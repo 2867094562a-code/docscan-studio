@@ -1,0 +1,2797 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>DocScan Studio - 智能图片转文档工具</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- jsPDF for PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Tesseract.js for optional OCR -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              500: '#4f46e5',
+              600: '#4338ca',
+              700: '#3730a3',
+            }
+          },
+          animation: {
+            'scan-beam': 'scanBeam 2s ease-in-out infinite alternate',
+            'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'fade-in': 'fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            'scale-in': 'scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+            'slide-up': 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+          },
+          keyframes: {
+            scanBeam: {
+              '0%': { top: '0%', opacity: '0.8' },
+              '100%': { top: '100%', opacity: '0.8' }
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+              '50%': { opacity: '0.6', transform: 'scale(1.08)' }
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' }
+            },
+            scaleIn: {
+              '0%': { opacity: '0', transform: 'scale(0.95)' },
+              '100%': { opacity: '1', transform: 'scale(1)' }
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(100%)' },
+              '100%': { transform: 'translateY(0)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    
+    * {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    input, textarea, [contenteditable="true"] {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    /* Prevent elastic scrolling on canvas area for touch devices */
+    #viewportContainer {
+      touch-action: none;
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.35);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.7);
+    }
+
+    /* Loupe / Magnifier Glass */
+    #magnifier {
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 0 3px #4f46e5, 0 0 0 6px rgba(255, 255, 255, 0.85);
+      pointer-events: none;
+      overflow: hidden;
+      display: none;
+      z-index: 999;
+      background: #000;
+    }
+
+    #magnifier canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #magnifier::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      transform: translate(-50%, -50%);
+      border: 1.5px solid #ef4444;
+      border-radius: 50%;
+      box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.1);
+      pointer-events: none;
+    }
+
+    #magnifier::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(239, 68, 68, 0.85);
+      z-index: 2;
+    }
+
+    .crosshair-v {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(239, 68, 68, 0.85);
+      z-index: 2;
+    }
+
+    /* Range slider custom styling */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 3px;
+      background: #e2e8f0;
+    }
+    .dark input[type=range]::-webkit-slider-runnable-track {
+      background: #334155;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      background: #4f46e5;
+      margin-top: -6px;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    /* Checkerboard background */
+    .bg-checker {
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      background-image: 
+        linear-gradient(45deg, #f1f5f9 25%, transparent 25%),
+        linear-gradient(-45deg, #f1f5f9 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #f1f5f9 75%),
+        linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
+    }
+    .dark .bg-checker {
+      background-image: 
+        linear-gradient(45deg, #1e293b 25%, transparent 25%),
+        linear-gradient(-45deg, #1e293b 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #1e293b 75%),
+        linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+    }
+
+    /* Laser Scanning Animation Beam */
+    .scanner-laser {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(79, 70, 229, 0) 0%, rgba(99, 102, 241, 1) 20%, rgba(168, 85, 247, 1) 50%, rgba(99, 102, 241, 1) 80%, rgba(79, 70, 229, 0) 100%);
+      box-shadow: 0 0 15px 3px rgba(99, 102, 241, 0.8), 0 0 30px 6px rgba(168, 85, 247, 0.4);
+      pointer-events: none;
+      z-index: 25;
+    }
+
+    /* Interactive Before/After Split Line */
+    .split-divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      cursor: ew-resize;
+      z-index: 30;
+    }
+    .split-divider-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2.5px solid #4f46e5;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4f46e5;
+      cursor: ew-resize;
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col transition-colors duration-200 overflow-hidden">
+
+  <!-- ==================== TOP NAVIGATION ==================== -->
+  <header class="h-14 sm:h-16 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between z-30 shrink-0 shadow-sm">
+    <div class="flex items-center space-x-2 sm:space-x-3">
+      <!-- Mobile Page Menu Toggle -->
+      <button onclick="toggleMobilePageDrawer()" class="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+        <i data-lucide="layers" class="w-5 h-5"></i>
+      </button>
+
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+        <i data-lucide="scan-line" class="w-5 h-5 sm:w-6 sm:h-6 animate-pulse"></i>
+      </div>
+      <div>
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
+          <h1 class="text-base sm:text-lg font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">DocScan</h1>
+          <span class="text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">Pro</span>
+        </div>
+        <p class="text-[10px] text-slate-400 hidden lg:block">智能切边 / 透视拉直 / 去阴影增白 / PDF导出</p>
+      </div>
+    </div>
+
+    <!-- Center Mode Switch Tabs (Desktop) -->
+    <div id="mainTabs" class="hidden md:flex items-center p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700">
+      <button id="tabCrop" onclick="switchMainTab('crop')" class="flex items-center space-x-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300">
+        <i data-lucide="crop" class="w-4 h-4"></i>
+        <span>1. 边缘识别与切边</span>
+      </button>
+      <button id="tabFilter" onclick="switchMainTab('filter')" class="flex items-center space-x-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+        <span>2. 文档调色与增强</span>
+      </button>
+    </div>
+
+    <!-- Right Header Actions -->
+    <div class="flex items-center space-x-1.5 sm:space-x-2">
+      <!-- Import Button -->
+      <button onclick="triggerFileInput()" class="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-medium border border-slate-300 dark:border-slate-700 transition active:scale-95">
+        <i data-lucide="image-plus" class="w-4 h-4 text-indigo-500"></i>
+        <span class="hidden sm:inline">导入</span>
+      </button>
+      
+      <!-- Camera Button -->
+      <button onclick="openCameraModal()" class="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-medium border border-slate-300 dark:border-slate-700 transition active:scale-95">
+        <i data-lucide="camera" class="w-4 h-4 text-emerald-500"></i>
+        <span class="hidden sm:inline">拍照</span>
+      </button>
+
+      <!-- Export Dropdown -->
+      <div class="relative inline-block text-left" id="exportDropdownContainer">
+        <button onclick="toggleExportMenu()" class="flex items-center space-x-1 sm:space-x-1.5 px-3 sm:px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition active:scale-95">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>导出</span>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-80"></i>
+        </button>
+
+        <div id="exportMenu" class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-2xl border border-slate-200 dark:border-slate-700 py-1.5 z-50 text-xs text-slate-700 dark:text-slate-200 animate-scale-in">
+          <button onclick="exportCurrentAsImage('png')" class="w-full text-left px-3.5 py-2 hover:bg-indigo-50 dark:hover:bg-slate-700/70 flex items-center space-x-2">
+            <i data-lucide="file-image" class="w-4 h-4 text-indigo-500"></i>
+            <div>
+              <div class="font-medium">导出当前页为 PNG</div>
+              <div class="text-[10px] text-slate-400">无损高清文档图片</div>
+            </div>
+          </button>
+          <button onclick="exportCurrentAsImage('jpeg')" class="w-full text-left px-3.5 py-2 hover:bg-indigo-50 dark:hover:bg-slate-700/70 flex items-center space-x-2">
+            <i data-lucide="image" class="w-4 h-4 text-blue-500"></i>
+            <div>
+              <div class="font-medium">导出当前页为 JPG</div>
+              <div class="text-[10px] text-slate-400">较小体积方便分享</div>
+            </div>
+          </button>
+          <div class="h-px bg-slate-200 dark:bg-slate-700 my-1"></div>
+          <button onclick="exportToPDF(false)" class="w-full text-left px-3.5 py-2 hover:bg-indigo-50 dark:hover:bg-slate-700/70 flex items-center space-x-2">
+            <i data-lucide="file-text" class="w-4 h-4 text-red-500"></i>
+            <div>
+              <div class="font-medium">导出当前页为 PDF</div>
+              <div class="text-[10px] text-slate-400">标准 A4 页面排版</div>
+            </div>
+          </button>
+          <button onclick="exportToPDF(true)" class="w-full text-left px-3.5 py-2 hover:bg-indigo-50 dark:hover:bg-slate-700/70 flex items-center space-x-2">
+            <i data-lucide="layers" class="w-4 h-4 text-amber-500"></i>
+            <div>
+              <div class="font-medium">合并所有页为多页 PDF</div>
+              <div class="text-[10px] text-slate-400" id="pdfPageCountHint">导出全部 (1页)</div>
+            </div>
+          </button>
+          <div class="h-px bg-slate-200 dark:bg-slate-700 my-1"></div>
+          <button onclick="copyImageToClipboard()" class="w-full text-left px-3.5 py-2 hover:bg-indigo-50 dark:hover:bg-slate-700/70 flex items-center space-x-2">
+            <i data-lucide="copy" class="w-4 h-4 text-emerald-500"></i>
+            <div>
+              <div class="font-medium">复制图像到剪贴板</div>
+              <div class="text-[10px] text-slate-400">直接粘贴到微信/Word</div>
+            </div>
+          </button>
+          <button onclick="printCurrentDocument()" class="w-full text-left px-3.5 py-2 hover:bg-indigo-50 dark:hover:bg-slate-700/70 flex items-center space-x-2">
+            <i data-lucide="printer" class="w-4 h-4 text-slate-500"></i>
+            <div class="font-medium">直接打印</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Theme Toggle -->
+      <button onclick="toggleDarkMode()" class="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+        <i data-lucide="moon" id="moonIcon" class="w-4 h-4 hidden dark:block"></i>
+        <i data-lucide="sun" id="sunIcon" class="w-4 h-4 block dark:hidden"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hidden File Input -->
+  <input type="file" id="fileInput" accept="image/*" multiple class="hidden" onchange="handleFileSelect(event)">
+
+  <!-- ==================== MAIN WORKSPACE ==================== -->
+  <div class="flex-1 flex overflow-hidden relative">
+    
+    <!-- LEFT SIDEBAR: Document Pages (Desktop: static, Mobile: slide-out drawer) -->
+    <aside id="leftSidebar" class="fixed md:static inset-y-0 left-0 z-40 w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 shadow-xl md:shadow-none">
+      <div class="p-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">文档页面</span>
+          <span id="pageBadge" class="text-[11px] font-semibold px-2 py-0.5 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-full">0 页</span>
+        </div>
+        <div class="flex items-center space-x-1">
+          <button onclick="triggerFileInput()" title="添加更多页面" class="p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 rounded-md transition active:scale-95">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          </button>
+          <button onclick="toggleMobilePageDrawer()" class="md:hidden p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pages Thumbnails Container -->
+      <div id="pagesList" class="flex-1 overflow-y-auto p-3 space-y-2.5">
+        <!-- Populated via JS -->
+      </div>
+
+      <!-- Left Sidebar Bottom Actions -->
+      <div class="p-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 space-y-2">
+        <button onclick="applyCurrentFilterToAll()" class="w-full py-1.5 px-2.5 bg-slate-200/70 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-medium flex items-center justify-center space-x-1.5 transition active:scale-95">
+          <i data-lucide="check-check" class="w-3.5 h-3.5 text-indigo-500"></i>
+          <span>应用调色到所有页</span>
+        </button>
+        <button onclick="clearAllPages()" class="w-full py-1 px-2 text-slate-400 hover:text-red-500 text-[11px] flex items-center justify-center space-x-1 transition">
+          <i data-lucide="trash-2" class="w-3 h-3"></i>
+          <span>清空所有页面</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Mobile Left Sidebar Backdrop -->
+    <div id="mobileBackdrop" onclick="toggleMobilePageDrawer()" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden"></div>
+
+    <!-- CENTER: Canvas Workspace -->
+    <main class="flex-1 flex flex-col bg-slate-200/60 dark:bg-slate-950 relative overflow-hidden pb-14 md:pb-0">
+      
+      <!-- Top Workspace Toolbar -->
+      <div class="h-10 sm:h-12 border-b border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 backdrop-blur px-2 sm:px-4 flex items-center justify-between shrink-0 z-10">
+        <!-- Action tools for current mode -->
+        <div class="flex items-center space-x-1 sm:space-x-2" id="cropTools">
+          <button onclick="autoDetectEdges()" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-indigo-50 dark:bg-indigo-900/40 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 rounded-lg text-[11px] sm:text-xs font-medium transition active:scale-95" title="智能识别纸张边距">
+            <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
+            <span>智能识边</span>
+          </button>
+          <button onclick="resetCornersToFull()" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] sm:text-xs font-medium transition active:scale-95" title="铺满整张照片">
+            <i data-lucide="maximize" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">全选整图</span>
+          </button>
+          <button onclick="rotateImage(90)" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] sm:text-xs font-medium transition active:scale-95" title="顺时针旋转90度">
+            <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">向右旋转</span>
+          </button>
+          <button onclick="rotateImage(-90)" class="p-1 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="逆时针旋转90度">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <div class="flex items-center space-x-1 sm:space-x-2" id="filterTools" style="display: none;">
+          <button onclick="toggleSplitCompareMode()" id="splitCompareBtn" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] sm:text-xs font-medium transition active:scale-95">
+            <i data-lucide="columns-2" class="w-3.5 h-3.5 text-indigo-500"></i>
+            <span id="splitCompareBtnText" class="hidden sm:inline">分屏对比</span>
+          </button>
+          <button onclick="openWatermarkModal()" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] sm:text-xs font-medium transition active:scale-95">
+            <i data-lucide="stamp" class="w-3.5 h-3.5 text-purple-500"></i>
+            <span>水印</span>
+          </button>
+          <button onclick="openSignatureModal()" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] sm:text-xs font-medium transition active:scale-95">
+            <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-blue-500"></i>
+            <span>签名</span>
+          </button>
+          <button onclick="switchMainTab('crop')" class="flex items-center space-x-1 px-2 py-1 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 rounded-lg text-[11px] sm:text-xs font-medium transition">
+            <i data-lucide="crop" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">重新微调</span>
+          </button>
+        </div>
+
+        <!-- Canvas Zoom Controls -->
+        <div class="flex items-center space-x-0.5 sm:space-x-1 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-xs text-slate-600 dark:text-slate-300">
+          <button onclick="zoomCanvas(-0.15)" class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded transition" title="缩小">
+            <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i>
+          </button>
+          <span id="zoomLevelText" class="px-1.5 font-mono text-[10px] sm:text-[11px]">100%</span>
+          <button onclick="zoomCanvas(0.15)" class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded transition" title="放大">
+            <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i>
+          </button>
+          <button onclick="fitCanvasToView()" class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded transition" title="适应窗口">
+            <i data-lucide="expand" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Canvas Viewport Area -->
+      <div id="viewportContainer" class="flex-1 relative flex items-center justify-center p-2 sm:p-4 overflow-hidden bg-checker cursor-grab active:cursor-grabbing">
+        
+        <!-- Empty State / Dropzone -->
+        <div id="emptyState" class="max-w-md w-full p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-700 text-center shadow-lg transition-all hover:border-indigo-400 animate-scale-in">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto mb-3 sm:mb-4 animate-bounce">
+            <i data-lucide="file-up" class="w-7 h-7 sm:w-8 sm:h-8"></i>
+          </div>
+          <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 mb-1">开始扫描您的第一份文档</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 sm:mb-5 leading-relaxed">
+            点击下方按钮上传图片，或支持从微信/截图直接 <kbd class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded text-[10px] font-mono">Ctrl + V</kbd> 粘贴。
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
+            <button onclick="triggerFileInput()" class="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-md shadow-indigo-500/20 transition active:scale-95 flex items-center justify-center space-x-2">
+              <i data-lucide="upload" class="w-4 h-4"></i>
+              <span>选择本地图片</span>
+            </button>
+            <button onclick="loadSampleImage()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-medium transition active:scale-95 flex items-center justify-center space-x-1.5">
+              <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+              <span>加载测试样张</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Canvas Wrapper for Positioning & Split Compare -->
+        <div id="canvasWrapper" class="relative hidden origin-center transition-transform duration-75">
+          <canvas id="mainCanvas" class="shadow-2xl rounded-sm max-w-none block"></canvas>
+          <div id="scannerBeam" class="scanner-laser hidden animate-scan-beam"></div>
+
+          <!-- Split Comparison Divider Line & Drag Handle -->
+          <div id="splitDivider" class="split-divider hidden">
+            <div class="split-divider-handle">
+              <i data-lucide="chevrons-left-right" class="w-4 h-4"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Magnifier Loupe Floating Window (Active during drag) -->
+        <div id="magnifier">
+          <canvas id="magnifierCanvas"></canvas>
+          <div class="crosshair-v"></div>
+          <div id="magnifierCoord" class="absolute bottom-1 left-0 right-0 text-center text-[9px] font-mono text-white/90 bg-black/50 py-0.5">X: 0, Y: 0</div>
+        </div>
+
+        <!-- Hint Overlay at bottom of Canvas -->
+        <div id="canvasTip" class="absolute bottom-16 md:bottom-4 left-1/2 -translate-x-1/2 px-3.5 py-1.5 bg-slate-900/80 backdrop-blur text-white text-[11px] sm:text-xs rounded-full pointer-events-none shadow-lg border border-white/10 hidden items-center space-x-2 animate-fade-in max-w-[90vw] truncate">
+          <i data-lucide="info" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
+          <span id="canvasTipText" class="truncate">拖动 4 个彩色圆点或 4 条边微调文档边角</span>
+        </div>
+      </div>
+
+      <!-- ==================== MOBILE BOTTOM NAVIGATION BAR ==================== -->
+      <div class="md:hidden fixed bottom-0 inset-x-0 h-14 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex items-center justify-around z-30 px-2">
+        <button onclick="toggleMobilePageDrawer()" class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 hover:text-indigo-600">
+          <i data-lucide="layers" class="w-5 h-5"></i>
+          <span class="text-[10px] mt-0.5">页面</span>
+        </button>
+        <button onclick="switchMainTab('crop')" id="mobileNavCrop" class="flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400 font-semibold">
+          <i data-lucide="crop" class="w-5 h-5"></i>
+          <span class="text-[10px] mt-0.5">1.切边</span>
+        </button>
+        <button onclick="switchMainTab('filter')" id="mobileNavFilter" class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 hover:text-indigo-600">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+          <span class="text-[10px] mt-0.5">2.增强</span>
+        </button>
+        <button onclick="toggleMobileFilterDrawer()" class="flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 hover:text-indigo-600">
+          <i data-lucide="sliders" class="w-5 h-5"></i>
+          <span class="text-[10px] mt-0.5">调色板</span>
+        </button>
+        <button onclick="exportToPDF(false)" class="flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">
+          <i data-lucide="file-down" class="w-5 h-5"></i>
+          <span class="text-[10px] mt-0.5">导出PDF</span>
+        </button>
+      </div>
+
+    </main>
+
+    <!-- RIGHT SIDEBAR / MOBILE BOTTOM SHEET: Filters & Adjustments -->
+    <aside id="rightSidebar" class="fixed md:static inset-x-0 bottom-0 md:inset-auto z-40 md:z-20 w-full md:w-80 max-h-[75vh] md:max-h-none border-t md:border-t-0 md:border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-t-3xl md:rounded-none flex flex-col shrink-0 transform translate-y-full md:translate-y-0 transition-transform duration-300 shadow-2xl md:shadow-none">
+      
+      <!-- Right Header / Mobile Drawer Drag Bar -->
+      <div class="p-3 sm:p-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between relative">
+        <div class="w-12 h-1 bg-slate-300 dark:bg-slate-700 rounded-full absolute top-2 left-1/2 -translate-x-1/2 md:hidden"></div>
+        <div class="flex items-center space-x-2 pt-2 md:pt-0">
+          <i data-lucide="sliders" class="w-4 h-4 text-indigo-500"></i>
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">文档增强与滤镜</span>
+        </div>
+        <div class="flex items-center space-x-2 pt-2 md:pt-0">
+          <button onclick="resetCurrentAdjustments()" class="text-[11px] text-slate-400 hover:text-indigo-500 transition">
+            重置
+          </button>
+          <button onclick="toggleMobileFilterDrawer()" class="md:hidden p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Scrollable Panel -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-4 sm:space-y-5">
+        
+        <!-- Filter Presets Section -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-semibold text-slate-700 dark:text-slate-200">色彩处理模式</label>
+            <span class="text-[10px] text-indigo-500 font-medium">即时渲染</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <!-- 1. Magic Color (彩色增强) -->
+            <button onclick="setFilterPreset('magic_color')" id="btnPreset_magic_color" class="preset-btn relative p-2 rounded-xl border-2 border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 text-left transition flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-0.5">
+                <span class="text-xs font-bold text-indigo-700 dark:text-indigo-300">彩色增强</span>
+                <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+              </div>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">白底增白、去除阴影、还原鲜艳字迹</p>
+            </button>
+
+            <!-- 2. B&W Document (黑白扫描) -->
+            <button onclick="setFilterPreset('bw_document')" id="btnPreset_bw_document" class="preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-0.5">
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-100">黑白扫描</span>
+                <i data-lucide="file-check" class="w-3.5 h-3.5 text-slate-400"></i>
+              </div>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">局部自适应二值化，极清公文打印件</p>
+            </button>
+
+            <!-- 3. Red Seal Protect (红头/印章保护) -->
+            <button onclick="setFilterPreset('red_seal')" id="btnPreset_red_seal" class="preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-0.5">
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-100">印章强化</span>
+                <i data-lucide="stamp" class="w-3.5 h-3.5 text-red-500"></i>
+              </div>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">白底黑字，高亮鲜艳公章与批注</p>
+            </button>
+
+            <!-- 4. Grayscale (高清灰度) -->
+            <button onclick="setFilterPreset('grayscale')" id="btnPreset_grayscale" class="preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-0.5">
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-100">高清灰度</span>
+                <i data-lucide="palette" class="w-3.5 h-3.5 text-slate-400"></i>
+              </div>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">平滑灰度阶调，去除多余杂色</p>
+            </button>
+
+            <!-- 5. Ink Saver (省墨线条) -->
+            <button onclick="setFilterPreset('ink_saver')" id="btnPreset_ink_saver" class="preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-0.5">
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-100">省墨复印</span>
+                <i data-lucide="printer" class="w-3.5 h-3.5 text-slate-400"></i>
+              </div>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">高反差线条化，节省打印墨水</p>
+            </button>
+
+            <!-- 6. Original (原图拉平) -->
+            <button onclick="setFilterPreset('original')" id="btnPreset_original" class="preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between">
+              <div class="flex items-center justify-between mb-0.5">
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-100">原图拉平</span>
+                <i data-lucide="image" class="w-3.5 h-3.5 text-slate-400"></i>
+              </div>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">仅做四角矫正，保留原始光影质感</p>
+            </button>
+          </div>
+        </div>
+
+        <div class="h-px bg-slate-200 dark:bg-slate-800"></div>
+
+        <!-- Fine-Tuning Sliders -->
+        <div class="space-y-3.5">
+          <label class="text-xs font-semibold text-slate-700 dark:text-slate-200 block">细节微调参数</label>
+
+          <!-- Brightness -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                <i data-lucide="sun-medium" class="w-3.5 h-3.5 text-amber-500"></i>
+                <span>亮度 (Brightness)</span>
+              </span>
+              <span id="valBrightness" class="font-mono text-[11px] text-slate-500">0</span>
+            </div>
+            <input type="range" id="sliderBrightness" min="-100" max="100" value="0" oninput="handleSliderChange()" class="w-full">
+          </div>
+
+          <!-- Contrast -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                <i data-lucide="circle-dot" class="w-3.5 h-3.5 text-indigo-500"></i>
+                <span>对比度 (Contrast)</span>
+              </span>
+              <span id="valContrast" class="font-mono text-[11px] text-slate-500">0</span>
+            </div>
+            <input type="range" id="sliderContrast" min="-100" max="100" value="0" oninput="handleSliderChange()" class="w-full">
+          </div>
+
+          <!-- Whiten / Shadow Removal -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                <i data-lucide="eraser" class="w-3.5 h-3.5 text-emerald-500"></i>
+                <span>去阴影 / 白底增白</span>
+              </span>
+              <span id="valWhiten" class="font-mono text-[11px] text-slate-500">50</span>
+            </div>
+            <input type="range" id="sliderWhiten" min="0" max="100" value="50" oninput="handleSliderChange()" class="w-full">
+          </div>
+
+          <!-- Sharpness / Clarity -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                <i data-lucide="focus" class="w-3.5 h-3.5 text-blue-500"></i>
+                <span>文字锐化清晰度</span>
+              </span>
+              <span id="valSharpness" class="font-mono text-[11px] text-slate-500">30</span>
+            </div>
+            <input type="range" id="sliderSharpness" min="0" max="100" value="30" oninput="handleSliderChange()" class="w-full">
+          </div>
+
+          <!-- B&W Threshold Bias -->
+          <div id="bwBiasContainer" class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
+                <i data-lucide="binary" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>二值化深浅偏置</span>
+              </span>
+              <span id="valBwBias" class="font-mono text-[11px] text-slate-500">0</span>
+            </div>
+            <input type="range" id="sliderBwBias" min="-50" max="50" value="0" oninput="handleSliderChange()" class="w-full">
+          </div>
+        </div>
+
+        <div class="h-px bg-slate-200 dark:bg-slate-800"></div>
+
+        <!-- OCR Text Extraction Panel -->
+        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/50 p-3 border border-slate-200 dark:border-slate-700 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-1.5">
+              <i data-lucide="scan-text" class="w-4 h-4 text-indigo-500"></i>
+              <span class="text-xs font-bold text-slate-700 dark:text-slate-200">文字识别 (OCR)</span>
+            </div>
+            <button onclick="runOCR()" id="btnOCR" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-[11px] font-semibold transition flex items-center space-x-1 active:scale-95">
+              <span>提取文字</span>
+            </button>
+          </div>
+          
+          <div id="ocrStatus" class="text-[11px] text-slate-500 dark:text-slate-400 hidden">
+            <div class="flex items-center space-x-2">
+              <div class="w-3.5 h-3.5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+              <span id="ocrStatusText">正在加载识别模型...</span>
+            </div>
+          </div>
+
+          <div id="ocrResultBox" class="hidden animate-fade-in">
+            <textarea id="ocrTextOutput" rows="3" class="w-full text-xs p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-mono resize-none focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="识别到的文字将显示在此处..."></textarea>
+            <div class="flex justify-end mt-1">
+              <button onclick="copyOCRText()" class="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-1">
+                <i data-lucide="copy" class="w-3 h-3"></i>
+                <span>复制全部文字</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Footer Action -->
+      <div class="p-3.5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80">
+        <button onclick="exportToPDF(false)" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-500/20 flex items-center justify-center space-x-2 transition active:scale-95">
+          <i data-lucide="file-down" class="w-4 h-4"></i>
+          <span>导出为高清 PDF 文档</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- Mobile Right Sidebar Backdrop -->
+    <div id="mobileFilterBackdrop" onclick="toggleMobileFilterDrawer()" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden"></div>
+
+  </div>
+
+  <!-- ==================== PROCESSING / SCAN PROGRESS MODAL ==================== -->
+  <div id="processingModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-700 text-center animate-scale-in">
+      <div class="relative w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+        <div class="absolute inset-0 border-4 border-indigo-200 dark:border-indigo-950 rounded-full"></div>
+        <div class="absolute inset-0 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+        <i data-lucide="sparkles" class="w-7 h-7 text-indigo-600 dark:text-indigo-400 animate-pulse"></i>
+      </div>
+      
+      <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1" id="processTitle">正在处理文档...</h3>
+      <p class="text-xs text-slate-500 dark:text-slate-400 mb-4" id="processDesc">执行高精度透视变换与自适应增强</p>
+      
+      <div class="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mb-2 border border-slate-200 dark:border-slate-700">
+        <div id="progressBarFill" class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-600 transition-all duration-200 rounded-full w-0"></div>
+      </div>
+      <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+        <span id="processStepText">初始化...</span>
+        <span id="processPercentText">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== WATERMARK MODAL ==================== -->
+  <div id="watermarkModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-5 shadow-2xl border border-slate-200 dark:border-slate-700 animate-scale-in">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="stamp" class="w-5 h-5 text-purple-500"></i>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">添加文档防盗水印</h3>
+        </div>
+        <button onclick="closeWatermarkModal()" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      
+      <div class="py-4 space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">水印文字内容</label>
+          <input type="text" id="watermarkInput" value="仅供业务办理使用 他用无效" class="w-full text-xs p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">水印颜色</label>
+            <select id="watermarkColor" class="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none">
+              <option value="rgba(239, 68, 68, 0.28)">印章红 (Red)</option>
+              <option value="rgba(79, 70, 229, 0.25)">科技蓝 (Indigo)</option>
+              <option value="rgba(100, 116, 139, 0.25)">标准灰 (Gray)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">排版方式</label>
+            <select id="watermarkLayout" class="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none">
+              <option value="repeat">整页平铺防盗</option>
+              <option value="center">正中心单条</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+        <button onclick="closeWatermarkModal()" class="px-4 py-2 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">取消</button>
+        <button onclick="applyWatermark()" class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition active:scale-95">确定应用水印</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SIGNATURE MODAL ==================== -->
+  <div id="signatureModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-5 shadow-2xl border border-slate-200 dark:border-slate-700 animate-scale-in">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="pen-tool" class="w-5 h-5 text-blue-500"></i>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">在线手写签名</h3>
+        </div>
+        <button onclick="closeSignatureModal()" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      
+      <div class="py-4">
+        <div class="relative bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-inner">
+          <canvas id="sigCanvas" width="400" height="200" class="w-full h-44 sm:h-48 cursor-crosshair block"></canvas>
+          <div class="absolute bottom-2 left-3 text-[10px] text-slate-400 pointer-events-none">请在框内手写签名</div>
+        </div>
+        
+        <div class="flex items-center justify-between mt-3 text-xs">
+          <div class="flex items-center space-x-2">
+            <span class="text-slate-500">笔触颜色:</span>
+            <button onclick="setSigColor('#000000')" class="w-5 h-5 rounded-full bg-black border-2 border-indigo-500 focus:outline-none"></button>
+            <button onclick="setSigColor('#1e40af')" class="w-5 h-5 rounded-full bg-blue-800 focus:outline-none"></button>
+            <button onclick="setSigColor('#dc2626')" class="w-5 h-5 rounded-full bg-red-600 focus:outline-none"></button>
+          </div>
+          <button onclick="clearSigCanvas()" class="text-slate-500 hover:text-red-500 flex items-center space-x-1">
+            <i data-lucide="eraser" class="w-3.5 h-3.5"></i>
+            <span>重签</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-200 dark:border-slate-800">
+        <button onclick="closeSignatureModal()" class="px-4 py-2 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">取消</button>
+        <button onclick="applySignature()" class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition active:scale-95">添加签名至右下角</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CAMERA MODAL ==================== -->
+  <div id="cameraModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700 animate-scale-in">
+      <div class="p-3.5 sm:p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="camera" class="w-5 h-5 text-indigo-500"></i>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">摄像头拍摄文档</h3>
+        </div>
+        <button onclick="closeCameraModal()" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="relative bg-black aspect-[4/3] flex items-center justify-center overflow-hidden">
+        <video id="cameraVideo" autoplay playsinline class="w-full h-full object-contain"></video>
+        <div class="absolute inset-6 sm:inset-8 border-2 border-white/50 border-dashed rounded-xl pointer-events-none flex items-center justify-center">
+          <span class="text-white/80 text-[11px] sm:text-xs px-3 py-1 bg-black/50 rounded-full backdrop-blur">将纸张对准框线</span>
+        </div>
+      </div>
+      <div class="p-3.5 sm:p-4 flex items-center justify-center space-x-3 bg-slate-50 dark:bg-slate-800/50">
+        <button onclick="captureCameraPhoto()" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-500/20 flex items-center space-x-2 transition active:scale-95">
+          <i data-lucide="aperture" class="w-4 h-4"></i>
+          <span>拍照并导入</span>
+        </button>
+        <button onclick="closeCameraModal()" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-medium transition">
+          取消
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toast" class="fixed bottom-16 md:bottom-6 right-4 sm:right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2.5 rounded-xl shadow-2xl text-xs font-medium flex items-center space-x-2 border border-slate-700 dark:border-slate-200 max-w-[90vw]">
+    <i data-lucide="check-circle" id="toastIcon" class="w-4 h-4 text-emerald-400 dark:text-emerald-600 shrink-0"></i>
+    <span id="toastMsg" class="truncate">操作成功</span>
+  </div>
+
+  <!-- ==================== CORE JAVASCRIPT LOGIC ==================== -->
+  <script>
+    /* =========================================================================
+       1. GLOBAL STATE & DATA STRUCTURES
+       ========================================================================= */
+    const state = {
+      pages: [],
+      currentPageIndex: -1,
+      currentTab: 'crop',
+      
+      zoom: 1.0,
+      panX: 0,
+      panY: 0,
+      isPanning: false,
+      startPanX: 0,
+      startPanY: 0,
+      
+      activeHandleIndex: -1,
+      isDraggingHandle: false,
+      hoverHandleIndex: -1,
+      
+      isSplitCompare: false,
+      splitPos: 0.5,
+      isDraggingSplit: false,
+      
+      filterDebounceTimer: null,
+      cameraStream: null
+    };
+
+    const mainCanvas = document.getElementById('mainCanvas');
+    const ctx = mainCanvas.getContext('2d');
+    const canvasWrapper = document.getElementById('canvasWrapper');
+    const magnifier = document.getElementById('magnifier');
+    const magnifierCanvas = document.getElementById('magnifierCanvas');
+    const magCtx = magnifierCanvas.getContext('2d');
+    magnifierCanvas.width = 140;
+    magnifierCanvas.height = 140;
+
+    const sigCanvas = document.getElementById('sigCanvas');
+    const sigCtx = sigCanvas.getContext('2d');
+    let isDrawingSig = false;
+    let sigPenColor = '#000000';
+
+    /* =========================================================================
+       2. INITIALIZATION & EVENTS
+       ========================================================================= */
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      setupClipboardPaste();
+      setupDragAndDrop();
+      setupCanvasInteractions();
+      setupSplitDividerInteractions();
+      setupSignaturePad();
+      setupWindowResize();
+
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark');
+      }
+    });
+
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+    }
+
+    function toggleMobilePageDrawer() {
+      const sidebar = document.getElementById('leftSidebar');
+      const backdrop = document.getElementById('mobileBackdrop');
+      const isClosed = sidebar.classList.contains('-translate-x-full');
+      
+      if (isClosed) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function toggleMobileFilterDrawer() {
+      const sidebar = document.getElementById('rightSidebar');
+      const backdrop = document.getElementById('mobileFilterBackdrop');
+      const isClosed = sidebar.classList.contains('translate-y-full');
+      
+      if (isClosed) {
+        sidebar.classList.remove('translate-y-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('translate-y-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+      
+      toastMsg.innerText = msg;
+      if (type === 'error') {
+        toastIcon.setAttribute('data-lucide', 'alert-circle');
+        toastIcon.className = 'w-4 h-4 text-red-400 shrink-0';
+      } else {
+        toastIcon.setAttribute('data-lucide', 'check-circle');
+        toastIcon.className = 'w-4 h-4 text-emerald-400 dark:text-emerald-600 shrink-0';
+      }
+      lucide.createIcons();
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    function showProgress(title, desc) {
+      const modal = document.getElementById('processingModal');
+      document.getElementById('processTitle').innerText = title || '正在智能处理中...';
+      document.getElementById('processDesc').innerText = desc || '正在执行高精度透视变换与自适应增强';
+      updateProgress(0, '准备就绪');
+      modal.classList.remove('hidden');
+    }
+
+    function updateProgress(percent, stepText) {
+      const fill = document.getElementById('progressBarFill');
+      const pText = document.getElementById('processPercentText');
+      const sText = document.getElementById('processStepText');
+      fill.style.width = `${Math.min(100, Math.max(0, percent))}%`;
+      pText.innerText = `${Math.round(percent)}%`;
+      if (stepText) sText.innerText = stepText;
+    }
+
+    function hideProgress() {
+      const modal = document.getElementById('processingModal');
+      modal.classList.add('hidden');
+    }
+
+    /* =========================================================================
+       3. DOCUMENT & PAGE MANAGEMENT
+       ========================================================================= */
+    function triggerFileInput() {
+      document.getElementById('fileInput').click();
+    }
+
+    function handleFileSelect(e) {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+      processIncomingFiles(files);
+      e.target.value = '';
+    }
+
+    function setupClipboardPaste() {
+      window.addEventListener('paste', (e) => {
+        const items = e.clipboardData?.items;
+        if (!items) return;
+        const imageFiles = [];
+        for (let item of items) {
+          if (item.type.indexOf('image') !== -1) {
+            const file = item.getAsFile();
+            if (file) imageFiles.push(file);
+          }
+        }
+        if (imageFiles.length > 0) {
+          e.preventDefault();
+          processIncomingFiles(imageFiles);
+          showToast(`已从剪贴板粘贴 ${imageFiles.length} 张图片`);
+        }
+      });
+    }
+
+    function setupDragAndDrop() {
+      const container = document.getElementById('viewportContainer');
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        container.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          container.classList.add('ring-4', 'ring-indigo-500/50');
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        container.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          container.classList.remove('ring-4', 'ring-indigo-500/50');
+        }, false);
+      });
+
+      container.addEventListener('drop', (e) => {
+        const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+        if (files.length > 0) {
+          processIncomingFiles(files);
+          showToast(`已成功导入 ${files.length} 张图片`);
+        }
+      });
+    }
+
+    function processIncomingFiles(files) {
+      showProgress('正在导入图片...', `准备导入 ${files.length} 张图片并自动识别四角`);
+      let loadedCount = 0;
+      
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            addNewPage(img);
+            loadedCount++;
+            const pct = (loadedCount / files.length) * 100;
+            updateProgress(pct, `已识别第 ${loadedCount}/${files.length} 页`);
+            
+            if (loadedCount === files.length) {
+              setTimeout(() => {
+                hideProgress();
+                renderPagesList();
+                if (state.currentPageIndex === -1 || state.pages.length === files.length) {
+                  selectPage(state.pages.length - files.length);
+                }
+              }, 200);
+            }
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function addNewPage(img) {
+      const corners = detectDocumentCorners(img);
+      
+      const newPage = {
+        id: 'page_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+        originalImg: img,
+        rotation: 0,
+        corners: corners,
+        filterPreset: 'magic_color',
+        adjustments: {
+          brightness: 0,
+          contrast: 0,
+          whiten: 50,
+          sharpness: 30,
+          bwBias: 0
+        },
+        watermark: null,
+        signature: null,
+        processedCanvas: null
+      };
+
+      state.pages.push(newPage);
+      updatePageBadge();
+    }
+
+    function selectPage(index) {
+      if (index < 0 || index >= state.pages.length) return;
+      state.currentPageIndex = index;
+      
+      const page = state.pages[index];
+      setFilterPresetUI(page.filterPreset);
+      setSlidersUI(page.adjustments);
+      
+      document.getElementById('emptyState').classList.add('hidden');
+      canvasWrapper.classList.remove('hidden');
+      document.getElementById('canvasTip').classList.remove('hidden');
+      document.getElementById('canvasTip').classList.add('flex');
+
+      renderPagesList();
+      fitCanvasToView();
+      renderCurrentPage();
+
+      // Close mobile drawer if open
+      document.getElementById('leftSidebar').classList.add('-translate-x-full');
+      document.getElementById('mobileBackdrop').classList.add('hidden');
+    }
+
+    function deletePage(index, event) {
+      if (event) event.stopPropagation();
+      state.pages.splice(index, 1);
+      if (state.pages.length === 0) {
+        state.currentPageIndex = -1;
+        document.getElementById('emptyState').classList.remove('hidden');
+        canvasWrapper.classList.add('hidden');
+        document.getElementById('canvasTip').classList.add('hidden');
+        document.getElementById('canvasTip').classList.remove('flex');
+      } else {
+        if (state.currentPageIndex >= state.pages.length) {
+          state.currentPageIndex = state.pages.length - 1;
+        }
+        selectPage(state.currentPageIndex);
+      }
+      updatePageBadge();
+      renderPagesList();
+    }
+
+    function clearAllPages() {
+      if (state.pages.length === 0) return;
+      if (confirm('确定要清空所有页面吗？')) {
+        state.pages = [];
+        state.currentPageIndex = -1;
+        document.getElementById('emptyState').classList.remove('hidden');
+        canvasWrapper.classList.add('hidden');
+        document.getElementById('canvasTip').classList.add('hidden');
+        document.getElementById('canvasTip').classList.remove('flex');
+        updatePageBadge();
+        renderPagesList();
+        showToast('已清空全部页面');
+      }
+    }
+
+    function updatePageBadge() {
+      const count = state.pages.length;
+      document.getElementById('pageBadge').innerText = `${count} 页`;
+      document.getElementById('pdfPageCountHint').innerText = `导出全部 (${count}页)`;
+    }
+
+    function renderPagesList() {
+      const container = document.getElementById('pagesList');
+      container.innerHTML = '';
+
+      state.pages.forEach((page, idx) => {
+        const isSelected = idx === state.currentPageIndex;
+        const card = document.createElement('div');
+        card.className = `p-2 rounded-xl border transition cursor-pointer flex items-center space-x-3 group ${
+          isSelected 
+            ? 'bg-indigo-50/80 dark:bg-indigo-950/60 border-indigo-500 dark:border-indigo-500 shadow-sm' 
+            : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+        }`;
+        card.onclick = () => selectPage(idx);
+
+        const thumbWrapper = document.createElement('div');
+        thumbWrapper.className = 'w-12 h-14 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform';
+        
+        const thumbImg = document.createElement('img');
+        thumbImg.className = 'w-full h-full object-cover';
+        thumbImg.src = page.processedCanvas ? page.processedCanvas.toDataURL('image/jpeg', 0.5) : page.originalImg.src;
+        thumbWrapper.appendChild(thumbImg);
+
+        const info = document.createElement('div');
+        info.className = 'flex-1 min-w-0';
+        const title = document.createElement('div');
+        title.className = `text-xs font-bold truncate ${isSelected ? 'text-indigo-600 dark:text-indigo-300' : 'text-slate-700 dark:text-slate-200'}`;
+        title.innerText = `第 ${idx + 1} 页`;
+        
+        const modeBadge = document.createElement('div');
+        modeBadge.className = 'text-[10px] text-slate-400 truncate mt-0.5';
+        const presetNames = {
+          'magic_color': '彩色增强',
+          'bw_document': '黑白扫描',
+          'red_seal': '印章强化',
+          'grayscale': '高清灰度',
+          'ink_saver': '省墨复印',
+          'original': '原图'
+        };
+        modeBadge.innerText = presetNames[page.filterPreset] || '处理完成';
+
+        info.appendChild(title);
+        info.appendChild(modeBadge);
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'p-1 text-slate-400 hover:text-red-500 rounded transition';
+        delBtn.innerHTML = '<i data-lucide="trash" class="w-3.5 h-3.5"></i>';
+        delBtn.onclick = (e) => deletePage(idx, e);
+
+        card.appendChild(thumbWrapper);
+        card.appendChild(info);
+        card.appendChild(delBtn);
+        container.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    /* =========================================================================
+       4. SMART EDGE DETECTION ALGORITHM (Pure JS / Canvas)
+       ========================================================================= */
+    function detectDocumentCorners(img) {
+      const scale = Math.min(1.0, 400 / img.naturalWidth);
+      const w = Math.round(img.naturalWidth * scale);
+      const h = Math.round(img.naturalHeight * scale);
+
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = w;
+      tempCanvas.height = h;
+      const tCtx = tempCanvas.getContext('2d');
+      tCtx.drawImage(img, 0, 0, w, h);
+
+      const imgData = tCtx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+      const gray = new Float32Array(w * h);
+
+      for (let i = 0; i < data.length; i += 4) {
+        gray[i / 4] = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+      }
+
+      const grad = new Float32Array(w * h);
+      let maxGrad = 0;
+      for (let y = 1; y < h - 1; y++) {
+        for (let x = 1; x < w - 1; x++) {
+          const idx = y * w + x;
+          const gx = (gray[idx + 1 - w] + 2 * gray[idx + 1] + gray[idx + 1 + w]) -
+                     (gray[idx - 1 - w] + 2 * gray[idx - 1] + gray[idx - 1 + w]);
+          const gy = (gray[idx - w - 1] + 2 * gray[idx - w] + gray[idx - w + 1]) -
+                     (gray[idx + w - 1] + 2 * gray[idx + w] + gray[idx + w + 1]);
+          const g = Math.hypot(gx, gy);
+          grad[idx] = g;
+          if (g > maxGrad) maxGrad = g;
+        }
+      }
+
+      const thresh = maxGrad * 0.25;
+      const cornersSearch = [
+        { startX: 0, startY: 0, dx: 1, dy: 1 },
+        { startX: w - 1, startY: 0, dx: -1, dy: 1 },
+        { startX: w - 1, startY: h - 1, dx: -1, dy: -1 },
+        { startX: 0, startY: h - 1, dx: 1, dy: -1 }
+      ];
+
+      const detectedCorners = [];
+
+      for (let c of cornersSearch) {
+        let found = false;
+        let px = c.startX, py = c.startY;
+        const totalSteps = Math.min(w, h) * 0.45;
+        
+        for (let step = 0; step < totalSteps; step++) {
+          const ix = Math.round(px);
+          const iy = Math.round(py);
+          if (ix >= 1 && ix < w - 1 && iy >= 1 && iy < h - 1) {
+            if (grad[iy * w + ix] > thresh) {
+              detectedCorners.push({
+                x: (ix / scale),
+                y: (iy / scale)
+              });
+              found = true;
+              break;
+            }
+          }
+          px += c.dx * 1.5;
+          py += c.dy * 1.5;
+        }
+
+        if (!found) {
+          detectedCorners.push({
+            x: (c.startX === 0 ? img.naturalWidth * 0.05 : img.naturalWidth * 0.95),
+            y: (c.startY === 0 ? img.naturalHeight * 0.05 : img.naturalHeight * 0.95)
+          });
+        }
+      }
+
+      return detectedCorners;
+    }
+
+    function autoDetectEdges() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+      
+      triggerLaserAnimation();
+      page.corners = detectDocumentCorners(page.originalImg);
+      renderCurrentPage();
+      showToast('已自动识别文档四角边距');
+    }
+
+    function resetCornersToFull() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+      const w = page.originalImg.naturalWidth;
+      const h = page.originalImg.naturalHeight;
+      page.corners = [
+        { x: 0, y: 0 },
+        { x: w, y: 0 },
+        { x: w, y: h },
+        { x: 0, y: h }
+      ];
+      renderCurrentPage();
+      showToast('已重置为整图铺满');
+    }
+
+    function rotateImage(angleDelta) {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+      
+      const srcCanvas = document.createElement('canvas');
+      const srcW = page.originalImg.naturalWidth;
+      const srcH = page.originalImg.naturalHeight;
+
+      if (Math.abs(angleDelta) === 90 || Math.abs(angleDelta) === 270) {
+        srcCanvas.width = srcH;
+        srcCanvas.height = srcW;
+      } else {
+        srcCanvas.width = srcW;
+        srcCanvas.height = srcH;
+      }
+
+      const sCtx = srcCanvas.getContext('2d');
+      sCtx.translate(srcCanvas.width / 2, srcCanvas.height / 2);
+      sCtx.rotate((angleDelta * Math.PI) / 180);
+      sCtx.drawImage(page.originalImg, -srcW / 2, -srcH / 2);
+
+      const newImg = new Image();
+      newImg.onload = () => {
+        page.originalImg = newImg;
+        page.corners = detectDocumentCorners(newImg);
+        renderCurrentPage();
+      };
+      newImg.src = srcCanvas.toDataURL('image/png');
+    }
+
+    function triggerLaserAnimation() {
+      const beam = document.getElementById('scannerBeam');
+      beam.classList.remove('hidden');
+      setTimeout(() => {
+        beam.classList.add('hidden');
+      }, 1600);
+    }
+
+    /* =========================================================================
+       5. PERSPECTIVE WARP & ENHANCEMENT ENGINE
+       ========================================================================= */
+    function computePerspectiveWarp(img, corners) {
+      const p0 = corners[0];
+      const p1 = corners[1];
+      const p2 = corners[2];
+      const p3 = corners[3];
+
+      const wTop = Math.hypot(p1.x - p0.x, p1.y - p0.y);
+      const wBottom = Math.hypot(p2.x - p3.x, p2.y - p3.y);
+      const targetW = Math.max(10, Math.round(Math.max(wTop, wBottom)));
+
+      const hLeft = Math.hypot(p3.x - p0.x, p3.y - p0.y);
+      const hRight = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      const targetH = Math.max(10, Math.round(Math.max(hLeft, hRight)));
+
+      const dx1 = p1.x - p2.x;
+      const dx2 = p3.x - p2.x;
+      const sumX = p0.x - p1.x + p2.x - p3.x;
+      const dy1 = p1.y - p2.y;
+      const dy2 = p3.y - p2.y;
+      const sumY = p0.y - p1.y + p2.y - p3.y;
+
+      let g = 0, h = 0;
+      let a = p1.x - p0.x, b = p3.x - p0.x, c = p0.x;
+      let d = p1.y - p0.y, e = p3.y - p0.y, f = p0.y;
+
+      const det = dx1 * dy2 - dy1 * dx2;
+      if (Math.abs(det) > 1e-7 && (Math.abs(sumX) > 1e-4 || Math.abs(sumY) > 1e-4)) {
+        g = (sumX * dy2 - sumY * dx2) / det;
+        h = (dx1 * sumY - dy1 * sumX) / det;
+        a = p1.x - p0.x + g * p1.x;
+        b = p3.x - p0.x + h * p3.x;
+        c = p0.x;
+        d = p1.y - p0.y + g * p1.y;
+        e = p3.y - p0.y + h * p3.y;
+        f = p0.y;
+      }
+
+      const srcCanvas = document.createElement('canvas');
+      srcCanvas.width = img.naturalWidth;
+      srcCanvas.height = img.naturalHeight;
+      const sCtx = srcCanvas.getContext('2d');
+      sCtx.drawImage(img, 0, 0);
+      const srcImgData = sCtx.getImageData(0, 0, srcCanvas.width, srcCanvas.height);
+      const srcData = srcImgData.data;
+      const sw = srcCanvas.width;
+      const sh = srcCanvas.height;
+
+      const dstCanvas = document.createElement('canvas');
+      dstCanvas.width = targetW;
+      dstCanvas.height = targetH;
+      const dCtx = dstCanvas.getContext('2d');
+      const dstImgData = dCtx.createImageData(targetW, targetH);
+      const dstData = dstImgData.data;
+
+      let dstIdx = 0;
+      for (let y = 0; y < targetH; y++) {
+        const v = y / targetH;
+        for (let x = 0; x < targetW; x++) {
+          const u = x / targetW;
+          const denom = g * u + h * v + 1.0;
+          const sx = (a * u + b * v + c) / denom;
+          const sy = (d * u + e * v + f) / denom;
+
+          if (sx >= 0 && sx < sw - 1 && sy >= 0 && sy < sh - 1) {
+            const x0 = Math.floor(sx), x1 = x0 + 1;
+            const y0 = Math.floor(sy), y1 = y0 + 1;
+            const fx = sx - x0, fy = sy - y0;
+            const w00 = (1 - fx) * (1 - fy);
+            const w10 = fx * (1 - fy);
+            const w01 = (1 - fx) * fy;
+            const w11 = fx * fy;
+
+            const i00 = (y0 * sw + x0) * 4;
+            const i10 = (y0 * sw + x1) * 4;
+            const i01 = (y1 * sw + x0) * 4;
+            const i11 = (y1 * sw + x1) * 4;
+
+            dstData[dstIdx]     = w00 * srcData[i00]     + w10 * srcData[i10]     + w01 * srcData[i01]     + w11 * srcData[i11];
+            dstData[dstIdx + 1] = w00 * srcData[i00 + 1] + w10 * srcData[i10 + 1] + w01 * srcData[i01 + 1] + w11 * srcData[i11 + 1];
+            dstData[dstIdx + 2] = w00 * srcData[i00 + 2] + w10 * srcData[i10 + 2] + w01 * srcData[i01 + 2] + w11 * srcData[i11 + 2];
+            dstData[dstIdx + 3] = 255;
+          } else {
+            dstData[dstIdx + 3] = 0;
+          }
+          dstIdx += 4;
+        }
+      }
+
+      dCtx.putImageData(dstImgData, 0, 0);
+      return dstCanvas;
+    }
+
+    function applyDocumentFilters(canvas, preset, adjustments) {
+      const w = canvas.width;
+      const h = canvas.height;
+      const ctx = canvas.getContext('2d');
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+      const len = data.length;
+
+      const br = adjustments.brightness;
+      const ct = adjustments.contrast;
+      const contrastFactor = (259 * (ct + 255)) / (255 * (259 - ct));
+      const whiten = adjustments.whiten / 100;
+      const sharpness = adjustments.sharpness / 100;
+      const bwBias = adjustments.bwBias;
+
+      if (preset === 'original') {
+        if (br !== 0 || ct !== 0) {
+          for (let i = 0; i < len; i += 4) {
+            data[i]     = Math.min(255, Math.max(0, contrastFactor * (data[i] - 128) + 128 + br));
+            data[i + 1] = Math.min(255, Math.max(0, contrastFactor * (data[i + 1] - 128) + 128 + br));
+            data[i + 2] = Math.min(255, Math.max(0, contrastFactor * (data[i + 2] - 128) + 128 + br));
+          }
+          ctx.putImageData(imgData, 0, 0);
+        }
+        return canvas;
+      }
+
+      const gray = new Float32Array(w * h);
+      for (let i = 0; i < len; i += 4) {
+        gray[i / 4] = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+      }
+
+      const integral = new Float64Array((w + 1) * (h + 1));
+      for (let y = 0; y < h; y++) {
+        let sumRow = 0;
+        for (let x = 0; x < w; x++) {
+          sumRow += gray[y * w + x];
+          integral[(y + 1) * (w + 1) + (x + 1)] = integral[y * (w + 1) + (x + 1)] + sumRow;
+        }
+      }
+
+      function getLocalMean(x, y, radius) {
+        const x1 = Math.max(0, x - radius);
+        const y1 = Math.max(0, y - radius);
+        const x2 = Math.min(w - 1, x + radius);
+        const y2 = Math.min(h - 1, y + radius);
+        const count = (x2 - x1 + 1) * (y2 - y1 + 1);
+
+        const sum = integral[(y2 + 1) * (w + 1) + (x2 + 1)]
+                  - integral[y1 * (w + 1) + (x2 + 1)]
+                  - integral[(y2 + 1) * (w + 1) + x1]
+                  + integral[y1 * (w + 1) + x1];
+        return sum / count;
+      }
+
+      const windowRadius = Math.max(12, Math.round(w / 35));
+
+      if (preset === 'bw_document' || preset === 'ink_saver') {
+        const biasMultiplier = preset === 'ink_saver' ? (0.82 - bwBias * 0.003) : (1.0 - (0.12 + bwBias * 0.003));
+
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const idx = y * w + x;
+            const pIdx = idx * 4;
+            const mean = getLocalMean(x, y, windowRadius);
+            const threshold = mean * biasMultiplier;
+            const val = gray[idx];
+
+            let outVal = 255;
+            if (val < threshold) {
+              const diff = threshold - val;
+              outVal = Math.max(0, 255 - diff * 14);
+            }
+
+            outVal = Math.min(255, Math.max(0, contrastFactor * (outVal - 128) + 128 + br));
+
+            data[pIdx] = outVal;
+            data[pIdx + 1] = outVal;
+            data[pIdx + 2] = outVal;
+          }
+        }
+      } else if (preset === 'red_seal') {
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const idx = y * w + x;
+            const pIdx = idx * 4;
+            const r = data[pIdx];
+            const g = data[pIdx + 1];
+            const b = data[pIdx + 2];
+            const isRedStamp = (r > 120) && (r > g * 1.35) && (r > b * 1.35);
+
+            if (isRedStamp) {
+              data[pIdx]     = Math.min(255, r * 1.2 + 20);
+              data[pIdx + 1] = Math.max(0, g * 0.7);
+              data[pIdx + 2] = Math.max(0, b * 0.7);
+            } else {
+              const mean = getLocalMean(x, y, windowRadius);
+              const threshold = mean * 0.88;
+              let outVal = gray[idx] < threshold ? 0 : 255;
+              data[pIdx] = outVal;
+              data[pIdx + 1] = outVal;
+              data[pIdx + 2] = outVal;
+            }
+          }
+        }
+      } else if (preset === 'magic_color') {
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const idx = y * w + x;
+            const pIdx = idx * 4;
+            const mean = getLocalMean(x, y, windowRadius * 2);
+            const bgNorm = Math.max(30, mean);
+
+            let r = (data[pIdx] / bgNorm) * 255 * (1 + whiten * 0.2);
+            let g = (data[pIdx + 1] / bgNorm) * 255 * (1 + whiten * 0.2);
+            let b = (data[pIdx + 2] / bgNorm) * 255 * (1 + whiten * 0.2);
+
+            r = contrastFactor * (r - 128) + 128 + br;
+            g = contrastFactor * (g - 128) + 128 + br;
+            b = contrastFactor * (b - 128) + 128 + br;
+
+            const grayVal = r * 0.299 + g * 0.587 + b * 0.114;
+            r = grayVal + (r - grayVal) * 1.35;
+            g = grayVal + (g - grayVal) * 1.35;
+            b = grayVal + (b - grayVal) * 1.35;
+
+            data[pIdx]     = Math.min(255, Math.max(0, r));
+            data[pIdx + 1] = Math.min(255, Math.max(0, g));
+            data[pIdx + 2] = Math.min(255, Math.max(0, b));
+          }
+        }
+      } else if (preset === 'grayscale') {
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const idx = y * w + x;
+            const pIdx = idx * 4;
+            const mean = getLocalMean(x, y, windowRadius * 2);
+            const bgNorm = Math.max(30, mean);
+            
+            let gVal = (gray[idx] / bgNorm) * 240 * (1 + whiten * 0.15);
+            gVal = contrastFactor * (gVal - 128) + 128 + br;
+            gVal = Math.min(255, Math.max(0, gVal));
+
+            data[pIdx]     = gVal;
+            data[pIdx + 1] = gVal;
+            data[pIdx + 2] = gVal;
+          }
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      if (sharpness > 0) {
+        applySharpness(canvas, sharpness);
+      }
+
+      return canvas;
+    }
+
+    function applySharpness(canvas, amount) {
+      const w = canvas.width;
+      const h = canvas.height;
+      const ctx = canvas.getContext('2d');
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const data = imgData.data;
+      const copy = new Uint8ClampedArray(data);
+
+      const weight = amount * 0.7;
+      const centerWeight = 1 + 4 * weight;
+
+      for (let y = 1; y < h - 1; y++) {
+        for (let x = 1; x < w - 1; x++) {
+          const idx = (y * w + x) * 4;
+          const up = ((y - 1) * w + x) * 4;
+          const down = ((y + 1) * w + x) * 4;
+          const left = (y * w + (x - 1)) * 4;
+          const right = (y * w + (x + 1)) * 4;
+
+          for (let c = 0; c < 3; c++) {
+            const val = copy[idx + c] * centerWeight - weight * (copy[up + c] + copy[down + c] + copy[left + c] + copy[right + c]);
+            data[idx + c] = Math.min(255, Math.max(0, val));
+          }
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    /* =========================================================================
+       6. RENDERING WORKSPACE & INTERACTIVE SPLIT COMPARISON
+       ========================================================================= */
+    function renderCurrentPage() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+
+      if (state.currentTab === 'crop') {
+        renderCropMode(page);
+      } else {
+        renderFilterMode(page);
+      }
+    }
+
+    function renderCropMode(page) {
+      const img = page.originalImg;
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
+
+      mainCanvas.width = w;
+      mainCanvas.height = h;
+
+      ctx.drawImage(img, 0, 0);
+
+      const pts = page.corners;
+      ctx.save();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      ctx.lineTo(pts[1].x, pts[1].y);
+      ctx.lineTo(pts[2].x, pts[2].y);
+      ctx.lineTo(pts[3].x, pts[3].y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      ctx.lineTo(pts[1].x, pts[1].y);
+      ctx.lineTo(pts[2].x, pts[2].y);
+      ctx.lineTo(pts[3].x, pts[3].y);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(img, 0, 0);
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.lineWidth = Math.max(1, Math.round(w / 800));
+      ctx.setLineDash([6, 6]);
+
+      for (let t = 0.33; t <= 0.67; t += 0.33) {
+        const lx1 = pts[0].x + (pts[3].x - pts[0].x) * t;
+        const ly1 = pts[0].y + (pts[3].y - pts[0].y) * t;
+        const lx2 = pts[1].x + (pts[2].x - pts[1].x) * t;
+        const ly2 = pts[1].y + (pts[2].y - pts[1].y) * t;
+        ctx.beginPath();
+        ctx.moveTo(lx1, ly1);
+        ctx.lineTo(lx2, ly2);
+        ctx.stroke();
+
+        const vx1 = pts[0].x + (pts[1].x - pts[0].x) * t;
+        const vy1 = pts[0].y + (pts[1].y - pts[0].y) * t;
+        const vx2 = pts[3].x + (pts[2].x - pts[3].x) * t;
+        const vy2 = pts[3].y + (pts[2].y - pts[3].y) * t;
+        ctx.beginPath();
+        ctx.moveTo(vx1, vy1);
+        ctx.lineTo(vx2, vy2);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      ctx.strokeStyle = '#4f46e5';
+      ctx.lineWidth = Math.max(3, Math.round(w / 400));
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      ctx.lineTo(pts[1].x, pts[1].y);
+      ctx.lineTo(pts[2].x, pts[2].y);
+      ctx.lineTo(pts[3].x, pts[3].y);
+      ctx.closePath();
+      ctx.stroke();
+
+      const edgeMids = [
+        { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 },
+        { x: (pts[1].x + pts[2].x) / 2, y: (pts[1].y + pts[2].y) / 2 },
+        { x: (pts[2].x + pts[3].x) / 2, y: (pts[2].y + pts[3].y) / 2 },
+        { x: (pts[3].x + pts[0].x) / 2, y: (pts[3].y + pts[0].y) / 2 }
+      ];
+
+      edgeMids.forEach((mid) => {
+        const radius = Math.max(6, Math.round(w / 200));
+        ctx.fillStyle = '#ffffff';
+        ctx.strokeStyle = '#4f46e5';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(mid.x, mid.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      });
+
+      pts.forEach((p, idx) => {
+        const radius = Math.max(12, Math.round(w / 100));
+        const isHover = state.hoverHandleIndex === idx || state.activeHandleIndex === idx;
+
+        ctx.fillStyle = isHover ? 'rgba(79, 70, 229, 0.45)' : 'rgba(255, 255, 255, 0.35)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, radius + 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#4f46e5';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      document.getElementById('splitDivider').classList.add('hidden');
+    }
+
+    function renderFilterMode(page) {
+      const warpedCanvas = computePerspectiveWarp(page.originalImg, page.corners);
+      const enhancedCanvas = document.createElement('canvas');
+      enhancedCanvas.width = warpedCanvas.width;
+      enhancedCanvas.height = warpedCanvas.height;
+      const eCtx = enhancedCanvas.getContext('2d');
+      eCtx.drawImage(warpedCanvas, 0, 0);
+
+      applyDocumentFilters(enhancedCanvas, page.filterPreset, page.adjustments);
+      renderWatermarkAndSignatureOnCanvas(enhancedCanvas, page);
+
+      page.processedCanvas = enhancedCanvas;
+
+      mainCanvas.width = enhancedCanvas.width;
+      mainCanvas.height = enhancedCanvas.height;
+
+      if (state.isSplitCompare) {
+        const splitX = Math.round(enhancedCanvas.width * state.splitPos);
+        ctx.drawImage(warpedCanvas, 0, 0, splitX, enhancedCanvas.height, 0, 0, splitX, enhancedCanvas.height);
+        ctx.drawImage(enhancedCanvas, splitX, 0, enhancedCanvas.width - splitX, enhancedCanvas.height, splitX, 0, enhancedCanvas.width - splitX, enhancedCanvas.height);
+
+        const divider = document.getElementById('splitDivider');
+        divider.classList.remove('hidden');
+        divider.style.left = `${state.splitPos * 100}%`;
+      } else {
+        ctx.drawImage(enhancedCanvas, 0, 0);
+        document.getElementById('splitDivider').classList.add('hidden');
+      }
+
+      renderPagesList();
+    }
+
+    function renderWatermarkAndSignatureOnCanvas(canvas, page) {
+      const c = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      if (page.watermark) {
+        c.save();
+        c.fillStyle = page.watermark.color || 'rgba(239, 68, 68, 0.28)';
+        c.font = `bold ${Math.round(w / 28)}px sans-serif`;
+        c.textAlign = 'center';
+        
+        if (page.watermark.layout === 'repeat') {
+          c.rotate(-0.35);
+          for (let y = -h; y < h * 2; y += 180) {
+            for (let x = -w; x < w * 2; x += 400) {
+              c.fillText(page.watermark.text, x, y);
+            }
+          }
+        } else {
+          c.translate(w / 2, h / 2);
+          c.rotate(-0.35);
+          c.fillText(page.watermark.text, 0, 0);
+        }
+        c.restore();
+      }
+
+      if (page.signature) {
+        c.save();
+        const sigW = Math.round(w * 0.28);
+        const sigH = Math.round(sigW * (page.signature.height / page.signature.width));
+        c.drawImage(page.signature, w - sigW - 30, h - sigH - 30, sigW, sigH);
+        c.restore();
+      }
+    }
+
+    /* =========================================================================
+       7. CANVAS INTERACTIONS, DRAGGING & MAGNIFIER LOUPE (TOUCH OPTIMIZED)
+       ========================================================================= */
+    function setupCanvasInteractions() {
+      const container = document.getElementById('viewportContainer');
+
+      function getCanvasCoords(e) {
+        const rect = mainCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        const scaleX = mainCanvas.width / rect.width;
+        const scaleY = mainCanvas.height / rect.height;
+
+        return {
+          imgX: (clientX - rect.left) * scaleX,
+          imgY: (clientY - rect.top) * scaleY,
+          screenX: clientX,
+          screenY: clientY
+        };
+      }
+
+      function findHitHandle(imgX, imgY) {
+        const page = state.pages[state.currentPageIndex];
+        if (!page || state.currentTab !== 'crop') return -1;
+
+        // Enlarged hit area for mobile touch devices
+        const threshold = Math.max(38, mainCanvas.width / 32);
+
+        for (let i = 0; i < 4; i++) {
+          const p = page.corners[i];
+          if (Math.hypot(p.x - imgX, p.y - imgY) < threshold) {
+            return i;
+          }
+        }
+
+        const pts = page.corners;
+        const edgeMids = [
+          { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 },
+          { x: (pts[1].x + pts[2].x) / 2, y: (pts[1].y + pts[2].y) / 2 },
+          { x: (pts[2].x + pts[3].x) / 2, y: (pts[2].y + pts[3].y) / 2 },
+          { x: (pts[3].x + pts[0].x) / 2, y: (pts[3].y + pts[0].y) / 2 }
+        ];
+
+        for (let i = 0; i < 4; i++) {
+          const m = edgeMids[i];
+          if (Math.hypot(m.x - imgX, m.y - imgY) < threshold * 0.85) {
+            return i + 4;
+          }
+        }
+
+        return -1;
+      }
+
+      function onPointerDown(e) {
+        if (state.currentPageIndex === -1 || state.isDraggingSplit) return;
+        const { imgX, imgY, screenX, screenY } = getCanvasCoords(e);
+
+        if (state.currentTab === 'crop') {
+          const hit = findHitHandle(imgX, imgY);
+          if (hit !== -1) {
+            state.activeHandleIndex = hit;
+            state.isDraggingHandle = true;
+            state.dragStartImgX = imgX;
+            state.dragStartImgY = imgY;
+            showMagnifier(screenX, screenY, imgX, imgY);
+            return;
+          }
+        }
+
+        state.isPanning = true;
+        state.startPanX = screenX - state.panX;
+        state.startPanY = screenY - state.panY;
+      }
+
+      function onPointerMove(e) {
+        if (state.currentPageIndex === -1) return;
+        const { imgX, imgY, screenX, screenY } = getCanvasCoords(e);
+        const page = state.pages[state.currentPageIndex];
+
+        if (state.isDraggingHandle && state.activeHandleIndex !== -1) {
+          const idx = state.activeHandleIndex;
+          const w = page.originalImg.naturalWidth;
+          const h = page.originalImg.naturalHeight;
+
+          const clampedX = Math.max(0, Math.min(w, imgX));
+          const clampedY = Math.max(0, Math.min(h, imgY));
+
+          if (idx < 4) {
+            page.corners[idx].x = clampedX;
+            page.corners[idx].y = clampedY;
+          } else {
+            const edgeIdx = idx - 4;
+            const pA = edgeIdx === 0 ? 0 : edgeIdx === 1 ? 1 : edgeIdx === 2 ? 3 : 0;
+            const pB = edgeIdx === 0 ? 1 : edgeIdx === 1 ? 2 : edgeIdx === 2 ? 2 : 3;
+
+            const deltaX = imgX - state.dragStartImgX;
+            const deltaY = imgY - state.dragStartImgY;
+            state.dragStartImgX = imgX;
+            state.dragStartImgY = imgY;
+
+            page.corners[pA].x = Math.max(0, Math.min(w, page.corners[pA].x + deltaX));
+            page.corners[pA].y = Math.max(0, Math.min(h, page.corners[pA].y + deltaY));
+            page.corners[pB].x = Math.max(0, Math.min(w, page.corners[pB].x + deltaX));
+            page.corners[pB].y = Math.max(0, Math.min(h, page.corners[pB].y + deltaY));
+          }
+
+          renderCurrentPage();
+          updateMagnifier(screenX, screenY, clampedX, clampedY);
+          return;
+        }
+
+        if (state.isPanning) {
+          state.panX = screenX - state.startPanX;
+          state.panY = screenY - state.startPanY;
+          applyCanvasTransform();
+          return;
+        }
+
+        if (state.currentTab === 'crop') {
+          const hit = findHitHandle(imgX, imgY);
+          if (hit !== state.hoverHandleIndex) {
+            state.hoverHandleIndex = hit;
+            mainCanvas.style.cursor = hit !== -1 ? 'pointer' : 'default';
+            renderCurrentPage();
+          }
+        }
+      }
+
+      function onPointerUp() {
+        state.isDraggingHandle = false;
+        state.activeHandleIndex = -1;
+        state.isPanning = false;
+        hideMagnifier();
+      }
+
+      container.addEventListener('mousedown', onPointerDown);
+      window.addEventListener('mousemove', onPointerMove);
+      window.addEventListener('mouseup', onPointerUp);
+
+      container.addEventListener('touchstart', onPointerDown, { passive: false });
+      window.addEventListener('touchmove', onPointerMove, { passive: false });
+      window.addEventListener('touchend', onPointerUp);
+
+      container.addEventListener('wheel', (e) => {
+        if (state.currentPageIndex === -1) return;
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 0.1 : -0.1;
+        zoomCanvas(delta);
+      }, { passive: false });
+    }
+
+    function showMagnifier(screenX, screenY, imgX, imgY) {
+      magnifier.style.display = 'block';
+      updateMagnifier(screenX, screenY, imgX, imgY);
+    }
+
+    function updateMagnifier(screenX, screenY, imgX, imgY) {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        magnifier.style.left = `${Math.max(10, Math.min(window.innerWidth - 150, screenX - 70))}px`;
+        magnifier.style.top = `${Math.max(60, screenY - 180)}px`;
+      } else {
+        magnifier.style.left = `${screenX - 70}px`;
+        magnifier.style.top = `${screenY - 160}px`;
+      }
+
+      const zoom = 3.5;
+      const mw = magnifierCanvas.width;
+      const mh = magnifierCanvas.height;
+
+      magCtx.clearRect(0, 0, mw, mh);
+      magCtx.save();
+      magCtx.translate(mw / 2, mh / 2);
+      magCtx.scale(zoom, zoom);
+      magCtx.translate(-imgX, -imgY);
+      magCtx.drawImage(page.originalImg, 0, 0);
+      magCtx.restore();
+
+      document.getElementById('magnifierCoord').innerText = `X: ${Math.round(imgX)}, Y: ${Math.round(imgY)}`;
+    }
+
+    function hideMagnifier() {
+      magnifier.style.display = 'none';
+    }
+
+    function applyCanvasTransform() {
+      canvasWrapper.style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${state.zoom})`;
+      document.getElementById('zoomLevelText').innerText = `${Math.round(state.zoom * 100)}%`;
+    }
+
+    function zoomCanvas(delta) {
+      state.zoom = Math.max(0.2, Math.min(4.0, state.zoom + delta));
+      applyCanvasTransform();
+    }
+
+    function fitCanvasToView() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+
+      const container = document.getElementById('viewportContainer');
+      const isMobile = window.innerWidth < 768;
+      const cw = container.clientWidth - (isMobile ? 16 : 40);
+      const ch = container.clientHeight - (isMobile ? 16 : 40);
+
+      const imgW = state.currentTab === 'crop' ? page.originalImg.naturalWidth : (page.processedCanvas ? page.processedCanvas.width : page.originalImg.naturalWidth);
+      const imgH = state.currentTab === 'crop' ? page.originalImg.naturalHeight : (page.processedCanvas ? page.processedCanvas.height : page.originalImg.naturalHeight);
+
+      const scale = Math.min(cw / imgW, ch / imgH, 1.0);
+      state.zoom = scale;
+      state.panX = 0;
+      state.panY = 0;
+      applyCanvasTransform();
+    }
+
+    function setupWindowResize() {
+      window.addEventListener('resize', () => {
+        if (state.currentPageIndex !== -1) {
+          fitCanvasToView();
+        }
+      });
+    }
+
+    function setupSplitDividerInteractions() {
+      const divider = document.getElementById('splitDivider');
+
+      function onStart(e) {
+        e.stopPropagation();
+        state.isDraggingSplit = true;
+      }
+
+      function onMove(e) {
+        if (!state.isDraggingSplit || !state.isSplitCompare) return;
+        const rect = mainCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const pos = Math.max(0.05, Math.min(0.95, (clientX - rect.left) / rect.width));
+        state.splitPos = pos;
+        renderCurrentPage();
+      }
+
+      function onEnd() {
+        state.isDraggingSplit = false;
+      }
+
+      divider.addEventListener('mousedown', onStart);
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onEnd);
+
+      divider.addEventListener('touchstart', onStart, { passive: false });
+      window.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('touchend', onEnd);
+    }
+
+    function toggleSplitCompareMode() {
+      state.isSplitCompare = !state.isSplitCompare;
+      const btn = document.getElementById('splitCompareBtn');
+      const text = document.getElementById('splitCompareBtnText');
+      if (state.isSplitCompare) {
+        btn.classList.add('bg-indigo-600', 'text-white');
+        text.innerText = '退出对比';
+        showToast('已开启前后分屏对比，可拖动中间白线查看细节');
+      } else {
+        btn.classList.remove('bg-indigo-600', 'text-white');
+        text.innerText = '分屏对比';
+      }
+      renderCurrentPage();
+    }
+
+    /* =========================================================================
+       8. TAB & FILTER PRESET CONTROLS
+       ========================================================================= */
+    function switchMainTab(tab) {
+      if (state.currentTab === tab) return;
+
+      const tabCrop = document.getElementById('tabCrop');
+      const tabFilter = document.getElementById('tabFilter');
+      const cropTools = document.getElementById('cropTools');
+      const filterTools = document.getElementById('filterTools');
+      const canvasTipText = document.getElementById('canvasTipText');
+      const mobileNavCrop = document.getElementById('mobileNavCrop');
+      const mobileNavFilter = document.getElementById('mobileNavFilter');
+
+      if (tab === 'filter') {
+        showProgress('正在智能生成文档...', '执行高精度透视校正与局部去阴影滤波');
+        updateProgress(25, '1. 计算高精度四角投影变换...');
+
+        setTimeout(() => {
+          updateProgress(65, '2. 局部自适应去阴影与白底增白...');
+          
+          setTimeout(() => {
+            updateProgress(90, '3. 优化文字边缘锐度与对比度...');
+
+            requestAnimationFrame(() => {
+              state.currentTab = 'filter';
+              tabFilter.className = 'flex items-center space-x-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300';
+              tabCrop.className = 'flex items-center space-x-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100';
+              cropTools.style.display = 'none';
+              filterTools.style.display = 'flex';
+              canvasTipText.innerText = '已完成透视压平！右侧选择黑白/彩色增强模式或滑动微调参数';
+
+              mobileNavCrop.className = 'flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 hover:text-indigo-600';
+              mobileNavFilter.className = 'flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400 font-semibold';
+
+              fitCanvasToView();
+              renderCurrentPage();
+              triggerLaserAnimation();
+
+              updateProgress(100, '处理完成！');
+              setTimeout(hideProgress, 200);
+            });
+          }, 80);
+        }, 80);
+
+      } else {
+        state.currentTab = 'crop';
+        tabCrop.className = 'flex items-center space-x-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300';
+        tabFilter.className = 'flex items-center space-x-2 px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100';
+        cropTools.style.display = 'flex';
+        filterTools.style.display = 'none';
+        canvasTipText.innerText = '拖动 4 个彩色圆点或 4 条边微调文档边角';
+
+        mobileNavCrop.className = 'flex flex-col items-center justify-center text-indigo-600 dark:text-indigo-400 font-semibold';
+        mobileNavFilter.className = 'flex flex-col items-center justify-center text-slate-600 dark:text-slate-400 hover:text-indigo-600';
+
+        fitCanvasToView();
+        renderCurrentPage();
+      }
+    }
+
+    function setFilterPreset(preset) {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+
+      page.filterPreset = preset;
+      setFilterPresetUI(preset);
+
+      if (state.currentTab === 'crop') {
+        switchMainTab('filter');
+      } else {
+        triggerLaserAnimation();
+        renderCurrentPage();
+      }
+    }
+
+    function setFilterPresetUI(preset) {
+      const presets = ['magic_color', 'bw_document', 'red_seal', 'grayscale', 'ink_saver', 'original'];
+      presets.forEach(p => {
+        const btn = document.getElementById(`btnPreset_${p}`);
+        if (!btn) return;
+        if (p === preset) {
+          btn.className = 'preset-btn relative p-2 rounded-xl border-2 border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 text-left transition flex flex-col justify-between';
+        } else {
+          btn.className = 'preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between';
+        }
+      });
+
+      const bwContainer = document.getElementById('bwBiasContainer');
+      if (preset === 'bw_document' || preset === 'ink_saver') {
+        bwContainer.style.display = 'block';
+      } else {
+        bwContainer.style.display = 'none';
+      }
+    }
+
+    function handleSliderChange() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+
+      page.adjustments.brightness = parseInt(document.getElementById('sliderBrightness').value, 10);
+      page.adjustments.contrast = parseInt(document.getElementById('sliderContrast').value, 10);
+      page.adjustments.whiten = parseInt(document.getElementById('sliderWhiten').value, 10);
+      page.adjustments.sharpness = parseInt(document.getElementById('sliderSharpness').value, 10);
+      page.adjustments.bwBias = parseInt(document.getElementById('sliderBwBias').value, 10);
+
+      document.getElementById('valBrightness').innerText = page.adjustments.brightness;
+      document.getElementById('valContrast').innerText = page.adjustments.contrast;
+      document.getElementById('valWhiten').innerText = page.adjustments.whiten;
+      document.getElementById('valSharpness').innerText = page.adjustments.sharpness;
+      document.getElementById('valBwBias').innerText = page.adjustments.bwBias;
+
+      if (state.currentTab === 'crop') {
+        switchMainTab('filter');
+      } else {
+        if (state.filterDebounceTimer) clearTimeout(state.filterDebounceTimer);
+        state.filterDebounceTimer = setTimeout(() => {
+          renderCurrentPage();
+        }, 16);
+      }
+    }
+
+    function setSlidersUI(adj) {
+      document.getElementById('sliderBrightness').value = adj.brightness;
+      document.getElementById('sliderContrast').value = adj.contrast;
+      document.getElementById('sliderWhiten').value = adj.whiten;
+      document.getElementById('sliderSharpness').value = adj.sharpness;
+      document.getElementById('sliderBwBias').value = adj.bwBias;
+
+      document.getElementById('valBrightness').innerText = adj.brightness;
+      document.getElementById('valContrast').innerText = adj.contrast;
+      document.getElementById('valWhiten').innerText = adj.whiten;
+      document.getElementById('valSharpness').innerText = adj.sharpness;
+      document.getElementById('valBwBias').innerText = adj.bwBias;
+    }
+
+    function resetCurrentAdjustments() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+      page.adjustments = {
+        brightness: 0,
+        contrast: 0,
+        whiten: 50,
+        sharpness: 30,
+        bwBias: 0
+      };
+      page.watermark = null;
+      page.signature = null;
+      setSlidersUI(page.adjustments);
+      renderCurrentPage();
+      showToast('已重置细节微调参数与水印');
+    }
+
+    function applyCurrentFilterToAll() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page || state.pages.length <= 1) return;
+
+      showProgress('正在批量应用调色...', `将当前调色与滤镜应用至全部 ${state.pages.length} 页`);
+      
+      setTimeout(() => {
+        state.pages.forEach((p, idx) => {
+          p.filterPreset = page.filterPreset;
+          p.adjustments = { ...page.adjustments };
+          p.watermark = page.watermark ? { ...page.watermark } : null;
+          p.signature = page.signature;
+          const warped = computePerspectiveWarp(p.originalImg, p.corners);
+          applyDocumentFilters(warped, p.filterPreset, p.adjustments);
+          renderWatermarkAndSignatureOnCanvas(warped, p);
+          p.processedCanvas = warped;
+          updateProgress(((idx + 1) / state.pages.length) * 100, `处理第 ${idx + 1} 页完成`);
+        });
+
+        setTimeout(() => {
+          hideProgress();
+          renderPagesList();
+          showToast(`已将当前调色应用至全部 ${state.pages.length} 页`);
+        }, 150);
+      }, 50);
+    }
+
+    /* =========================================================================
+       9. WATERMARK & ELECTRONIC SIGNATURE
+       ========================================================================= */
+    function openWatermarkModal() {
+      document.getElementById('watermarkModal').classList.remove('hidden');
+    }
+    function closeWatermarkModal() {
+      document.getElementById('watermarkModal').classList.add('hidden');
+    }
+    function applyWatermark() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+
+      const text = document.getElementById('watermarkInput').value.trim();
+      const color = document.getElementById('watermarkColor').value;
+      const layout = document.getElementById('watermarkLayout').value;
+
+      if (!text) {
+        showToast('请输入水印文字', 'error');
+        return;
+      }
+
+      page.watermark = { text, color, layout };
+      closeWatermarkModal();
+      renderCurrentPage();
+      showToast('已添加防盗水印');
+    }
+
+    function openSignatureModal() {
+      document.getElementById('signatureModal').classList.remove('hidden');
+      clearSigCanvas();
+    }
+    function closeSignatureModal() {
+      document.getElementById('signatureModal').classList.add('hidden');
+    }
+    function setupSignaturePad() {
+      sigCtx.lineWidth = 3;
+      sigCtx.lineCap = 'round';
+      sigCtx.lineJoin = 'round';
+      sigCtx.strokeStyle = sigPenColor;
+
+      function getPos(e) {
+        const rect = sigCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: (clientX - rect.left) * (sigCanvas.width / rect.width),
+          y: (clientY - rect.top) * (sigCanvas.height / rect.height)
+        };
+      }
+
+      sigCanvas.addEventListener('mousedown', (e) => {
+        isDrawingSig = true;
+        const p = getPos(e);
+        sigCtx.beginPath();
+        sigCtx.moveTo(p.x, p.y);
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!isDrawingSig) return;
+        const p = getPos(e);
+        sigCtx.lineTo(p.x, p.y);
+        sigCtx.stroke();
+      });
+      window.addEventListener('mouseup', () => { isDrawingSig = false; });
+
+      sigCanvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        isDrawingSig = true;
+        const p = getPos(e);
+        sigCtx.beginPath();
+        sigCtx.moveTo(p.x, p.y);
+      }, { passive: false });
+      sigCanvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (!isDrawingSig) return;
+        const p = getPos(e);
+        sigCtx.lineTo(p.x, p.y);
+        sigCtx.stroke();
+      }, { passive: false });
+      sigCanvas.addEventListener('touchend', () => { isDrawingSig = false; });
+    }
+    function setSigColor(color) {
+      sigPenColor = color;
+      sigCtx.strokeStyle = color;
+    }
+    function clearSigCanvas() {
+      sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+    }
+    function applySignature() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+
+      const sigImg = new Image();
+      sigImg.onload = () => {
+        page.signature = sigImg;
+        closeSignatureModal();
+        renderCurrentPage();
+        showToast('已添加手写签名到文档右下角');
+      };
+      sigImg.src = sigCanvas.toDataURL('image/png');
+    }
+
+    /* =========================================================================
+       10. EXPORT: PDF, IMAGE, CLIPBOARD & PRINT
+       ========================================================================= */
+    function toggleExportMenu() {
+      const menu = document.getElementById('exportMenu');
+      menu.classList.toggle('hidden');
+    }
+
+    window.addEventListener('click', (e) => {
+      const container = document.getElementById('exportDropdownContainer');
+      if (container && !container.contains(e.target)) {
+        document.getElementById('exportMenu').classList.add('hidden');
+      }
+    });
+
+    function getProcessedCanvasForPage(page) {
+      if (page.processedCanvas) return page.processedCanvas;
+      const warped = computePerspectiveWarp(page.originalImg, page.corners);
+      applyDocumentFilters(warped, page.filterPreset, page.adjustments);
+      renderWatermarkAndSignatureOnCanvas(warped, page);
+      page.processedCanvas = warped;
+      return warped;
+    }
+
+    function exportCurrentAsImage(format = 'png') {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) {
+        showToast('请先导入并选择页面', 'error');
+        return;
+      }
+      const canvas = getProcessedCanvasForPage(page);
+      const mime = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+      const link = document.createElement('a');
+      link.download = `DocScan_${Date.now()}_Page${state.currentPageIndex + 1}.${format}`;
+      link.href = canvas.toDataURL(mime, 0.95);
+      link.click();
+      showToast(`已成功下载 ${format.toUpperCase()} 文档图片`);
+      document.getElementById('exportMenu').classList.add('hidden');
+    }
+
+    async function copyImageToClipboard() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) {
+        showToast('请先导入并选择页面', 'error');
+        return;
+      }
+      const canvas = getProcessedCanvasForPage(page);
+      try {
+        canvas.toBlob(async (blob) => {
+          if (navigator.clipboard && navigator.clipboard.write) {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            showToast('已复制高清文档图片到剪贴板！可直接粘贴');
+          } else {
+            showToast('当前浏览器不支持直接写入剪贴板图片', 'error');
+          }
+        }, 'image/png');
+      } catch (err) {
+        showToast('复制失败: ' + err.message, 'error');
+      }
+      document.getElementById('exportMenu').classList.add('hidden');
+    }
+
+    function exportToPDF(exportAll = false) {
+      if (state.pages.length === 0) {
+        showToast('请先导入并处理图片', 'error');
+        return;
+      }
+
+      showProgress('正在生成 PDF 文档...', '排版高质量 A4 页面并优化图像压缩');
+      updateProgress(30, '正在处理页面渲染...');
+
+      setTimeout(() => {
+        try {
+          const { jsPDF } = window.jspdf;
+          const pagesToExport = exportAll ? state.pages : [state.pages[state.currentPageIndex]];
+          
+          let pdf = null;
+
+          pagesToExport.forEach((p, idx) => {
+            const canvas = getProcessedCanvasForPage(p);
+            const imgData = canvas.toDataURL('image/jpeg', 0.92);
+            
+            const isLandscape = canvas.width > canvas.height;
+            const orientation = isLandscape ? 'landscape' : 'portrait';
+            
+            if (idx === 0) {
+              pdf = new jsPDF({
+                orientation: orientation,
+                unit: 'mm',
+                format: 'a4'
+              });
+            } else {
+              pdf.addPage('a4', orientation);
+            }
+
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+
+            const imgRatio = canvas.width / canvas.height;
+            const pageRatio = pageWidth / pageHeight;
+
+            let renderW = pageWidth;
+            let renderH = pageHeight;
+            let posX = 0;
+            let posY = 0;
+
+            if (imgRatio > pageRatio) {
+              renderH = pageWidth / imgRatio;
+              posY = (pageHeight - renderH) / 2;
+            } else {
+              renderW = pageHeight * imgRatio;
+              posX = (pageWidth - renderW) / 2;
+            }
+
+            pdf.addImage(imgData, 'JPEG', posX, posY, renderW, renderH, undefined, 'FAST');
+            updateProgress(30 + ((idx + 1) / pagesToExport.length) * 60, `已排版第 ${idx + 1}/${pagesToExport.length} 页`);
+          });
+
+          const filename = exportAll ? `DocScan_AllPages_${Date.now()}.pdf` : `DocScan_Page${state.currentPageIndex + 1}_${Date.now()}.pdf`;
+          pdf.save(filename);
+          updateProgress(100, '导出成功！');
+          setTimeout(hideProgress, 200);
+          showToast(`已成功导出 ${exportAll ? '多页' : '单页'} PDF 文档！`);
+        } catch (err) {
+          console.error(err);
+          hideProgress();
+          showToast('生成 PDF 失败: ' + err.message, 'error');
+        }
+        document.getElementById('exportMenu').classList.add('hidden');
+      }, 100);
+    }
+
+    function printCurrentDocument() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) return;
+      const canvas = getProcessedCanvasForPage(page);
+      
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>打印文档 - DocScan</title>
+            <style>
+              @page { size: auto; margin: 0mm; }
+              body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; }
+              img { max-width: 100%; max-height: 100%; object-fit: contain; }
+            </style>
+          </head>
+          <body>
+            <img src="${canvas.toDataURL('image/png')}" onload="window.print();window.close();">
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      document.getElementById('exportMenu').classList.add('hidden');
+    }
+
+    /* =========================================================================
+       11. OCR TEXT EXTRACTION
+       ========================================================================= */
+    async function runOCR() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) {
+        showToast('请先选择页面', 'error');
+        return;
+      }
+
+      const btnOCR = document.getElementById('btnOCR');
+      const ocrStatus = document.getElementById('ocrStatus');
+      const ocrStatusText = document.getElementById('ocrStatusText');
+      const ocrResultBox = document.getElementById('ocrResultBox');
+      const ocrTextOutput = document.getElementById('ocrTextOutput');
+
+      btnOCR.disabled = true;
+      ocrStatus.classList.remove('hidden');
+      ocrResultBox.classList.add('hidden');
+
+      try {
+        const canvas = getProcessedCanvasForPage(page);
+        ocrStatusText.innerText = '正在初始化 OCR 引擎并识别文字...';
+
+        const worker = await Tesseract.createWorker('chi_sim+eng', 1, {
+          logger: m => {
+            if (m.status === 'recognizing text') {
+              ocrStatusText.innerText = `正在识别文字: ${Math.round(m.progress * 100)}%`;
+            }
+          }
+        });
+
+        const ret = await worker.recognize(canvas);
+        await worker.terminate();
+
+        ocrTextOutput.value = ret.data.text.trim();
+        ocrStatus.classList.add('hidden');
+        ocrResultBox.classList.remove('hidden');
+        showToast('OCR 文字提取完成！');
+      } catch (err) {
+        console.error(err);
+        ocrStatusText.innerText = '识别遇到问题: ' + err.message;
+        showToast('OCR 识别失败，请检查网络是否能访问 OCR 资源', 'error');
+      } finally {
+        btnOCR.disabled = false;
+      }
+    }
+
+    function copyOCRText() {
+      const text = document.getElementById('ocrTextOutput').value;
+      if (!text) return;
+      navigator.clipboard.writeText(text);
+      showToast('已复制全部提取文字到剪贴板！');
+    }
+
+    /* =========================================================================
+       12. CAMERA CAPTURE MODAL
+       ========================================================================= */
+    async function openCameraModal() {
+      const modal = document.getElementById('cameraModal');
+      const video = document.getElementById('cameraVideo');
+      modal.classList.remove('hidden');
+
+      try {
+        state.cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }
+        });
+        video.srcObject = state.cameraStream;
+      } catch (err) {
+        showToast('无法启动摄像头: ' + err.message, 'error');
+        closeCameraModal();
+      }
+    }
+
+    function captureCameraPhoto() {
+      const video = document.getElementById('cameraVideo');
+      if (!video.videoWidth) return;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const vCtx = canvas.getContext('2d');
+      vCtx.drawImage(video, 0, 0);
+
+      const img = new Image();
+      img.onload = () => {
+        addNewPage(img);
+        renderPagesList();
+        selectPage(state.pages.length - 1);
+        closeCameraModal();
+        showToast('已成功拍照并导入文档');
+      };
+      img.src = canvas.toDataURL('image/jpeg', 0.95);
+    }
+
+    function closeCameraModal() {
+      const modal = document.getElementById('cameraModal');
+      modal.classList.add('hidden');
+      if (state.cameraStream) {
+        state.cameraStream.getTracks().forEach(track => track.stop());
+        state.cameraStream = null;
+      }
+    }
+
+    /* =========================================================================
+       13. TEST SAMPLE IMAGE GENERATOR
+       ========================================================================= */
+    function loadSampleImage() {
+      const sCanvas = document.createElement('canvas');
+      sCanvas.width = 1200;
+      sCanvas.height = 1600;
+      const sCtx = sCanvas.getContext('2d');
+
+      sCtx.fillStyle = '#292524';
+      sCtx.fillRect(0, 0, 1200, 1600);
+      for (let i = 0; i < 1200; i += 20) {
+        sCtx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+        sCtx.lineWidth = 1;
+        sCtx.beginPath();
+        sCtx.moveTo(i, 0);
+        sCtx.lineTo(i + 50, 1600);
+        sCtx.stroke();
+      }
+
+      sCtx.save();
+      sCtx.translate(600, 800);
+      sCtx.rotate(-0.06);
+
+      sCtx.shadowColor = 'rgba(0,0,0,0.6)';
+      sCtx.shadowBlur = 35;
+      sCtx.shadowOffsetX = 15;
+      sCtx.shadowOffsetY = 20;
+
+      sCtx.fillStyle = '#f8fafc';
+      sCtx.fillRect(-450, -650, 900, 1300);
+      sCtx.shadowColor = 'transparent';
+
+      const grad = sCtx.createLinearGradient(-450, -650, 450, 650);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0.15)');
+      sCtx.fillStyle = grad;
+      sCtx.fillRect(-450, -650, 900, 1300);
+
+      sCtx.fillStyle = '#1e293b';
+      sCtx.font = 'bold 36px sans-serif';
+      sCtx.fillText('商业服务结算单 / INVOICE', -380, -530);
+
+      sCtx.font = '20px sans-serif';
+      sCtx.fillStyle = '#64748b';
+      sCtx.fillText('单据编号: INV-20260827-089', -380, -470);
+      sCtx.fillText('开票日期: 2026年08月27日', -380, -430);
+
+      sCtx.strokeStyle = '#cbd5e1';
+      sCtx.lineWidth = 2;
+      sCtx.beginPath();
+      sCtx.moveTo(-380, -390);
+      sCtx.lineTo(380, -390);
+      sCtx.stroke();
+
+      const rows = [
+        ['项目名称', '数量', '单价', '总计'],
+        ['企业智能文档扫描系统开发', '1 套', '¥ 18,800', '¥ 18,800'],
+        ['透视矫正与高精度算法授权', '1 项', '¥ 8,500', '¥ 8,500'],
+        ['本地离线 OCR 引擎集成服务', '1 项', '¥ 6,200', '¥ 6,200'],
+        ['全平台响应式界面与微拟物设计', '1 项', '¥ 4,500', '¥ 4,500']
+      ];
+
+      rows.forEach((r, idx) => {
+        const y = -330 + idx * 70;
+        sCtx.font = idx === 0 ? 'bold 20px sans-serif' : '18px sans-serif';
+        sCtx.fillStyle = idx === 0 ? '#0f172a' : '#334155';
+        sCtx.fillText(r[0], -380, y);
+        sCtx.fillText(r[1], 20, y);
+        sCtx.fillText(r[2], 160, y);
+        sCtx.fillText(r[3], 280, y);
+
+        sCtx.strokeStyle = '#e2e8f0';
+        sCtx.beginPath();
+        sCtx.moveTo(-380, y + 25);
+        sCtx.lineTo(380, y + 25);
+        sCtx.stroke();
+      });
+
+      sCtx.font = 'bold 24px sans-serif';
+      sCtx.fillStyle = '#4f46e5';
+      sCtx.fillText('合计金额: ¥ 38,000.00', 100, 120);
+
+      // Red Official Seal Stamp
+      sCtx.save();
+      sCtx.translate(200, 320);
+      sCtx.rotate(0.2);
+      sCtx.strokeStyle = 'rgba(220, 38, 38, 0.85)';
+      sCtx.lineWidth = 4;
+      sCtx.beginPath();
+      sCtx.arc(0, 0, 85, 0, Math.PI * 2);
+      sCtx.stroke();
+      sCtx.font = 'bold 18px sans-serif';
+      sCtx.fillStyle = 'rgba(220, 38, 38, 0.85)';
+      sCtx.textAlign = 'center';
+      sCtx.fillText('★ 财务专用章 ★', 0, -20);
+      sCtx.fillText('DocScan 科技有限公司', 0, 25);
+      sCtx.restore();
+
+      sCtx.restore();
+
+      const img = new Image();
+      img.onload = () => {
+        addNewPage(img);
+        renderPagesList();
+        selectPage(state.pages.length - 1);
+        showToast('已载入测试样张！已自动识别倾斜纸张边距');
+      };
+      img.src = sCanvas.toDataURL('image/jpeg', 0.95);
+    }
+  </script>
+</body>
+</html>
