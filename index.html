@@ -11,8 +11,6 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- jsPDF for PDF Export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- Tesseract.js for optional OCR -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <script>
     tailwind.config = {
@@ -78,12 +76,10 @@
       -webkit-user-select: text;
     }
 
-    /* Prevent elastic scrolling on canvas area for touch devices */
     #viewportContainer {
       touch-action: none;
     }
 
-    /* Custom scrollbars */
     ::-webkit-scrollbar {
       width: 5px;
       height: 5px;
@@ -155,7 +151,6 @@
       z-index: 2;
     }
 
-    /* Range slider custom styling */
     input[type=range] {
       -webkit-appearance: none;
       background: transparent;
@@ -183,7 +178,6 @@
       transform: scale(1.25);
     }
 
-    /* Checkerboard background */
     .bg-checker {
       background-size: 20px 20px;
       background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
@@ -201,7 +195,6 @@
         linear-gradient(-45deg, transparent 75%, #1e293b 75%);
     }
 
-    /* Laser Scanning Animation Beam */
     .scanner-laser {
       position: absolute;
       left: 0;
@@ -213,7 +206,6 @@
       z-index: 25;
     }
 
-    /* Interactive Before/After Split Line */
     .split-divider {
       position: absolute;
       top: 0;
@@ -258,10 +250,10 @@
       </div>
       <div>
         <div class="flex items-center space-x-1.5 sm:space-x-2">
-          <h1 class="text-base sm:text-lg font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">DocScan</h1>
-          <span class="text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">Pro</span>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">DocScan Studio</h1>
+          <span class="text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">AI Pro</span>
         </div>
-        <p class="text-[10px] text-slate-400 hidden lg:block">智能切边 / 透视拉直 / 去阴影增白 / PDF导出</p>
+        <p class="text-[10px] text-slate-400 hidden lg:block">智能切边 / 透视拉直 / 增强滤波 / 多模态AI识图 / PDF导出</p>
       </div>
     </div>
 
@@ -279,6 +271,12 @@
 
     <!-- Right Header Actions -->
     <div class="flex items-center space-x-1.5 sm:space-x-2">
+      <!-- AI Settings Button -->
+      <button onclick="openAISettingsModal()" class="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 hover:from-purple-500/20 hover:to-indigo-500/20 text-purple-600 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60 rounded-lg text-xs font-semibold transition active:scale-95">
+        <i data-lucide="bot" class="w-4 h-4 text-purple-500"></i>
+        <span class="hidden sm:inline">AI 模型设置</span>
+      </button>
+
       <!-- Import Button -->
       <button onclick="triggerFileInput()" class="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-medium border border-slate-300 dark:border-slate-700 transition active:scale-95">
         <i data-lucide="image-plus" class="w-4 h-4 text-indigo-500"></i>
@@ -358,7 +356,7 @@
   <!-- ==================== MAIN WORKSPACE ==================== -->
   <div class="flex-1 flex overflow-hidden relative">
     
-    <!-- LEFT SIDEBAR: Document Pages (Desktop: static, Mobile: slide-out drawer) -->
+    <!-- LEFT SIDEBAR: Document Pages -->
     <aside id="leftSidebar" class="fixed md:static inset-y-0 left-0 z-40 w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 shadow-xl md:shadow-none">
       <div class="p-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
         <div class="flex items-center space-x-2">
@@ -532,14 +530,14 @@
     </main>
 
     <!-- RIGHT SIDEBAR / MOBILE BOTTOM SHEET: Filters & Adjustments -->
-    <aside id="rightSidebar" class="fixed md:static inset-x-0 bottom-0 md:inset-auto z-40 md:z-20 w-full md:w-80 max-h-[75vh] md:max-h-none border-t md:border-t-0 md:border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-t-3xl md:rounded-none flex flex-col shrink-0 transform translate-y-full md:translate-y-0 transition-transform duration-300 shadow-2xl md:shadow-none">
+    <aside id="rightSidebar" class="fixed md:static inset-x-0 bottom-0 md:inset-auto z-40 md:z-20 w-full md:w-80 max-h-[80vh] md:max-h-none border-t md:border-t-0 md:border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-t-3xl md:rounded-none flex flex-col shrink-0 transform translate-y-full md:translate-y-0 transition-transform duration-300 shadow-2xl md:shadow-none">
       
-      <!-- Right Header / Mobile Drawer Drag Bar -->
+      <!-- Right Header -->
       <div class="p-3 sm:p-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between relative">
         <div class="w-12 h-1 bg-slate-300 dark:bg-slate-700 rounded-full absolute top-2 left-1/2 -translate-x-1/2 md:hidden"></div>
         <div class="flex items-center space-x-2 pt-2 md:pt-0">
           <i data-lucide="sliders" class="w-4 h-4 text-indigo-500"></i>
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">文档增强与滤镜</span>
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">文档增强与AI解析</span>
         </div>
         <div class="flex items-center space-x-2 pt-2 md:pt-0">
           <button onclick="resetCurrentAdjustments()" class="text-[11px] text-slate-400 hover:text-indigo-500 transition">
@@ -562,7 +560,7 @@
           </div>
 
           <div class="grid grid-cols-2 gap-2">
-            <!-- 1. Magic Color (彩色增强) -->
+            <!-- 1. Magic Color -->
             <button onclick="setFilterPreset('magic_color')" id="btnPreset_magic_color" class="preset-btn relative p-2 rounded-xl border-2 border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 text-left transition flex flex-col justify-between">
               <div class="flex items-center justify-between mb-0.5">
                 <span class="text-xs font-bold text-indigo-700 dark:text-indigo-300">彩色增强</span>
@@ -571,7 +569,7 @@
               <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">白底增白、去除阴影、还原鲜艳字迹</p>
             </button>
 
-            <!-- 2. B&W Document (黑白扫描) -->
+            <!-- 2. B&W Document -->
             <button onclick="setFilterPreset('bw_document')" id="btnPreset_bw_document" class="preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between">
               <div class="flex items-center justify-between mb-0.5">
                 <span class="text-xs font-bold text-slate-800 dark:text-slate-100">黑白扫描</span>
@@ -580,7 +578,7 @@
               <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">局部自适应二值化，极清公文打印件</p>
             </button>
 
-            <!-- 3. Red Seal Protect (红头/印章保护) -->
+            <!-- 3. Red Seal Protect -->
             <button onclick="setFilterPreset('red_seal')" id="btnPreset_red_seal" class="preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between">
               <div class="flex items-center justify-between mb-0.5">
                 <span class="text-xs font-bold text-slate-800 dark:text-slate-100">印章强化</span>
@@ -589,7 +587,7 @@
               <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">白底黑字，高亮鲜艳公章与批注</p>
             </button>
 
-            <!-- 4. Grayscale (高清灰度) -->
+            <!-- 4. Grayscale -->
             <button onclick="setFilterPreset('grayscale')" id="btnPreset_grayscale" class="preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between">
               <div class="flex items-center justify-between mb-0.5">
                 <span class="text-xs font-bold text-slate-800 dark:text-slate-100">高清灰度</span>
@@ -598,7 +596,7 @@
               <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">平滑灰度阶调，去除多余杂色</p>
             </button>
 
-            <!-- 5. Ink Saver (省墨线条) -->
+            <!-- 5. Ink Saver -->
             <button onclick="setFilterPreset('ink_saver')" id="btnPreset_ink_saver" class="preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between">
               <div class="flex items-center justify-between mb-0.5">
                 <span class="text-xs font-bold text-slate-800 dark:text-slate-100">省墨复印</span>
@@ -607,7 +605,7 @@
               <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">高反差线条化，节省打印墨水</p>
             </button>
 
-            <!-- 6. Original (原图拉平) -->
+            <!-- 6. Original -->
             <button onclick="setFilterPreset('original')" id="btnPreset_original" class="preset-btn relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 bg-white dark:bg-slate-800 text-left transition flex flex-col justify-between">
               <div class="flex items-center justify-between mb-0.5">
                 <span class="text-xs font-bold text-slate-800 dark:text-slate-100">原图拉平</span>
@@ -687,33 +685,67 @@
 
         <div class="h-px bg-slate-200 dark:bg-slate-800"></div>
 
-        <!-- OCR Text Extraction Panel -->
-        <div class="rounded-xl bg-slate-50 dark:bg-slate-800/50 p-3 border border-slate-200 dark:border-slate-700 space-y-2.5">
+        <!-- ==================== AI VISION RECOGNITION (OPENAI COMPATIBLE) ==================== -->
+        <div class="rounded-2xl bg-gradient-to-br from-indigo-50/70 via-purple-50/50 to-slate-50 dark:from-slate-800/80 dark:via-indigo-950/40 dark:to-slate-900/80 p-3.5 border border-indigo-100 dark:border-indigo-900/50 shadow-sm space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-1.5">
-              <i data-lucide="scan-text" class="w-4 h-4 text-indigo-500"></i>
-              <span class="text-xs font-bold text-slate-700 dark:text-slate-200">文字识别 (OCR)</span>
+              <div class="w-6 h-6 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+                <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+              </div>
+              <span class="text-xs font-bold text-slate-800 dark:text-slate-100">AI 智能视觉识别</span>
             </div>
-            <button onclick="runOCR()" id="btnOCR" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-[11px] font-semibold transition flex items-center space-x-1 active:scale-95">
-              <span>提取文字</span>
+            <button onclick="openAISettingsModal()" class="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-1 font-medium">
+              <i data-lucide="settings" class="w-3 h-3"></i>
+              <span id="currentAIProviderBadge">配置 API</span>
             </button>
           </div>
+
+          <!-- AI Task Mode Selector -->
+          <div class="space-y-1">
+            <label class="text-[11px] font-medium text-slate-600 dark:text-slate-400">选择 AI 识别任务:</label>
+            <select id="aiTaskSelect" class="w-full text-xs p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              <option value="ocr">📝 纯文字精准提取 (保持段落排版)</option>
+              <option value="table">📊 表格提取并转 Markdown Table</option>
+              <option value="summary">💡 文档要点提炼与核心摘要</option>
+              <option value="translate">🌐 文档翻译为中文/英文</option>
+              <option value="invoice">🧾 发票与单据关键字段 JSON</option>
+            </select>
+          </div>
+
+          <!-- Custom prompt (optional) -->
+          <div class="space-y-1">
+            <input type="text" id="aiCustomPrompt" placeholder="可选: 自定义提问 (例如: 统计总金额)" class="w-full text-xs p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+          </div>
           
-          <div id="ocrStatus" class="text-[11px] text-slate-500 dark:text-slate-400 hidden">
-            <div class="flex items-center space-x-2">
-              <div class="w-3.5 h-3.5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-              <span id="ocrStatusText">正在加载识别模型...</span>
+          <button onclick="runAIRecognition()" id="btnAIRun" class="w-full py-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-500/20 flex items-center justify-center space-x-1.5 transition active:scale-95">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+            <span>开始 AI 智能识别</span>
+          </button>
+
+          <!-- AI Status Loading -->
+          <div id="aiStatus" class="text-[11px] text-slate-500 dark:text-slate-400 hidden">
+            <div class="flex items-center space-x-2 p-2 rounded-lg bg-indigo-50/50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/40">
+              <div class="w-3.5 h-3.5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+              <span id="aiStatusText">AI 正在深度思考并识别中...</span>
             </div>
           </div>
 
-          <div id="ocrResultBox" class="hidden animate-fade-in">
-            <textarea id="ocrTextOutput" rows="3" class="w-full text-xs p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-mono resize-none focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="识别到的文字将显示在此处..."></textarea>
-            <div class="flex justify-end mt-1">
-              <button onclick="copyOCRText()" class="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-1">
-                <i data-lucide="copy" class="w-3 h-3"></i>
-                <span>复制全部文字</span>
-              </button>
+          <!-- AI Result Output -->
+          <div id="aiResultBox" class="hidden animate-fade-in space-y-2">
+            <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+              <span>识别结果:</span>
+              <div class="flex items-center space-x-2">
+                <button onclick="copyAIText()" class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-0.5">
+                  <i data-lucide="copy" class="w-3 h-3"></i>
+                  <span>复制</span>
+                </button>
+                <button onclick="downloadAIText()" class="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-0.5">
+                  <i data-lucide="download" class="w-3 h-3"></i>
+                  <span>保存.md</span>
+                </button>
+              </div>
             </div>
+            <textarea id="aiTextOutput" rows="6" class="w-full text-xs p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-mono resize-none focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed"></textarea>
           </div>
         </div>
 
@@ -732,6 +764,79 @@
     <!-- Mobile Right Sidebar Backdrop -->
     <div id="mobileFilterBackdrop" onclick="toggleMobileFilterDrawer()" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden"></div>
 
+  </div>
+
+  <!-- ==================== AI CONFIGURATION MODAL ==================== -->
+  <div id="aiSettingsModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-5 shadow-2xl border border-slate-200 dark:border-slate-700 animate-scale-in max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center space-x-2">
+          <div class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">配置 AI 视觉识别模型</h3>
+            <p class="text-[10px] text-slate-400">兼容 OpenAI 标准接口协议，支持主流多模态大模型</p>
+          </div>
+        </div>
+        <button onclick="closeAISettingsModal()" class="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      
+      <div class="py-4 space-y-4">
+        <!-- Provider Quick Select -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">快捷选择 AI 服务商</label>
+          <select id="aiProviderPreset" onchange="handleAIProviderChange()" class="w-full text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium">
+            <option value="openai">ChatGPT / OpenAI (gpt-4o / gpt-4o-mini)</option>
+            <option value="gemini">Google Gemini (gemini-2.0-flash / 1.5-flash)</option>
+            <option value="qwen">通义千问 (qwen-vl-max / qwen-2.5-vl-72b)</option>
+            <option value="glm">智谱清言 GLM (glm-4v-plus / glm-4v-flash)</option>
+            <option value="kimi">Kimi / Moonshot (moonshot-v1-8k-vision-preview)</option>
+            <option value="minimax">MiniMax 海螺 (MiniMax-Text-01)</option>
+            <option value="custom">🛠️ 自定义 OpenAI 兼容接口 / 本地模型 / 代理</option>
+          </select>
+        </div>
+
+        <!-- Base URL -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">API Base URL (接口基址)</label>
+          <input type="text" id="aiBaseUrl" placeholder="https://api.openai.com/v1" class="w-full text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <!-- API Key -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">API Key (令牌密钥)</label>
+            <span class="text-[10px] text-slate-400">仅保存在您的本地浏览器中</span>
+          </div>
+          <div class="relative">
+            <input type="password" id="aiApiKey" placeholder="sk-..." class="w-full text-xs p-2.5 pr-9 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+              <i data-lucide="eye" id="eyeIcon" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Model Name -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Model Name (模型名称)</label>
+          <input type="text" id="aiModelName" placeholder="gpt-4o" class="w-full text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-800">
+        <button onclick="testAIConnection()" id="btnTestAI" class="px-3.5 py-2 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 rounded-lg flex items-center space-x-1">
+          <i data-lucide="radio" class="w-3.5 h-3.5"></i>
+          <span>测试连通性</span>
+        </button>
+        <div class="flex items-center space-x-2">
+          <button onclick="closeAISettingsModal()" class="px-4 py-2 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">取消</button>
+          <button onclick="saveAISettings()" class="px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-md transition active:scale-95">保存配置</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ==================== PROCESSING / SCAN PROGRESS MODAL ==================== -->
@@ -880,8 +985,46 @@
   <!-- ==================== CORE JAVASCRIPT LOGIC ==================== -->
   <script>
     /* =========================================================================
-       1. GLOBAL STATE & DATA STRUCTURES
+       1. GLOBAL STATE & AI PROVIDER PRESETS
        ========================================================================= */
+    const AI_PROVIDERS = {
+      openai: {
+        name: 'OpenAI (ChatGPT)',
+        baseUrl: 'https://api.openai.com/v1',
+        model: 'gpt-4o'
+      },
+      gemini: {
+        name: 'Google Gemini',
+        baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
+        model: 'gemini-2.0-flash'
+      },
+      qwen: {
+        name: '通义千问 (Qwen)',
+        baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+        model: 'qwen-vl-max'
+      },
+      glm: {
+        name: '智谱清言 (GLM)',
+        baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
+        model: 'glm-4v-plus'
+      },
+      kimi: {
+        name: 'Kimi (Moonshot)',
+        baseUrl: 'https://api.moonshot.cn/v1',
+        model: 'moonshot-v1-8k-vision-preview'
+      },
+      minimax: {
+        name: 'MiniMax (海螺)',
+        baseUrl: 'https://api.minimax.chat/v1',
+        model: 'MiniMax-Text-01'
+      },
+      custom: {
+        name: '自定义 OpenAI 接口',
+        baseUrl: 'https://api.openai.com/v1',
+        model: 'gpt-4o'
+      }
+    };
+
     const state = {
       pages: [],
       currentPageIndex: -1,
@@ -903,7 +1046,15 @@
       isDraggingSplit: false,
       
       filterDebounceTimer: null,
-      cameraStream: null
+      cameraStream: null,
+
+      // AI Settings
+      aiConfig: {
+        provider: 'openai',
+        baseUrl: 'https://api.openai.com/v1',
+        apiKey: '',
+        model: 'gpt-4o'
+      }
     };
 
     const mainCanvas = document.getElementById('mainCanvas');
@@ -925,6 +1076,7 @@
        ========================================================================= */
     window.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
+      loadSavedAISettings();
       setupClipboardPaste();
       setupDragAndDrop();
       setupCanvasInteractions();
@@ -1143,7 +1295,6 @@
       fitCanvasToView();
       renderCurrentPage();
 
-      // Close mobile drawer if open
       document.getElementById('leftSidebar').classList.add('-translate-x-full');
       document.getElementById('mobileBackdrop').classList.add('hidden');
     }
@@ -1246,7 +1397,7 @@
     }
 
     /* =========================================================================
-       4. SMART EDGE DETECTION ALGORITHM (Pure JS / Canvas)
+       4. SMART EDGE DETECTION ALGORITHM
        ========================================================================= */
     function detectDocumentCorners(img) {
       const scale = Math.min(1.0, 400 / img.naturalWidth);
@@ -1389,7 +1540,7 @@
     }
 
     /* =========================================================================
-       5. PERSPECTIVE WARP & ENHANCEMENT ENGINE
+       5. PERSPECTIVE WARP & FILTER ENGINE
        ========================================================================= */
     function computePerspectiveWarp(img, corners) {
       const p0 = corners[0];
@@ -1867,7 +2018,7 @@
     }
 
     /* =========================================================================
-       7. CANVAS INTERACTIONS, DRAGGING & MAGNIFIER LOUPE (TOUCH OPTIMIZED)
+       7. CANVAS INTERACTIONS & TOUCH GESTURES
        ========================================================================= */
     function setupCanvasInteractions() {
       const container = document.getElementById('viewportContainer');
@@ -1892,7 +2043,6 @@
         const page = state.pages[state.currentPageIndex];
         if (!page || state.currentTab !== 'crop') return -1;
 
-        // Enlarged hit area for mobile touch devices
         const threshold = Math.max(38, mainCanvas.width / 32);
 
         for (let i = 0; i < 4; i++) {
@@ -2420,7 +2570,241 @@
     }
 
     /* =========================================================================
-       10. EXPORT: PDF, IMAGE, CLIPBOARD & PRINT
+       10. AI MULTIMODAL VISION RECOGNITION (OPENAI COMPATIBLE)
+       ========================================================================= */
+    function loadSavedAISettings() {
+      try {
+        const saved = localStorage.getItem('docscan_ai_config');
+        if (saved) {
+          state.aiConfig = { ...state.aiConfig, ...JSON.parse(saved) };
+        }
+      } catch (err) {
+        console.error('Failed to read saved AI config', err);
+      }
+      updateAIProviderBadge();
+    }
+
+    function updateAIProviderBadge() {
+      const badge = document.getElementById('currentAIProviderBadge');
+      if (badge) {
+        const p = AI_PROVIDERS[state.aiConfig.provider];
+        badge.innerText = state.aiConfig.apiKey ? (p ? p.name.split(' ')[0] : '已配置') : '配置 API';
+      }
+    }
+
+    function openAISettingsModal() {
+      document.getElementById('aiProviderPreset').value = state.aiConfig.provider || 'openai';
+      document.getElementById('aiBaseUrl').value = state.aiConfig.baseUrl || 'https://api.openai.com/v1';
+      document.getElementById('aiApiKey').value = state.aiConfig.apiKey || '';
+      document.getElementById('aiModelName').value = state.aiConfig.model || 'gpt-4o';
+      document.getElementById('aiSettingsModal').classList.remove('hidden');
+    }
+
+    function closeAISettingsModal() {
+      document.getElementById('aiSettingsModal').classList.add('hidden');
+    }
+
+    function handleAIProviderChange() {
+      const provider = document.getElementById('aiProviderPreset').value;
+      const p = AI_PROVIDERS[provider];
+      if (p && provider !== 'custom') {
+        document.getElementById('aiBaseUrl').value = p.baseUrl;
+        document.getElementById('aiModelName').value = p.model;
+      }
+    }
+
+    function toggleApiKeyVisibility() {
+      const input = document.getElementById('aiApiKey');
+      const icon = document.getElementById('eyeIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        input.type = 'password';
+        icon.setAttribute('data-lucide', 'eye');
+      }
+      lucide.createIcons();
+    }
+
+    function saveAISettings() {
+      const provider = document.getElementById('aiProviderPreset').value;
+      const baseUrl = document.getElementById('aiBaseUrl').value.trim().replace(/\/+$/, '');
+      const apiKey = document.getElementById('aiApiKey').value.trim();
+      const model = document.getElementById('aiModelName').value.trim();
+
+      if (!baseUrl) {
+        showToast('请输入 Base URL', 'error');
+        return;
+      }
+
+      state.aiConfig = { provider, baseUrl, apiKey, model };
+      localStorage.setItem('docscan_ai_config', JSON.stringify(state.aiConfig));
+      updateAIProviderBadge();
+      closeAISettingsModal();
+      showToast('AI 配置已成功保存！');
+    }
+
+    async function testAIConnection() {
+      const baseUrl = document.getElementById('aiBaseUrl').value.trim().replace(/\/+$/, '');
+      const apiKey = document.getElementById('aiApiKey').value.trim();
+      const model = document.getElementById('aiModelName').value.trim();
+      const btn = document.getElementById('btnTestAI');
+
+      if (!apiKey) {
+        showToast('请先输入 API Key 密钥', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="w-3.5 h-3.5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div><span>正在测试连接...</span>';
+
+      try {
+        const endpoint = baseUrl.endsWith('/chat/completions') ? baseUrl : `${baseUrl}/chat/completions`;
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: model || 'gpt-4o-mini',
+            messages: [{ role: 'user', content: 'Ping! Return "OK"' }],
+            max_tokens: 5
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error?.message || `HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        showToast('🎉 连接测试成功！API 正常响应');
+      } catch (err) {
+        showToast('连接失败: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="radio" class="w-3.5 h-3.5"></i><span>测试连通性</span>';
+        lucide.createIcons();
+      }
+    }
+
+    async function runAIRecognition() {
+      const page = state.pages[state.currentPageIndex];
+      if (!page) {
+        showToast('请先导入并选择文档页面', 'error');
+        return;
+      }
+
+      if (!state.aiConfig.apiKey) {
+        showToast('请先点击上方“配置 API”设置您的 API Key', 'error');
+        openAISettingsModal();
+        return;
+      }
+
+      const task = document.getElementById('aiTaskSelect').value;
+      const customPrompt = document.getElementById('aiCustomPrompt').value.trim();
+      const btn = document.getElementById('btnAIRun');
+      const statusBox = document.getElementById('aiStatus');
+      const statusText = document.getElementById('aiStatusText');
+      const resultBox = document.getElementById('aiResultBox');
+      const outputArea = document.getElementById('aiTextOutput');
+
+      // Build Prompt based on task
+      let promptText = '';
+      if (customPrompt) {
+        promptText = customPrompt;
+      } else if (task === 'ocr') {
+        promptText = '请精确识别并提取这张文档图片中的所有文字内容。保持原始段落排版与格式，不要遗漏文字，直接输出转录文本，不要添加多余闲聊。';
+      } else if (task === 'table') {
+        promptText = '请仔细识别图片中的所有表格、清单与对齐数据，将其转换为清晰标准的 Markdown 表格格式输出。如果存在普通正文段落，保持在表格上方或下方。';
+      } else if (task === 'summary') {
+        promptText = '请仔细阅读并分析此文档图片，提炼出它的核心要点、主要结论、关键涉及实体、金额和日期，以结构化的分条要点（Bullet points）进行总结。';
+      } else if (task === 'translate') {
+        promptText = '请识别这张文档图片的内容，并将其完整翻译为另一种语言（中文文档翻译为地道英文，英文/外文文档翻译为地道中文），保留文档排版结构。';
+      } else if (task === 'invoice') {
+        promptText = '请仔细提取这张发票/票据中的关键信息，并以 JSON 格式输出，包含以下字段：发票号码、开票日期、购买方名称、销售方名称、金额、税额、价税合计（大写与小写）、商品/服务明细列表。';
+      }
+
+      // Get image base64
+      const canvas = getProcessedCanvasForPage(page);
+      const imgBase64 = canvas.toDataURL('image/jpeg', 0.88);
+
+      btn.disabled = true;
+      statusBox.classList.remove('hidden');
+      statusText.innerText = `正在请求 ${state.aiConfig.model || 'AI'} 视觉模型识别中...`;
+      resultBox.classList.add('hidden');
+      triggerLaserAnimation();
+
+      try {
+        const baseUrl = state.aiConfig.baseUrl.replace(/\/+$/, '');
+        const endpoint = baseUrl.endsWith('/chat/completions') ? baseUrl : `${baseUrl}/chat/completions`;
+
+        const payload = {
+          model: state.aiConfig.model || 'gpt-4o',
+          messages: [
+            {
+              role: 'user',
+              content: [
+                { type: 'text', text: promptText },
+                { type: 'image_url', image_url: { url: imgBase64 } }
+              ]
+            }
+          ],
+          temperature: 0.2
+        };
+
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${state.aiConfig.apiKey}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error?.message || `HTTP ${res.status}: ${res.statusText}`);
+        }
+
+        const data = await res.json();
+        const reply = data.choices?.[0]?.message?.content || '（AI 未返回文本）';
+
+        outputArea.value = reply.trim();
+        statusBox.classList.add('hidden');
+        resultBox.classList.remove('hidden');
+        showToast('AI 视觉解析完成！');
+      } catch (err) {
+        console.error(err);
+        statusBox.classList.add('hidden');
+        showToast('AI 识别遇到问题: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function copyAIText() {
+      const text = document.getElementById('aiTextOutput').value;
+      if (!text) return;
+      navigator.clipboard.writeText(text);
+      showToast('已复制 AI 解析结果到剪贴板！');
+    }
+
+    function downloadAIText() {
+      const text = document.getElementById('aiTextOutput').value;
+      if (!text) return;
+      const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `DocScan_AI_Result_${Date.now()}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('已下载解析结果文件');
+    }
+
+    /* =========================================================================
+       11. EXPORT: PDF, IMAGE, CLIPBOARD & PRINT
        ========================================================================= */
     function toggleExportMenu() {
       const menu = document.getElementById('exportMenu');
@@ -2576,61 +2960,6 @@
       `);
       printWindow.document.close();
       document.getElementById('exportMenu').classList.add('hidden');
-    }
-
-    /* =========================================================================
-       11. OCR TEXT EXTRACTION
-       ========================================================================= */
-    async function runOCR() {
-      const page = state.pages[state.currentPageIndex];
-      if (!page) {
-        showToast('请先选择页面', 'error');
-        return;
-      }
-
-      const btnOCR = document.getElementById('btnOCR');
-      const ocrStatus = document.getElementById('ocrStatus');
-      const ocrStatusText = document.getElementById('ocrStatusText');
-      const ocrResultBox = document.getElementById('ocrResultBox');
-      const ocrTextOutput = document.getElementById('ocrTextOutput');
-
-      btnOCR.disabled = true;
-      ocrStatus.classList.remove('hidden');
-      ocrResultBox.classList.add('hidden');
-
-      try {
-        const canvas = getProcessedCanvasForPage(page);
-        ocrStatusText.innerText = '正在初始化 OCR 引擎并识别文字...';
-
-        const worker = await Tesseract.createWorker('chi_sim+eng', 1, {
-          logger: m => {
-            if (m.status === 'recognizing text') {
-              ocrStatusText.innerText = `正在识别文字: ${Math.round(m.progress * 100)}%`;
-            }
-          }
-        });
-
-        const ret = await worker.recognize(canvas);
-        await worker.terminate();
-
-        ocrTextOutput.value = ret.data.text.trim();
-        ocrStatus.classList.add('hidden');
-        ocrResultBox.classList.remove('hidden');
-        showToast('OCR 文字提取完成！');
-      } catch (err) {
-        console.error(err);
-        ocrStatusText.innerText = '识别遇到问题: ' + err.message;
-        showToast('OCR 识别失败，请检查网络是否能访问 OCR 资源', 'error');
-      } finally {
-        btnOCR.disabled = false;
-      }
-    }
-
-    function copyOCRText() {
-      const text = document.getElementById('ocrTextOutput').value;
-      if (!text) return;
-      navigator.clipboard.writeText(text);
-      showToast('已复制全部提取文字到剪贴板！');
     }
 
     /* =========================================================================
