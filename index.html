@@ -247,7 +247,7 @@
       background-color: #dcfce7;
       color: #15803d;
       text-decoration: none;
-      padding: 1px 3px;
+      padding: 2px 4px;
       border-radius: 3px;
       font-weight: 600;
     }
@@ -255,7 +255,7 @@
       background-color: #fee2e2;
       color: #b91c1c;
       text-decoration: line-through;
-      padding: 1px 3px;
+      padding: 2px 4px;
       border-radius: 3px;
     }
   </style>
@@ -309,11 +309,15 @@
       </button>
       <button onclick="switchAppModule('templates')" id="tabNavTemplates" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
         <i data-lucide="grid" class="w-4 h-4 text-emerald-500"></i>
-        <span>5. 田字格与作业纸</span>
+        <span>5. 田字格作业模板</span>
+      </button>
+      <button onclick="switchAppModule('diff')" id="tabNavDiff" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
+        <i data-lucide="git-compare" class="w-4 h-4 text-cyan-500"></i>
+        <span>6. 文档/合同Diff比对</span>
       </button>
       <button onclick="switchAppModule('tools')" id="tabNavTools" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
         <i data-lucide="wrench" class="w-4 h-4 text-amber-500"></i>
-        <span>6. 实用小工具箱</span>
+        <span>7. 实用工具箱</span>
       </button>
     </nav>
 
@@ -354,7 +358,7 @@
       </button>
       <button onclick="switchAppModule('format'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
         <i data-lucide="type" class="w-5 h-5 text-purple-500"></i>
-        <div><div class="text-xs font-bold">3. Word/公文智能排版</div><div class="text-[10px] text-slate-400">国标排版、一键清洗、导出 .docx</div></div>
+        <div><div class="text-xs font-bold">3. Word/公文智能排版</div><div class="text-[10px] text-slate-400">国标排版、要素插入、导出 .docx</div></div>
       </button>
       <button onclick="switchAppModule('extract'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
         <i data-lucide="scissors" class="w-5 h-5 text-red-500"></i>
@@ -362,11 +366,15 @@
       </button>
       <button onclick="switchAppModule('templates'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
         <i data-lucide="grid" class="w-5 h-5 text-emerald-500"></i>
-        <div><div class="text-xs font-bold">5. 田字格与作业纸模板库</div><div class="text-[10px] text-slate-400">拼音田字格、米字格、五线谱、A3/A4/A5</div></div>
+        <div><div class="text-xs font-bold">5. 田字格作业纸与描红字帖</div><div class="text-[10px] text-slate-400">描红练习、拼音田字格、五线谱、A3/A4/A5</div></div>
+      </button>
+      <button onclick="switchAppModule('diff'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+        <i data-lucide="git-compare" class="w-5 h-5 text-cyan-500"></i>
+        <div><div class="text-xs font-bold">6. 文档/合同Diff差异比对</div><div class="text-[10px] text-slate-400">上传Word/PDF比对、左右分栏、AI风险审查</div></div>
       </button>
       <button onclick="switchAppModule('tools'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
         <i data-lucide="wrench" class="w-4 h-4 text-amber-500"></i>
-        <div><div class="text-xs font-bold">6. 办公高效小工具箱</div><div class="text-[10px] text-slate-400">PDF合并拆分、合同Diff比对、脱敏器</div></div>
+        <div><div class="text-xs font-bold">7. 办公高效实用工具箱</div><div class="text-[10px] text-slate-400">PDF合并拆分、隐私脱敏器</div></div>
       </button>
     </div>
   </div>
@@ -390,7 +398,7 @@
             高颜值 · 极速 · 全能的<br><span class="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">线上办公超级增强工作台</span>
           </h2>
           <p class="text-xs sm:text-sm text-indigo-100/80 leading-relaxed">
-            为您整合了日常办公最高频的 6 大核心模块：图像文档扫描压平、全格式文件互转、Word 国标公文排版美化、印章签名透明抠图、学生练字与作业纸高清打印，以及 PDF 瑞士军刀工具集。
+            为您整合了日常办公最高频的 7 大核心模块：图像文档扫描压平、全格式文件互转、Word 国标公文排版美化、印章签名透明抠图、学生练字与作业纸高清打印、双文档/合同上传Diff比对，以及 PDF 瑞士军刀工具集。
           </p>
         </div>
       </div>
@@ -438,7 +446,7 @@
                 <span class="text-[11px] font-semibold text-blue-500 bg-blue-50 dark:bg-blue-950/80 px-2 py-0.5 rounded-full">全能互转</span>
               </div>
               <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                PDF ⇄ Word (.docx)、PDF ⇄ Excel (.xlsx)、PDF ⇄ PPT (.pptx)、PDF ⇄ 高清图片包 (ZIP)、表格数据四向互转。
+                PDF ⇄ Word (.docx)、PDF ⇄ Excel (.xlsx)、PDF ⇄ PPT (.pptx)、PDF ⇄ 高清图片包 (ZIP)、多图转PDF、表格数据四向互转。
               </p>
             </div>
             <div class="flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform">
@@ -458,7 +466,7 @@
                 <span class="text-[11px] font-semibold text-purple-500 bg-purple-50 dark:bg-purple-950/80 px-2 py-0.5 rounded-full">国标规范</span>
               </div>
               <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                一键清洗多余空行/空格、中英文盘古空格、标点规范化、仿宋国标公文排版预设、AI 智能公文润色，一键导出真实 .docx。
+                一键清洗格式、公文要素快捷插入 (发文字号/主送机关/落款日期)、仿宋国标公文排版预设、AI 智能公文润色，导出真实 .docx。
               </p>
             </div>
             <div class="flex items-center text-xs font-bold text-purple-600 dark:text-purple-400 group-hover:translate-x-1 transition-transform">
@@ -494,11 +502,11 @@
                 <i data-lucide="grid" class="w-6 h-6"></i>
               </div>
               <div class="flex items-center justify-between mb-1">
-                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition-colors">5. 田字格与作业纸模板库</h4>
-                <span class="text-[11px] font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded-full">高清矢量打印</span>
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition-colors">5. 田字格与字帖模板库</h4>
+                <span class="text-[11px] font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded-full">支持描红字帖</span>
               </div>
               <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                拼音田字格、米字格、日字格、英语四线三格、五线谱、吉他TAB六线谱、作文稿纸，支持 A3 / A4 / A5 尺寸高清导出与打印。
+                自定义字帖描红练习、拼音田字格、米字格、日字格、英语四线三格、五线谱、吉他TAB，支持 A3 / A4 / A5 高清矢量导出。
               </p>
             </div>
             <div class="flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform">
@@ -507,18 +515,38 @@
             </div>
           </div>
 
-          <!-- Card 6: Toolbox -->
+          <!-- Card 6: Diff -->
+          <div onclick="switchAppModule('diff')" class="group p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-cyan-500 dark:hover:border-cyan-500 shadow-sm hover:shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-4">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="git-compare" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-cyan-600 transition-colors">6. 双文档/合同Diff比对</h4>
+                <span class="text-[11px] font-semibold text-cyan-500 bg-cyan-50 dark:bg-cyan-950/80 px-2 py-0.5 rounded-full">支持Word/PDF上传</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                上传两份 Word (.docx) 或 PDF 文件，秒级提取并高亮新增与删除差异，支持并排双栏对比与 AI 法律风险审查。
+              </p>
+            </div>
+            <div class="flex items-center text-xs font-bold text-cyan-600 dark:text-cyan-400 group-hover:translate-x-1 transition-transform">
+              <span>立即进行文档比对</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+            </div>
+          </div>
+
+          <!-- Card 7: Toolbox -->
           <div onclick="switchAppModule('tools')" class="group p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 dark:hover:border-amber-500 shadow-sm hover:shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-4">
             <div>
               <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <i data-lucide="wrench" class="w-6 h-6"></i>
               </div>
               <div class="flex items-center justify-between mb-1">
-                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-amber-600 transition-colors">6. 办公高效小工具箱</h4>
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-amber-600 transition-colors">7. 办公高效小工具箱</h4>
                 <span class="text-[11px] font-semibold text-amber-500 bg-amber-50 dark:bg-amber-950/80 px-2 py-0.5 rounded-full">实用合集</span>
               </div>
               <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                多 PDF 毫秒级合并、页面按范围拆分、双文档合同差异 Diff 对比、商业个人隐私脱敏器、标准电子公章实时绘制。
+                多 PDF 毫秒级合并、页面按范围拆分、商业个人隐私脱敏器、标准电子公章实时绘制。
               </p>
             </div>
             <div class="flex items-center text-xs font-bold text-amber-600 dark:text-amber-400 group-hover:translate-x-1 transition-transform">
@@ -763,19 +791,19 @@
           </div>
         </div>
 
-        <!-- Word (.docx) Import -->
+        <!-- Images -> PDF -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4">
           <div>
             <div class="flex items-center space-x-3 mb-2">
-              <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center"><i data-lucide="file-code" class="w-5 h-5"></i></div>
-              <div><h3 class="text-sm font-bold">Word (.docx) 导入排版</h3><span class="text-[11px] text-slate-400">读取并送去公文排版</span></div>
+              <div class="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-950/50 text-pink-600 dark:text-pink-400 flex items-center justify-center"><i data-lucide="image-plus" class="w-5 h-5"></i></div>
+              <div><h3 class="text-sm font-bold">多张图片合并转 PDF</h3><span class="text-[11px] text-slate-400">批量合并多图为一个 PDF</span></div>
             </div>
-            <p class="text-xs text-slate-500">读取本地 Word (.docx) 文档，精准解析段落格式，直接送入智能排版编辑器。</p>
+            <p class="text-xs text-slate-500">选择多张 JPG/PNG/WebP 图片，自动按顺序排版并合并生成高清 PDF 文档。</p>
           </div>
           <div>
-            <input type="file" id="inputWordToDocx" accept=".docx" class="hidden" onchange="handleWordImport(event)">
-            <button onclick="document.getElementById('inputWordToDocx').click()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-md flex items-center justify-center space-x-2">
-              <i data-lucide="file-up" class="w-4 h-4"></i><span>导入 Word 文档</span>
+            <input type="file" id="inputImagesToPdf" accept="image/*" multiple class="hidden" onchange="handleImagesToPdf(event)">
+            <button onclick="document.getElementById('inputImagesToPdf').click()" class="w-full py-2.5 bg-pink-600 hover:bg-pink-700 text-white rounded-xl text-xs font-semibold shadow-md flex items-center justify-center space-x-2">
+              <i data-lucide="upload" class="w-4 h-4"></i><span>选择多张图片转 PDF</span>
             </button>
           </div>
         </div>
@@ -831,8 +859,9 @@
         </button>
       </div>
       <div class="flex items-center space-x-2">
-        <button onclick="loadSampleDocText()" class="hidden sm:flex items-center space-x-1 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-medium">
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i><span>载入公文范例</span>
+        <input type="file" id="inputFormatImportDocx" accept=".docx" class="hidden" onchange="handleWordImportToFormatter(event)">
+        <button onclick="document.getElementById('inputFormatImportDocx').click()" class="hidden sm:flex items-center space-x-1 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-medium">
+          <i data-lucide="upload" class="w-3.5 h-3.5"></i><span>导入 Word</span>
         </button>
         <button onclick="exportFormattedAsDocx()" class="flex items-center space-x-1 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold shadow-md">
           <i data-lucide="file-down" class="w-4 h-4"></i><span>导出真实 .docx</span>
@@ -846,25 +875,32 @@
     <!-- Workspace -->
     <div class="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100 dark:bg-slate-950">
       <div class="w-full md:w-1/2 flex flex-col border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-        <div class="p-2.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-between gap-1 overflow-x-auto">
-          <div class="flex items-center space-x-1">
+        
+        <!-- Action Toolbar with Fast Element Insertions -->
+        <div class="p-2.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 flex flex-wrap items-center justify-between gap-1.5">
+          <div class="flex items-center flex-wrap gap-1">
             <button onclick="cleanDocumentFormat('all')" title="综合智能清洗" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold flex items-center space-x-1">
               <i data-lucide="wand-2" class="w-3.5 h-3.5"></i><span>一键清洗格式</span>
             </button>
-            <button onclick="cleanDocumentFormat('pangu')" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[11px]">中英空格</button>
-            <button onclick="cleanDocumentFormat('punct')" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[11px]">标点规范</button>
-            <button onclick="cleanDocumentFormat('emptyLines')" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[11px]">去空行</button>
+            <button onclick="insertGovElement('docNo')" class="px-2 py-1 bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] font-medium">+ 发文字号</button>
+            <button onclick="insertGovElement('recipient')" class="px-2 py-1 bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] font-medium">+ 主送机关</button>
+            <button onclick="insertGovElement('attachment')" class="px-2 py-1 bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] font-medium">+ 附件说明</button>
+            <button onclick="insertGovElement('signature')" class="px-2 py-1 bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] font-medium">+ 落款日期</button>
           </div>
           <button onclick="runAIDocPolish()" id="btnAIPolish" class="px-2.5 py-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg text-xs font-semibold flex items-center space-x-1">
             <i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>AI 公文润色</span>
           </button>
         </div>
+
         <div class="flex-1 p-4">
-          <textarea id="formatterEditor" oninput="updateFormattedPreview()" placeholder="在此粘贴需要排版的文章、公文、汇报草稿或杂乱文本..." class="w-full h-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 text-sm font-mono leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+          <textarea id="formatterEditor" oninput="updateFormattedPreview()" placeholder="在此粘贴需要排版的文章、公文、汇报草稿或杂乱文本，支持导入 Word (.docx)..." class="w-full h-full p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 text-sm font-mono leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
         </div>
         <div class="h-8 border-t border-slate-200 dark:border-slate-800 px-4 flex items-center justify-between text-[11px] text-slate-400 font-mono">
           <span id="docCharCount">字数: 0 字 | 段落: 0 段</span>
-          <button onclick="clearFormatterEditor()" class="hover:text-red-500">清空文本</button>
+          <div class="flex space-x-3">
+            <button onclick="loadSampleDocText()" class="hover:text-indigo-500">载入公文范例</button>
+            <button onclick="clearFormatterEditor()" class="hover:text-red-500">清空文本</button>
+          </div>
         </div>
       </div>
 
@@ -967,7 +1003,7 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 5: STUDENT GRID & SHEET TEMPLATES (田字格、米字格、五线谱、A3/A4/A5)
+       MODULE 5: STUDENT GRID & SHEET TEMPLATES (田字格、米字格、字帖描红)
        ========================================================================= -->
   <div id="moduleTemplates" class="app-module flex-1 flex flex-col overflow-hidden hidden">
     
@@ -978,8 +1014,8 @@
           <i data-lucide="grid" class="w-4 h-4"></i>
         </div>
         <div>
-          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">中小学生作业纸与练字模板库</h3>
-          <p class="text-[10px] text-slate-400 hidden sm:block">拼音田字格、米字格、日字格、英语四线三格、五线谱、吉他TAB</p>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">中小学生作业纸与字帖模板库</h3>
+          <p class="text-[10px] text-slate-400 hidden sm:block">拼音田字格、米字格、日字格、英语四线三格、五线谱、支持字帖描红</p>
         </div>
       </div>
 
@@ -1022,6 +1058,27 @@
             <option value="dot">▫️ 5mm 点阵坐标纸 (Bullet Journal)</option>
             <option value="grid">📐 方格坐标纸 (数学几何作图)</option>
           </select>
+        </div>
+
+        <!-- Trace Calligraphy Feature -->
+        <div class="p-3 bg-emerald-50/50 dark:bg-emerald-950/30 rounded-2xl border border-emerald-200 dark:border-emerald-800 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>字帖描红模式 (Trace)
+            </span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="tplTraceEnabled" onchange="renderPaperTemplateCanvas()" class="sr-only peer">
+              <div class="w-8 h-4 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-emerald-600"></div>
+            </label>
+          </div>
+          <div id="traceConfigBox" class="space-y-2">
+            <input type="text" id="tplTraceText" placeholder="输入练字内容 (如: 天地玄黄 宇宙洪荒)" value="天地玄黄 宇宙洪荒 日月盈昃 辰宿列张" oninput="renderPaperTemplateCanvas()" class="w-full text-xs p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-medium">
+            <div class="flex space-x-1">
+              <button onclick="setTraceSample('sanzi')" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded text-[10px] text-slate-600 dark:text-slate-300">《三字经》</button>
+              <button onclick="setTraceSample('tangshi')" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded text-[10px] text-slate-600 dark:text-slate-300">《静夜思》</button>
+              <button onclick="setTraceSample('abc')" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded text-[10px] text-slate-600 dark:text-slate-300">英文字母</button>
+            </div>
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
@@ -1085,7 +1142,123 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 6: OFFICE TOOLS
+       MODULE 6: PROFESSIONAL DOCUMENT / CONTRACT DIFF (文档比对中心)
+       ========================================================================= -->
+  <div id="moduleDiff" class="app-module flex-1 flex-col overflow-y-auto p-4 sm:p-6 lg:p-8 hidden">
+    <div class="max-w-6xl w-full mx-auto space-y-6">
+      
+      <!-- Header -->
+      <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <i data-lucide="git-compare" class="w-5 h-5 text-cyan-500"></i>
+            <span>双文档 / 商务合同专业差异比对中心 (Document Diff)</span>
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            支持直接上传 Word (.docx)、PDF (.pdf)、TXT 或 Markdown 文件进行高精度文本比对，支持左右并排对照与 AI 法律风险审查。
+          </p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="loadSampleDiffContracts()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold">
+            载入示例合同
+          </button>
+          <button onclick="runDocumentDiffAction()" class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-indigo-600 text-white rounded-xl text-xs font-bold shadow-md flex items-center space-x-1.5">
+            <i data-lucide="play" class="w-4 h-4"></i><span>开始比对差异</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Upload Zones for Doc A & Doc B -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <!-- Doc A -->
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 hover:border-indigo-400 transition flex flex-col justify-between space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950 text-indigo-600 text-xs font-bold flex items-center justify-center">A</span>
+              <span class="text-xs font-bold text-slate-800 dark:text-slate-200">基准版本 / 原版文档 (Document A)</span>
+            </div>
+            <span id="docAStatusBadge" class="text-[10px] px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-full">未上传</span>
+          </div>
+
+          <div class="py-4 text-center cursor-pointer" onclick="document.getElementById('inputDiffFileA').click()">
+            <input type="file" id="inputDiffFileA" accept=".docx,.pdf,.txt,.md" class="hidden" onchange="handleDiffFileUpload(event, 'A')">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center mx-auto mb-2">
+              <i data-lucide="file-up" class="w-5 h-5"></i>
+            </div>
+            <p class="text-xs font-semibold text-slate-700 dark:text-slate-200">点击选择或拖拽原版文件</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">支持 Word (.docx) / PDF (.pdf) / TXT / MD</p>
+          </div>
+
+          <textarea id="diffTextA" rows="5" class="w-full text-xs p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 font-mono resize-y" placeholder="也可在此直接粘贴或修改原版文本..."></textarea>
+        </div>
+
+        <!-- Doc B -->
+        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 hover:border-cyan-400 transition flex flex-col justify-between space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="w-6 h-6 rounded-lg bg-cyan-50 dark:bg-cyan-950 text-cyan-600 text-xs font-bold flex items-center justify-center">B</span>
+              <span class="text-xs font-bold text-slate-800 dark:text-slate-200">修改版本 / 对比文档 (Document B)</span>
+            </div>
+            <span id="docBStatusBadge" class="text-[10px] px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-full">未上传</span>
+          </div>
+
+          <div class="py-4 text-center cursor-pointer" onclick="document.getElementById('inputDiffFileB').click()">
+            <input type="file" id="inputDiffFileB" accept=".docx,.pdf,.txt,.md" class="hidden" onchange="handleDiffFileUpload(event, 'B')">
+            <div class="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 flex items-center justify-center mx-auto mb-2">
+              <i data-lucide="file-up" class="w-5 h-5"></i>
+            </div>
+            <p class="text-xs font-semibold text-slate-700 dark:text-slate-200">点击选择或拖拽修改后文件</p>
+            <p class="text-[10px] text-slate-400 mt-0.5">支持 Word (.docx) / PDF (.pdf) / TXT / MD</p>
+          </div>
+
+          <textarea id="diffTextB" rows="5" class="w-full text-xs p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 font-mono resize-y" placeholder="也可在此直接粘贴或修改修改版文本..."></textarea>
+        </div>
+
+      </div>
+
+      <!-- Diff Stats Dashboard & AI Summary -->
+      <div id="diffStatsDashboard" class="hidden bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4 animate-fade-in">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div class="flex items-center space-x-4 text-xs font-bold">
+            <span class="text-emerald-600 flex items-center gap-1"><i data-lucide="plus-circle" class="w-4 h-4"></i>新增内容: <span id="statDiffIns" class="font-mono text-sm">0</span> 字</span>
+            <span class="text-red-600 flex items-center gap-1"><i data-lucide="minus-circle" class="w-4 h-4"></i>删除内容: <span id="statDiffDel" class="font-mono text-sm">0</span> 字</span>
+            <span class="text-slate-600 dark:text-slate-300 flex items-center gap-1"><i data-lucide="activity" class="w-4 h-4"></i>总体变更率: <span id="statDiffRatio" class="font-mono text-sm">0%</span></span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="runAIContractRiskReview()" class="px-3 py-1.5 bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-300 border border-purple-200 dark:border-purple-800 rounded-lg text-xs font-semibold flex items-center space-x-1">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-500"></i><span>AI 合同变更与法律风险审查</span>
+            </button>
+            <button onclick="exportDiffReportHTML()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold">
+              导出比对报告
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Contract Review Box -->
+        <div id="aiContractReviewBox" class="hidden p-4 rounded-xl bg-purple-50/50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-900/50 space-y-2">
+          <div class="flex items-center justify-between text-xs font-bold text-purple-800 dark:text-purple-300">
+            <span class="flex items-center gap-1.5"><i data-lucide="bot" class="w-4 h-4"></i>AI 合同实质性修订要点与风险分析</span>
+            <button onclick="document.getElementById('aiContractReviewBox').classList.add('hidden')" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+          </div>
+          <div id="aiContractReviewContent" class="text-xs text-slate-700 dark:text-slate-200 leading-relaxed font-sans whitespace-pre-wrap"></div>
+        </div>
+
+        <!-- Diff Views: Side-by-Side & Unified -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300">修订标记比对结果 (Unified Redline Stream)</span>
+            <span class="text-[11px] text-slate-400">绿色为新增，红色删除线为已删除</span>
+          </div>
+          <div id="diffResultContainer" class="p-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs sm:text-sm font-sans leading-relaxed max-h-[500px] overflow-y-auto"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODULE 7: OFFICE TOOLS
        ========================================================================= -->
   <div id="moduleTools" class="app-module flex-1 flex-col overflow-y-auto p-4 sm:p-6 lg:p-8 hidden">
     <div class="max-w-6xl w-full mx-auto space-y-8">
@@ -1094,7 +1267,7 @@
           <i data-lucide="wrench" class="w-5 h-5 text-indigo-500"></i>
           <span>办公高效实用小工具箱</span>
         </h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">涵盖 PDF 多文件合并拆分、合同差异比对 (Diff)、商业脱敏器与电子公章绘制。</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">涵盖 PDF 多文件合并拆分、商业脱敏器与电子公章绘制。</p>
       </div>
 
       <!-- 1. PDF Merge & Split -->
@@ -1127,25 +1300,7 @@
         </div>
       </div>
 
-      <!-- 2. Diff -->
-      <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-        <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
-          <div class="flex items-center space-x-3">
-            <div class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 flex items-center justify-center"><i data-lucide="git-compare" class="w-4 h-4"></i></div>
-            <div><h3 class="text-sm font-bold">双文档 / 合同差异比对 (Document Diff)</h3><p class="text-[11px] text-slate-400">高亮新增（绿色）与删除（红色删除线）</p></div>
-          </div>
-          <button onclick="runDocumentDiff()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold">开始比对</button>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <textarea id="diffTextA" rows="4" class="w-full text-xs p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono" placeholder="版本 A...">甲方应于合同签订后3个工作日内支付首付款人民币10,000元整，尾款于验收合格后付清。</textarea>
-          <textarea id="diffTextB" rows="4" class="w-full text-xs p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono" placeholder="版本 B...">甲方应于合同签订后5个工作日内支付首期预付款人民币15,000元整（含增值税专用发票），尾款于验收合格后7日内付清。</textarea>
-        </div>
-        <div id="diffResultContainer" class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-mono">
-          <span class="text-slate-400">点击上方「开始比对」查看对比结果...</span>
-        </div>
-      </div>
-
-      <!-- 3. Redactor -->
+      <!-- 2. Redactor -->
       <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
           <div class="flex items-center space-x-3">
@@ -1242,7 +1397,7 @@
     };
 
     const state = {
-      currentModule: 'home', // 'home', 'scan', 'convert', 'format', 'extract', 'templates', 'tools'
+      currentModule: 'home', // 'home', 'scan', 'convert', 'format', 'extract', 'templates', 'diff', 'tools'
       pages: [],
       currentPageIndex: -1,
       currentTab: 'crop',
@@ -1277,11 +1432,12 @@
       updateFormattedPreview();
       renderPaperTemplateCanvas();
       loadSampleExtractImage();
+      loadSampleDiffContracts();
 
       // Check URL parameters for direct module loading
       const urlParams = new URLSearchParams(window.location.search);
       const mod = urlParams.get('m');
-      if (mod && ['scan', 'convert', 'format', 'extract', 'templates', 'tools'].includes(mod)) {
+      if (mod && ['scan', 'convert', 'format', 'extract', 'templates', 'diff', 'tools'].includes(mod)) {
         switchAppModule(mod);
       }
     });
@@ -1294,15 +1450,15 @@
 
     function switchAppModule(moduleName) {
       state.currentModule = moduleName;
-      const modules = ['home', 'scan', 'convert', 'format', 'extract', 'templates', 'tools'];
+      const modules = ['home', 'scan', 'convert', 'format', 'extract', 'templates', 'diff', 'tools'];
       modules.forEach(m => {
         const el = document.getElementById(`module${capitalize(m)}`);
         const btn = document.getElementById(`tabNav${capitalize(m)}`);
         if (m === moduleName) {
-          el.classList.remove('hidden'); el.classList.add('flex');
+          if (el) { el.classList.remove('hidden'); el.classList.add('flex'); }
           if (btn) btn.className = 'nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300';
         } else {
-          el.classList.add('hidden'); el.classList.remove('flex');
+          if (el) { el.classList.add('hidden'); el.classList.remove('flex'); }
           if (btn) btn.className = 'nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100';
         }
       });
@@ -1335,7 +1491,123 @@
     function hideProgress() { document.getElementById('processingModal').classList.add('hidden'); }
 
     /* =========================================================================
-       TEMPLATES VIEWER SCALING & CRISP RENDERING (FIX BLURRY PREVIEW)
+       DOCUMENT DIFF ENGINE (SUPPORTS WORD .DOCX, PDF, TXT UPLOAD & AI REVIEW)
+       ========================================================================= */
+    async function handleDiffFileUpload(e, target) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      showProgress(`正在解析文档 ${target}...`, file.name);
+      try {
+        let extractedText = '';
+        const ext = file.name.split('.').pop().toLowerCase();
+        
+        if (ext === 'docx') {
+          const ab = await file.arrayBuffer();
+          const res = await mammoth.extractRawText({ arrayBuffer: ab });
+          extractedText = res.value;
+        } else if (ext === 'pdf') {
+          const ab = await file.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const pg = await pdf.getPage(i);
+            const tc = await pg.getTextContent();
+            extractedText += tc.items.map(it => it.str).join(' ') + '\n\n';
+          }
+        } else {
+          extractedText = await file.text();
+        }
+
+        if (target === 'A') {
+          document.getElementById('diffTextA').value = extractedText;
+          document.getElementById('docAStatusBadge').innerText = `已加载: ${file.name} (${extractedText.length} 字)`;
+          document.getElementById('docAStatusBadge').className = 'text-[10px] px-2 py-0.5 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 rounded-full font-bold';
+        } else {
+          document.getElementById('diffTextB').value = extractedText;
+          document.getElementById('docBStatusBadge').innerText = `已加载: ${file.name} (${extractedText.length} 字)`;
+          document.getElementById('docBStatusBadge').className = 'text-[10px] px-2 py-0.5 bg-cyan-100 dark:bg-cyan-950 text-cyan-600 rounded-full font-bold';
+        }
+        hideProgress();
+        showToast(`文档 ${target} (${file.name}) 解析成功！`);
+        runDocumentDiffAction();
+      } catch (err) {
+        hideProgress();
+        showToast(`文档解析失败: ${err.message}`, 'error');
+      }
+    }
+
+    function loadSampleDiffContracts() {
+      document.getElementById('diffTextA').value = `【技术开发与服务合同（原版）】\n\n一、 项目交付与验收周期\n乙方应于合同签订后30个工作日内完成系统开发并提交甲方初验。甲方应在收到初验报告后5个工作日内组织验收。\n\n二、 付款节点与方式\n1. 首付款：合同签订后3个工作日内，甲方支付合同总金额的30%（人民币30,000元）。\n2. 尾款：系统终验合格后，甲方支付剩余70%尾款。\n\n三、 违约责任与赔偿\n任何一方逾期履行的，每日按应付款项的千分之三向守约方支付违约金。若延期超过15日，守约方有权解除本合同。`;
+      document.getElementById('diffTextB').value = `【技术开发与服务合同（修改版）】\n\n一、 项目交付与验收周期\n乙方应于合同签订后45个工作日内完成系统开发与安全合规审查，并提交甲方初验。甲方应在收到初验报告后7个工作日内组织验收。\n\n二、 付款节点与方式\n1. 首付款：合同签订后5个工作日内，甲方支付合同总金额的20%预付款（人民币20,000元，含税）。\n2. 进度款：系统初验合格后，甲方支付合同总金额的40%。\n3. 尾款：系统终验合格后30日内，甲方支付剩余40%尾款。\n\n三、 违约责任与赔偿\n任何一方逾期履行的，每日按应付款项的千分之五向守约方支付违约金。若延期超过30日，守约方有权解除本合同，违约方需赔偿直接经济损失。`;
+      document.getElementById('docAStatusBadge').innerText = '示例原版合同';
+      document.getElementById('docBStatusBadge').innerText = '示例修改版合同';
+      runDocumentDiffAction();
+    }
+
+    function runDocumentDiffAction() {
+      const a = document.getElementById('diffTextA').value;
+      const b = document.getElementById('diffTextB').value;
+      if (!a && !b) { showToast('请先输入或上传两份文档', 'error'); return; }
+
+      const dmp = new diff_match_patch();
+      const diffs = dmp.diff_main(a, b);
+      dmp.diff_cleanupSemantic(diffs);
+
+      let insChars = 0, delChars = 0, html = '';
+      diffs.forEach(p => {
+        const text = p[1].replace(/\n/g, '<br/>');
+        if (p[0] === 1) { insChars += p[1].length; html += `<ins class="diff-ins">${text}</ins>`; }
+        else if (p[0] === -1) { delChars += p[1].length; html += `<del class="diff-del">${text}</del>`; }
+        else { html += `<span>${text}</span>`; }
+      });
+
+      const totalChars = Math.max(1, Math.max(a.length, b.length));
+      const ratio = Math.round(((insChars + delChars) / totalChars) * 100);
+
+      document.getElementById('statDiffIns').innerText = `+${insChars}`;
+      document.getElementById('statDiffDel').innerText = `-${delChars}`;
+      document.getElementById('statDiffRatio').innerText = `${ratio}%`;
+      document.getElementById('diffResultContainer').innerHTML = html;
+      document.getElementById('diffStatsDashboard').classList.remove('hidden');
+      showToast('文档差异比对完成！');
+    }
+
+    async function runAIContractRiskReview() {
+      const a = document.getElementById('diffTextA').value.trim();
+      const b = document.getElementById('diffTextB').value.trim();
+      if (!state.aiConfig.apiKey) { openAISettingsModal(); return; }
+
+      showProgress('AI 正在深度审查合同实质性变更...', '对比条款差异、法律风险及商业履约变动');
+      try {
+        const prompt = `你是一位资深商业律师。请对比以下【文档A（原版）】与【文档B（修改版）】，提炼出合同的关键实质性修订要点（如交期、付款方式、违约责任、免责条款等），并指出对甲乙双方的法律与商业风险提示：\n\n【原版文档A】：\n${a.slice(0, 3000)}\n\n【修改后文档B】：\n${b.slice(0, 3000)}`;
+        const res = await fetch(`${state.aiConfig.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${state.aiConfig.apiKey}` },
+          body: JSON.stringify({
+            model: state.aiConfig.model || 'gpt-4o',
+            messages: [{ role: 'user', content: prompt }]
+          })
+        });
+        const data = await res.json();
+        const reviewText = data.choices?.[0]?.message?.content || '未能生成审查结果';
+        document.getElementById('aiContractReviewContent').innerText = reviewText;
+        document.getElementById('aiContractReviewBox').classList.remove('hidden');
+        hideProgress();
+        showToast('AI 合同审查报告已生成！');
+      } catch (err) {
+        hideProgress();
+        showToast('AI 审查失败: ' + err.message, 'error');
+      }
+    }
+
+    function exportDiffReportHTML() {
+      const diffHtml = document.getElementById('diffResultContainer').innerHTML;
+      const stats = `新增: ${document.getElementById('statDiffIns').innerText} 字 | 删除: ${document.getElementById('statDiffDel').innerText} 字 | 变更率: ${document.getElementById('statDiffRatio').innerText}`;
+      const win = window.open('', '_blank');
+      win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>文档比对与修订报告</title><style>body{font-family:sans-serif;padding:40px;line-height:1.8;color:#1e293b;}ins{background:#dcfce7;color:#15803d;text-decoration:none;padding:2px 4px;border-radius:3px;font-weight:bold;}del{background:#fee2e2;color:#b91c1c;text-decoration:line-through;padding:2px 4px;border-radius:3px;}.header{border-bottom:2px solid #e2e8f0;padding-bottom:16px;margin-bottom:24px;}</style></head><body><div class="header"><h2>文档与合同差异比对报告</h2><p>${stats}</p><p>生成时间: ${new Date().toLocaleString()}</p></div><div class="content">${diffHtml}</div></body></html>`);
+      win.document.close();
+    }
+
+    /* =========================================================================
+       TEMPLATES VIEWER SCALING & TRACE CALLIGRAPHY (字帖描红与高清缩放)
        ========================================================================= */
     function setTemplateColor(color) {
       state.tplColor = color;
@@ -1360,11 +1632,18 @@
       const wrapper = document.getElementById('tplPaperWrapper');
       const canvas = document.getElementById('templatePaperCanvas');
       if (!wrapper || !canvas) return;
-      
-      // Calculate scaled display width
       const displayW = Math.round(canvas.width * state.tplZoom);
       wrapper.style.width = `${displayW}px`;
       document.getElementById('tplZoomText').innerText = `${Math.round(state.tplZoom * 200)}%`;
+    }
+
+    function setTraceSample(type) {
+      const input = document.getElementById('tplTraceText');
+      if (type === 'sanzi') input.value = '人之初 性本善 性相近 习相远 苟不教 性乃迁 教之道 贵以专';
+      else if (type === 'tangshi') input.value = '床前明月光 疑是地上霜 举头望明月 低头思故乡';
+      else if (type === 'abc') input.value = 'Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn';
+      document.getElementById('tplTraceEnabled').checked = true;
+      renderPaperTemplateCanvas();
     }
 
     function renderPaperTemplateCanvas() {
@@ -1378,24 +1657,21 @@
       const lineBoldness = parseFloat(document.getElementById('sliderTplLineWidth').value);
       const color = state.tplColor || '#dc2626';
 
+      const isTrace = document.getElementById('tplTraceEnabled').checked;
+      const traceText = document.getElementById('tplTraceText').value.replace(/\s+/g, '');
+
       document.getElementById('valTplGridSize').innerText = `${gridSize}mm`;
       document.getElementById('valTplLineWidth').innerText = `${lineBoldness}px`;
 
-      // Set dimensions (200-300 DPI for ultra-crisp render)
-      let w = 2480, h = 3508; // Standard A4
+      let w = 2480, h = 3508;
       if (paperSize === 'a5') { w = 1748; h = 2480; }
       else if (paperSize === 'a3') { w = 3508; h = 4960; }
 
       if (orientation === 'l') { const tmp = w; w = h; h = tmp; }
 
-      canvas.width = w;
-      canvas.height = h;
+      canvas.width = w; canvas.height = h;
+      c.fillStyle = '#ffffff'; c.fillRect(0, 0, w, h);
 
-      // Pure White Background
-      c.fillStyle = '#ffffff';
-      c.fillRect(0, 0, w, h);
-
-      // Margin
       const margin = Math.round(w * 0.055);
       const contentW = w - margin * 2;
       const contentH = h - margin * 2;
@@ -1412,7 +1688,9 @@
       const strokeOuter = lineBoldness * 1.5;
       const strokeInner = Math.max(1, lineBoldness * 0.85);
 
-      if (tplType === 'tianzi' || tplType === 'pure_tianzi') {
+      let charIdx = 0;
+
+      if (tplType === 'tianzi' || tplType === 'pure_tianzi' || tplType === 'mizi') {
         const hasPinyin = tplType === 'tianzi';
         const cols = Math.floor(contentW / cellPx);
         const pinyinH = hasPinyin ? Math.round(cellPx * 0.42) : 0;
@@ -1425,54 +1703,41 @@
             const x = margin + col * cellPx;
 
             if (hasPinyin) {
-              c.strokeStyle = color;
-              c.lineWidth = strokeOuter;
+              c.strokeStyle = color; c.lineWidth = strokeOuter;
               c.strokeRect(x, y, cellPx, pinyinH);
-              c.setLineDash([8, 8]);
-              c.lineWidth = strokeInner;
+              c.setLineDash([8, 8]); c.lineWidth = strokeInner;
               c.beginPath();
               c.moveTo(x, y + pinyinH * 0.33); c.lineTo(x + cellPx, y + pinyinH * 0.33);
               c.moveTo(x, y + pinyinH * 0.66); c.lineTo(x + cellPx, y + pinyinH * 0.66);
-              c.stroke();
-              c.setLineDash([]);
+              c.stroke(); c.setLineDash([]);
             }
 
             const tianY = y + pinyinH;
-            c.strokeStyle = color;
-            c.lineWidth = strokeOuter;
+            c.strokeStyle = color; c.lineWidth = strokeOuter;
             c.strokeRect(x, tianY, cellPx, cellPx);
 
-            c.setLineDash([8, 8]);
-            c.lineWidth = strokeInner;
+            c.setLineDash([8, 8]); c.lineWidth = strokeInner;
             c.beginPath();
             c.moveTo(x + cellPx / 2, tianY); c.lineTo(x + cellPx / 2, tianY + cellPx);
             c.moveTo(x, tianY + cellPx / 2); c.lineTo(x + cellPx, tianY + cellPx / 2);
-            c.stroke();
-            c.setLineDash([]);
-          }
-        }
-      } else if (tplType === 'mizi') {
-        const cols = Math.floor(contentW / cellPx);
-        const rowH = cellPx + Math.round(cellPx * 0.15);
-        const rows = Math.floor(drawH / rowH);
+            if (tplType === 'mizi') {
+              c.moveTo(x, tianY); c.lineTo(x + cellPx, tianY + cellPx);
+              c.moveTo(x + cellPx, tianY); c.lineTo(x, tianY + cellPx);
+            }
+            c.stroke(); c.setLineDash([]);
 
-        for (let r = 0; r < rows; r++) {
-          const y = startY + r * rowH;
-          for (let col = 0; col < cols; col++) {
-            const x = margin + col * cellPx;
-            c.strokeStyle = color;
-            c.lineWidth = strokeOuter;
-            c.strokeRect(x, y, cellPx, cellPx);
-
-            c.setLineDash([8, 8]);
-            c.lineWidth = strokeInner;
-            c.beginPath();
-            c.moveTo(x + cellPx / 2, y); c.lineTo(x + cellPx / 2, y + cellPx);
-            c.moveTo(x, y + cellPx / 2); c.lineTo(x + cellPx, y + cellPx / 2);
-            c.moveTo(x, y); c.lineTo(x + cellPx, y + cellPx);
-            c.moveTo(x + cellPx, y); c.lineTo(x, y + cellPx);
-            c.stroke();
-            c.setLineDash([]);
+            // Draw Trace Character Watermark
+            if (isTrace && traceText.length > 0) {
+              const char = traceText[charIdx % traceText.length];
+              charIdx++;
+              c.save();
+              c.font = `${Math.round(cellPx * 0.72)}px "KaiTi", "楷体", "STKaiti", serif`;
+              c.fillStyle = 'rgba(148, 163, 184, 0.42)'; // faint gray trace ink
+              c.textAlign = 'center';
+              c.textBaseline = 'middle';
+              c.fillText(char, x + cellPx / 2, tianY + cellPx / 2 + cellPx * 0.04);
+              c.restore();
+            }
           }
         }
       } else if (tplType === 'music' || tplType === 'guitar') {
@@ -1484,13 +1749,10 @@
 
         for (let s = 0; s < systems; s++) {
           const sy = startY + s * (staveH + systemGap);
-          c.strokeStyle = color;
-          c.lineWidth = strokeOuter;
+          c.strokeStyle = color; c.lineWidth = strokeOuter;
           for (let l = 0; l < lineCount; l++) {
             const ly = sy + l * staveGap;
-            c.beginPath();
-            c.moveTo(margin, ly); c.lineTo(w - margin, ly);
-            c.stroke();
+            c.beginPath(); c.moveTo(margin, ly); c.lineTo(w - margin, ly); c.stroke();
           }
           c.lineWidth = strokeOuter * 1.5;
           c.beginPath();
@@ -1506,20 +1768,17 @@
         for (let r = 0; r < rows; r++) {
           const ry = startY + r * (rowH + gap);
           const h1 = rowH * 0.33, h2 = rowH * 0.66;
-          c.strokeStyle = color;
-          c.lineWidth = strokeOuter;
+          c.strokeStyle = color; c.lineWidth = strokeOuter;
           c.beginPath();
           c.moveTo(margin, ry); c.lineTo(w - margin, ry);
           c.moveTo(margin, ry + rowH); c.lineTo(w - margin, ry + rowH);
           c.stroke();
 
-          c.setLineDash([8, 8]);
-          c.lineWidth = strokeInner;
+          c.setLineDash([8, 8]); c.lineWidth = strokeInner;
           c.beginPath();
           c.moveTo(margin, ry + h1); c.lineTo(w - margin, ry + h1);
           c.moveTo(margin, ry + h2); c.lineTo(w - margin, ry + h2);
-          c.stroke();
-          c.setLineDash([]);
+          c.stroke(); c.setLineDash([]);
         }
       } else if (tplType === 'grid' || tplType === 'dot') {
         const isDot = tplType === 'dot';
@@ -1527,14 +1786,9 @@
         for (let y = startY; y < h - margin; y += step) {
           for (let x = margin; x < w - margin; x += step) {
             if (isDot) {
-              c.fillStyle = color;
-              c.beginPath();
-              c.arc(x, y, lineBoldness * 1.2, 0, Math.PI * 2);
-              c.fill();
+              c.fillStyle = color; c.beginPath(); c.arc(x, y, lineBoldness * 1.2, 0, Math.PI * 2); c.fill();
             } else {
-              c.strokeStyle = color;
-              c.lineWidth = strokeInner * 0.7;
-              c.strokeRect(x, y, step, step);
+              c.strokeStyle = color; c.lineWidth = strokeInner * 0.7; c.strokeRect(x, y, step, step);
             }
           }
         }
@@ -1548,14 +1802,10 @@
           const y = startY + r * rowH;
           for (let col = 0; col < cols; col++) {
             const x = margin + col * cellW;
-            c.strokeStyle = color;
-            c.lineWidth = strokeOuter;
+            c.strokeStyle = color; c.lineWidth = strokeOuter;
             c.strokeRect(x, y, cellW, cellPx);
-            c.setLineDash([8, 8]);
-            c.lineWidth = strokeInner;
-            c.beginPath();
-            c.moveTo(x, y + cellPx / 2); c.lineTo(x + cellW, y + cellPx / 2);
-            c.stroke();
+            c.setLineDash([8, 8]); c.lineWidth = strokeInner;
+            c.beginPath(); c.moveTo(x, y + cellPx / 2); c.lineTo(x + cellW, y + cellPx / 2); c.stroke();
             c.setLineDash([]);
           }
         }
@@ -1567,8 +1817,7 @@
           const y = startY + r * Math.round(squareSize * 1.2);
           for (let cIdx = 0; cIdx < cols; cIdx++) {
             const x = margin + cIdx * squareSize;
-            c.strokeStyle = color;
-            c.lineWidth = strokeOuter;
+            c.strokeStyle = color; c.lineWidth = strokeOuter;
             c.strokeRect(x, y, squareSize, squareSize);
           }
         }
@@ -1724,6 +1973,39 @@
     /* =========================================================================
        FORMAT CONVERTER, FORMATTER, PDF TOOLS & AI
        ========================================================================= */
+    async function handleImagesToPdf(e) {
+      const files = Array.from(e.target.files); if (!files.length) return; e.target.value = '';
+      showProgress('正在将图片合并为 PDF...', `处理 ${files.length} 张图片`);
+      try {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfW = pdf.internal.pageSize.getWidth();
+        const pdfH = pdf.internal.pageSize.getHeight();
+
+        for (let i = 0; i < files.length; i++) {
+          if (i > 0) pdf.addPage();
+          const imgData = await readFileAsDataURL(files[i]);
+          pdf.addImage(imgData, 'JPEG', 10, 10, pdfW - 20, pdfH - 20, undefined, 'FAST');
+          updateProgress(((i + 1) / files.length) * 100);
+        }
+        pdf.save(`Images_Merged_${Date.now()}.pdf`);
+        hideProgress();
+        showToast('多张图片已成功合并为 PDF！');
+      } catch (err) {
+        hideProgress();
+        showToast('图片转 PDF 失败: ' + err.message, 'error');
+      }
+    }
+
+    function readFileAsDataURL(file) {
+      return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = e => res(e.target.result);
+        r.onerror = rej;
+        r.readAsDataURL(file);
+      });
+    }
+
     async function handlePdfToWord(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       showProgress('正在将 PDF 转换为 Word...', '解析 PDF 排版与文本结构');
@@ -1815,14 +2097,14 @@
       } catch (err) { hideProgress(); showToast('导出图片失败: ' + err.message, 'error'); }
     }
 
-    async function handleWordImport(e) {
+    async function handleWordImportToFormatter(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       try {
         const ab = await file.arrayBuffer();
         const res = await mammoth.extractRawText({ arrayBuffer: ab });
         document.getElementById('formatterEditor').value = res.value;
-        updateFormattedPreview(); switchAppModule('format');
-        showToast('Word 文档已导入并进入排版！');
+        updateFormattedPreview();
+        showToast('Word 文档已导入到编辑器！');
       } catch (err) { showToast('导入 Word 失败: ' + err.message, 'error'); }
     }
 
@@ -1862,6 +2144,18 @@
     }
 
     /* Formatter Logic */
+    function insertGovElement(type) {
+      const ed = document.getElementById('formatterEditor');
+      let insert = '';
+      if (type === 'docNo') insert = '发文字号：〔2026〕18号\n\n';
+      else if (type === 'recipient') insert = '各部室、直属各单位、分支机构：\n\n';
+      else if (type === 'attachment') insert = '\n\n附件：1. 2026年度重点项目推进清单\n      2. 工作考核细则';
+      else if (type === 'signature') insert = '\n\n办公综合管理部\n2026年08月28日';
+      ed.value += insert;
+      updateFormattedPreview();
+      showToast('已插入公文标准要素！');
+    }
+
     function setFormatterStyle(style) {
       document.getElementById('formattedA4Paper').className = `w-full max-w-[800px] min-h-[1050px] bg-white dark:bg-slate-900 shadow-2xl rounded-sm p-8 sm:p-12 sm:px-16 border border-slate-200 dark:border-slate-800 doc-preview-${style}`;
       updateFormattedPreview();
@@ -1907,7 +2201,7 @@
     }
     function printFormattedDoc() { window.print(); }
     function loadSampleDocText() {
-      document.getElementById('formatterEditor').value = `关于进一步推进数字化办公体系建设的通知\n\n各部室、直属各单位、分支机构：\n\n为全面贯彻落实智能化发展战略，提升全员跨部门协作与文档处理流转效率，经办公会议研究决定，现就全面推广使用新一代线上办公增强超级工作台有关事项通知如下：\n\n一、 统一文档格式规范与排版标准\n各单位在拟定各类通知通报、会议纪要、工作汇报时，应严格遵循国家标准公文格式。全面消除由于格式错乱、全半角标点混用及多余空行带来的排版问题，确保对外输出文档权威、美观、规范。\n\n二、 全面深化数据隐私与安全保护\n所有涉及外部供应商结算单据、人员信息及商业合同文件，严禁通过未经安全认证的第三方中转服务器处理。\n\n特此通知。\n\n办公综合管理部\n2026年08月28日`;
+      document.getElementById('formatterEditor').value = `关于进一步推进数字化办公体系建设的通知\n\n发文字号：办公发〔2026〕18号\n\n各部室、直属各单位、分支机构：\n\n为全面贯彻落实智能化发展战略，提升全员跨部门协作与文档处理流转效率，经办公会议研究决定，现就全面推广使用新一代线上办公增强超级工作台有关事项通知如下：\n\n一、 统一文档格式规范与排版标准\n各单位在拟定各类通知通报、会议纪要、工作汇报时，应严格遵循国家标准公文格式。全面消除由于格式错乱、全半角标点混用及多余空行带来的排版问题，确保对外输出文档权威、美观、规范。\n\n二、 全面深化数据隐私与安全保护\n所有涉及外部供应商结算单据、人员信息及商业合同文件，严禁通过未经安全认证的第三方中转服务器处理。\n\n附件：1. 2026年度数字化办公推广推进清单\n\n特此通知。\n\n办公综合管理部\n2026年08月28日`;
       updateFormattedPreview(); showToast('已载入公文范例');
     }
     function clearFormatterEditor() { document.getElementById('formatterEditor').value = ''; updateFormattedPreview(); }
@@ -1931,7 +2225,7 @@
       } catch (err) { showToast('AI 润色失败: ' + err.message, 'error'); }
     }
 
-    /* PDF Tools, Diff, Redactor */
+    /* PDF Tools, Redactor */
     async function handleMergePdfs(e) {
       const files = Array.from(e.target.files); if (files.length < 2) return; e.target.value = '';
       showProgress('正在合并 PDF...', `合并 ${files.length} 个文件`);
@@ -1971,21 +2265,6 @@
         hideProgress();
         showToast('PDF 拆分提取成功！');
       } catch (err) { hideProgress(); showToast('拆分失败: ' + err.message, 'error'); }
-    }
-    function runDocumentDiff() {
-      const a = document.getElementById('diffTextA').value, b = document.getElementById('diffTextB').value;
-      const dmp = new diff_match_patch();
-      const diffs = dmp.diff_main(a, b);
-      dmp.diff_cleanupSemantic(diffs);
-      let html = '';
-      diffs.forEach(p => {
-        const text = p[1].replace(/\n/g, '<br/>');
-        if (p[0] === 1) html += `<ins class="diff-ins">${text}</ins>`;
-        else if (p[0] === -1) html += `<del class="diff-del">${text}</del>`;
-        else html += `<span>${text}</span>`;
-      });
-      document.getElementById('diffResultContainer').innerHTML = html;
-      showToast('比对完成！');
     }
     function runPrivacyRedaction() {
       let t = document.getElementById('redactorInput').value;
