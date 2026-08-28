@@ -11,23 +11,14 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <!-- Core Office Processing Libraries -->
-  <!-- 1. jsPDF for A3/A4/A5 PDF generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- 2. pdf-lib for PDF merge, split, watermark -->
   <script src="https://unpkg.com/pdf-lib@1.17.9/dist/pdf-lib.min.js"></script>
-  <!-- 3. pdfjs-dist for rendering & reading PDF pages -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <!-- 4. SheetJS (xlsx) for Excel <-> CSV <-> JSON <-> Tables -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <!-- 5. Mammoth.js for converting .docx to clean HTML/text -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-  <!-- 6. docx.js for generating real styled .docx files -->
   <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
-  <!-- 7. PptxGenJS for PowerPoint generation -->
   <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
-  <!-- 8. JSZip for bulk file packaging -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <!-- 9. Diff Match Patch for document comparison -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js"></script>
 
   <script>
@@ -67,7 +58,7 @@
   </script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     
     * {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
@@ -83,7 +74,7 @@
       touch-action: none;
     }
 
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.35); border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.7); }
@@ -194,34 +185,6 @@
       z-index: 25;
     }
 
-    .split-divider {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: #ffffff;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-      cursor: ew-resize;
-      z-index: 30;
-    }
-    .split-divider-handle {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 2.5px solid #4f46e5;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #4f46e5;
-      cursor: ew-resize;
-    }
-
     /* Document Formatter Typography */
     .doc-preview-gov {
       font-family: "FangSong", "仿宋", "STFangsong", serif;
@@ -307,55 +270,59 @@
         <i data-lucide="menu" class="w-5 h-5"></i>
       </button>
 
-      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-        <i data-lucide="briefcase" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-      </div>
-      <div>
-        <div class="flex items-center space-x-1.5 sm:space-x-2">
-          <h1 class="text-base sm:text-lg font-bold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 dark:from-indigo-400 dark:via-purple-400 dark:to-violet-400 bg-clip-text text-transparent">Office Master Studio</h1>
-          <span class="text-[10px] sm:text-[11px] px-1.5 py-0.2 rounded-full bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">超级办公工作台</span>
+      <!-- Home Logo -->
+      <button onclick="switchAppModule('home')" class="flex items-center space-x-2.5 group text-left">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="briefcase" class="w-5 h-5 sm:w-6 sm:h-6"></i>
         </div>
-        <p class="text-[10px] text-slate-400 hidden 2xl:block">格式互转 / 公文智能排版 / 图像扫描 / 印章签名提取 / 田字格作业模板 / PDF瑞士军刀</p>
-      </div>
+        <div>
+          <div class="flex items-center space-x-1.5">
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 dark:from-indigo-400 dark:via-purple-400 dark:to-violet-400 bg-clip-text text-transparent">Office Master Studio</h1>
+            <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">Pro</span>
+          </div>
+          <p class="text-[10px] text-slate-400 hidden 2xl:block">一站式线上办公超级工作台 / 100% 本地离线安全</p>
+        </div>
+      </button>
     </div>
 
     <!-- Main Navigation Tabs (Desktop) -->
     <nav class="hidden xl:flex items-center p-1 bg-slate-100 dark:bg-slate-800/90 rounded-xl border border-slate-200 dark:border-slate-700">
-      <button onclick="switchAppModule('scan')" id="tabNavScan" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300">
+      <button onclick="switchAppModule('home')" id="tabNavHome" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300">
+        <i data-lucide="home" class="w-4 h-4"></i>
+        <span>首页</span>
+      </button>
+      <button onclick="switchAppModule('scan')" id="tabNavScan" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
         <i data-lucide="scan-line" class="w-4 h-4"></i>
         <span>1. 图像转文档</span>
       </button>
       <button onclick="switchAppModule('convert')" id="tabNavConvert" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
-        <i data-lucide="repeat" class="w-4 h-4"></i>
+        <i data-lucide="repeat" class="w-4 h-4 text-blue-500"></i>
         <span>2. 格式互转中心</span>
       </button>
       <button onclick="switchAppModule('format')" id="tabNavFormat" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
-        <i data-lucide="type" class="w-4 h-4"></i>
+        <i data-lucide="type" class="w-4 h-4 text-indigo-500"></i>
         <span>3. Word/公文排版</span>
       </button>
       <button onclick="switchAppModule('extract')" id="tabNavExtract" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
         <i data-lucide="scissors" class="w-4 h-4 text-red-500"></i>
-        <span>4. 印章与签名抠图</span>
+        <span>4. 印章签名抠图</span>
       </button>
       <button onclick="switchAppModule('templates')" id="tabNavTemplates" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
         <i data-lucide="grid" class="w-4 h-4 text-emerald-500"></i>
-        <span>5. 田字格与作业纸模板</span>
+        <span>5. 田字格与作业纸</span>
       </button>
       <button onclick="switchAppModule('tools')" id="tabNavTools" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
-        <i data-lucide="wrench" class="w-4 h-4"></i>
-        <span>6. 实用工具箱</span>
+        <i data-lucide="wrench" class="w-4 h-4 text-amber-500"></i>
+        <span>6. 实用小工具箱</span>
       </button>
     </nav>
 
     <!-- Right Header Actions -->
     <div class="flex items-center space-x-1.5 sm:space-x-2">
-      <!-- AI Settings Button -->
       <button onclick="openAISettingsModal()" class="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 hover:from-purple-500/20 hover:to-indigo-500/20 text-purple-600 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60 rounded-lg text-xs font-semibold transition active:scale-95">
         <i data-lucide="bot" class="w-4 h-4 text-purple-500"></i>
         <span class="hidden sm:inline">AI 模型设置</span>
       </button>
-
-      <!-- Theme Toggle -->
       <button onclick="toggleDarkMode()" class="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">
         <i data-lucide="moon" id="moonIcon" class="w-4 h-4 hidden dark:block"></i>
         <i data-lucide="sun" id="sunIcon" class="w-4 h-4 block dark:hidden"></i>
@@ -367,51 +334,211 @@
   <div id="mobileNavDrawer" class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-900 shadow-2xl border-r border-slate-200 dark:border-slate-800 transform -translate-x-full transition-transform duration-300 flex flex-col xl:hidden">
     <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
       <div class="flex items-center space-x-2">
-        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-          <i data-lucide="briefcase" class="w-4 h-4"></i>
-        </div>
-        <span class="font-bold text-sm">全功能导航</span>
+        <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i data-lucide="briefcase" class="w-4 h-4"></i></div>
+        <span class="font-bold text-sm">功能导航菜单</span>
       </div>
-      <button onclick="toggleMobileGlobalNav()" class="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
+      <button onclick="toggleMobileGlobalNav()" class="p-1.5 text-slate-400"><i data-lucide="x" class="w-5 h-5"></i></button>
     </div>
-    <div class="p-3 space-y-1 flex-1 overflow-y-auto">
-      <button onclick="switchAppModule('scan'); toggleMobileGlobalNav();" class="w-full text-left p-2.5 rounded-xl flex items-center space-x-3 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-300 font-semibold">
-        <i data-lucide="scan-line" class="w-4 h-4"></i>
-        <span class="text-xs font-bold">1. 图像转文档 (DocScan)</span>
+    <div class="p-3 space-y-1.5 flex-1 overflow-y-auto">
+      <button onclick="switchAppModule('home'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-300 font-bold">
+        <i data-lucide="home" class="w-5 h-5"></i>
+        <div><div class="text-xs font-bold">首页 / 功能大厅</div><div class="text-[10px] text-slate-400">快速查找与启动办公工具</div></div>
       </button>
-      <button onclick="switchAppModule('convert'); toggleMobileGlobalNav();" class="w-full text-left p-2.5 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
-        <i data-lucide="repeat" class="w-4 h-4 text-blue-500"></i>
-        <span class="text-xs font-bold">2. 全能格式互转中心</span>
+      <button onclick="switchAppModule('scan'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+        <i data-lucide="scan-line" class="w-5 h-5 text-indigo-500"></i>
+        <div><div class="text-xs font-bold">1. 图像转文档 (DocScan)</div><div class="text-[10px] text-slate-400">智能切边、去阴影增强、多模态AI</div></div>
       </button>
-      <button onclick="switchAppModule('format'); toggleMobileGlobalNav();" class="w-full text-left p-2.5 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
-        <i data-lucide="type" class="w-4 h-4 text-indigo-500"></i>
-        <span class="text-xs font-bold">3. Word/公文智能排版</span>
+      <button onclick="switchAppModule('convert'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+        <i data-lucide="repeat" class="w-5 h-5 text-blue-500"></i>
+        <div><div class="text-xs font-bold">2. 全能格式互转中心</div><div class="text-[10px] text-slate-400">PDF ⇄ Word / Excel / PPT / 图片包</div></div>
       </button>
-      <button onclick="switchAppModule('extract'); toggleMobileGlobalNav();" class="w-full text-left p-2.5 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
-        <i data-lucide="scissors" class="w-4 h-4 text-red-500"></i>
-        <span class="text-xs font-bold">4. 印章与手写签名提取</span>
+      <button onclick="switchAppModule('format'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+        <i data-lucide="type" class="w-5 h-5 text-purple-500"></i>
+        <div><div class="text-xs font-bold">3. Word/公文智能排版</div><div class="text-[10px] text-slate-400">国标排版、一键清洗、导出 .docx</div></div>
       </button>
-      <button onclick="switchAppModule('templates'); toggleMobileGlobalNav();" class="w-full text-left p-2.5 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
-        <i data-lucide="grid" class="w-4 h-4 text-emerald-500"></i>
-        <span class="text-xs font-bold">5. 田字格与作业纸模板库</span>
+      <button onclick="switchAppModule('extract'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+        <i data-lucide="scissors" class="w-5 h-5 text-red-500"></i>
+        <div><div class="text-xs font-bold">4. 印章与签名抠图提取</div><div class="text-[10px] text-slate-400">红印章分离、笔迹手写透明化</div></div>
       </button>
-      <button onclick="switchAppModule('tools'); toggleMobileGlobalNav();" class="w-full text-left p-2.5 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+      <button onclick="switchAppModule('templates'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
+        <i data-lucide="grid" class="w-5 h-5 text-emerald-500"></i>
+        <div><div class="text-xs font-bold">5. 田字格与作业纸模板库</div><div class="text-[10px] text-slate-400">拼音田字格、米字格、五线谱、A3/A4/A5</div></div>
+      </button>
+      <button onclick="switchAppModule('tools'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
         <i data-lucide="wrench" class="w-4 h-4 text-amber-500"></i>
-        <span class="text-xs font-bold">6. 办公高效小工具箱</span>
+        <div><div class="text-xs font-bold">6. 办公高效小工具箱</div><div class="text-[10px] text-slate-400">PDF合并拆分、合同Diff比对、脱敏器</div></div>
       </button>
     </div>
   </div>
   <div id="mobileGlobalBackdrop" onclick="toggleMobileGlobalNav()" class="fixed inset-0 bg-black/50 z-40 hidden xl:hidden"></div>
 
   <!-- =========================================================================
-       MODULE 1: DOCUMENT SCANNER & AI RECOGNITION (DOCSCAN)
+       MODULE 0: HOME / PORTAL HUB (功能大厅首页)
        ========================================================================= -->
-  <div id="moduleScan" class="app-module flex-1 flex overflow-hidden relative">
+  <div id="moduleHome" class="app-module flex-1 flex-col overflow-y-auto p-4 sm:p-6 lg:p-10">
+    <div class="max-w-6xl w-full mx-auto space-y-8 animate-fade-in">
+      
+      <!-- Hero Banner -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-white p-6 sm:p-10 shadow-2xl border border-indigo-700/50">
+        <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 max-w-2xl space-y-3">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-medium text-indigo-200 border border-white/10">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>100% 浏览器本地离线运行 · 数据绝不上传云端</span>
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
+            高颜值 · 极速 · 全能的<br><span class="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">线上办公超级增强工作台</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-indigo-100/80 leading-relaxed">
+            为您整合了日常办公最高频的 6 大核心模块：图像文档扫描压平、全格式文件互转、Word 国标公文排版美化、印章签名透明抠图、学生练字与作业纸高清打印，以及 PDF 瑞士军刀工具集。
+          </p>
+        </div>
+      </div>
+
+      <!-- Core Function Cards Grid -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <i data-lucide="layout-grid" class="w-4 h-4 text-indigo-500"></i>
+            <span>选择您需要使用的办公功能</span>
+          </h3>
+          <span class="text-xs text-slate-400">点击任意卡片即可直接进入</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          
+          <!-- Card 1: DocScan -->
+          <div onclick="switchAppModule('scan')" class="group p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 dark:hover:border-indigo-500 shadow-sm hover:shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-4">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="scan-line" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 transition-colors">1. 智能图像转文档</h4>
+                <span class="text-[11px] font-semibold text-indigo-500 bg-indigo-50 dark:bg-indigo-950/80 px-2 py-0.5 rounded-full">扫描全能王同款</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                自动检测倾斜纸张四角、透视压平展开、局部白底增白去阴影、保护红头公章、多模态 AI 视觉提取与多页 PDF 导出。
+              </p>
+            </div>
+            <div class="flex items-center text-xs font-bold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 transition-transform">
+              <span>立即使用图像扫描</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+            </div>
+          </div>
+
+          <!-- Card 2: Converter Hub -->
+          <div onclick="switchAppModule('convert')" class="group p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 shadow-sm hover:shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-4">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="repeat" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-blue-600 transition-colors">2. 全能格式互转中心</h4>
+                <span class="text-[11px] font-semibold text-blue-500 bg-blue-50 dark:bg-blue-950/80 px-2 py-0.5 rounded-full">全能互转</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                PDF ⇄ Word (.docx)、PDF ⇄ Excel (.xlsx)、PDF ⇄ PPT (.pptx)、PDF ⇄ 高清图片包 (ZIP)、表格数据四向互转。
+              </p>
+            </div>
+            <div class="flex items-center text-xs font-bold text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform">
+              <span>立即进行文件格式互转</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+            </div>
+          </div>
+
+          <!-- Card 3: Formatter -->
+          <div onclick="switchAppModule('format')" class="group p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-purple-500 dark:hover:border-purple-500 shadow-sm hover:shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-4">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="type" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-purple-600 transition-colors">3. Word / 公文智能排版</h4>
+                <span class="text-[11px] font-semibold text-purple-500 bg-purple-50 dark:bg-purple-950/80 px-2 py-0.5 rounded-full">国标规范</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                一键清洗多余空行/空格、中英文盘古空格、标点规范化、仿宋国标公文排版预设、AI 智能公文润色，一键导出真实 .docx。
+              </p>
+            </div>
+            <div class="flex items-center text-xs font-bold text-purple-600 dark:text-purple-400 group-hover:translate-x-1 transition-transform">
+              <span>立即进行公文排版</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+            </div>
+          </div>
+
+          <!-- Card 4: Extractor -->
+          <div onclick="switchAppModule('extract')" class="group p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-red-500 dark:hover:border-red-500 shadow-sm hover:shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-4">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="scissors" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-red-600 transition-colors">4. 印章与签名抠图提取</h4>
+                <span class="text-[11px] font-semibold text-red-500 bg-red-50 dark:bg-red-950/80 px-2 py-0.5 rounded-full">透明抠图</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                高精度红色公章分离、黑蓝手写笔迹提取，自动过滤底色与黑字杂质，一键生成并下载 100% 透明无损 PNG。
+              </p>
+            </div>
+            <div class="flex items-center text-xs font-bold text-red-600 dark:text-red-400 group-hover:translate-x-1 transition-transform">
+              <span>立即提取印章与签名</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+            </div>
+          </div>
+
+          <!-- Card 5: Templates -->
+          <div onclick="switchAppModule('templates')" class="group p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 shadow-sm hover:shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-4">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="grid" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition-colors">5. 田字格与作业纸模板库</h4>
+                <span class="text-[11px] font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded-full">高清矢量打印</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                拼音田字格、米字格、日字格、英语四线三格、五线谱、吉他TAB六线谱、作文稿纸，支持 A3 / A4 / A5 尺寸高清导出与打印。
+              </p>
+            </div>
+            <div class="flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform">
+              <span>立即生成练字纸/作业模板</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+            </div>
+          </div>
+
+          <!-- Card 6: Toolbox -->
+          <div onclick="switchAppModule('tools')" class="group p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 dark:hover:border-amber-500 shadow-sm hover:shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between space-y-4">
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <i data-lucide="wrench" class="w-6 h-6"></i>
+              </div>
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-amber-600 transition-colors">6. 办公高效小工具箱</h4>
+                <span class="text-[11px] font-semibold text-amber-500 bg-amber-50 dark:bg-amber-950/80 px-2 py-0.5 rounded-full">实用合集</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                多 PDF 毫秒级合并、页面按范围拆分、双文档合同差异 Diff 对比、商业个人隐私脱敏器、标准电子公章实时绘制。
+              </p>
+            </div>
+            <div class="flex items-center text-xs font-bold text-amber-600 dark:text-amber-400 group-hover:translate-x-1 transition-transform">
+              <span>进入工具箱</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODULE 1: DOCUMENT SCANNER (DOCSCAN)
+       ========================================================================= -->
+  <div id="moduleScan" class="app-module flex-1 flex overflow-hidden relative hidden">
     <input type="file" id="fileInput" accept="image/*" multiple class="hidden" onchange="handleFileSelect(event)">
 
-    <!-- LEFT SIDEBAR: Pages -->
     <aside id="leftSidebar" class="fixed md:static inset-y-0 left-0 z-40 w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 shadow-xl md:shadow-none">
       <div class="p-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
         <div class="flex items-center space-x-2">
@@ -419,60 +546,43 @@
           <span id="pageBadge" class="text-[11px] font-semibold px-2 py-0.5 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-full">0 页</span>
         </div>
         <div class="flex items-center space-x-1">
-          <button onclick="triggerFileInput()" class="p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 rounded-md">
-            <i data-lucide="plus-circle" class="w-4 h-4"></i>
-          </button>
-          <button onclick="toggleMobilePageDrawer()" class="md:hidden p-1.5 text-slate-400">
-            <i data-lucide="x" class="w-4 h-4"></i>
-          </button>
+          <button onclick="triggerFileInput()" class="p-1.5 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 rounded-md"><i data-lucide="plus-circle" class="w-4 h-4"></i></button>
+          <button onclick="toggleMobilePageDrawer()" class="md:hidden p-1.5 text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button>
         </div>
       </div>
       <div id="pagesList" class="flex-1 overflow-y-auto p-3 space-y-2.5"></div>
       <div class="p-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 space-y-2">
         <button onclick="applyCurrentFilterToAll()" class="w-full py-1.5 bg-slate-200/70 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-medium flex items-center justify-center space-x-1.5">
-          <i data-lucide="check-check" class="w-3.5 h-3.5 text-indigo-500"></i>
-          <span>应用调色到所有页</span>
+          <i data-lucide="check-check" class="w-3.5 h-3.5 text-indigo-500"></i><span>应用调色到所有页</span>
         </button>
         <button onclick="clearAllPages()" class="w-full py-1 text-slate-400 hover:text-red-500 text-[11px] flex items-center justify-center space-x-1">
-          <i data-lucide="trash-2" class="w-3 h-3"></i>
-          <span>清空所有页面</span>
+          <i data-lucide="trash-2" class="w-3 h-3"></i><span>清空所有页面</span>
         </button>
       </div>
     </aside>
     <div id="mobileBackdrop" onclick="toggleMobilePageDrawer()" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden"></div>
 
-    <!-- CENTER: Canvas Workspace -->
     <main class="flex-1 flex flex-col bg-slate-200/60 dark:bg-slate-950 relative overflow-hidden pb-14 md:pb-0">
       <div class="h-10 sm:h-12 border-b border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 backdrop-blur px-2 sm:px-4 flex items-center justify-between shrink-0 z-10">
         <div class="flex items-center space-x-1 sm:space-x-2" id="cropTools">
           <button onclick="autoDetectEdges()" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-indigo-50 dark:bg-indigo-900/40 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 rounded-lg text-[11px] sm:text-xs font-medium">
-            <i data-lucide="wand-2" class="w-3.5 h-3.5"></i>
-            <span>智能识边</span>
+            <i data-lucide="wand-2" class="w-3.5 h-3.5"></i><span>智能识边</span>
           </button>
           <button onclick="resetCornersToFull()" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] sm:text-xs font-medium">
-            <i data-lucide="maximize" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">全选整图</span>
+            <i data-lucide="maximize" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">全选整图</span>
           </button>
           <button onclick="rotateImage(90)" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] sm:text-xs font-medium">
-            <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">向右旋转</span>
+            <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">向右旋转</span>
           </button>
         </div>
         <div class="flex items-center space-x-1 sm:space-x-2" id="filterTools" style="display: none;">
-          <button onclick="toggleSplitCompareMode()" id="splitCompareBtn" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-[11px] sm:text-xs font-medium">
-            <i data-lucide="columns-2" class="w-3.5 h-3.5 text-indigo-500"></i>
-            <span id="splitCompareBtnText" class="hidden sm:inline">分屏对比</span>
-          </button>
           <button onclick="sendCurrentDocToSealExtractor()" class="flex items-center space-x-1 px-2 sm:px-2.5 py-1 bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-lg text-[11px] sm:text-xs font-medium">
-            <i data-lucide="scissors" class="w-3.5 h-3.5"></i>
-            <span>提取印章/签名</span>
+            <i data-lucide="scissors" class="w-3.5 h-3.5"></i><span>提取此页印章/签名</span>
           </button>
           <button onclick="switchMainTab('crop')" class="flex items-center space-x-1 px-2 py-1 text-indigo-600 dark:text-indigo-400 text-[11px] sm:text-xs font-medium">
-            <i data-lucide="crop" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">重新微调</span>
+            <i data-lucide="crop" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">重新微调</span>
           </button>
         </div>
-        <!-- Zoom -->
         <div class="flex items-center space-x-0.5 bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg text-xs text-slate-600 dark:text-slate-300">
           <button onclick="zoomCanvas(-0.15)" class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded"><i data-lucide="zoom-out" class="w-3.5 h-3.5"></i></button>
           <span id="zoomLevelText" class="px-1.5 font-mono text-[10px]">100%</span>
@@ -481,24 +591,21 @@
         </div>
       </div>
 
-      <!-- Viewport -->
       <div id="viewportContainer" class="flex-1 relative flex items-center justify-center p-2 sm:p-4 overflow-hidden bg-checker cursor-grab active:cursor-grabbing">
         <div id="emptyState" class="max-w-md w-full p-6 sm:p-8 rounded-2xl bg-white dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-700 text-center shadow-lg animate-scale-in">
           <div class="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto mb-3">
             <i data-lucide="file-up" class="w-7 h-7"></i>
           </div>
-          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">开始扫描您的第一份文档</h3>
+          <h3 class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 mb-1">开始扫描您的第一份文档</h3>
           <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
             点击下方按钮上传图片，或支持从微信/截图直接 <kbd class="px-1 py-0.5 bg-slate-100 dark:bg-slate-800 border rounded text-[10px] font-mono">Ctrl + V</kbd> 粘贴。
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-2">
             <button onclick="triggerFileInput()" class="w-full sm:w-auto px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-md flex items-center justify-center space-x-2">
-              <i data-lucide="upload" class="w-4 h-4"></i>
-              <span>选择本地图片</span>
+              <i data-lucide="upload" class="w-4 h-4"></i><span>选择本地图片</span>
             </button>
             <button onclick="loadSampleImage()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-medium flex items-center justify-center space-x-1.5">
-              <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
-              <span>加载测试样张</span>
+              <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i><span>加载测试样张</span>
             </button>
           </div>
         </div>
@@ -521,14 +628,12 @@
       </div>
     </main>
 
-    <!-- RIGHT SIDEBAR: Filters -->
     <aside id="rightSidebar" class="fixed md:static inset-x-0 bottom-0 md:inset-auto z-40 md:z-20 w-full md:w-80 max-h-[80vh] md:max-h-none border-t md:border-t-0 md:border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-t-3xl md:rounded-none flex flex-col shrink-0 transform translate-y-full md:translate-y-0 transition-transform duration-300 shadow-2xl md:shadow-none">
       <div class="p-3.5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
         <span class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">文档增强与AI解析</span>
         <button onclick="resetCurrentAdjustments()" class="text-[11px] text-slate-400 hover:text-indigo-500">重置</button>
       </div>
       <div class="flex-1 overflow-y-auto p-4 space-y-4">
-        <!-- Presets -->
         <div class="grid grid-cols-2 gap-2">
           <button onclick="setFilterPreset('magic_color')" id="btnPreset_magic_color" class="preset-btn p-2 rounded-xl border-2 border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 text-left">
             <span class="text-xs font-bold text-indigo-700 dark:text-indigo-300">彩色增强</span>
@@ -548,17 +653,15 @@
           </button>
         </div>
 
-        <!-- AI OCR Section -->
         <div class="rounded-2xl bg-gradient-to-br from-indigo-50/70 via-purple-50/50 to-slate-50 dark:from-slate-800/80 dark:via-indigo-950/40 dark:to-slate-900/80 p-3.5 border border-indigo-100 dark:border-indigo-900/50 space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5"><i data-lucide="bot" class="w-3.5 h-3.5 text-indigo-600"></i>AI 视觉智能识别</span>
             <button onclick="openAISettingsModal()" class="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline">配置 API</button>
           </div>
           <button onclick="runAIRecognition()" id="btnAIRun" class="w-full py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1.5">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-            <span>开始 AI 智能识别与提取</span>
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>开始 AI 识别提取</span>
           </button>
-          <div id="aiStatus" class="text-[11px] text-slate-500 hidden p-2 bg-indigo-50/50 dark:bg-indigo-950/40 rounded-lg">AI 正在思考识别中...</div>
+          <div id="aiStatus" class="text-[11px] text-slate-500 hidden p-2 bg-indigo-50/50 rounded-lg">AI 正在思考识别中...</div>
           <div id="aiResultBox" class="hidden space-y-2">
             <div class="flex justify-between text-[11px] text-slate-500">
               <span>识别结果:</span>
@@ -570,8 +673,7 @@
       </div>
       <div class="p-3.5 border-t border-slate-200 dark:border-slate-800">
         <button onclick="exportToPDF(false)" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-2">
-          <i data-lucide="file-down" class="w-4 h-4"></i>
-          <span>导出为高清 PDF 文档</span>
+          <i data-lucide="file-down" class="w-4 h-4"></i><span>导出为高清 PDF</span>
         </button>
       </div>
     </aside>
@@ -766,7 +868,6 @@
         </div>
       </div>
 
-      <!-- Preview Paper -->
       <div class="w-full md:w-1/2 flex flex-col bg-slate-200/50 dark:bg-slate-950 overflow-y-auto p-4 sm:p-6 lg:p-8 flex items-center justify-start">
         <div id="formattedA4Paper" class="w-full max-w-[800px] min-h-[1050px] bg-white dark:bg-slate-900 shadow-2xl rounded-sm p-8 sm:p-12 sm:px-16 border border-slate-200 dark:border-slate-800 doc-preview-gov"></div>
       </div>
@@ -774,7 +875,7 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 4: SEAL & SIGNATURE EXTRACTOR (印章与手写签名提取/透明抠图)
+       MODULE 4: SEAL & SIGNATURE EXTRACTOR
        ========================================================================= -->
   <div id="moduleExtract" class="app-module flex-1 flex-col overflow-y-auto p-4 sm:p-6 lg:p-8 hidden">
     <div class="max-w-5xl w-full mx-auto space-y-6">
@@ -791,34 +892,27 @@
         <div class="flex items-center space-x-2">
           <input type="file" id="inputExtractImage" accept="image/*" class="hidden" onchange="handleExtractImageUpload(event)">
           <button onclick="document.getElementById('inputExtractImage').click()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-md flex items-center space-x-1.5">
-            <i data-lucide="upload" class="w-4 h-4"></i><span>上传包含印章/签名的图片</span>
+            <i data-lucide="upload" class="w-4 h-4"></i><span>上传带章或签名图片</span>
           </button>
         </div>
       </div>
 
-      <!-- Main Extractor Studio -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Left: Control Panel -->
         <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
           <div>
             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">选择提取目标类型</label>
             <div class="grid grid-cols-2 gap-2">
               <button onclick="setExtractorTarget('seal')" id="btnExtractSeal" class="p-3 rounded-xl border-2 border-red-500 bg-red-50/50 dark:bg-red-950/40 text-left transition">
-                <div class="flex items-center justify-between mb-1">
-                  <span class="text-xs font-bold text-red-600 dark:text-red-400">🔴 红色公章/印章</span>
-                </div>
-                <p class="text-[10px] text-slate-500">过滤黑字与白纸底色</p>
+                <span class="text-xs font-bold text-red-600 dark:text-red-400">🔴 红色公章/印章</span>
+                <p class="text-[10px] text-slate-500 mt-1">过滤黑字与白纸底色</p>
               </button>
               <button onclick="setExtractorTarget('signature')" id="btnExtractSig" class="p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-left transition">
-                <div class="flex items-center justify-between mb-1">
-                  <span class="text-xs font-bold text-slate-800 dark:text-slate-200">✍️ 手写签名</span>
-                </div>
-                <p class="text-[10px] text-slate-500">提取黑/蓝色笔迹墨水</p>
+                <span class="text-xs font-bold text-slate-800 dark:text-slate-200">✍️ 手写签名</span>
+                <p class="text-[10px] text-slate-500 mt-1">提取黑/蓝色笔迹墨水</p>
               </button>
             </div>
           </div>
 
-          <!-- Threshold Sliders -->
           <div class="space-y-4">
             <div class="space-y-1">
               <div class="flex justify-between text-xs">
@@ -835,17 +929,8 @@
               </div>
               <input type="range" id="sliderExtractDensity" min="0" max="100" value="60" oninput="runExtractionAlgorithm()" class="w-full">
             </div>
-
-            <div class="space-y-1">
-              <div class="flex justify-between text-xs">
-                <span class="text-slate-600 dark:text-slate-400">边缘羽化平滑 (Smoothness)</span>
-                <span id="valExtractSmooth" class="font-mono text-slate-500">20</span>
-              </div>
-              <input type="range" id="sliderExtractSmooth" min="0" max="50" value="20" oninput="runExtractionAlgorithm()" class="w-full">
-            </div>
           </div>
 
-          <!-- Actions -->
           <div class="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
             <button onclick="downloadExtractedPng()" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1.5">
               <i data-lucide="download" class="w-4 h-4"></i><span>下载透明 PNG 图片</span>
@@ -856,23 +941,20 @@
           </div>
         </div>
 
-        <!-- Right: Dual Canvas Comparison (Original vs Extracted Transparent) -->
         <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Original Preview -->
           <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
             <div class="flex items-center justify-between mb-2">
               <span class="text-xs font-bold text-slate-700 dark:text-slate-300">原图预览</span>
-              <span class="text-[10px] text-slate-400">上传带章文档</span>
+              <span class="text-[10px] text-slate-400">带章文档</span>
             </div>
             <div class="flex-1 bg-slate-100 dark:bg-slate-950 rounded-xl flex items-center justify-center min-h-[280px] p-2 overflow-hidden border border-slate-200 dark:border-slate-800">
               <canvas id="extractSrcCanvas" class="max-w-full max-h-64 object-contain shadow"></canvas>
             </div>
           </div>
 
-          <!-- Extracted Transparent Preview -->
           <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
             <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i>提取结果 (透明通道)</span>
+              <span class="text-xs font-bold text-red-600 dark:text-red-400 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i>提取结果 (透明底)</span>
               <span class="text-[10px] text-emerald-500 font-semibold">棋盘背景为透明</span>
             </div>
             <div class="flex-1 bg-checker rounded-xl flex items-center justify-center min-h-[280px] p-2 overflow-hidden border border-slate-200 dark:border-slate-800">
@@ -885,113 +967,125 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 5: STUDENT GRID & SHEET TEMPLATES (田字格、米字格、五线谱、A3/A4/A5纸张)
+       MODULE 5: STUDENT GRID & SHEET TEMPLATES (田字格、米字格、五线谱、A3/A4/A5)
        ========================================================================= -->
-  <div id="moduleTemplates" class="app-module flex-1 flex-col overflow-y-auto p-4 sm:p-6 lg:p-8 hidden">
-    <div class="max-w-6xl w-full mx-auto space-y-6">
-      
-      <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <i data-lucide="grid" class="w-5 h-5 text-emerald-500"></i>
-            <span>中小学生作业纸与练字模板库 (高清矢量打印)</span>
-          </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            支持田字格、拼音田字格、米字格、日字格、英语四线三格、五线谱、吉他六线谱等，支持 A3 / A4 / A5 尺寸高清导出与直接打印。
-          </p>
+  <div id="moduleTemplates" class="app-module flex-1 flex flex-col overflow-hidden hidden">
+    
+    <!-- Top Action Bar -->
+    <div class="h-14 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 sm:px-6 flex items-center justify-between shrink-0">
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center">
+          <i data-lucide="grid" class="w-4 h-4"></i>
         </div>
-        <div class="flex items-center space-x-2">
-          <button onclick="exportTemplateToPDF()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center space-x-1.5 transition active:scale-95">
-            <i data-lucide="file-down" class="w-4 h-4"></i><span>导出高清矢量 PDF</span>
-          </button>
-          <button onclick="printTemplatePaper()" class="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center space-x-1.5">
-            <i data-lucide="printer" class="w-4 h-4"></i><span>直接打印</span>
-          </button>
+        <div>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">中小学生作业纸与练字模板库</h3>
+          <p class="text-[10px] text-slate-400 hidden sm:block">拼音田字格、米字格、日字格、英语四线三格、五线谱、吉他TAB</p>
         </div>
       </div>
 
-      <!-- Controls & Template Generator Studio -->
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+      <!-- Quick Zoom & Export Buttons -->
+      <div class="flex items-center space-x-2">
+        <!-- Scale Controls -->
+        <div class="flex items-center space-x-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs">
+          <button onclick="zoomTplPreview(-0.15)" class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded transition" title="缩小预览"><i data-lucide="zoom-out" class="w-3.5 h-3.5"></i></button>
+          <span id="tplZoomText" class="px-2 font-mono text-[11px]">100%</span>
+          <button onclick="zoomTplPreview(0.15)" class="p-1 hover:bg-white dark:hover:bg-slate-700 rounded transition" title="放大预览"><i data-lucide="zoom-in" class="w-3.5 h-3.5"></i></button>
+          <button onclick="fitTplWidth()" class="px-2 py-0.5 hover:bg-white dark:hover:bg-slate-700 rounded text-[10px] font-semibold text-indigo-600 dark:text-indigo-400">适应宽度</button>
+        </div>
+
+        <button onclick="exportTemplateToPDF()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center space-x-1.5 transition active:scale-95">
+          <i data-lucide="file-down" class="w-4 h-4"></i><span>导出高清矢量 PDF</span>
+        </button>
+        <button onclick="printTemplatePaper()" class="p-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Workspace: Left Config Panel vs Center Zoomable Canvas Viewer -->
+    <div class="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-200/50 dark:bg-slate-950">
+      
+      <!-- Left Config Sidebar -->
+      <div class="w-full md:w-80 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 overflow-y-auto space-y-4 shrink-0">
         
-        <!-- Controls Config -->
-        <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-          
-          <!-- Template Type Select -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">模版种类选择</label>
+          <select id="tplTypeSelect" onchange="renderPaperTemplateCanvas()" class="w-full text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-medium">
+            <option value="tianzi">🀄 拼音田字格 (幼小衔接/语文练字)</option>
+            <option value="pure_tianzi">🔲 纯田字格 (规范汉字书写)</option>
+            <option value="mizi">✳️ 米字格 (书法楷书字帖)</option>
+            <option value="rizi">📅 日字格 (数字规范书写练习)</option>
+            <option value="english">🔤 英语四线三格 (字母单词书写)</option>
+            <option value="music">🎼 音乐五线谱 (标准五线谱纸)</option>
+            <option value="guitar">🎸 吉他/尤克里里六线谱 (TAB)</option>
+            <option value="zuowen">📝 作文稿纸 (20×20 方格)</option>
+            <option value="dot">▫️ 5mm 点阵坐标纸 (Bullet Journal)</option>
+            <option value="grid">📐 方格坐标纸 (数学几何作图)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">选择模版类型</label>
-            <select id="tplTypeSelect" onchange="renderPaperTemplateCanvas()" class="w-full text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-medium">
-              <option value="tianzi">🀄 拼音田字格 (幼小衔接/语文写字)</option>
-              <option value="pure_tianzi">🔲 纯田字格 (汉字规范书写)</option>
-              <option value="mizi">✳️ 米字格 (毛笔/硬笔书法临摹)</option>
-              <option value="rizi">📅 日字格 (数字规范书写练习)</option>
-              <option value="english">🔤 英语四线三格 (字母单词书写)</option>
-              <option value="music">🎼 音乐五线谱 (标准乐谱纸)</option>
-              <option value="guitar">🎸 吉他/尤克里里六线谱 (TAB)</option>
-              <option value="zuowen">📝 作文稿纸 (20×20 方格)</option>
-              <option value="dot">▫️ 5mm 点阵坐标纸 (Bullet Journal)</option>
-              <option value="grid">📐 方格坐标纸 (数学几何作图)</option>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">纸张尺寸</label>
+            <select id="tplPaperSize" onchange="renderPaperTemplateCanvas()" class="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-medium">
+              <option value="a4">标准 A4 (210×297mm)</option>
+              <option value="a5">便携 A5 (148×210mm)</option>
+              <option value="a3">大号 A3 (297×420mm)</option>
             </select>
           </div>
-
-          <!-- Paper Size -->
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">纸张尺寸</label>
-              <select id="tplPaperSize" onchange="renderPaperTemplateCanvas()" class="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100">
-                <option value="a4">标准 A4 (210×297mm)</option>
-                <option value="a5">便携 A5 (148×210mm)</option>
-                <option value="a3">大号 A3 (297×420mm)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">纸张方向</label>
-              <select id="tplOrientation" onchange="renderPaperTemplateCanvas()" class="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100">
-                <option value="p">纵向 (Portrait)</option>
-                <option value="l">横向 (Landscape)</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Color Theme -->
           <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">格线颜色</label>
-            <div class="grid grid-cols-4 gap-2">
-              <button onclick="setTemplateColor('#dc2626')" class="h-8 rounded-lg bg-red-500/10 border-2 border-red-500 text-red-600 text-[11px] font-bold">经典红</button>
-              <button onclick="setTemplateColor('#10b981')" class="h-8 rounded-lg bg-emerald-500/10 border border-slate-200 dark:border-slate-700 text-emerald-600 text-[11px] font-medium">护眼绿</button>
-              <button onclick="setTemplateColor('#64748b')" class="h-8 rounded-lg bg-slate-500/10 border border-slate-200 dark:border-slate-700 text-slate-600 text-[11px] font-medium">复古灰</button>
-              <button onclick="setTemplateColor('#2563eb')" class="h-8 rounded-lg bg-blue-500/10 border border-slate-200 dark:border-slate-700 text-blue-600 text-[11px] font-medium">墨水蓝</button>
-            </div>
-          </div>
-
-          <!-- Header Student Info Bar -->
-          <div>
-            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">抬头信息栏文字</label>
-            <input type="text" id="tplHeaderTitle" value="班级：__________  姓名：__________  日期：__________  得分：_____" oninput="renderPaperTemplateCanvas()" class="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100">
-          </div>
-
-          <!-- Density Slider -->
-          <div class="space-y-1">
-            <div class="flex justify-between text-xs">
-              <span class="text-slate-600 dark:text-slate-400">格子大小 (Grid Size)</span>
-              <span id="valTplGridSize" class="font-mono text-slate-500">中 (14mm)</span>
-            </div>
-            <input type="range" id="sliderTplGridSize" min="10" max="22" value="14" oninput="renderPaperTemplateCanvas()" class="w-full">
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">纸张方向</label>
+            <select id="tplOrientation" onchange="renderPaperTemplateCanvas()" class="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-medium">
+              <option value="p">纵向 (Portrait)</option>
+              <option value="l">横向 (Landscape)</option>
+            </select>
           </div>
         </div>
 
-        <!-- Live Preview Canvas Paper (Simulates Real Paper with Shadow) -->
-        <div class="lg:col-span-3 flex items-center justify-center p-4 sm:p-8 bg-slate-200/60 dark:bg-slate-950 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto min-h-[600px]">
-          <div class="shadow-2xl rounded-sm bg-white border border-slate-300 dark:border-slate-800">
-            <canvas id="templatePaperCanvas" width="1240" height="1754" class="max-w-full max-h-[75vh] w-auto h-auto block"></canvas>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">格线颜色</label>
+          <div class="grid grid-cols-4 gap-2">
+            <button onclick="setTemplateColor('#dc2626')" class="h-8 rounded-lg bg-red-500/10 border-2 border-red-500 text-red-600 text-[11px] font-bold">经典红</button>
+            <button onclick="setTemplateColor('#059669')" class="h-8 rounded-lg bg-emerald-500/10 border border-slate-200 dark:border-slate-700 text-emerald-600 text-[11px] font-medium">护眼绿</button>
+            <button onclick="setTemplateColor('#475569')" class="h-8 rounded-lg bg-slate-500/10 border border-slate-200 dark:border-slate-700 text-slate-600 text-[11px] font-medium">复古灰</button>
+            <button onclick="setTemplateColor('#2563eb')" class="h-8 rounded-lg bg-blue-500/10 border border-slate-200 dark:border-slate-700 text-blue-600 text-[11px] font-medium">墨水蓝</button>
           </div>
         </div>
 
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">抬头信息栏文字</label>
+          <input type="text" id="tplHeaderTitle" value="班级：__________  姓名：__________  日期：__________  得分：_____" oninput="renderPaperTemplateCanvas()" class="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100">
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-600 dark:text-slate-400">格子大小 (Grid Size)</span>
+            <span id="valTplGridSize" class="font-mono text-slate-500">14mm (中)</span>
+          </div>
+          <input type="range" id="sliderTplGridSize" min="10" max="22" value="14" oninput="renderPaperTemplateCanvas()" class="w-full">
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex justify-between text-xs">
+            <span class="text-slate-600 dark:text-slate-400">格线粗细 (Line Boldness)</span>
+            <span id="valTplLineWidth" class="font-mono text-slate-500">标准 (2px)</span>
+          </div>
+          <input type="range" id="sliderTplLineWidth" min="1" max="4" value="2" step="0.5" oninput="renderPaperTemplateCanvas()" class="w-full">
+        </div>
       </div>
+
+      <!-- Center Scalable Canvas Preview Area -->
+      <div id="tplCanvasContainer" class="flex-1 overflow-auto p-4 sm:p-8 flex items-center justify-center relative">
+        <div id="tplPaperWrapper" class="shadow-2xl rounded-sm bg-white border border-slate-300 dark:border-slate-800 origin-top transition-transform duration-100 my-auto">
+          <canvas id="templatePaperCanvas" width="2480" height="3508" class="block w-full h-auto max-w-none"></canvas>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <!-- =========================================================================
-       MODULE 6: OFFICE SUPER TOOLS (PDF Swiss Knife / Diff / Redactor / Seals)
+       MODULE 6: OFFICE TOOLS
        ========================================================================= -->
   <div id="moduleTools" class="app-module flex-1 flex-col overflow-y-auto p-4 sm:p-6 lg:p-8 hidden">
     <div class="max-w-6xl w-full mx-auto space-y-8">
@@ -1017,9 +1111,7 @@
             </div>
             <div>
               <input type="file" id="inputMergePdfs" accept=".pdf" multiple class="hidden" onchange="handleMergePdfs(event)">
-              <button onclick="document.getElementById('inputMergePdfs').click()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold">
-                选择 2 个以上 PDF 进行合并
-              </button>
+              <button onclick="document.getElementById('inputMergePdfs').click()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold">选择 2 个以上 PDF 进行合并</button>
             </div>
           </div>
           <div class="space-y-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
@@ -1029,9 +1121,7 @@
             </div>
             <div>
               <input type="file" id="inputSplitPdf" accept=".pdf" class="hidden" onchange="handleSplitPdf(event)">
-              <button onclick="document.getElementById('inputSplitPdf').click()" class="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold">
-                选择 PDF 拆分提取
-              </button>
+              <button onclick="document.getElementById('inputSplitPdf').click()" class="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold">选择 PDF 拆分提取</button>
             </div>
           </div>
         </div>
@@ -1072,13 +1162,13 @@
     </div>
   </div>
 
-  <!-- ==================== AI SETTINGS MODAL ==================== -->
+  <!-- AI Settings Modal -->
   <div id="aiSettingsModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
     <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-5 shadow-2xl border border-slate-200 dark:border-slate-700 animate-scale-in">
       <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
         <div class="flex items-center space-x-2">
           <div class="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i data-lucide="bot" class="w-4 h-4"></i></div>
-          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">配置 AI 视觉与语言模型 (兼容 OpenAI 协议)</h3>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">配置 AI 视觉与语言模型</h3>
         </div>
         <button onclick="closeAISettingsModal()" class="p-1 text-slate-400"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
@@ -1139,7 +1229,7 @@
     <span id="toastMsg">操作成功</span>
   </div>
 
-  <!-- ==================== LOGIC JAVASCRIPT ==================== -->
+  <!-- ==================== SCRIPT LOGIC ==================== -->
   <script>
     const AI_PROVIDERS = {
       openai: { name: 'OpenAI (ChatGPT)', baseUrl: 'https://api.openai.com/v1', model: 'gpt-4o' },
@@ -1152,20 +1242,20 @@
     };
 
     const state = {
-      currentModule: 'scan',
+      currentModule: 'home', // 'home', 'scan', 'convert', 'format', 'extract', 'templates', 'tools'
       pages: [],
       currentPageIndex: -1,
       currentTab: 'crop',
       zoom: 1.0, panX: 0, panY: 0, isPanning: false,
-      activeHandleIndex: -1, isDraggingHandle: false, hoverHandleIndex: -1,
-      isSplitCompare: false,
+      activeHandleIndex: -1, isDraggingHandle: false,
 
       // Extractor state
-      extractTarget: 'seal', // 'seal', 'signature'
+      extractTarget: 'seal',
       extractSrcImg: null,
 
       // Paper template state
       tplColor: '#dc2626',
+      tplZoom: 0.45,
 
       aiConfig: { provider: 'openai', baseUrl: 'https://api.openai.com/v1', apiKey: '', model: 'gpt-4o' }
     };
@@ -1187,6 +1277,13 @@
       updateFormattedPreview();
       renderPaperTemplateCanvas();
       loadSampleExtractImage();
+
+      // Check URL parameters for direct module loading
+      const urlParams = new URLSearchParams(window.location.search);
+      const mod = urlParams.get('m');
+      if (mod && ['scan', 'convert', 'format', 'extract', 'templates', 'tools'].includes(mod)) {
+        switchAppModule(mod);
+      }
     });
 
     function toggleDarkMode() { document.documentElement.classList.toggle('dark'); }
@@ -1197,20 +1294,23 @@
 
     function switchAppModule(moduleName) {
       state.currentModule = moduleName;
-      const modules = ['scan', 'convert', 'format', 'extract', 'templates', 'tools'];
+      const modules = ['home', 'scan', 'convert', 'format', 'extract', 'templates', 'tools'];
       modules.forEach(m => {
         const el = document.getElementById(`module${capitalize(m)}`);
         const btn = document.getElementById(`tabNav${capitalize(m)}`);
         if (m === moduleName) {
           el.classList.remove('hidden'); el.classList.add('flex');
-          if (btn) btn.className = 'nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300';
+          if (btn) btn.className = 'nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300';
         } else {
           el.classList.add('hidden'); el.classList.remove('flex');
           if (btn) btn.className = 'nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100';
         }
       });
       if (moduleName === 'scan' && state.currentPageIndex !== -1) setTimeout(fitCanvasToView, 50);
-      if (moduleName === 'templates') renderPaperTemplateCanvas();
+      if (moduleName === 'templates') {
+        renderPaperTemplateCanvas();
+        setTimeout(fitTplWidth, 50);
+      }
       lucide.createIcons();
     }
     function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
@@ -1235,6 +1335,272 @@
     function hideProgress() { document.getElementById('processingModal').classList.add('hidden'); }
 
     /* =========================================================================
+       TEMPLATES VIEWER SCALING & CRISP RENDERING (FIX BLURRY PREVIEW)
+       ========================================================================= */
+    function setTemplateColor(color) {
+      state.tplColor = color;
+      renderPaperTemplateCanvas();
+    }
+
+    function zoomTplPreview(delta) {
+      state.tplZoom = Math.max(0.15, Math.min(2.0, state.tplZoom + delta));
+      applyTplScale();
+    }
+
+    function fitTplWidth() {
+      const container = document.getElementById('tplCanvasContainer');
+      const canvas = document.getElementById('templatePaperCanvas');
+      if (!container || !canvas) return;
+      const targetW = container.clientWidth - 80;
+      state.tplZoom = Math.min(0.85, Math.max(0.2, targetW / canvas.width));
+      applyTplScale();
+    }
+
+    function applyTplScale() {
+      const wrapper = document.getElementById('tplPaperWrapper');
+      const canvas = document.getElementById('templatePaperCanvas');
+      if (!wrapper || !canvas) return;
+      
+      // Calculate scaled display width
+      const displayW = Math.round(canvas.width * state.tplZoom);
+      wrapper.style.width = `${displayW}px`;
+      document.getElementById('tplZoomText').innerText = `${Math.round(state.tplZoom * 200)}%`;
+    }
+
+    function renderPaperTemplateCanvas() {
+      const canvas = document.getElementById('templatePaperCanvas');
+      const c = canvas.getContext('2d');
+      const tplType = document.getElementById('tplTypeSelect').value;
+      const paperSize = document.getElementById('tplPaperSize').value;
+      const orientation = document.getElementById('tplOrientation').value;
+      const headerTitle = document.getElementById('tplHeaderTitle').value;
+      const gridSize = parseInt(document.getElementById('sliderTplGridSize').value, 10);
+      const lineBoldness = parseFloat(document.getElementById('sliderTplLineWidth').value);
+      const color = state.tplColor || '#dc2626';
+
+      document.getElementById('valTplGridSize').innerText = `${gridSize}mm`;
+      document.getElementById('valTplLineWidth').innerText = `${lineBoldness}px`;
+
+      // Set dimensions (200-300 DPI for ultra-crisp render)
+      let w = 2480, h = 3508; // Standard A4
+      if (paperSize === 'a5') { w = 1748; h = 2480; }
+      else if (paperSize === 'a3') { w = 3508; h = 4960; }
+
+      if (orientation === 'l') { const tmp = w; w = h; h = tmp; }
+
+      canvas.width = w;
+      canvas.height = h;
+
+      // Pure White Background
+      c.fillStyle = '#ffffff';
+      c.fillRect(0, 0, w, h);
+
+      // Margin
+      const margin = Math.round(w * 0.055);
+      const contentW = w - margin * 2;
+      const contentH = h - margin * 2;
+
+      // Header Bar
+      c.fillStyle = '#1e293b';
+      c.font = `bold ${Math.round(w * 0.016)}px sans-serif`;
+      c.fillText(headerTitle, margin, margin + Math.round(w * 0.016));
+
+      const startY = margin + Math.round(w * 0.045);
+      const drawH = contentH - Math.round(w * 0.045);
+      const cellPx = Math.round(w * (gridSize / 210));
+
+      const strokeOuter = lineBoldness * 1.5;
+      const strokeInner = Math.max(1, lineBoldness * 0.85);
+
+      if (tplType === 'tianzi' || tplType === 'pure_tianzi') {
+        const hasPinyin = tplType === 'tianzi';
+        const cols = Math.floor(contentW / cellPx);
+        const pinyinH = hasPinyin ? Math.round(cellPx * 0.42) : 0;
+        const rowTotalH = cellPx + pinyinH + Math.round(cellPx * 0.16);
+        const rows = Math.floor(drawH / rowTotalH);
+
+        for (let r = 0; r < rows; r++) {
+          const y = startY + r * rowTotalH;
+          for (let col = 0; col < cols; col++) {
+            const x = margin + col * cellPx;
+
+            if (hasPinyin) {
+              c.strokeStyle = color;
+              c.lineWidth = strokeOuter;
+              c.strokeRect(x, y, cellPx, pinyinH);
+              c.setLineDash([8, 8]);
+              c.lineWidth = strokeInner;
+              c.beginPath();
+              c.moveTo(x, y + pinyinH * 0.33); c.lineTo(x + cellPx, y + pinyinH * 0.33);
+              c.moveTo(x, y + pinyinH * 0.66); c.lineTo(x + cellPx, y + pinyinH * 0.66);
+              c.stroke();
+              c.setLineDash([]);
+            }
+
+            const tianY = y + pinyinH;
+            c.strokeStyle = color;
+            c.lineWidth = strokeOuter;
+            c.strokeRect(x, tianY, cellPx, cellPx);
+
+            c.setLineDash([8, 8]);
+            c.lineWidth = strokeInner;
+            c.beginPath();
+            c.moveTo(x + cellPx / 2, tianY); c.lineTo(x + cellPx / 2, tianY + cellPx);
+            c.moveTo(x, tianY + cellPx / 2); c.lineTo(x + cellPx, tianY + cellPx / 2);
+            c.stroke();
+            c.setLineDash([]);
+          }
+        }
+      } else if (tplType === 'mizi') {
+        const cols = Math.floor(contentW / cellPx);
+        const rowH = cellPx + Math.round(cellPx * 0.15);
+        const rows = Math.floor(drawH / rowH);
+
+        for (let r = 0; r < rows; r++) {
+          const y = startY + r * rowH;
+          for (let col = 0; col < cols; col++) {
+            const x = margin + col * cellPx;
+            c.strokeStyle = color;
+            c.lineWidth = strokeOuter;
+            c.strokeRect(x, y, cellPx, cellPx);
+
+            c.setLineDash([8, 8]);
+            c.lineWidth = strokeInner;
+            c.beginPath();
+            c.moveTo(x + cellPx / 2, y); c.lineTo(x + cellPx / 2, y + cellPx);
+            c.moveTo(x, y + cellPx / 2); c.lineTo(x + cellPx, y + cellPx / 2);
+            c.moveTo(x, y); c.lineTo(x + cellPx, y + cellPx);
+            c.moveTo(x + cellPx, y); c.lineTo(x, y + cellPx);
+            c.stroke();
+            c.setLineDash([]);
+          }
+        }
+      } else if (tplType === 'music' || tplType === 'guitar') {
+        const lineCount = tplType === 'music' ? 5 : 6;
+        const staveGap = Math.round(cellPx * 0.24);
+        const staveH = (lineCount - 1) * staveGap;
+        const systemGap = Math.round(staveH * 1.6);
+        const systems = Math.floor(drawH / (staveH + systemGap));
+
+        for (let s = 0; s < systems; s++) {
+          const sy = startY + s * (staveH + systemGap);
+          c.strokeStyle = color;
+          c.lineWidth = strokeOuter;
+          for (let l = 0; l < lineCount; l++) {
+            const ly = sy + l * staveGap;
+            c.beginPath();
+            c.moveTo(margin, ly); c.lineTo(w - margin, ly);
+            c.stroke();
+          }
+          c.lineWidth = strokeOuter * 1.5;
+          c.beginPath();
+          c.moveTo(margin, sy); c.lineTo(margin, sy + staveH);
+          c.moveTo(w - margin, sy); c.lineTo(w - margin, sy + staveH);
+          c.stroke();
+        }
+      } else if (tplType === 'english') {
+        const rowH = Math.round(cellPx * 0.9);
+        const gap = Math.round(rowH * 0.5);
+        const rows = Math.floor(drawH / (rowH + gap));
+
+        for (let r = 0; r < rows; r++) {
+          const ry = startY + r * (rowH + gap);
+          const h1 = rowH * 0.33, h2 = rowH * 0.66;
+          c.strokeStyle = color;
+          c.lineWidth = strokeOuter;
+          c.beginPath();
+          c.moveTo(margin, ry); c.lineTo(w - margin, ry);
+          c.moveTo(margin, ry + rowH); c.lineTo(w - margin, ry + rowH);
+          c.stroke();
+
+          c.setLineDash([8, 8]);
+          c.lineWidth = strokeInner;
+          c.beginPath();
+          c.moveTo(margin, ry + h1); c.lineTo(w - margin, ry + h1);
+          c.moveTo(margin, ry + h2); c.lineTo(w - margin, ry + h2);
+          c.stroke();
+          c.setLineDash([]);
+        }
+      } else if (tplType === 'grid' || tplType === 'dot') {
+        const isDot = tplType === 'dot';
+        const step = Math.round(cellPx * 0.35);
+        for (let y = startY; y < h - margin; y += step) {
+          for (let x = margin; x < w - margin; x += step) {
+            if (isDot) {
+              c.fillStyle = color;
+              c.beginPath();
+              c.arc(x, y, lineBoldness * 1.2, 0, Math.PI * 2);
+              c.fill();
+            } else {
+              c.strokeStyle = color;
+              c.lineWidth = strokeInner * 0.7;
+              c.strokeRect(x, y, step, step);
+            }
+          }
+        }
+      } else if (tplType === 'rizi') {
+        const cellW = cellPx * 0.75;
+        const cols = Math.floor(contentW / cellW);
+        const rowH = cellPx + Math.round(cellPx * 0.15);
+        const rows = Math.floor(drawH / rowH);
+
+        for (let r = 0; r < rows; r++) {
+          const y = startY + r * rowH;
+          for (let col = 0; col < cols; col++) {
+            const x = margin + col * cellW;
+            c.strokeStyle = color;
+            c.lineWidth = strokeOuter;
+            c.strokeRect(x, y, cellW, cellPx);
+            c.setLineDash([8, 8]);
+            c.lineWidth = strokeInner;
+            c.beginPath();
+            c.moveTo(x, y + cellPx / 2); c.lineTo(x + cellW, y + cellPx / 2);
+            c.stroke();
+            c.setLineDash([]);
+          }
+        }
+      } else if (tplType === 'zuowen') {
+        const cols = 20;
+        const squareSize = Math.floor(contentW / cols);
+        const rows = Math.floor(drawH / (squareSize * 1.2));
+        for (let r = 0; r < rows; r++) {
+          const y = startY + r * Math.round(squareSize * 1.2);
+          for (let cIdx = 0; cIdx < cols; cIdx++) {
+            const x = margin + cIdx * squareSize;
+            c.strokeStyle = color;
+            c.lineWidth = strokeOuter;
+            c.strokeRect(x, y, squareSize, squareSize);
+          }
+        }
+      }
+
+      applyTplScale();
+    }
+
+    function exportTemplateToPDF() {
+      const canvas = document.getElementById('templatePaperCanvas');
+      const paperSize = document.getElementById('tplPaperSize').value;
+      const orientation = document.getElementById('tplOrientation').value;
+      const { jsPDF } = window.jspdf;
+
+      const pdf = new jsPDF({ orientation: orientation, unit: 'mm', format: paperSize });
+      const imgData = canvas.toDataURL('image/jpeg', 0.96);
+      const pdfW = pdf.internal.pageSize.getWidth();
+      const pdfH = pdf.internal.pageSize.getHeight();
+
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH, undefined, 'FAST');
+      pdf.save(`Template_${document.getElementById('tplTypeSelect').value}_${paperSize.toUpperCase()}.pdf`);
+      showToast(`已成功导出 ${paperSize.toUpperCase()} 高清矢量 PDF 模板！`);
+    }
+
+    function printTemplatePaper() {
+      const canvas = document.getElementById('templatePaperCanvas');
+      const win = window.open('', '_blank');
+      win.document.write(`<html><head><title>打印作业纸</title><style>@page{size:auto;margin:0;}body{margin:0;display:flex;align-items:center;justify-content:center;height:100vh;}img{width:100%;height:100%;object-fit:contain;}</style></head><body><img src="${canvas.toDataURL('image/png')}" onload="window.print();window.close();"></body></html>`);
+      win.document.close();
+    }
+
+    /* =========================================================================
        SEAL & SIGNATURE EXTRACTOR LOGIC
        ========================================================================= */
     function setExtractorTarget(target) {
@@ -1245,38 +1611,29 @@
     }
 
     function handleExtractImageUpload(e) {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      e.target.value = '';
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       const reader = new FileReader();
       reader.onload = (event) => {
         const img = new Image();
-        img.onload = () => {
-          state.extractSrcImg = img;
-          runExtractionAlgorithm();
-          showToast('图片加载成功，已开始提取');
-        };
+        img.onload = () => { state.extractSrcImg = img; runExtractionAlgorithm(); showToast('图片已载入并自动抠图提取'); };
         img.src = event.target.result;
       };
       reader.readAsDataURL(file);
     }
 
     function loadSampleExtractImage() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 600; canvas.height = 400;
-      const c = canvas.getContext('2d');
-      c.fillStyle = '#f8fafc'; c.fillRect(0, 0, 600, 400);
-
+      const canvas = document.createElement('canvas'); canvas.width = 600; canvas.height = 400;
+      const c = canvas.getContext('2d'); c.fillStyle = '#f8fafc'; c.fillRect(0, 0, 600, 400);
       c.fillStyle = '#1e293b'; c.font = '20px sans-serif';
-      c.fillText('甲方签字：___________________  日期：2026-08-28', 50, 100);
-      c.fillText('乙方代表（盖章）：___________  日期：2026-08-28', 50, 160);
+      c.fillText('甲方代表签字：_________________  日期：2026-08-28', 50, 100);
+      c.fillText('乙方代表（盖章）：_____________  日期：2026-08-28', 50, 160);
 
-      // Draw handwritten signature
+      // Signature
       c.strokeStyle = '#1e40af'; c.lineWidth = 4; c.lineCap = 'round';
-      c.beginPath(); c.moveTo(150, 100); c.bezierCurveTo(170, 70, 210, 120, 240, 90); c.stroke();
+      c.beginPath(); c.moveTo(170, 100); c.bezierCurveTo(190, 70, 230, 120, 260, 90); c.stroke();
 
-      // Draw red seal
-      c.save(); c.translate(360, 220);
+      // Seal
+      c.save(); c.translate(380, 220);
       c.strokeStyle = 'rgba(220, 38, 38, 0.88)'; c.lineWidth = 4;
       c.beginPath(); c.arc(0, 0, 65, 0, Math.PI * 2); c.stroke();
       c.fillStyle = 'rgba(220, 38, 38, 0.88)'; c.font = 'bold 16px sans-serif'; c.textAlign = 'center';
@@ -1284,16 +1641,12 @@
       c.restore();
 
       const img = new Image();
-      img.onload = () => {
-        state.extractSrcImg = img;
-        runExtractionAlgorithm();
-      };
+      img.onload = () => { state.extractSrcImg = img; runExtractionAlgorithm(); };
       img.src = canvas.toDataURL('image/png');
     }
 
     function sendCurrentDocToSealExtractor() {
-      const page = state.pages[state.currentPageIndex];
-      if (!page) return;
+      const page = state.pages[state.currentPageIndex]; if (!page) return;
       state.extractSrcImg = page.originalImg;
       switchAppModule('extract');
       runExtractionAlgorithm();
@@ -1307,8 +1660,7 @@
       const resCanvas = document.getElementById('extractResultCanvas');
 
       srcCanvas.width = img.naturalWidth; srcCanvas.height = img.naturalHeight;
-      const sCtx = srcCanvas.getContext('2d');
-      sCtx.drawImage(img, 0, 0);
+      const sCtx = srcCanvas.getContext('2d'); sCtx.drawImage(img, 0, 0);
 
       resCanvas.width = img.naturalWidth; resCanvas.height = img.naturalHeight;
       const rCtx = resCanvas.getContext('2d');
@@ -1324,30 +1676,25 @@
 
       for (let i = 0; i < data.length; i += 4) {
         const r = data[i], g = data[i + 1], b = data[i + 2];
-
         if (isSeal) {
-          // Red Seal Extraction: Red Dominance
           const isRed = (r > 80) && (r - g > thresh * 0.7) && (r - b > thresh * 0.7);
           if (isRed) {
             const redness = Math.max(0, r - Math.max(g, b));
-            const alpha = Math.min(255, redness * 2.2 * density);
             data[i] = Math.min(255, r * 1.25);
             data[i + 1] = Math.max(0, g * 0.5);
             data[i + 2] = Math.max(0, b * 0.5);
-            data[i + 3] = alpha;
+            data[i + 3] = Math.min(255, redness * 2.2 * density);
           } else {
-            data[i + 3] = 0; // Pure transparent background
+            data[i + 3] = 0;
           }
         } else {
-          // Signature Extraction: Dark Pen Strokes
           const gray = 0.299 * r + 0.587 * g + 0.114 * b;
           const isStroke = gray < (255 - thresh * 1.8);
           if (isStroke) {
-            const alpha = Math.min(255, (255 - gray) * 1.5 * density);
-            data[i] = 0; data[i + 1] = 0; data[i + 2] = 0; // Crisp black ink
-            data[i + 3] = alpha;
+            data[i] = 0; data[i + 1] = 0; data[i + 2] = 0;
+            data[i + 3] = Math.min(255, (255 - gray) * 1.5 * density);
           } else {
-            data[i + 3] = 0; // Pure transparent background
+            data[i + 3] = 0;
           }
         }
       }
@@ -1375,241 +1722,7 @@
     }
 
     /* =========================================================================
-       STUDENT GRID & SHEET TEMPLATES (A3, A4, A5, 田字格, 米字格, 五线谱)
-       ========================================================================= */
-    function setTemplateColor(color) {
-      state.tplColor = color;
-      renderPaperTemplateCanvas();
-    }
-
-    function renderPaperTemplateCanvas() {
-      const canvas = document.getElementById('templatePaperCanvas');
-      const c = canvas.getContext('2d');
-      const tplType = document.getElementById('tplTypeSelect').value;
-      const paperSize = document.getElementById('tplPaperSize').value;
-      const orientation = document.getElementById('tplOrientation').value;
-      const headerTitle = document.getElementById('tplHeaderTitle').value;
-      const gridSize = parseInt(document.getElementById('sliderTplGridSize').value, 10);
-      const color = state.tplColor || '#dc2626';
-
-      // Set dimensions (300 DPI high-res)
-      let w = 2480, h = 3508; // Standard A4 (300 DPI)
-      if (paperSize === 'a5') { w = 1748; h = 2480; }
-      else if (paperSize === 'a3') { w = 3508; h = 4960; }
-
-      if (orientation === 'l') { const tmp = w; w = h; h = tmp; }
-
-      canvas.width = w;
-      canvas.height = h;
-
-      // Pure White Background
-      c.fillStyle = '#ffffff';
-      c.fillRect(0, 0, w, h);
-
-      // Outer Paper Margin
-      const margin = Math.round(w * 0.06);
-      const contentW = w - margin * 2;
-      const contentH = h - margin * 2;
-
-      // Header Bar
-      c.fillStyle = '#1e293b';
-      c.font = `bold ${Math.round(w * 0.016)}px sans-serif`;
-      c.fillText(headerTitle, margin, margin + Math.round(w * 0.016));
-
-      const startY = margin + Math.round(w * 0.045);
-      const drawH = contentH - Math.round(w * 0.045);
-
-      const cellPx = Math.round(w * (gridSize / 210));
-
-      if (tplType === 'tianzi' || tplType === 'pure_tianzi') {
-        const hasPinyin = tplType === 'tianzi';
-        const cols = Math.floor(contentW / cellPx);
-        const pinyinH = hasPinyin ? Math.round(cellPx * 0.38) : 0;
-        const rowTotalH = cellPx + pinyinH + Math.round(cellPx * 0.15);
-        const rows = Math.floor(drawH / rowTotalH);
-
-        for (let r = 0; r < rows; r++) {
-          const y = startY + r * rowTotalH;
-          for (let col = 0; col < cols; col++) {
-            const x = margin + col * cellPx;
-
-            // Pinyin 4 lines 3 grids
-            if (hasPinyin) {
-              c.strokeStyle = color;
-              c.lineWidth = 1.5;
-              c.strokeRect(x, y, cellPx, pinyinH);
-              c.setLineDash([4, 4]);
-              c.beginPath();
-              c.moveTo(x, y + pinyinH * 0.33); c.lineTo(x + cellPx, y + pinyinH * 0.33);
-              c.moveTo(x, y + pinyinH * 0.66); c.lineTo(x + cellPx, y + pinyinH * 0.66);
-              c.stroke();
-              c.setLineDash([]);
-            }
-
-            // Main Tian Zi Ge
-            const tianY = y + pinyinH;
-            c.strokeStyle = color;
-            c.lineWidth = 2.5;
-            c.strokeRect(x, tianY, cellPx, cellPx);
-
-            // Cross dashed lines
-            c.setLineDash([5, 5]);
-            c.lineWidth = 1.5;
-            c.beginPath();
-            c.moveTo(x + cellPx / 2, tianY); c.lineTo(x + cellPx / 2, tianY + cellPx);
-            c.moveTo(x, tianY + cellPx / 2); c.lineTo(x + cellPx, tianY + cellPx / 2);
-            c.stroke();
-            c.setLineDash([]);
-          }
-        }
-      } else if (tplType === 'mizi') {
-        // Mi Zi Ge (Calligraphy)
-        const cols = Math.floor(contentW / cellPx);
-        const rows = Math.floor(drawH / (cellPx + Math.round(cellPx * 0.15)));
-        const rowH = cellPx + Math.round(cellPx * 0.15);
-
-        for (let r = 0; r < rows; r++) {
-          const y = startY + r * rowH;
-          for (let col = 0; col < cols; col++) {
-            const x = margin + col * cellPx;
-            c.strokeStyle = color;
-            c.lineWidth = 2.5;
-            c.strokeRect(x, y, cellPx, cellPx);
-
-            // Cross & Diagonals
-            c.setLineDash([5, 5]);
-            c.lineWidth = 1.2;
-            c.beginPath();
-            c.moveTo(x + cellPx / 2, y); c.lineTo(x + cellPx / 2, y + cellPx);
-            c.moveTo(x, y + cellPx / 2); c.lineTo(x + cellPx, y + cellPx / 2);
-            c.moveTo(x, y); c.lineTo(x + cellPx, y + cellPx);
-            c.moveTo(x + cellPx, y); c.lineTo(x, y + cellPx);
-            c.stroke();
-            c.setLineDash([]);
-          }
-        }
-      } else if (tplType === 'music' || tplType === 'guitar') {
-        // Stave Paper (5 lines or 6 lines TAB)
-        const lineCount = tplType === 'music' ? 5 : 6;
-        const staveGap = Math.round(cellPx * 0.22);
-        const staveH = (lineCount - 1) * staveGap;
-        const systemGap = Math.round(staveH * 1.5);
-        const systems = Math.floor(drawH / (staveH + systemGap));
-
-        for (let s = 0; s < systems; s++) {
-          const sy = startY + s * (staveH + systemGap);
-          c.strokeStyle = color;
-          c.lineWidth = 2;
-          for (let l = 0; l < lineCount; l++) {
-            const ly = sy + l * staveGap;
-            c.beginPath();
-            c.moveTo(margin, ly);
-            c.lineTo(w - margin, ly);
-            c.stroke();
-          }
-          // Left & right bar lines
-          c.lineWidth = 3;
-          c.beginPath();
-          c.moveTo(margin, sy); c.lineTo(margin, sy + staveH);
-          c.moveTo(w - margin, sy); c.lineTo(w - margin, sy + staveH);
-          c.stroke();
-        }
-      } else if (tplType === 'english') {
-        // English 4 lines 3 grids
-        const rowH = Math.round(cellPx * 0.85);
-        const gap = Math.round(rowH * 0.45);
-        const rows = Math.floor(drawH / (rowH + gap));
-
-        for (let r = 0; r < rows; r++) {
-          const ry = startY + r * (rowH + gap);
-          const h1 = rowH * 0.33, h2 = rowH * 0.66;
-          c.strokeStyle = color;
-          c.lineWidth = 2;
-          c.beginPath();
-          c.moveTo(margin, ry); c.lineTo(w - margin, ry);
-          c.moveTo(margin, ry + rowH); c.lineTo(w - margin, ry + rowH);
-          c.stroke();
-
-          c.setLineDash([4, 4]);
-          c.lineWidth = 1.2;
-          c.beginPath();
-          c.moveTo(margin, ry + h1); c.lineTo(w - margin, ry + h1);
-          c.moveTo(margin, ry + h2); c.lineTo(w - margin, ry + h2);
-          c.stroke();
-          c.setLineDash([]);
-        }
-      } else if (tplType === 'grid' || tplType === 'dot') {
-        // Graph / Dot Paper
-        const isDot = tplType === 'dot';
-        const step = Math.round(cellPx * 0.35);
-        for (let y = startY; y < h - margin; y += step) {
-          for (let x = margin; x < w - margin; x += step) {
-            if (isDot) {
-              c.fillStyle = color;
-              c.beginPath();
-              c.arc(x, y, 2.5, 0, Math.PI * 2);
-              c.fill();
-            } else {
-              c.strokeStyle = color;
-              c.lineWidth = 0.8;
-              c.strokeRect(x, y, step, step);
-            }
-          }
-        }
-      } else if (tplType === 'rizi') {
-        // Ri Zi Ge (Numbers)
-        const cellW = cellPx * 0.75;
-        const cols = Math.floor(contentW / cellW);
-        const rows = Math.floor(drawH / (cellPx + Math.round(cellPx * 0.15)));
-        const rowH = cellPx + Math.round(cellPx * 0.15);
-
-        for (let r = 0; r < rows; r++) {
-          const y = startY + r * rowH;
-          for (let col = 0; col < cols; col++) {
-            const x = margin + col * cellW;
-            c.strokeStyle = color;
-            c.lineWidth = 2.2;
-            c.strokeRect(x, y, cellW, cellPx);
-            c.setLineDash([4, 4]);
-            c.beginPath();
-            c.moveTo(x, y + cellPx / 2); c.lineTo(x + cellW, y + cellPx / 2);
-            c.stroke();
-            c.setLineDash([]);
-          }
-        }
-      }
-    }
-
-    function exportTemplateToPDF() {
-      const canvas = document.getElementById('templatePaperCanvas');
-      const paperSize = document.getElementById('tplPaperSize').value;
-      const orientation = document.getElementById('tplOrientation').value;
-      const { jsPDF } = window.jspdf;
-
-      const pdf = new jsPDF({
-        orientation: orientation,
-        unit: 'mm',
-        format: paperSize
-      });
-
-      const imgData = canvas.toDataURL('image/jpeg', 0.95);
-      const pdfW = pdf.internal.pageSize.getWidth();
-      const pdfH = pdf.internal.pageSize.getHeight();
-
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH, undefined, 'FAST');
-      pdf.save(`Template_${document.getElementById('tplTypeSelect').value}_${paperSize.toUpperCase()}.pdf`);
-      showToast(`已成功导出 ${paperSize.toUpperCase()} 高清矢量 PDF 模板！`);
-    }
-
-    function printTemplatePaper() {
-      const canvas = document.getElementById('templatePaperCanvas');
-      const win = window.open('', '_blank');
-      win.document.write(`<html><head><title>打印作业纸</title><style>@page{size:auto;margin:0;}body{margin:0;display:flex;align-items:center;justify-content:center;height:100vh;}img{width:100%;height:100%;object-fit:contain;}</style></head><body><img src="${canvas.toDataURL('image/png')}" onload="window.print();window.close();"></body></html>`);
-      win.document.close();
-    }
-
-    /* =========================================================================
-       PDF MERGE & SPLIT, DIFF, REDACTOR & UTILS
+       FORMAT CONVERTER, FORMATTER, PDF TOOLS & AI
        ========================================================================= */
     async function handlePdfToWord(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
@@ -1667,8 +1780,7 @@
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const vp = page.getViewport({ scale: 2.0 });
-          const cvs = document.createElement('canvas');
-          cvs.width = vp.width; cvs.height = vp.height;
+          const cvs = document.createElement('canvas'); cvs.width = vp.width; cvs.height = vp.height;
           await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
           const slide = pptx.addSlide();
           slide.addImage({ data: cvs.toDataURL('image/png'), x: 0, y: 0, w: '100%', h: '100%' });
@@ -1689,8 +1801,7 @@
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const vp = page.getViewport({ scale: 2.0 });
-          const cvs = document.createElement('canvas');
-          cvs.width = vp.width; cvs.height = vp.height;
+          const cvs = document.createElement('canvas'); cvs.width = vp.width; cvs.height = vp.height;
           await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
           const dataUrl = cvs.toDataURL('image/png').replace(/^data:image\/png;base64,/, '');
           zip.file(`Page_${i}.png`, dataUrl, { base64: true });
@@ -1710,8 +1821,7 @@
         const ab = await file.arrayBuffer();
         const res = await mammoth.extractRawText({ arrayBuffer: ab });
         document.getElementById('formatterEditor').value = res.value;
-        updateFormattedPreview();
-        switchAppModule('format');
+        updateFormattedPreview(); switchAppModule('format');
         showToast('Word 文档已导入并进入排版！');
       } catch (err) { showToast('导入 Word 失败: ' + err.message, 'error'); }
     }
@@ -1723,7 +1833,6 @@
         const wb = XLSX.read(ab, { type: 'array' });
         const json = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
         state.convertedTableData = json;
-
         let html = '<table class="w-full text-xs text-left border-collapse">';
         json.slice(0, 10).forEach((r, idx) => {
           html += `<tr class="${idx === 0 ? 'bg-slate-100 dark:bg-slate-800 font-bold' : 'border-t'}">`;
@@ -1749,8 +1858,7 @@
     function copyConvertedDataMarkdown() {
       if (!state.convertedTableData) return;
       let md = state.convertedTableData.map(r => '| ' + r.join(' | ') + ' |').join('\n');
-      navigator.clipboard.writeText(md);
-      showToast('已复制 Markdown 表格！');
+      navigator.clipboard.writeText(md); showToast('已复制 Markdown 表格！');
     }
 
     /* Formatter Logic */
@@ -1764,9 +1872,7 @@
       if (mode === 'all' || mode === 'emptyLines') text = text.replace(/\n\s*\n+/g, '\n\n').split('\n').map(l => l.trim()).join('\n');
       if (mode === 'all' || mode === 'pangu') text = text.replace(/([\u4e00-\u9fa5])([a-zA-Z0-9])/g, '$1 $2').replace(/([a-zA-Z0-9])([\u4e00-\u9fa5])/g, '$1 $2');
       if (mode === 'all' || mode === 'punct') text = text.replace(/,/g, '，').replace(/:/g, '：').replace(/;/g, '；').replace(/\?/g, '？').replace(/!/g, '！');
-      ed.value = text;
-      updateFormattedPreview();
-      showToast('格式清洗完成！');
+      ed.value = text; updateFormattedPreview(); showToast('格式清洗完成！');
     }
     function updateFormattedPreview() {
       const text = document.getElementById('formatterEditor').value;
@@ -1787,8 +1893,7 @@
       showProgress('正在生成 Word (.docx)...', '配置国标公文仿宋字体与段落');
       try {
         const paragraphs = text.split('\n').filter(l => l.trim()).map(l => new docx.Paragraph({
-          indent: { firstLine: 560 },
-          spacing: { line: 480, after: 120 },
+          indent: { firstLine: 560 }, spacing: { line: 480, after: 120 },
           children: [new docx.TextRun({ text: l.trim(), font: 'FangSong', size: 32 })]
         }));
         const doc = new docx.Document({ sections: [{ children: paragraphs }] });
@@ -1803,8 +1908,7 @@
     function printFormattedDoc() { window.print(); }
     function loadSampleDocText() {
       document.getElementById('formatterEditor').value = `关于进一步推进数字化办公体系建设的通知\n\n各部室、直属各单位、分支机构：\n\n为全面贯彻落实智能化发展战略，提升全员跨部门协作与文档处理流转效率，经办公会议研究决定，现就全面推广使用新一代线上办公增强超级工作台有关事项通知如下：\n\n一、 统一文档格式规范与排版标准\n各单位在拟定各类通知通报、会议纪要、工作汇报时，应严格遵循国家标准公文格式。全面消除由于格式错乱、全半角标点混用及多余空行带来的排版问题，确保对外输出文档权威、美观、规范。\n\n二、 全面深化数据隐私与安全保护\n所有涉及外部供应商结算单据、人员信息及商业合同文件，严禁通过未经安全认证的第三方中转服务器处理。\n\n特此通知。\n\n办公综合管理部\n2026年08月28日`;
-      updateFormattedPreview();
-      showToast('已载入公文范例');
+      updateFormattedPreview(); showToast('已载入公文范例');
     }
     function clearFormatterEditor() { document.getElementById('formatterEditor').value = ''; updateFormattedPreview(); }
     function sendAITextToFormatter() {
@@ -1856,7 +1960,7 @@
         const ab = await file.arrayBuffer();
         const src = await PDFLib.PDFDocument.load(ab);
         const newDoc = await PDFLib.PDFDocument.create();
-        const idxs = [0]; // default first page or range
+        const idxs = [0];
         const pgs = await newDoc.copyPages(src, idxs);
         pgs.forEach(p => newDoc.addPage(p));
         const bytes = await newDoc.save();
@@ -2166,7 +2270,6 @@
     }
     function resetCurrentAdjustments() { showToast('参数已重置'); }
     function applyCurrentFilterToAll() { showToast('已应用调色到所有页'); }
-    function toggleSplitCompareMode() { showToast('分屏对比'); }
     function toggleMobilePageDrawer() { document.getElementById('leftSidebar').classList.toggle('-translate-x-full'); }
     function exportToPDF() {
       const { jsPDF } = window.jspdf;
