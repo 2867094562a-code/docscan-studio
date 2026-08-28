@@ -20,6 +20,8 @@
   <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
   <script>
     if (window.pdfjsLib) {
@@ -70,9 +72,7 @@
       -webkit-user-select: text;
     }
 
-    #viewportContainer {
-      touch-action: none;
-    }
+    #viewportContainer { touch-action: none; }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -82,8 +82,7 @@
     /* Loupe Magnifier */
     #magnifier {
       position: absolute;
-      width: 140px;
-      height: 140px;
+      width: 140px; height: 140px;
       border-radius: 50%;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 0 3px #4f46e5, 0 0 0 6px rgba(255, 255, 255, 0.85);
       pointer-events: none;
@@ -92,70 +91,27 @@
       z-index: 999;
       background: #000;
     }
-    #magnifier canvas {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
+    #magnifier canvas { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
     #magnifier::after {
       content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 20px;
-      height: 20px;
+      position: absolute; top: 50%; left: 50%; width: 20px; height: 20px;
       transform: translate(-50%, -50%);
-      border: 1.5px solid #ef4444;
-      border-radius: 50%;
-      pointer-events: none;
+      border: 1.5px solid #ef4444; border-radius: 50%; pointer-events: none;
     }
     #magnifier::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: rgba(239, 68, 68, 0.85);
-      z-index: 2;
+      content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(239, 68, 68, 0.85); z-index: 2;
     }
-    .crosshair-v {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: rgba(239, 68, 68, 0.85);
-      z-index: 2;
-    }
+    .crosshair-v { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(239, 68, 68, 0.85); z-index: 2; }
 
-    input[type=range] {
-      -webkit-appearance: none;
-      background: transparent;
-    }
-    input[type=range]::-webkit-slider-runnable-track {
-      height: 6px;
-      border-radius: 3px;
-      background: #e2e8f0;
-    }
-    .dark input[type=range]::-webkit-slider-runnable-track {
-      background: #334155;
-    }
+    input[type=range] { -webkit-appearance: none; background: transparent; }
+    input[type=range]::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: #e2e8f0; }
+    .dark input[type=range]::-webkit-slider-runnable-track { background: #334155; }
     input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 18px;
-      width: 18px;
-      border-radius: 50%;
-      background: #4f46e5;
-      margin-top: -6px;
-      cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.35);
-      transition: transform 0.15s;
+      -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
+      background: #4f46e5; margin-top: -6px; cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.35); transition: transform 0.15s;
     }
-    input[type=range]::-webkit-slider-thumb:hover {
-      transform: scale(1.25);
-    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.25); }
 
     .bg-checker {
       background-size: 20px 20px;
@@ -175,88 +131,49 @@
     }
 
     .scanner-laser {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 3px;
+      position: absolute; left: 0; right: 0; height: 3px;
       background: linear-gradient(90deg, rgba(79, 70, 229, 0) 0%, rgba(99, 102, 241, 1) 20%, rgba(168, 85, 247, 1) 50%, rgba(99, 102, 241, 1) 80%, rgba(79, 70, 229, 0) 100%);
       box-shadow: 0 0 15px 3px rgba(99, 102, 241, 0.8);
-      pointer-events: none;
-      z-index: 25;
+      pointer-events: none; z-index: 25;
     }
 
     /* Document Formatter Typography */
     .doc-preview-gov {
       font-family: "FangSong", "仿宋", "STFangsong", serif;
-      line-height: 1.8;
-      font-size: 16px;
-      color: #111827;
+      line-height: 1.8; font-size: 16px; color: #111827;
     }
     .doc-preview-gov h1 {
       font-family: "SimHei", "黑体", "STHeiti", sans-serif;
-      font-size: 24px;
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 24px;
-      color: #dc2626;
+      font-size: 24px; text-align: center; font-weight: bold; margin-bottom: 24px; color: #dc2626;
     }
     .doc-preview-gov h2 {
       font-family: "SimHei", "黑体", "STHeiti", sans-serif;
-      font-size: 18px;
-      font-weight: bold;
-      margin-top: 16px;
-      margin-bottom: 8px;
+      font-size: 18px; font-weight: bold; margin-top: 16px; margin-bottom: 8px;
     }
     .doc-preview-gov h3 {
       font-family: "KaiTi", "楷体", "STKaiti", serif;
-      font-size: 16px;
-      font-weight: bold;
-      margin-top: 12px;
-      margin-bottom: 6px;
+      font-size: 16px; font-weight: bold; margin-top: 12px; margin-bottom: 6px;
     }
-    .doc-preview-gov p {
-      text-indent: 2em;
-      margin-bottom: 12px;
-      text-align: justify;
-    }
+    .doc-preview-gov p { text-indent: 2em; margin-bottom: 12px; text-align: justify; }
 
     .doc-preview-business {
       font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-      line-height: 1.7;
-      font-size: 15px;
-      color: #1e293b;
+      line-height: 1.7; font-size: 15px; color: #1e293b;
     }
     .doc-preview-business h1 {
-      font-size: 26px;
-      font-weight: 800;
-      color: #1e40af;
-      border-bottom: 2px solid #3b82f6;
-      padding-bottom: 8px;
-      margin-bottom: 20px;
+      font-size: 26px; font-weight: 800; color: #1e40af;
+      border-bottom: 2px solid #3b82f6; padding-bottom: 8px; margin-bottom: 20px;
     }
     .doc-preview-business h2 {
-      font-size: 18px;
-      font-weight: 700;
-      color: #2563eb;
-      margin-top: 18px;
-      margin-bottom: 8px;
+      font-size: 18px; font-weight: 700; color: #2563eb; margin-top: 18px; margin-bottom: 8px;
     }
     .doc-preview-business p { margin-bottom: 12px; }
 
     ins.diff-ins {
-      background-color: #dcfce7;
-      color: #15803d;
-      text-decoration: none;
-      padding: 2px 4px;
-      border-radius: 3px;
-      font-weight: 600;
+      background-color: #dcfce7; color: #15803d; text-decoration: none; padding: 2px 4px; border-radius: 3px; font-weight: 600;
     }
     del.diff-del {
-      background-color: #fee2e2;
-      color: #b91c1c;
-      text-decoration: line-through;
-      padding: 2px 4px;
-      border-radius: 3px;
+      background-color: #fee2e2; color: #b91c1c; text-decoration: line-through; padding: 2px 4px; border-radius: 3px;
     }
   </style>
 </head>
@@ -278,7 +195,7 @@
         <div>
           <div class="flex items-center space-x-1.5">
             <h1 class="text-base sm:text-lg font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 dark:from-indigo-400 dark:via-purple-400 dark:to-violet-400 bg-clip-text text-transparent">Office Master Studio</h1>
-            <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">Pro</span>
+            <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">Pro 3.0</span>
           </div>
           <p class="text-[10px] text-slate-400 hidden 2xl:block">一站式线上办公超级工作台 / 100% 本地离线安全</p>
         </div>
@@ -292,7 +209,7 @@
         <span>首页</span>
       </button>
       <button onclick="switchAppModule('scan')" id="tabNavScan" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
-        <i data-lucide="scan-line" class="w-4 h-4"></i>
+        <i data-lucide="scan-line" class="w-4 h-4 text-indigo-500"></i>
         <span>1. 图像转文档</span>
       </button>
       <button onclick="switchAppModule('convert')" id="tabNavConvert" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
@@ -300,7 +217,7 @@
         <span>2. 格式互转中心</span>
       </button>
       <button onclick="switchAppModule('format')" id="tabNavFormat" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
-        <i data-lucide="type" class="w-4 h-4 text-indigo-500"></i>
+        <i data-lucide="type" class="w-4 h-4 text-purple-500"></i>
         <span>3. Word/公文排版</span>
       </button>
       <button onclick="switchAppModule('extract')" id="tabNavExtract" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
@@ -309,15 +226,15 @@
       </button>
       <button onclick="switchAppModule('templates')" id="tabNavTemplates" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
         <i data-lucide="grid" class="w-4 h-4 text-emerald-500"></i>
-        <span>5. 田字格作业模板</span>
+        <span>5. 作业纸与字帖模板</span>
       </button>
       <button onclick="switchAppModule('diff')" id="tabNavDiff" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
         <i data-lucide="git-compare" class="w-4 h-4 text-cyan-500"></i>
-        <span>6. 文档/合同Diff比对</span>
+        <span>6. 合同/文档比对</span>
       </button>
       <button onclick="switchAppModule('tools')" id="tabNavTools" class="nav-module-btn flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100">
         <i data-lucide="wrench" class="w-4 h-4 text-amber-500"></i>
-        <span>7. 实用工具箱</span>
+        <span>7. 办公实用工具箱</span>
       </button>
     </nav>
 
@@ -366,15 +283,15 @@
       </button>
       <button onclick="switchAppModule('templates'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
         <i data-lucide="grid" class="w-5 h-5 text-emerald-500"></i>
-        <div><div class="text-xs font-bold">5. 田字格作业纸与描红字帖</div><div class="text-[10px] text-slate-400">描红练习、拼音田字格、五线谱、A3/A4/A5</div></div>
+        <div><div class="text-xs font-bold">5. 作业纸与字帖模板库 (18+款)</div><div class="text-[10px] text-slate-400">拼音田字格、字帖描红、错题本、康奈尔</div></div>
       </button>
       <button onclick="switchAppModule('diff'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
         <i data-lucide="git-compare" class="w-5 h-5 text-cyan-500"></i>
-        <div><div class="text-xs font-bold">6. 文档/合同Diff差异比对</div><div class="text-[10px] text-slate-400">上传Word/PDF比对、左右分栏、AI风险审查</div></div>
+        <div><div class="text-xs font-bold">6. 文档/合同Diff差异比对</div><div class="text-[10px] text-slate-400">上传Word/PDF比对、AI法律风险审查</div></div>
       </button>
       <button onclick="switchAppModule('tools'); toggleMobileGlobalNav();" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
         <i data-lucide="wrench" class="w-4 h-4 text-amber-500"></i>
-        <div><div class="text-xs font-bold">7. 办公高效实用工具箱</div><div class="text-[10px] text-slate-400">PDF合并拆分、隐私脱敏器</div></div>
+        <div><div class="text-xs font-bold">7. 办公高效实用工具箱</div><div class="text-[10px] text-slate-400">批量水印、证件A4拼版、大写金额、二维码</div></div>
       </button>
     </div>
   </div>
@@ -392,13 +309,13 @@
         <div class="relative z-10 max-w-2xl space-y-3">
           <div class="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-xs font-medium text-indigo-200 border border-white/10">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>100% 浏览器本地离线运行 · 数据绝不上传云端</span>
+            <span>100% 浏览器本地离线运行 · 保护合同与财务隐私</span>
           </div>
           <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
             高颜值 · 极速 · 全能的<br><span class="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">线上办公超级增强工作台</span>
           </h2>
           <p class="text-xs sm:text-sm text-indigo-100/80 leading-relaxed">
-            为您整合了日常办公最高频的 7 大核心模块：图像文档扫描压平、全格式文件互转、Word 国标公文排版美化、印章签名透明抠图、学生练字与作业纸高清打印、双文档/合同上传Diff比对，以及 PDF 瑞士军刀工具集。
+            为您整合了日常办公最高频的 7 大核心模块：图像文档扫描压平、全格式文件互转、Word 国标公文排版美化、印章签名透明抠图、18+款学生练字与作业纸高清打印、双文档/合同上传Diff比对，以及 PDF 批量水印与证件A4拼版工具集。
           </p>
         </div>
       </div>
@@ -502,15 +419,15 @@
                 <i data-lucide="grid" class="w-6 h-6"></i>
               </div>
               <div class="flex items-center justify-between mb-1">
-                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition-colors">5. 田字格与字帖模板库</h4>
-                <span class="text-[11px] font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded-full">支持描红字帖</span>
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-emerald-600 transition-colors">5. 作业纸与字帖模板库</h4>
+                <span class="text-[11px] font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-950/80 px-2 py-0.5 rounded-full">18+款专业模板</span>
               </div>
               <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                自定义字帖描红练习、拼音田字格、米字格、日字格、英语四线三格、五线谱、吉他TAB，支持 A3 / A4 / A5 高清矢量导出。
+                拼音田字格、米字格、回宫格、衡水体英文、五线谱、错题本、康奈尔笔记纸、化学六边形、字帖描红练习，支持 A3/A4/A5 矢量导出。
               </p>
             </div>
             <div class="flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform">
-              <span>立即生成练字纸/作业模板</span>
+              <span>立即生成作业纸/字帖</span>
               <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
             </div>
           </div>
@@ -542,11 +459,11 @@
                 <i data-lucide="wrench" class="w-6 h-6"></i>
               </div>
               <div class="flex items-center justify-between mb-1">
-                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-amber-600 transition-colors">7. 办公高效小工具箱</h4>
-                <span class="text-[11px] font-semibold text-amber-500 bg-amber-50 dark:bg-amber-950/80 px-2 py-0.5 rounded-full">实用合集</span>
+                <h4 class="text-base font-bold text-slate-800 dark:text-slate-100 group-hover:text-amber-600 transition-colors">7. 办公高效实用工具箱</h4>
+                <span class="text-[11px] font-semibold text-amber-500 bg-amber-50 dark:bg-amber-950/80 px-2 py-0.5 rounded-full">加水印/证件拼版</span>
               </div>
               <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                多 PDF 毫秒级合并、页面按范围拆分、商业个人隐私脱敏器、标准电子公章实时绘制。
+                PDF 智能批量防伪水印、身份证/卡证 A4 1:1 拼版打印、财务大写金额转换、二维码与条形码生成器、个人隐私脱敏器。
               </p>
             </div>
             <div class="flex items-center text-xs font-bold text-amber-600 dark:text-amber-400 group-hover:translate-x-1 transition-transform">
@@ -1003,7 +920,7 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 5: STUDENT GRID & SHEET TEMPLATES (田字格、米字格、字帖描红)
+       MODULE 5: STUDENT GRID & SHEET TEMPLATES (18+ 丰富模版库)
        ========================================================================= -->
   <div id="moduleTemplates" class="app-module flex-1 flex flex-col overflow-hidden hidden">
     
@@ -1014,8 +931,8 @@
           <i data-lucide="grid" class="w-4 h-4"></i>
         </div>
         <div>
-          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">中小学生作业纸与字帖模板库</h3>
-          <p class="text-[10px] text-slate-400 hidden sm:block">拼音田字格、米字格、日字格、英语四线三格、五线谱、支持字帖描红</p>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">作业纸与字帖模板库 (18+ 款)</h3>
+          <p class="text-[10px] text-slate-400 hidden sm:block">拼音田字格、米字格、回宫格、衡水体、错题本、康奈尔笔记、化学分子、字帖描红</p>
         </div>
       </div>
 
@@ -1045,18 +962,32 @@
       <div class="w-full md:w-80 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 overflow-y-auto space-y-4 shrink-0">
         
         <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">模版种类选择</label>
+          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">模版种类选择 (共 18 款)</label>
           <select id="tplTypeSelect" onchange="renderPaperTemplateCanvas()" class="w-full text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 font-medium">
-            <option value="tianzi">🀄 拼音田字格 (幼小衔接/语文练字)</option>
-            <option value="pure_tianzi">🔲 纯田字格 (规范汉字书写)</option>
-            <option value="mizi">✳️ 米字格 (书法楷书字帖)</option>
-            <option value="rizi">📅 日字格 (数字规范书写练习)</option>
-            <option value="english">🔤 英语四线三格 (字母单词书写)</option>
-            <option value="music">🎼 音乐五线谱 (标准五线谱纸)</option>
-            <option value="guitar">🎸 吉他/尤克里里六线谱 (TAB)</option>
-            <option value="zuowen">📝 作文稿纸 (20×20 方格)</option>
-            <option value="dot">▫️ 5mm 点阵坐标纸 (Bullet Journal)</option>
-            <option value="grid">📐 方格坐标纸 (数学几何作图)</option>
+            <optgroup label="语文与书法练字">
+              <option value="tianzi">🀄 拼音田字格 (幼小衔接/语文练字)</option>
+              <option value="pure_tianzi">🔲 纯田字格 (规范汉字书写)</option>
+              <option value="mizi">✳️ 米字格 (书法楷书字帖)</option>
+              <option value="huigong">⭕ 回宫格 / 回字格 (书法间架结构)</option>
+              <option value="jiugong">📐 九宫格 (书法大字结构)</option>
+              <option value="calligraphy_v">📜 竖排书法条幅稿纸 (传统书法创作)</option>
+              <option value="zuowen">📝 作文方格纸 (20×20 标准方格)</option>
+            </optgroup>
+            <optgroup label="数学、英语与错题订正">
+              <option value="rizi">📅 日字格 (数字规范书写练习)</option>
+              <option value="english">🔤 英语四线三格 (字母单词规范)</option>
+              <option value="hengshui">✍️ 衡水体/斜体英文练习格 (68°斜辅助线)</option>
+              <option value="mistake">📊 错题本与试卷订正整理纸 (错题专练)</option>
+              <option value="grid">📐 工程方格坐标纸 (数学几何作图)</option>
+              <option value="chemistry">⬡ 六边形有机化学分子结构纸</option>
+            </optgroup>
+            <optgroup label="音乐、笔记与时间管理">
+              <option value="music">🎼 音乐五线谱 (标准乐谱纸)</option>
+              <option value="guitar">🎸 吉他/尤克里里六线谱 (TAB指弹)</option>
+              <option value="cornell">📖 康奈尔经典笔记纸 (Cue/Notes/Summary)</option>
+              <option value="planner">🗓️ 每日时间管理与打卡计划表</option>
+              <option value="dot">▫️ 5mm 点阵坐标纸 (Bullet Journal)</option>
+            </optgroup>
           </select>
         </div>
 
@@ -1119,7 +1050,7 @@
             <span class="text-slate-600 dark:text-slate-400">格子大小 (Grid Size)</span>
             <span id="valTplGridSize" class="font-mono text-slate-500">14mm (中)</span>
           </div>
-          <input type="range" id="sliderTplGridSize" min="10" max="22" value="14" oninput="renderPaperTemplateCanvas()" class="w-full">
+          <input type="range" id="sliderTplGridSize" min="10" max="24" value="14" oninput="renderPaperTemplateCanvas()" class="w-full">
         </div>
 
         <div class="space-y-1">
@@ -1244,7 +1175,7 @@
           <div id="aiContractReviewContent" class="text-xs text-slate-700 dark:text-slate-200 leading-relaxed font-sans whitespace-pre-wrap"></div>
         </div>
 
-        <!-- Diff Views: Side-by-Side & Unified -->
+        <!-- Diff Views: Unified -->
         <div>
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs font-bold text-slate-700 dark:text-slate-300">修订标记比对结果 (Unified Redline Stream)</span>
@@ -1258,23 +1189,143 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 7: OFFICE TOOLS
+       MODULE 7: SUPER TOOLBOX (新增批量防伪水印、证件A4拼版、大写金额、二维码生成)
        ========================================================================= -->
   <div id="moduleTools" class="app-module flex-1 flex-col overflow-y-auto p-4 sm:p-6 lg:p-8 hidden">
     <div class="max-w-6xl w-full mx-auto space-y-8">
-      <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-          <i data-lucide="wrench" class="w-5 h-5 text-indigo-500"></i>
-          <span>办公高效实用小工具箱</span>
-        </h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">涵盖 PDF 多文件合并拆分、商业脱敏器与电子公章绘制。</p>
+      <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <i data-lucide="wrench" class="w-5 h-5 text-amber-500"></i>
+            <span>办公高效实用超级工具箱</span>
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            涵盖 PDF 批量防伪水印、身份证/卡证 A4 拼版、财务人民币大写转换、二维码与条形码生成器、PDF 瑞士军刀及隐私脱敏。
+          </p>
+        </div>
       </div>
 
-      <!-- 1. PDF Merge & Split -->
+      <!-- 1. Smart Watermark Generator -->
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+        <div class="flex items-center space-x-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 flex items-center justify-center"><i data-lucide="stamp" class="w-4 h-4"></i></div>
+          <div><h3 class="text-sm font-bold">1. 智能批量防伪水印加注器 (PDF / 图片)</h3><p class="text-[11px] text-slate-400">防止证件照与合同盗用，添加“仅供办理业务使用 他用无效”等倾斜防伪水印</p></div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold mb-1">水印文字内容</label>
+              <input type="text" id="wmText" value="仅供办理业务使用 他用无效" class="w-full text-xs p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs font-semibold mb-1">水印颜色</label>
+                <select id="wmColor" class="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  <option value="rgba(148, 163, 184, 0.45)">浅灰色 (通用)</option>
+                  <option value="rgba(220, 38, 38, 0.38)">红色 (严防复印)</option>
+                  <option value="rgba(79, 70, 229, 0.38)">靛蓝色</option>
+                  <option value="rgba(16, 185, 129, 0.38)">绿色</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold mb-1">倾斜角度</label>
+                <select id="wmAngle" class="w-full text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                  <option value="-30">-30° (经典)</option>
+                  <option value="-45">-45°</option>
+                  <option value="0">0° (水平)</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <input type="file" id="inputWatermarkFile" accept=".pdf,image/*" class="hidden" onchange="handleWatermarkUpload(event)">
+              <button onclick="document.getElementById('inputWatermarkFile').click()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1.5">
+                <i data-lucide="upload" class="w-4 h-4"></i><span>选择 PDF 或图片加注水印</span>
+              </button>
+            </div>
+          </div>
+          <div class="lg:col-span-2 bg-checker rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center p-4 min-h-[200px]">
+            <canvas id="watermarkPreviewCanvas" class="max-w-full max-h-60 shadow-md object-contain bg-white"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. ID Card A4 1:1 Merger -->
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+        <div class="flex items-center space-x-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+          <div class="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/50 text-blue-600 flex items-center justify-center"><i data-lucide="contact" class="w-4 h-4"></i></div>
+          <div><h3 class="text-sm font-bold">2. 身份证 / 卡证 A4 纸 1:1 拼版打印助手</h3><p class="text-[11px] text-slate-400">人像面 + 国徽面精准按 85.6×54mm 真实物理尺寸排版到 A4 纸正中央</p></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold mb-1">1. 上传身份证【人像正面】</label>
+              <input type="file" id="inputIdFront" accept="image/*" class="hidden" onchange="handleIdCardUpload(event, 'front')">
+              <button onclick="document.getElementById('inputIdFront').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-medium border border-slate-200 dark:border-slate-700">选择正面照片</button>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1">2. 上传身份证【国徽反面】</label>
+              <input type="file" id="inputIdBack" accept="image/*" class="hidden" onchange="handleIdCardUpload(event, 'back')">
+              <button onclick="document.getElementById('inputIdBack').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-medium border border-slate-200 dark:border-slate-700">选择反面照片</button>
+            </div>
+            <button onclick="exportIdCardA4PDF()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1.5">
+              <i data-lucide="file-down" class="w-4 h-4"></i><span>导出 1:1 A4 打印 PDF</span>
+            </button>
+          </div>
+          <div class="md:col-span-2 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center p-3">
+            <canvas id="idCardA4Canvas" width="800" height="1130" class="max-h-72 shadow-lg bg-white"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Financial RMB Capitalizer & QR/Barcode -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- RMB Capitalizer -->
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="flex items-center space-x-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center"><i data-lucide="badge-dollar-sign" class="w-4 h-4"></i></div>
+            <div><h3 class="text-sm font-bold">3. 财务人民币大写金额转换器</h3><p class="text-[11px] text-slate-400">发票、借条与合同金额大写规范转换</p></div>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold mb-1">输入小写阿拉伯金额 (¥)</label>
+              <input type="number" id="rmbInput" step="0.01" placeholder="例如: 123456.78" value="123456.78" oninput="convertRmbAmount()" class="w-full text-sm p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1">中文大写规范结果</label>
+              <div class="relative">
+                <input type="text" id="rmbOutput" readonly class="w-full text-xs sm:text-sm p-2.5 pr-16 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-200 dark:border-emerald-800">
+                <button onclick="copyRmbCapitalized()" class="absolute right-1.5 top-1.5 px-2.5 py-1 bg-emerald-600 text-white rounded-lg text-xs font-semibold">复制</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QR & Barcode -->
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="flex items-center space-x-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div class="w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-600 flex items-center justify-center"><i data-lucide="qr-code" class="w-4 h-4"></i></div>
+            <div><h3 class="text-sm font-bold">4. 二维码 & 条形码快速生成器</h3><p class="text-[11px] text-slate-400">网址、文本、WiFi 与 Code128 条形码</p></div>
+          </div>
+          <div class="space-y-3">
+            <div class="flex space-x-2">
+              <input type="text" id="qrTextInput" value="https://github.com/2867094562a-code/docscan-studio" oninput="generateQRAndBarcode()" class="flex-1 text-xs p-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              <button onclick="generateQRAndBarcode()" class="px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-bold">生成</button>
+            </div>
+            <div class="flex items-center justify-around p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800">
+              <div id="qrCodeContainer" class="p-2 bg-white rounded shadow-sm"></div>
+              <svg id="barcodeContainer" class="max-w-[160px]"></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 4. PDF Merge & Split -->
       <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
         <div class="flex items-center space-x-3 pb-3 border-b border-slate-200 dark:border-slate-800">
           <div class="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-950/50 text-red-600 flex items-center justify-center"><i data-lucide="file-stack" class="w-4 h-4"></i></div>
-          <div><h3 class="text-sm font-bold">PDF 瑞士军刀 (合并与拆分)</h3><p class="text-[11px] text-slate-400">纯前端毫秒级合并、按页码范围拆分提取</p></div>
+          <div><h3 class="text-sm font-bold">5. PDF 瑞士军刀 (合并与拆分)</h3><p class="text-[11px] text-slate-400">纯前端毫秒级合并、按页码范围拆分提取</p></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
@@ -1300,12 +1351,12 @@
         </div>
       </div>
 
-      <!-- 2. Redactor -->
+      <!-- 5. Redactor -->
       <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
         <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
           <div class="flex items-center space-x-3">
             <div class="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center"><i data-lucide="shield-check" class="w-4 h-4"></i></div>
-            <div><h3 class="text-sm font-bold">商业敏感信息一键脱敏器</h3><p class="text-[11px] text-slate-400">自动脱敏身份证、手机号、银行卡与邮箱</p></div>
+            <div><h3 class="text-sm font-bold">6. 商业敏感信息一键脱敏器</h3><p class="text-[11px] text-slate-400">自动脱敏身份证、手机号、银行卡与邮箱</p></div>
           </div>
           <button onclick="runPrivacyRedaction()" class="px-4 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold">一键脱敏</button>
         </div>
@@ -1314,6 +1365,7 @@
           <textarea id="redactorOutput" rows="4" readonly class="w-full text-xs p-3 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 font-mono"></textarea>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -1412,6 +1464,10 @@
       tplColor: '#dc2626',
       tplZoom: 0.45,
 
+      // ID Card Merger
+      idFrontImg: null,
+      idBackImg: null,
+
       aiConfig: { provider: 'openai', baseUrl: 'https://api.openai.com/v1', apiKey: '', model: 'gpt-4o' }
     };
 
@@ -1433,6 +1489,10 @@
       renderPaperTemplateCanvas();
       loadSampleExtractImage();
       loadSampleDiffContracts();
+      convertRmbAmount();
+      generateQRAndBarcode();
+      renderWatermarkPreview();
+      renderIdCardA4Canvas();
 
       // Check URL parameters for direct module loading
       const urlParams = new URLSearchParams(window.location.search);
@@ -1489,6 +1549,231 @@
       if (s) document.getElementById('processStepText').innerText = s;
     }
     function hideProgress() { document.getElementById('processingModal').classList.add('hidden'); }
+
+    /* =========================================================================
+       SUPER TOOLBOX: WATERMARK, ID CARD MERGER, RMB, QR & BARCODE
+       ========================================================================= */
+    // 1. Watermark Generator
+    function renderWatermarkPreview() {
+      const canvas = document.getElementById('watermarkPreviewCanvas');
+      if (!canvas) return;
+      canvas.width = 600; canvas.height = 400;
+      const c = canvas.getContext('2d');
+      c.fillStyle = '#ffffff'; c.fillRect(0, 0, 600, 400);
+
+      // Draw fake contract lines
+      c.fillStyle = '#64748b'; c.font = '14px sans-serif';
+      c.fillText('【商业技术服务合同 / 保密审查件】', 40, 60);
+      for (let i = 0; i < 6; i++) {
+        c.fillStyle = '#cbd5e1'; c.fillRect(40, 90 + i * 35, 520, 10);
+      }
+
+      // Draw Watermark
+      const wm = document.getElementById('wmText').value || '仅供办理业务使用 他用无效';
+      const color = document.getElementById('wmColor').value;
+      const angle = parseInt(document.getElementById('wmAngle').value, 10) * Math.PI / 180;
+
+      c.save();
+      c.fillStyle = color;
+      c.font = 'bold 22px sans-serif';
+      c.textAlign = 'center';
+      for (let y = -200; y < 600; y += 140) {
+        for (let x = -100; x < 700; x += 260) {
+          c.save();
+          c.translate(x, y);
+          c.rotate(angle);
+          c.fillText(wm, 0, 0);
+          c.restore();
+        }
+      }
+      c.restore();
+    }
+
+    async function handleWatermarkUpload(e) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      showProgress('正在加注防伪水印...', file.name);
+      try {
+        const ext = file.name.split('.').pop().toLowerCase();
+        const wmText = document.getElementById('wmText').value || '仅供办理业务使用';
+        
+        if (ext === 'pdf') {
+          const ab = await file.arrayBuffer();
+          const pdfDoc = await PDFLib.PDFDocument.load(ab);
+          const pages = pdfDoc.getPages();
+          const font = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+          pages.forEach(pg => {
+            const { width, height } = pg.getSize();
+            for (let y = 0; y < height; y += 180) {
+              for (let x = 0; x < width; x += 220) {
+                pg.drawText(wmText, {
+                  x: x, y: y, size: 24, font: font,
+                  color: PDFLib.rgb(0.6, 0.6, 0.6),
+                  opacity: 0.35,
+                  rotate: PDFLib.degrees(-30)
+                });
+              }
+            }
+          });
+          const bytes = await pdfDoc.save();
+          const blob = new Blob([bytes], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a'); a.href = url; a.download = file.name.replace(/\.pdf$/i, '') + '_Watermarked.pdf'; a.click();
+          URL.revokeObjectURL(url);
+          hideProgress();
+          showToast('PDF 防伪水印已成功加注并下载！');
+        } else {
+          const imgData = await readFileAsDataURL(file);
+          const img = new Image();
+          img.onload = () => {
+            const cvs = document.createElement('canvas');
+            cvs.width = img.naturalWidth; cvs.height = img.naturalHeight;
+            const c = cvs.getContext('2d');
+            c.drawImage(img, 0, 0);
+
+            const color = document.getElementById('wmColor').value;
+            const angle = parseInt(document.getElementById('wmAngle').value, 10) * Math.PI / 180;
+            c.save();
+            c.fillStyle = color;
+            c.font = `bold ${Math.round(cvs.width * 0.035)}px sans-serif`;
+            c.textAlign = 'center';
+            const step = Math.round(cvs.width * 0.25);
+            for (let y = -cvs.height; y < cvs.height * 2; y += step) {
+              for (let x = -cvs.width; x < cvs.width * 2; x += step) {
+                c.save(); c.translate(x, y); c.rotate(angle); c.fillText(wmText, 0, 0); c.restore();
+              }
+            }
+            c.restore();
+
+            const link = document.createElement('a');
+            link.download = file.name.replace(/\.[^/.]+$/, '') + '_Watermarked.png';
+            link.href = cvs.toDataURL('image/png');
+            link.click();
+            hideProgress();
+            showToast('图片水印已加注完成！');
+          };
+          img.src = imgData;
+        }
+      } catch (err) {
+        hideProgress();
+        showToast('加注水印失败: ' + err.message, 'error');
+      }
+    }
+
+    // 2. ID Card A4 Merger
+    function handleIdCardUpload(e, side) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      const r = new FileReader();
+      r.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          if (side === 'front') state.idFrontImg = img;
+          else state.idBackImg = img;
+          renderIdCardA4Canvas();
+          showToast(`身份证${side === 'front' ? '正面' : '反面'}已载入！`);
+        };
+        img.src = ev.target.result;
+      };
+      r.readAsDataURL(file);
+    }
+
+    function renderIdCardA4Canvas() {
+      const canvas = document.getElementById('idCardA4Canvas');
+      if (!canvas) return;
+      const c = canvas.getContext('2d');
+      const w = 800, h = 1130;
+      canvas.width = w; canvas.height = h;
+
+      c.fillStyle = '#ffffff'; c.fillRect(0, 0, w, h);
+
+      // Title
+      c.fillStyle = '#1e293b'; c.font = 'bold 24px sans-serif'; c.textAlign = 'center';
+      c.fillText('居民身份证复印留存件', w / 2, 80);
+
+      const cardW = 428, cardH = 270; // 85.6mm : 54mm scale ratio
+      const cardX = (w - cardW) / 2;
+      const frontY = 160, backY = 560;
+
+      // Front
+      if (state.idFrontImg) {
+        c.drawImage(state.idFrontImg, cardX, frontY, cardW, cardH);
+      } else {
+        c.strokeStyle = '#94a3b8'; c.setLineDash([6, 6]); c.strokeRect(cardX, frontY, cardW, cardH);
+        c.setLineDash([]); c.fillStyle = '#94a3b8'; c.font = '16px sans-serif'; c.fillText('【身份证人像正面 (待上传)】', w / 2, frontY + cardH / 2);
+      }
+
+      // Back
+      if (state.idBackImg) {
+        c.drawImage(state.idBackImg, cardX, backY, cardW, cardH);
+      } else {
+        c.strokeStyle = '#94a3b8'; c.setLineDash([6, 6]); c.strokeRect(cardX, backY, cardW, cardH);
+        c.setLineDash([]); c.fillStyle = '#94a3b8'; c.font = '16px sans-serif'; c.fillText('【身份证国徽反面 (待上传)】', w / 2, backY + cardH / 2);
+      }
+
+      // Watermark footer
+      c.fillStyle = 'rgba(220, 38, 38, 0.8)'; c.font = 'bold 16px sans-serif'; c.textAlign = 'center';
+      c.fillText('★ 仅供办理相关业务审核使用 · 再次复印无效 ★', w / 2, h - 80);
+    }
+
+    function exportIdCardA4PDF() {
+      const canvas = document.getElementById('idCardA4Canvas');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297);
+      pdf.save(`ID_Card_A4_${Date.now()}.pdf`);
+      showToast('已成功导出 1:1 物理尺寸 A4 身份证复印件 PDF！');
+    }
+
+    // 3. RMB Capitalizer
+    function convertRmbAmount() {
+      const n = parseFloat(document.getElementById('rmbInput').value);
+      if (isNaN(n)) { document.getElementById('rmbOutput').value = ''; return; }
+      document.getElementById('rmbOutput').value = numberToRMB(n);
+    }
+
+    function numberToRMB(n) {
+      const fraction = ['角', '分'];
+      const digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+      const unit = [['元', '万', '亿'], ['', '拾', '佰', '仟']];
+      let head = n < 0 ? '欠' : '';
+      n = Math.abs(n);
+      let s = '';
+      for (let i = 0; i < fraction.length; i++) {
+        s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
+      }
+      s = s || '整';
+      n = Math.floor(n);
+      for (let i = 0; i < unit[0].length && n > 0; i++) {
+        let p = '';
+        for (let j = 0; j < unit[1].length && n > 0; j++) {
+          p = digit[n % 10] + unit[1][j] + p;
+          n = Math.floor(n / 10);
+        }
+        s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + unit[0][i] + s;
+      }
+      return head + s.replace(/(零.)*零元/, '元').replace(/(零.)+/g, '零').replace(/^整$/, '零元整');
+    }
+
+    function copyRmbCapitalized() {
+      const val = document.getElementById('rmbOutput').value;
+      if (!val) return;
+      navigator.clipboard.writeText(val);
+      showToast('人民币大写金额已复制到剪贴板！');
+    }
+
+    // 4. QR & Barcode
+    function generateQRAndBarcode() {
+      const text = document.getElementById('qrTextInput').value.trim() || 'https://github.com/2867094562a-code/docscan-studio';
+      const qrBox = document.getElementById('qrCodeContainer');
+      if (qrBox) {
+        qrBox.innerHTML = '';
+        new QRCode(qrBox, { text: text, width: 100, height: 100, colorDark: "#1e293b", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+      }
+      if (window.JsBarcode) {
+        try {
+          JsBarcode("#barcodeContainer", text.slice(0, 16), { format: "CODE128", width: 1.5, height: 40, displayValue: true, fontSize: 11 });
+        } catch (e) {}
+      }
+    }
 
     /* =========================================================================
        DOCUMENT DIFF ENGINE (SUPPORTS WORD .DOCX, PDF, TXT UPLOAD & AI REVIEW)
@@ -1607,7 +1892,7 @@
     }
 
     /* =========================================================================
-       TEMPLATES VIEWER SCALING & TRACE CALLIGRAPHY (字帖描红与高清缩放)
+       TEMPLATES VIEWER SCALING & TRACE CALLIGRAPHY (18+ 丰富模版库实现)
        ========================================================================= */
     function setTemplateColor(color) {
       state.tplColor = color;
@@ -1690,7 +1975,8 @@
 
       let charIdx = 0;
 
-      if (tplType === 'tianzi' || tplType === 'pure_tianzi' || tplType === 'mizi') {
+      // 1. Tianzi, Pure Tianzi, Mizi, Huigong, Jiugong
+      if (['tianzi', 'pure_tianzi', 'mizi', 'huigong', 'jiugong'].includes(tplType)) {
         const hasPinyin = tplType === 'tianzi';
         const cols = Math.floor(contentW / cellPx);
         const pinyinH = hasPinyin ? Math.round(cellPx * 0.42) : 0;
@@ -1720,25 +2006,171 @@
             c.beginPath();
             c.moveTo(x + cellPx / 2, tianY); c.lineTo(x + cellPx / 2, tianY + cellPx);
             c.moveTo(x, tianY + cellPx / 2); c.lineTo(x + cellPx, tianY + cellPx / 2);
+
             if (tplType === 'mizi') {
               c.moveTo(x, tianY); c.lineTo(x + cellPx, tianY + cellPx);
               c.moveTo(x + cellPx, tianY); c.lineTo(x, tianY + cellPx);
+            } else if (tplType === 'huigong') {
+              const innerPad = cellPx * 0.25;
+              c.strokeRect(x + innerPad, tianY + innerPad, cellPx - innerPad * 2, cellPx - innerPad * 2);
+            } else if (tplType === 'jiugong') {
+              c.moveTo(x + cellPx * 0.33, tianY); c.lineTo(x + cellPx * 0.33, tianY + cellPx);
+              c.moveTo(x + cellPx * 0.66, tianY); c.lineTo(x + cellPx * 0.66, tianY + cellPx);
+              c.moveTo(x, tianY + cellPx * 0.33); c.lineTo(x + cellPx, tianY + cellPx * 0.33);
+              c.moveTo(x, tianY + cellPx * 0.66); c.lineTo(x + cellPx, tianY + cellPx * 0.66);
             }
             c.stroke(); c.setLineDash([]);
 
-            // Draw Trace Character Watermark
+            // Trace Watermark
             if (isTrace && traceText.length > 0) {
               const char = traceText[charIdx % traceText.length];
               charIdx++;
               c.save();
               c.font = `${Math.round(cellPx * 0.72)}px "KaiTi", "楷体", "STKaiti", serif`;
-              c.fillStyle = 'rgba(148, 163, 184, 0.42)'; // faint gray trace ink
-              c.textAlign = 'center';
-              c.textBaseline = 'middle';
+              c.fillStyle = 'rgba(148, 163, 184, 0.42)';
+              c.textAlign = 'center'; c.textBaseline = 'middle';
               c.fillText(char, x + cellPx / 2, tianY + cellPx / 2 + cellPx * 0.04);
               c.restore();
             }
           }
+        }
+      } else if (tplType === 'hengshui') {
+        // Hengshui / Spencerian Slanted English Paper (带倾斜 68° 辅助线)
+        const rowH = Math.round(cellPx * 0.85);
+        const gap = Math.round(rowH * 0.45);
+        const rows = Math.floor(drawH / (rowH + gap));
+
+        for (let r = 0; r < rows; r++) {
+          const ry = startY + r * (rowH + gap);
+          const h1 = rowH * 0.33, h2 = rowH * 0.66;
+          c.strokeStyle = color; c.lineWidth = strokeOuter;
+          c.beginPath();
+          c.moveTo(margin, ry); c.lineTo(w - margin, ry);
+          c.moveTo(margin, ry + rowH); c.lineTo(w - margin, ry + rowH);
+          c.stroke();
+
+          c.setLineDash([8, 8]); c.lineWidth = strokeInner;
+          c.beginPath();
+          c.moveTo(margin, ry + h1); c.lineTo(w - margin, ry + h1);
+          c.moveTo(margin, ry + h2); c.lineTo(w - margin, ry + h2);
+          c.stroke();
+
+          // 68° Slanted auxiliary lines
+          c.strokeStyle = 'rgba(148, 163, 184, 0.45)';
+          c.setLineDash([]);
+          const slantStep = Math.round(cellPx * 0.6);
+          const slantOffset = rowH * Math.tan((90 - 68) * Math.PI / 180);
+          for (let sx = margin; sx < w - margin; sx += slantStep) {
+            c.beginPath(); c.moveTo(sx + slantOffset, ry); c.lineTo(sx, ry + rowH); c.stroke();
+          }
+        }
+      } else if (tplType === 'mistake') {
+        // Mistake Notebook (错题本与订正纸)
+        const blockH = Math.round(drawH / 3.2);
+        const blocks = 3;
+        for (let b = 0; b < blocks; b++) {
+          const by = startY + b * (blockH + Math.round(w * 0.02));
+          c.strokeStyle = color; c.lineWidth = strokeOuter;
+          c.strokeRect(margin, by, contentW, blockH);
+
+          c.fillStyle = color; c.fillRect(margin, by, contentW, Math.round(blockH * 0.12));
+          c.fillStyle = '#ffffff'; c.font = `bold ${Math.round(w * 0.014)}px sans-serif`;
+          c.fillText(`错题 ${b + 1}【 题型: _________ 难度: ★★★☆☆  掌握程度: ○掌握 ○待巩固 】`, margin + 15, by + Math.round(blockH * 0.08));
+
+          // Split into Question Area vs Correction / Knowledge reflection
+          const midX = margin + Math.round(contentW * 0.55);
+          c.strokeStyle = color; c.lineWidth = strokeInner;
+          c.beginPath(); c.moveTo(midX, by + Math.round(blockH * 0.12)); c.lineTo(midX, by + blockH); c.stroke();
+
+          c.fillStyle = '#64748b'; c.font = `bold ${Math.round(w * 0.012)}px sans-serif`;
+          c.fillText('【原题记录与错解分析】', margin + 15, by + Math.round(blockH * 0.22));
+          c.fillText('【正解步骤与考点归纳】', midX + 15, by + Math.round(blockH * 0.22));
+        }
+      } else if (tplType === 'cornell') {
+        // Cornell Notes (康奈尔笔记纸)
+        c.strokeStyle = color; c.lineWidth = strokeOuter;
+        c.strokeRect(margin, startY, contentW, drawH);
+
+        const cueW = Math.round(contentW * 0.3);
+        const sumH = Math.round(drawH * 0.2);
+
+        // Vertical split line
+        c.beginPath(); c.moveTo(margin + cueW, startY); c.lineTo(margin + cueW, startY + drawH - sumH); c.stroke();
+        // Horizontal summary split line
+        c.beginPath(); c.moveTo(margin, startY + drawH - sumH); c.lineTo(margin + contentW, startY + drawH - sumH); c.stroke();
+
+        c.fillStyle = color; c.font = `bold ${Math.round(w * 0.014)}px sans-serif`;
+        c.fillText('线索与关键词 (Cues / Questions)', margin + 15, startY + 30);
+        c.fillText('核心笔记区 (Main Notes)', margin + cueW + 15, startY + 30);
+        c.fillText('总结与反思 (Summary)', margin + 15, startY + drawH - sumH + 30);
+
+        // Light note lines in main notes area
+        c.strokeStyle = 'rgba(148, 163, 184, 0.4)'; c.lineWidth = 1;
+        const lineGap = Math.round(w * 0.025);
+        for (let ly = startY + 50; ly < startY + drawH - sumH; ly += lineGap) {
+          c.beginPath(); c.moveTo(margin + cueW + 10, ly); c.lineTo(margin + contentW - 10, ly); c.stroke();
+        }
+      } else if (tplType === 'planner') {
+        // Daily Planner (每日时间管理与打卡计划表)
+        c.strokeStyle = color; c.lineWidth = strokeOuter;
+        c.strokeRect(margin, startY, contentW, drawH);
+
+        const leftW = Math.round(contentW * 0.45);
+        c.beginPath(); c.moveTo(margin + leftW, startY); c.lineTo(margin + leftW, startY + drawH); c.stroke();
+
+        c.fillStyle = color; c.font = `bold ${Math.round(w * 0.014)}px sans-serif`;
+        c.fillText('⏰ 今日时间轴 (Time Blocking)', margin + 15, startY + 30);
+        c.fillText('🎯 核心目标与清单 (Priorities & Todos)', margin + leftW + 15, startY + 30);
+
+        // Time slots (6:00 -> 23:00)
+        c.font = `${Math.round(w * 0.011)}px sans-serif`; c.fillStyle = '#64748b';
+        let slotY = startY + 60;
+        const slotH = Math.round((drawH - 80) / 18);
+        for (let hIdx = 6; hIdx <= 23; hIdx++) {
+          c.fillText(`${hIdx.toString().padStart(2, '0')}:00`, margin + 15, slotY + slotH * 0.7);
+          c.strokeStyle = 'rgba(148, 163, 184, 0.35)'; c.lineWidth = 1;
+          c.beginPath(); c.moveTo(margin + 60, slotY + slotH); c.lineTo(margin + leftW - 10, slotY + slotH); c.stroke();
+          slotY += slotH;
+        }
+
+        // Todos right side
+        let todoY = startY + 60;
+        for (let t = 1; t <= 16; t++) {
+          c.strokeStyle = color; c.strokeRect(margin + leftW + 15, todoY + slotH * 0.2, 16, 16);
+          c.strokeStyle = 'rgba(148, 163, 184, 0.35)'; c.lineWidth = 1;
+          c.beginPath(); c.moveTo(margin + leftW + 40, todoY + slotH * 0.8); c.lineTo(margin + contentW - 15, todoY + slotH * 0.8); c.stroke();
+          todoY += slotH;
+        }
+      } else if (tplType === 'chemistry') {
+        // Hexagonal Organic Chemistry Grid
+        const r = Math.round(cellPx * 0.45);
+        const a = 2 * Math.PI / 6;
+        c.strokeStyle = color; c.lineWidth = strokeInner;
+        for (let y = startY; y < h - margin; y += r * 1.5) {
+          for (let x = margin; x < w - margin; x += r * Math.sqrt(3)) {
+            const cx = x + ((Math.round(y / (r * 1.5)) % 2) * (r * Math.sqrt(3) / 2));
+            c.beginPath();
+            for (let i = 0; i < 6; i++) {
+              c.lineTo(cx + r * Math.cos(a * i), y + r * Math.sin(a * i));
+            }
+            c.closePath(); c.stroke();
+          }
+        }
+      } else if (tplType === 'calligraphy_v') {
+        // Vertical Calligraphy Columns (竖排书法条幅)
+        const colW = Math.round(cellPx * 1.3);
+        const cols = Math.floor(contentW / colW);
+        for (let cIdx = 0; cIdx < cols; cIdx++) {
+          const x = w - margin - (cIdx + 1) * colW;
+          c.strokeStyle = color; c.lineWidth = strokeOuter;
+          c.strokeRect(x, startY, colW, drawH);
+          const cellH = colW;
+          const rows = Math.floor(drawH / cellH);
+          c.setLineDash([8, 8]); c.lineWidth = strokeInner;
+          for (let r = 1; r < rows; r++) {
+            c.beginPath(); c.moveTo(x, startY + r * cellH); c.lineTo(x + colW, startY + r * cellH); c.stroke();
+          }
+          c.setLineDash([]);
         }
       } else if (tplType === 'music' || tplType === 'guitar') {
         const lineCount = tplType === 'music' ? 5 : 6;
