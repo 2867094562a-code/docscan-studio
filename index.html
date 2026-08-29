@@ -6,6 +6,11 @@
   <title>Office Master Studio - 线上办公增强超级工作台</title>
   
   <!-- CDN Dependencies -->
+  <!-- Google Calligraphy & Master Fonts CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=Long+Cang&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700;900&family=ZCOOL+KuaiLe&family=ZCOOL+XiaoWei&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1507,7 +1512,7 @@
       <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
         <div class="flex items-center justify-between">
           <label class="text-[11px] font-bold text-teal-700 dark:text-teal-300 flex items-center space-x-1">
-            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>✍️ 字帖描红临摹水印</span>
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>✍️ 字帖描红临摹水印 (与作业纸独立)</span>
           </label>
           <input type="checkbox" id="tplTraceEnabled" checked onchange="renderPaperTemplateCanvas()" class="rounded text-teal-600">
         </div>
@@ -1515,32 +1520,81 @@
         <!-- Master & System Fonts Selector -->
         <div>
           <div class="flex justify-between items-center mb-1">
-            <span class="text-[10px] text-slate-400 font-bold">临摹字体 (大师名家 / 系统字体)：</span>
-            <button onclick="loadPcLocalFontsForTemplates()" class="text-[10px] text-indigo-600 hover:underline">🔍 读取本机</button>
+            <span class="text-[10px] text-slate-400 font-bold">临摹字体 (大师名家真迹 / 系统字库)：</span>
+            <button onclick="loadPcLocalFontsForTemplates()" class="text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline">🔍 读取电脑本机字体</button>
           </div>
           <select id="tplFontSelect" onchange="renderPaperTemplateCanvas()" class="w-full p-1.5 border rounded-lg text-xs bg-white dark:bg-slate-900 font-medium">
-            <optgroup label="👑 经典书法名家大师字体 (手机/PC全适配)">
-              <option value='"KaiTi", "STKaiti", "楷体", serif' selected>👑 规范正楷 (教育部字帖楷体)</option>
-              <option value='"WangXizhi", "Xingkai", "STXingkai", "华文行楷", "KaiTi", cursive'>👑 王羲之《兰亭序》行楷书风</option>
-              <option value='"YanZhenqing", "STKaiti", "楷体", "DFKai-SB", serif'>👑 颜真卿《多宝塔碑》楷书风</option>
-              <option value='"LiuGongquan", "SimSun", "STSong", "Songti SC", serif'>👑 柳公权《玄秘塔碑》柳体风</option>
-              <option value='"OuyangXun", "STKaiti", "KaiTi", serif'>👑 欧阳询《九成宫醴泉铭》欧体风</option>
-              <option value='"ZhaoMengfu", "STXingkai", "KaiTi", cursive'>👑 赵孟頫《胆巴碑》赵体行书</option>
-              <option value='"Shoujin", "FZShouJinTi-S10S", "STKaiti", serif'>👑 宋徽宗《千字文》瘦金体风</option>
-              <option value='"Segoe Script", "Brush Script MT", "Caveat", "Dancing Script", cursive'>👑 衡水中学高考英语手写斜体</option>
-              <option value='"YouYuan", "Yuanti SC", "幼圆", sans-serif'>👑 幼圆可爱卡通书写体</option>
+            <optgroup label="👑 经典书法名家大师真迹 (手机/PC全端真实渲染)">
+              <option value="'Ma Shan Zheng', 'STKaiti', 'KaiTi', serif" selected>👑 盛唐楷书·颜筋柳骨风 (马善政真迹楷书)</option>
+              <option value="'Zhi Mang Xing', 'WangXizhi', 'Xingkai', 'STXingkai', cursive">👑 王羲之《兰亭序》行楷风 (智芒星行书)</option>
+              <option value="'Long Cang', 'Xingkai', cursive">👑 狂草大写意·行草气韵 (龙苍行草体)</option>
+              <option value="'ZCOOL XiaoWei', 'STKaiti', 'KaiTi', serif">👑 宋徽宗瘦金体风格 (站酷小薇体)</option>
+              <option value="'Dancing Script', 'Caveat', 'Segoe Script', cursive">👑 衡水体高考英语手写斜体 (Dancing Script)</option>
+              <option value="'Caveat', 'Segoe Script', cursive">👑 现代自然手写连笔体 (Caveat Hand)</option>
+              <option value="'ZCOOL KuaiLe', 'Yuanti SC', '幼圆', sans-serif">👑 幼圆可爱卡通书写体 (站酷快乐体)</option>
+              <option value="'Noto Serif SC', 'SimSun', 'Songti SC', serif">👑 文人雕版大宋体 (思源宋体精修)</option>
+              <option value='"KaiTi", "STKaiti", "楷体", serif'>👑 标准教育部规范正楷 (标准楷体)</option>
             </optgroup>
-            <optgroup label="🖥️ PC 本机电脑系统常用字体" id="tplLocalFontsGroup">
+            <optgroup label="🖥️ PC 本机电脑系统常用字体 (按名称实时调用)" id="tplLocalFontsGroup">
               <option value='"Microsoft YaHei", "微软雅黑", sans-serif'>微软雅黑 (Microsoft YaHei)</option>
               <option value='"SimSun", "宋体", serif'>宋体 (SimSun)</option>
               <option value='"SimHei", "黑体", sans-serif'>黑体 (SimHei)</option>
               <option value='"FangSong", "仿宋", serif'>仿宋 (FangSong)</option>
-              <option value='Arial, sans-serif'>Arial (英文规范)</option>
-              <option value='"Times New Roman", serif'>Times New Roman (衬线)</option>
-              <option value='"Segoe UI", sans-serif'>Segoe UI (现代界面)</option>
-              <option value='Georgia, serif'>Georgia (典雅英文)</option>
+              <option value='Arial, sans-serif'>Arial (现代规范英文)</option>
+              <option value='"Times New Roman", serif'>Times New Roman (经典衬线)</option>
+              <option value='"Segoe UI", sans-serif'>Segoe UI (极简界面字体)</option>
+              <option value='Georgia, serif'>Georgia (典雅英文报刊体)</option>
             </optgroup>
           </select>
+        </div>
+
+        <!-- Font Weight / Boldness Control -->
+        <div class="grid grid-cols-2 gap-1.5">
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold">笔画粗细 / 浓淡：</span>
+            <select id="tplFontWeight" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+              <option value="100">100 (极细纤巧)</option>
+              <option value="300">300 (清秀细笔)</option>
+              <option value="400" selected>400 (标准适中)</option>
+              <option value="600">600 (端庄加粗)</option>
+              <option value="700">700 (厚重遒劲)</option>
+              <option value="900">900 (苍劲特粗)</option>
+            </select>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold">描红样式：</span>
+            <select id="tplTraceStyle" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+              <option value="solid" selected>🔴 饱满实心填墨</option>
+              <option value="outline">⭕ 空心双钩描边</option>
+              <option value="dashed">〰️ 虚线引笔描线</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tracing Watermark Color (Independent from Paper Grid Color) -->
+        <div class="grid grid-cols-2 gap-1.5">
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold">描红字迹颜色：</span>
+            <select id="tplTraceColor" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+              <option value="#dc2626" selected>🔴 朱砂红 (古法描红)</option>
+              <option value="#64748b">⚪ 铅灰淡印 (临摹仿影)</option>
+              <option value="#0f172a">⚫ 墨黑如漆 (正楷习字)</option>
+              <option value="#2563eb">🔵 靛蓝墨水 (钢笔练习)</option>
+              <option value="#059669">🟢 竹青雅绿 (护眼习字)</option>
+              <option value="#7c3aed">🟣 紫藤雅韵 (古典雅致)</option>
+              <option value="#d97706">🟠 琥珀沉香 (古籍泛黄)</option>
+            </select>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold">水印透明度：</span>
+            <select id="tplTraceOpacity" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+              <option value="0.18">18% (隐约如烟)</option>
+              <option value="0.30">30% (清浅淡印)</option>
+              <option value="0.45" selected>45% (标准描红)</option>
+              <option value="0.65">65% (清晰浓墨)</option>
+              <option value="0.90">90% (深浓对比)</option>
+            </select>
+          </div>
         </div>
         
         <div>
@@ -1553,26 +1607,7 @@
               <button onclick="setTplPresetText('英文')" class="text-teal-600 hover:underline">English</button>
             </div>
           </div>
-          <textarea id="tplTraceText" rows="3" oninput="renderPaperTemplateCanvas()" class="w-full p-2 border rounded-lg text-xs bg-white dark:bg-slate-900 resize-none font-mono" placeholder="输入自定义汉字、拼音或英文句子...">天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏</textarea>
-        </div>
-
-        <div class="grid grid-cols-2 gap-1.5">
-          <div>
-            <span class="text-[10px] text-slate-400">描红临摹样式：</span>
-            <select id="tplTraceStyle" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900">
-              <option value="red">🔴 楷体淡红描红</option>
-              <option value="gray">⚪ 浅灰淡印临摹</option>
-              <option value="outline">⭕ 空心双钩描边</option>
-            </select>
-          </div>
-          <div>
-            <span class="text-[10px] text-slate-400">水印透明度：</span>
-            <select id="tplTraceOpacity" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900">
-              <option value="0.25">极淡 (25%)</option>
-              <option value="0.45" selected>标准 (45%)</option>
-              <option value="0.7">深浓 (70%)</option>
-            </select>
-          </div>
+          <textarea id="tplTraceText" rows="3" oninput="renderPaperTemplateCanvas()" class="w-full p-2 border rounded-lg text-xs bg-white dark:bg-slate-900 resize-none font-mono" placeholder="输入自定义汉字、拼音或英文句子...">天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳</textarea>
         </div>
 
         <div class="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
@@ -1581,17 +1616,22 @@
         </div>
       </div>
 
+      <!-- Isolated Paper Grid Lines Color -->
       <div class="space-y-1">
-        <label class="text-[11px] font-bold text-slate-500">3. 作业纸网格线条颜色</label>
+        <label class="text-[11px] font-bold text-slate-600 dark:text-slate-300 flex items-center justify-between">
+          <span>3. 作业纸网格线条颜色 (独立不影响描红字迹)</span>
+        </label>
         <select id="tplGridColor" onchange="renderPaperTemplateCanvas()" class="w-full p-1.5 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-medium">
-          <option value="#dc2626">🔴 经典朱砂红 (书法描红)</option>
-          <option value="#16a34a">🟢 墨绿护眼色 (护眼作业)</option>
-          <option value="#0284c7">🔵 典雅青蓝色</option>
-          <option value="#475569">⚫ 沉稳铅灰黑</option>
+          <option value="#dc2626" selected>🔴 经典朱砂红 (书法红格)</option>
+          <option value="#16a34a">🟢 墨绿护眼色 (标准作业本)</option>
+          <option value="#0284c7">🔵 典雅青蓝色 (高考答题卡)</option>
+          <option value="#475569">⚫ 沉稳铅灰黑 (素描极简)</option>
+          <option value="#9333ea">🟣 紫罗兰印格 (艺术乐谱)</option>
+          <option value="#ca8a04">🟠 暖黄护眼格 (柔光防疲劳)</option>
         </select>
       </div>
 
-      <button onclick="exportTemplateToPDF()" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="download" class="w-4 h-4"></i><span>导出 300 DPI 高清 PDF</span></button>
+      <button onclick="exportTemplateToPDF()" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="download" class="w-4 h-4"></i><span>导出 300 DPI 高清作业纸 PDF</span></button>
     </div>
 
     <div id="tplCanvasContainer" class="flex-1 p-4 overflow-auto bg-slate-200/60 dark:bg-slate-950 flex justify-center items-start">
