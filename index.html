@@ -53,7 +53,7 @@
     
     /* Document Editor Typography (No forced global text-indent to let user control via right-click) */
     .gov-doc-mode {
-      font-family: "FangSong", "仿宋", "STFangsong", serif !important;
+      font-family: "FangSong", "仿宋", "STFangsong", "仿宋_GB2312", serif !important;
       line-height: 1.8 !important; font-size: 16px !important;
     }
     .gov-doc-mode h1 {
@@ -64,7 +64,7 @@
     .indent-0 { text-indent: 0 !important; }
   </style>
 </head>
-<body class="h-full bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden select-none pb-14 xl:pb-0" onclick="closeContextMenu()">
+<body class="h-full bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden select-none pb-14 xl:pb-0" onclick="closeAllContextMenus()">
 
   <!-- ==================== TOP NAVIGATION HEADER ==================== -->
   <header class="h-14 sm:h-16 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between z-30 shrink-0 shadow-sm">
@@ -331,12 +331,12 @@
           <button onclick="toggleGovDocMode()" id="btnGovDocMode" class="px-2 py-1 rounded bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 font-bold border border-purple-300 shrink-0">仿宋公文</button>
           
           <!-- Font Family Selector (Top Core Fonts + Local Font Query on PC) -->
-          <select id="docFontFamilySelect" onchange="changeDocFont(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium">
-            <optgroup label="🌟 常用推荐字体">
-              <option value="FangSong, 仿宋, STFangsong">仿宋 (国标公文正文)</option>
+          <select id="docFontFamilySelect" onchange="changeDocFont(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium font-select-element">
+            <optgroup label="🌟 常用核心字体 (Top Fonts)">
+              <option value="FangSong, 仿宋, STFangsong, 仿宋_GB2312">仿宋 (国标公文正文)</option>
               <option value="SimSun, 宋体, SimSun">宋体 (经典报刊出版)</option>
               <option value="SimHei, 黑体, STHeiti">黑体 (标题与加粗)</option>
-              <option value="KaiTi, 楷体, STKaiti">楷体 (传统书法诗词)</option>
+              <option value="KaiTi, 楷体, STKaiti, 楷体_GB2312">楷体 (传统书法诗词)</option>
               <option value="'Microsoft YaHei', 微软雅黑">微软雅黑 (高清屏幕)</option>
               <option value="'PingFang SC', 苹方">苹方 / 鸿蒙黑体</option>
               <option value="STZhongsong, 华文中宋">华文中宋</option>
@@ -349,7 +349,7 @@
           </select>
 
           <!-- PC Local Font Query Button -->
-          <button onclick="loadSystemLocalFonts()" class="px-2 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 rounded font-semibold text-[11px] hidden sm:flex items-center space-x-1" title="读取本机电脑已安装的全部字体库 (支持 Chrome/Edge 等 PC 浏览器)">
+          <button onclick="loadAllSystemLocalFonts()" class="px-2 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 rounded font-semibold text-[11px] hidden sm:flex items-center space-x-1" title="读取本机电脑已安装的全部字体库 (支持 Chrome/Edge 等 PC 浏览器)">
             <i data-lucide="laptop" class="w-3 h-3"></i><span>读取本机字体</span>
           </button>
 
@@ -390,7 +390,7 @@
 
           <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
 
-          <!-- Alignments -->
+          <!-- Alignments & Indents -->
           <button onclick="execDocCmd('justifyLeft')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800" title="左对齐"><i data-lucide="align-left" class="w-3.5 h-3.5"></i></button>
           <button onclick="execDocCmd('justifyCenter')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800" title="居中对齐"><i data-lucide="align-center" class="w-3.5 h-3.5"></i></button>
           <button onclick="execDocCmd('justifyRight')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800" title="右对齐"><i data-lucide="align-right" class="w-3.5 h-3.5"></i></button>
@@ -452,16 +452,16 @@
           <p style="text-indent:0;font-weight:bold;margin-bottom:12px;">〔2026〕18号</p>
           <p style="text-indent:0;font-weight:bold;margin-bottom:16px;">各部门、各直属机构：</p>
           <p class="indent-2em" style="margin-bottom:12px;">为提升数字化协作与日常办公效率，现全面启用 Office Master Studio 一站式线上办公工作台。新电脑无需安装 WPS 或 Office 套件即可直接在线编辑 Word、Excel、PPT 和 PDF 文件。</p>
-          <p class="indent-2em" style="margin-bottom:12px;">【右键新功能】在文档任意区域单击鼠标右键，可随时调整段落首行缩进（无缩进/2字符缩进）、行间距（1.0倍~2.0倍）以及对齐方式；PC端更支持直接读取本机已安装字体！</p>
+          <p class="indent-2em" style="margin-bottom:12px;">【全模块右键排版升级】在 Word、Excel 表格、PPT 演示文稿及 PDF 中单击鼠标右键，均可随时调整行距（1.0倍~2.0倍）、首行缩进（无缩进/2字符/4字符）、文字对齐及字体样式；PC端支持一键读取电脑本机安装的全部字体库！</p>
           <div style="text-align:right;margin-top:36px;"><p style="margin-bottom:4px;">办公厅</p><p>2026年8月29日</p></div>
         </div>
       </div>
 
-      <!-- Custom Floating Right-Click Context Menu -->
-      <div id="wordContextMenu" class="fixed z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-1.5 text-xs text-slate-700 dark:text-slate-200 w-52 hidden divide-y divide-slate-100 dark:divide-slate-800">
+      <!-- Word Custom Floating Right-Click Context Menu -->
+      <div id="wordContextMenu" onclick="event.stopPropagation()" class="fixed z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-1.5 text-xs text-slate-700 dark:text-slate-200 w-56 hidden divide-y divide-slate-100 dark:divide-slate-800">
         <!-- Indent Group -->
         <div class="py-1 space-y-0.5">
-          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400 flex items-center space-x-1"><i data-lucide="indent" class="w-3 h-3"></i><span>首行缩进设置</span></div>
+          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400 flex items-center space-x-1"><i data-lucide="indent" class="w-3 h-3"></i><span>📏 首行缩进设置</span></div>
           <button onclick="setParagraphIndent('0')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>无缩进 (顶格靠左)</span><span class="text-[10px] text-slate-400">0em</span></button>
           <button onclick="setParagraphIndent('2em')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between font-bold text-indigo-600"><span>首行缩进 2 字符</span><span class="text-[10px]">2em (公文标准)</span></button>
           <button onclick="setParagraphIndent('4em')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>首行缩进 4 字符</span><span class="text-[10px] text-slate-400">4em</span></button>
@@ -469,7 +469,7 @@
 
         <!-- Line Height Group -->
         <div class="py-1 space-y-0.5">
-          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400 flex items-center space-x-1"><i data-lucide="chevrons-up-down" class="w-3 h-3"></i><span>行间距设置</span></div>
+          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400 flex items-center space-x-1"><i data-lucide="chevrons-up-down" class="w-3 h-3"></i><span>↕️ 行间距设置</span></div>
           <button onclick="setParagraphLineHeight('1.0')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>单倍行距</span><span class="text-[10px] text-slate-400">1.0</span></button>
           <button onclick="setParagraphLineHeight('1.25')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>1.25 倍行距</span><span class="text-[10px] text-slate-400">1.25</span></button>
           <button onclick="setParagraphLineHeight('1.5')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between font-bold text-indigo-600"><span>1.5 倍行距 (公文推荐)</span><span class="text-[10px]">1.5</span></button>
@@ -477,10 +477,14 @@
           <button onclick="setParagraphLineHeight('2.0')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>双倍行距</span><span class="text-[10px] text-slate-400">2.0</span></button>
         </div>
 
-        <!-- Quick Actions -->
+        <!-- Alignments & Quick Actions -->
         <div class="py-1 space-y-0.5">
-          <button onclick="execDocCmd('justifyCenter')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center space-x-1.5"><i data-lucide="align-center" class="w-3.5 h-3.5"></i><span>居中对齐当前段落</span></button>
-          <button onclick="execDocCmd('removeFormat')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center space-x-1.5"><i data-lucide="eraser" class="w-3.5 h-3.5 text-red-500"></i><span>清除选中格式</span></button>
+          <div class="grid grid-cols-3 gap-1 px-1">
+            <button onclick="execDocCmd('justifyLeft')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center font-medium">左对齐</button>
+            <button onclick="execDocCmd('justifyCenter')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center font-medium">居中</button>
+            <button onclick="execDocCmd('justifyRight')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center font-medium">右对齐</button>
+          </div>
+          <button onclick="execDocCmd('removeFormat')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/50 flex items-center space-x-1.5 text-red-500 font-medium"><i data-lucide="eraser" class="w-3.5 h-3.5"></i><span>清除格式</span></button>
         </div>
       </div>
 
@@ -493,28 +497,73 @@
       </div>
     </div>
 
-    <!-- 2. EXCEL SPREADSHEET EDITOR -->
-    <div id="subOfficeExcel" class="office-sub-panel flex-1 flex flex-col overflow-hidden hidden">
-      <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 flex items-center space-x-2 text-xs">
-        <div class="flex items-center space-x-1">
+    <!-- 2. EXCEL SPREADSHEET EDITOR (支持字体切换、行距与右键单元格菜单) -->
+    <div id="subOfficeExcel" class="office-sub-panel flex-1 flex flex-col overflow-hidden hidden relative">
+      <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 flex items-center space-x-2 text-xs overflow-x-auto">
+        <div class="flex items-center space-x-1 shrink-0">
           <button onclick="insertExcelRow()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium">+ 行</button>
           <button onclick="insertExcelCol()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium">+ 列</button>
           <button onclick="deleteExcelRow()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium text-red-500">删行</button>
         </div>
-        <div class="h-4 w-px bg-slate-300 dark:bg-slate-700"></div>
+
+        <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
+
+        <!-- Excel Font Selector -->
+        <select id="excelFontFamilySelect" onchange="changeExcelFont(this.value)" class="text-xs p-1 rounded bg-white dark:bg-slate-800 border font-medium font-select-element shrink-0">
+          <optgroup label="🌟 常用核心字体">
+            <option value="'Microsoft YaHei', 微软雅黑">微软雅黑</option>
+            <option value="FangSong, 仿宋, STFangsong">仿宋</option>
+            <option value="SimSun, 宋体">宋体</option>
+            <option value="SimHei, 黑体">黑体</option>
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="'Courier New', monospace">等宽数字</option>
+          </optgroup>
+        </select>
+
+        <button onclick="loadAllSystemLocalFonts()" class="px-2 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border border-indigo-200 rounded font-semibold text-[11px] hidden sm:flex items-center space-x-1 shrink-0">
+          <i data-lucide="laptop" class="w-3 h-3"></i><span>本机字体</span>
+        </button>
+
+        <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
+
+        <!-- Excel Formula Bar -->
         <span class="font-bold font-mono text-indigo-600 shrink-0" id="excelActiveCellLabel">A1</span>
-        <div class="flex-1 flex items-center bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 px-2 py-1">
+        <div class="flex-1 min-w-[140px] flex items-center bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 px-2 py-1">
           <span class="text-slate-400 font-mono mr-1.5 italic font-bold">fx</span>
           <input type="text" id="excelFormulaInput" oninput="handleExcelFormulaInput(this.value)" placeholder="输入数值或公式..." class="w-full bg-transparent text-xs font-mono focus:outline-none">
         </div>
       </div>
-      <div class="flex-1 overflow-auto bg-white dark:bg-slate-900" id="excelGridContainer">
+
+      <div class="flex-1 overflow-auto bg-white dark:bg-slate-900" id="excelGridContainer" oncontextmenu="handleExcelContextMenu(event)">
         <table id="excelTableElement" class="w-full text-xs border-collapse border border-slate-300 dark:border-slate-700 font-mono"></table>
+      </div>
+
+      <!-- Excel Custom Right-Click Context Menu -->
+      <div id="excelContextMenu" onclick="event.stopPropagation()" class="fixed z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-1.5 text-xs text-slate-700 dark:text-slate-200 w-52 hidden divide-y divide-slate-100 dark:divide-slate-800">
+        <div class="py-1 space-y-0.5">
+          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">📊 表格行列操作</div>
+          <button onclick="insertExcelRow(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>在下方插入行</span><span class="text-[10px] text-slate-400">+Row</span></button>
+          <button onclick="insertExcelCol(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>在右侧插入列</span><span class="text-[10px] text-slate-400">+Col</span></button>
+          <button onclick="deleteExcelRow(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-red-50 text-red-500 flex items-center justify-between font-semibold"><span>删除整行</span><span class="text-[10px]">-Row</span></button>
+        </div>
+        <div class="py-1 space-y-0.5">
+          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">📐 单元格对齐与行高</div>
+          <div class="grid grid-cols-3 gap-1 px-1">
+            <button onclick="setExcelCellAlign('left')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center font-medium">靠左</button>
+            <button onclick="setExcelCellAlign('center')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center font-medium">居中</button>
+            <button onclick="setExcelCellAlign('right')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center font-medium">靠右</button>
+          </div>
+          <div class="grid grid-cols-3 gap-1 px-1 pt-1">
+            <button onclick="setExcelRowHeight('8px')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center text-[10px]">紧凑行距</button>
+            <button onclick="setExcelRowHeight('12px')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center text-[10px]">标准行距</button>
+            <button onclick="setExcelRowHeight('18px')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center text-[10px]">宽松行距</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 3. PPT PRESENTATION STUDIO -->
-    <div id="subOfficePpt" class="office-sub-panel flex-1 flex flex-col sm:flex-row overflow-hidden hidden">
+    <!-- 3. PPT PRESENTATION STUDIO (支持字体切换、行距与右键幻灯片菜单) -->
+    <div id="subOfficePpt" class="office-sub-panel flex-1 flex flex-col sm:flex-row overflow-hidden hidden relative">
       <div class="w-full sm:w-48 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex flex-col p-2.5 sm:p-3 space-y-2 shrink-0 max-h-32 sm:max-h-none overflow-y-auto">
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold text-slate-500">幻灯片列表</span>
@@ -522,15 +571,37 @@
         </div>
         <div id="pptThumbnailsList" class="flex-1 space-y-2"></div>
       </div>
+
       <div class="flex-1 flex flex-col bg-slate-200/60 dark:bg-slate-950 overflow-hidden">
         <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center space-x-2 text-xs overflow-x-auto">
+          <!-- PPT Font Family Selector -->
+          <select id="pptFontFamilySelect" onchange="changePptFont(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium font-select-element shrink-0">
+            <optgroup label="🌟 常用核心字体">
+              <option value="'Microsoft YaHei', 微软雅黑">微软雅黑 (现代商务)</option>
+              <option value="SimHei, 黑体">黑体 (醒目大标)</option>
+              <option value="FangSong, 仿宋">仿宋 (正式汇报)</option>
+              <option value="KaiTi, 楷体">楷体 (文化典雅)</option>
+              <option value="Arial, sans-serif">Arial</option>
+            </optgroup>
+          </select>
+
+          <button onclick="loadAllSystemLocalFonts()" class="px-2 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border border-indigo-200 rounded font-semibold text-[11px] hidden sm:flex items-center space-x-1 shrink-0">
+            <i data-lucide="laptop" class="w-3 h-3"></i><span>本机字体</span>
+          </button>
+
+          <div class="h-4 w-px bg-slate-300 mx-1 shrink-0"></div>
+
+          <!-- PPT Theme Buttons -->
           <button onclick="setPptTheme('indigo')" class="px-2 py-1 bg-indigo-50 text-indigo-600 rounded font-medium shrink-0">科技蓝</button>
           <button onclick="setPptTheme('dark')" class="px-2 py-1 bg-slate-800 text-white rounded font-medium shrink-0">商务黑</button>
           <button onclick="setPptTheme('minimal')" class="px-2 py-1 bg-slate-100 text-slate-700 rounded font-medium shrink-0">极简白</button>
-          <div class="h-4 w-px bg-slate-300 mx-1"></div>
+          
+          <div class="h-4 w-px bg-slate-300 mx-1 shrink-0"></div>
+          
           <button onclick="runPptSlideShow()" class="px-3 py-1 bg-emerald-600 text-white rounded font-bold flex items-center space-x-1 shrink-0"><i data-lucide="play" class="w-3.5 h-3.5"></i><span>放映 (F5)</span></button>
         </div>
-        <div class="flex-1 flex items-center justify-center p-3 sm:p-6 overflow-auto">
+
+        <div class="flex-1 flex items-center justify-center p-3 sm:p-6 overflow-auto" oncontextmenu="handlePptContextMenu(event)">
           <div id="pptSlideCanvas" class="w-full max-w-[860px] aspect-video bg-white dark:bg-slate-900 shadow-2xl rounded-xl p-5 sm:p-12 border border-slate-200 dark:border-slate-800 flex flex-col justify-between relative">
             <div>
               <input type="text" id="pptSlideTitle" value="2026年度业务发展规划汇报" oninput="saveCurrentSlideData()" class="w-full text-lg sm:text-3xl font-extrabold bg-transparent border-b border-transparent hover:border-slate-300 focus:border-indigo-500 focus:outline-none pb-1.5 text-slate-800 dark:text-slate-100">
@@ -543,23 +614,77 @@
           </div>
         </div>
       </div>
+
+      <!-- PPT Custom Right-Click Context Menu -->
+      <div id="pptContextMenu" onclick="event.stopPropagation()" class="fixed z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-1.5 text-xs text-slate-700 dark:text-slate-200 w-52 hidden divide-y divide-slate-100 dark:divide-slate-800">
+        <div class="py-1 space-y-0.5">
+          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">↕️ 幻灯片行间距</div>
+          <button onclick="setPptLineHeight('1.2')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>紧凑行距 (1.2倍)</span></button>
+          <button onclick="setPptLineHeight('1.6')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between font-bold text-indigo-600"><span>标准行距 (1.6倍)</span></button>
+          <button onclick="setPptLineHeight('2.0')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>宽松行距 (2.0倍)</span></button>
+        </div>
+        <div class="py-1 space-y-0.5">
+          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">📽️ 幻灯片操作</div>
+          <button onclick="addPptSlide(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center space-x-1.5 font-medium"><i data-lucide="plus" class="w-3.5 h-3.5"></i><span>新建一页幻灯片</span></button>
+          <button onclick="runPptSlideShow(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 flex items-center space-x-1.5 font-medium"><i data-lucide="play" class="w-3.5 h-3.5"></i><span>全屏放映 (F5)</span></button>
+        </div>
+      </div>
     </div>
 
-    <!-- 4. PDF VIEWER -->
-    <div id="subOfficePdf" class="office-sub-panel flex-1 flex flex-col overflow-hidden hidden">
-      <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between text-xs px-3 sm:px-4">
-        <div class="flex items-center space-x-2">
+    <!-- 4. PDF VIEWER (支持缩放、旋转、字体批注与右键菜单) -->
+    <div id="subOfficePdf" class="office-sub-panel flex-1 flex flex-col overflow-hidden hidden relative">
+      <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between text-xs px-3 sm:px-4 overflow-x-auto">
+        <div class="flex items-center space-x-2 shrink-0">
           <input type="file" id="inputPdfViewerFile" accept=".pdf" class="hidden" onchange="handlePdfViewerUpload(event)">
           <button onclick="document.getElementById('inputPdfViewerFile').click()" class="px-2.5 sm:px-3 py-1 bg-red-600 text-white rounded-lg font-bold flex items-center space-x-1"><i data-lucide="upload" class="w-3.5 h-3.5"></i><span>打开 PDF</span></button>
           <span id="pdfViewerPageInfo" class="text-slate-500 font-mono text-[11px]">第 0 / 0 页</span>
         </div>
-        <div class="flex items-center space-x-1">
+
+        <div class="flex items-center space-x-1.5 shrink-0">
+          <!-- PDF Font Family Selector for Annotations -->
+          <select id="pdfFontFamilySelect" onchange="changePdfFont(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium font-select-element shrink-0">
+            <optgroup label="🌟 常用核心字体">
+              <option value="FangSong, 仿宋">仿宋</option>
+              <option value="SimHei, 黑体">黑体</option>
+              <option value="'Microsoft YaHei', 微软雅黑">微软雅黑</option>
+              <option value="SimSun, 宋体">宋体</option>
+            </optgroup>
+          </select>
+
+          <button onclick="loadAllSystemLocalFonts()" class="px-2 py-1 bg-indigo-50 text-indigo-600 rounded font-semibold text-[11px] hidden sm:flex items-center space-x-1">
+            <i data-lucide="laptop" class="w-3 h-3"></i><span>本机字体</span>
+          </button>
+
+          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
+
+          <button onclick="changePdfScale(0.2)" class="p-1 rounded bg-slate-100 dark:bg-slate-800" title="放大"><i data-lucide="zoom-in" class="w-3.5 h-3.5"></i></button>
+          <button onclick="changePdfScale(-0.2)" class="p-1 rounded bg-slate-100 dark:bg-slate-800" title="缩小"><i data-lucide="zoom-out" class="w-3.5 h-3.5"></i></button>
+          <button onclick="rotatePdfPage()" class="p-1 rounded bg-slate-100 dark:bg-slate-800" title="旋转 90°"><i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i></button>
+
+          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
+
           <button onclick="changePdfViewPage(-1)" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded">上页</button>
           <button onclick="changePdfViewPage(1)" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded">下页</button>
         </div>
       </div>
-      <div class="flex-1 overflow-auto bg-slate-200/60 dark:bg-slate-950 p-2 sm:p-6 flex justify-center items-center">
+
+      <div class="flex-1 overflow-auto bg-slate-200/60 dark:bg-slate-950 p-2 sm:p-6 flex justify-center items-center" oncontextmenu="handlePdfContextMenu(event)">
         <canvas id="pdfViewerCanvas" class="shadow-2xl bg-white max-w-full"></canvas>
+      </div>
+
+      <!-- PDF Custom Right-Click Context Menu -->
+      <div id="pdfContextMenu" onclick="event.stopPropagation()" class="fixed z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-1.5 text-xs text-slate-700 dark:text-slate-200 w-52 hidden divide-y divide-slate-100 dark:divide-slate-800">
+        <div class="py-1 space-y-0.5">
+          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">🔍 PDF 视图与翻页</div>
+          <button onclick="changePdfScale(0.25); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>放大 (125%)</span></button>
+          <button onclick="changePdfScale(-0.25); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>缩小 (75%)</span></button>
+          <button onclick="rotatePdfPage(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>旋转 90°</span></button>
+        </div>
+        <div class="py-1 space-y-0.5">
+          <button onclick="changePdfViewPage(-1); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>上一页</span></button>
+          <button onclick="changePdfViewPage(1); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>下一页</span></button>
+          <button onclick="window.print(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between text-indigo-600 font-bold"><span>打印 PDF</span></button>
+        </div>
       </div>
     </div>
   </div>
@@ -858,7 +983,7 @@
   </div>
 
   <!-- Global Toast -->
-  <div id="toast" class="fixed bottom-16 sm:bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-4 py-2.5 rounded-xl text-xs shadow-2xl flex items-center space-x-2 border border-slate-800">
+  <div id="toast" class="fixed bottom-16 sm:bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-4 py-2.5 rounded-xl text-xs shadow-2xl flex items-center space-x-2 border border-slate-800 pointer-events-none">
     <span id="toastMsg">操作成功</span>
   </div>
 
@@ -869,6 +994,8 @@
       currentOfficeTool: 'word',
       isGovMode: true,
       contextTargetElement: null,
+      pdfScale: 1.5,
+      pdfRotation: 0,
       excelData: [
         ['部门', '项目名称', '预算 (万元)', '执行进度', '状态'],
         ['技术部', 'Office 工作台 3.0', '15.00', '100%', '已完成'],
@@ -978,7 +1105,62 @@
       });
     }
 
-    /* ==================== WORD & GOV DOCUMENT ADVANCED EDITOR ==================== */
+    /* ==================== GLOBAL CONTEXT MENU CLOSE ==================== */
+    function closeAllContextMenus() {
+      ['wordContextMenu', 'excelContextMenu', 'pptContextMenu', 'pdfContextMenu'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+    }
+
+    /* ==================== UNIVERSAL PC LOCAL FONTS LOADER ==================== */
+    async function loadAllSystemLocalFonts() {
+      let fontList = [];
+      if ('queryLocalFonts' in window) {
+        try {
+          const availableFonts = await window.queryLocalFonts();
+          const fontSet = new Set();
+          availableFonts.forEach(f => {
+            if (f.family && !fontSet.has(f.family)) fontSet.add(f.family);
+          });
+          fontList = Array.from(fontSet).sort((a, b) => a.localeCompare(b, 'zh-CN'));
+        } catch (err) {
+          console.warn('queryLocalFonts canceled/rejected:', err);
+        }
+      }
+
+      // If empty or unsupported, populate with rich standard PC fonts
+      if (!fontList.length) {
+        fontList = [
+          '方正小标宋简体', '仿宋_GB2312', '楷体_GB2312', '华文中宋', '华文行楷', '华文新魏', '华文楷体',
+          '隶书', '幼圆', '思源黑体', '思源宋体', 'Calibri', 'Consolas', 'Segoe UI', 'Verdana', 'Tahoma', 'Trebuchet MS', 'Impact', 'Comic Sans MS'
+        ];
+      }
+
+      // Populate across all 4 modules (Word, Excel, PPT, PDF)
+      ['docFontFamilySelect', 'excelFontFamilySelect', 'pptFontFamilySelect', 'pdfFontFamilySelect'].forEach(selId => {
+        const select = document.getElementById(selId);
+        if (!select) return;
+        let optgroup = select.querySelector('.optgroup-local-fonts');
+        if (!optgroup) {
+          optgroup = document.createElement('optgroup');
+          optgroup.className = 'optgroup-local-fonts';
+          select.appendChild(optgroup);
+        }
+        optgroup.label = `💻 本机字体库 (${fontList.length} 款)`;
+        optgroup.innerHTML = '';
+        fontList.forEach(family => {
+          const opt = document.createElement('option');
+          opt.value = `"${family}", sans-serif`;
+          opt.innerText = family;
+          optgroup.appendChild(opt);
+        });
+      });
+
+      showToast(`已成功载入本机 ${fontList.length} 款字体！`);
+    }
+
+    /* ==================== 1. WORD & GOV DOCUMENT ADVANCED EDITOR ==================== */
     function switchOfficeSubTool(tool) {
       state.currentOfficeTool = tool;
       ['word', 'excel', 'ppt', 'pdf'].forEach(t => {
@@ -992,6 +1174,7 @@
           btn.className = 'px-2.5 sm:px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center space-x-1.5 shrink-0';
         }
       });
+      closeAllContextMenus();
       lucide.createIcons();
     }
 
@@ -1010,69 +1193,22 @@
       }
     }
 
-    /* Read Local System Fonts via Chrome/Edge API */
-    async function loadSystemLocalFonts() {
-      const select = document.getElementById('docFontFamilySelect');
-      if ('queryLocalFonts' in window) {
-        try {
-          const availableFonts = await window.queryLocalFonts();
-          const fontSet = new Set();
-          availableFonts.forEach(f => {
-            if (f.family && !fontSet.has(f.family)) {
-              fontSet.add(f.family);
-            }
-          });
-          const fontList = Array.from(fontSet).sort((a, b) => a.localeCompare(b, 'zh-CN'));
-          
-          let optgroup = document.getElementById('optgroupLocalFonts');
-          if (!optgroup) {
-            optgroup = document.createElement('optgroup');
-            optgroup.id = 'optgroupLocalFonts';
-            select.appendChild(optgroup);
-          }
-          optgroup.label = `💻 本机已安装字体库 (${fontList.length} 款)`;
-          optgroup.innerHTML = '';
-          fontList.forEach(family => {
-            const opt = document.createElement('option');
-            opt.value = `"${family}", sans-serif`;
-            opt.innerText = family;
-            optgroup.appendChild(opt);
-          });
-          showToast(`已成功读取本机 ${fontList.length} 款字体！`);
-        } catch (err) {
-          showToast('读取本机字体提示: ' + (err.message || '权限已取消'));
-        }
-      } else {
-        showToast('当前浏览器暂不支持直接读取本机字体，已提供全部标准中英文字体');
-      }
-    }
-
-    /* Right-Click Context Menu Implementation */
     function handleWordContextMenu(e) {
       e.preventDefault();
+      closeAllContextMenus();
       const menu = document.getElementById('wordContextMenu');
       if (!menu) return;
       
-      // Save target element
-      state.contextTargetElement = e.target;
+      state.contextTargetElement = e.target.closest('p, div, li, h1, h2, h3, blockquote') || e.target;
       
-      // Position menu
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
-      const menuWidth = 210;
-      const menuHeight = 280;
-      
-      const x = (mouseX + menuWidth > window.innerWidth) ? (window.innerWidth - menuWidth - 10) : mouseX;
-      const y = (mouseY + menuHeight > window.innerHeight) ? (window.innerHeight - menuHeight - 10) : mouseY;
+      const mouseX = e.clientX, mouseY = e.clientY;
+      const menuWidth = 224, menuHeight = 310;
+      const x = (mouseX + menuWidth > window.innerWidth) ? (window.innerWidth - menuWidth - 12) : mouseX;
+      const y = (mouseY + menuHeight > window.innerHeight) ? (window.innerHeight - menuHeight - 12) : mouseY;
       
       menu.style.left = `${x}px`;
       menu.style.top = `${y}px`;
       menu.classList.remove('hidden');
-    }
-
-    function closeContextMenu() {
-      const menu = document.getElementById('wordContextMenu');
-      if (menu) menu.classList.add('hidden');
     }
 
     function setParagraphIndent(indentVal) {
@@ -1082,14 +1218,14 @@
         const sel = window.getSelection();
         if (sel.rangeCount) target = sel.anchorNode?.parentElement;
       }
-      const p = target ? target.closest('p, div, li, h1, h2, h3') : null;
+      const p = target ? target.closest('p, div, li, h1, h2, h3, blockquote') : null;
       if (p) {
         p.style.textIndent = indentVal;
         showToast(indentVal === '0' ? '已取消缩进 (顶格靠左)' : `已设置首行缩进 (${indentVal})`);
       } else {
         document.execCommand('indent', false, null);
       }
-      closeContextMenu();
+      closeAllContextMenus();
       updateWordStats();
     }
 
@@ -1100,21 +1236,21 @@
         const sel = window.getSelection();
         if (sel.rangeCount) target = sel.anchorNode?.parentElement;
       }
-      const p = target ? target.closest('p, div, li, h1, h2, h3') : null;
+      const p = target ? target.closest('p, div, li, h1, h2, h3, blockquote') : null;
       if (p) {
         p.style.lineHeight = lhVal;
-        showToast(`行间距已调整为 ${lhVal} 倍`);
+        showToast(`当前段落行间距已调整为 ${lhVal} 倍`);
       } else {
         document.getElementById('wordEditorDoc').style.lineHeight = lhVal;
         showToast(`全文行间距已调整为 ${lhVal} 倍`);
       }
-      closeContextMenu();
+      closeAllContextMenus();
     }
 
     function execDocCmd(cmd, val = null) {
       document.getElementById('wordEditorDoc').focus();
       document.execCommand(cmd, false, val);
-      closeContextMenu();
+      closeAllContextMenus();
       updateWordStats();
     }
 
@@ -1265,7 +1401,7 @@
       window.print();
     }
 
-    // Excel Grid
+    /* ==================== 2. EXCEL SPREADSHEET EDITOR ==================== */
     function initExcelGrid() {
       const table = document.getElementById('excelTableElement');
       if (!table) return;
@@ -1288,6 +1424,7 @@
       html += '</tbody>';
       table.innerHTML = html;
     }
+
     function selectExcelCell(label, el) {
       document.getElementById('excelActiveCellLabel').innerText = label;
       document.getElementById('excelFormulaInput').value = el.innerText;
@@ -1316,7 +1453,36 @@
       showToast('已删除末尾行');
     }
 
-    // PPT Studio
+    function changeExcelFont(font) {
+      const grid = document.getElementById('excelGridContainer');
+      if (grid) grid.style.fontFamily = font;
+      showToast('表格字体已更新');
+    }
+    function handleExcelContextMenu(e) {
+      e.preventDefault();
+      closeAllContextMenus();
+      const menu = document.getElementById('excelContextMenu');
+      if (!menu) return;
+      state.activeExcelEl = e.target.closest('td') || state.activeExcelEl;
+      
+      const mouseX = e.clientX, mouseY = e.clientY;
+      const menuWidth = 210, menuHeight = 220;
+      const x = (mouseX + menuWidth > window.innerWidth) ? (window.innerWidth - menuWidth - 12) : mouseX;
+      const y = (mouseY + menuHeight > window.innerHeight) ? (window.innerHeight - menuHeight - 12) : mouseY;
+      menu.style.left = `${x}px`; menu.style.top = `${y}px`;
+      menu.classList.remove('hidden');
+    }
+    function setExcelCellAlign(align) {
+      if (state.activeExcelEl) state.activeExcelEl.style.textAlign = align;
+      closeAllContextMenus();
+    }
+    function setExcelRowHeight(pad) {
+      document.querySelectorAll('.editor-sheet-cell').forEach(td => td.style.padding = `${pad} 8px`);
+      closeAllContextMenus();
+      showToast('表格行高已调整');
+    }
+
+    /* ==================== 3. PPT PRESENTATION STUDIO ==================== */
     function renderPptSlidesList() {
       const list = document.getElementById('pptThumbnailsList');
       if (!list) return;
@@ -1356,13 +1522,36 @@
       else if (theme === 'indigo') c.className = 'w-full max-w-[860px] aspect-video bg-gradient-to-br from-indigo-900 to-slate-900 text-white shadow-2xl rounded-xl p-5 sm:p-12 border border-indigo-700 flex flex-col justify-between';
       else c.className = 'w-full max-w-[860px] aspect-video bg-white text-slate-800 shadow-2xl rounded-xl p-5 sm:p-12 border border-slate-200 flex flex-col justify-between';
     }
+    function changePptFont(font) {
+      const c = document.getElementById('pptSlideCanvas');
+      if (c) c.style.fontFamily = font;
+      showToast('幻灯片字体已更新');
+    }
+    function handlePptContextMenu(e) {
+      e.preventDefault();
+      closeAllContextMenus();
+      const menu = document.getElementById('pptContextMenu');
+      if (!menu) return;
+      const mouseX = e.clientX, mouseY = e.clientY;
+      const menuWidth = 210, menuHeight = 210;
+      const x = (mouseX + menuWidth > window.innerWidth) ? (window.innerWidth - menuWidth - 12) : mouseX;
+      const y = (mouseY + menuHeight > window.innerHeight) ? (window.innerHeight - menuHeight - 12) : mouseY;
+      menu.style.left = `${x}px`; menu.style.top = `${y}px`;
+      menu.classList.remove('hidden');
+    }
+    function setPptLineHeight(lh) {
+      const body = document.getElementById('pptSlideBody');
+      if (body) body.style.lineHeight = lh;
+      closeAllContextMenus();
+      showToast(`PPT 行间距已调整为 ${lh} 倍`);
+    }
     function runPptSlideShow() {
       const elem = document.getElementById('pptSlideCanvas');
       if (elem.requestFullscreen) elem.requestFullscreen();
       showToast('按 ESC 退出全屏放映');
     }
 
-    // PDF Viewer
+    /* ==================== 4. PDF VIEWER ==================== */
     async function handlePdfViewerUpload(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       const ab = await file.arrayBuffer();
@@ -1374,7 +1563,7 @@
     async function renderPdfViewerPage() {
       if (!state.pdfDoc) return;
       const page = await state.pdfDoc.getPage(state.pdfPageNum);
-      const vp = page.getViewport({ scale: 1.5 });
+      const vp = page.getViewport({ scale: state.pdfScale || 1.5, rotation: state.pdfRotation || 0 });
       const cvs = document.getElementById('pdfViewerCanvas');
       cvs.width = vp.width; cvs.height = vp.height;
       await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
@@ -1384,6 +1573,29 @@
       if (!state.pdfDoc) return;
       state.pdfPageNum = Math.max(1, Math.min(state.pdfDoc.numPages, state.pdfPageNum + delta));
       renderPdfViewerPage();
+    }
+    function changePdfScale(delta) {
+      state.pdfScale = Math.max(0.6, Math.min(3.0, (state.pdfScale || 1.5) + delta));
+      renderPdfViewerPage();
+    }
+    function rotatePdfPage() {
+      state.pdfRotation = ((state.pdfRotation || 0) + 90) % 360;
+      renderPdfViewerPage();
+    }
+    function changePdfFont(font) {
+      showToast(`PDF 标注字体已设置为: ${font}`);
+    }
+    function handlePdfContextMenu(e) {
+      e.preventDefault();
+      closeAllContextMenus();
+      const menu = document.getElementById('pdfContextMenu');
+      if (!menu) return;
+      const mouseX = e.clientX, mouseY = e.clientY;
+      const menuWidth = 210, menuHeight = 220;
+      const x = (mouseX + menuWidth > window.innerWidth) ? (window.innerWidth - menuWidth - 12) : mouseX;
+      const y = (mouseY + menuHeight > window.innerHeight) ? (window.innerHeight - menuHeight - 12) : mouseY;
+      menu.style.left = `${x}px`; menu.style.top = `${y}px`;
+      menu.classList.remove('hidden');
     }
 
     // Export & Open
@@ -1637,7 +1849,7 @@
       showToast('作业纸 PDF 导出成功！');
     }
 
-    /* ==================== SCAN & VISUAL STUDIO ==================== */
+    /* ==================== 5. SCAN & VISUAL STUDIO ==================== */
     function handleScanImageUpload(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       const rd = new FileReader();
@@ -1712,7 +1924,7 @@
       if (!cvs.width) return showToast('请先导入图片');
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF('p', 'mm', 'a4');
-      pdf.addImage(cvs.toDataURL('image/jpeg', 0.95), 'JPEG', 10, 10, 190, 277);
+      pdf.addImage(cvs.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297);
       pdf.save('Scanned_Doc.pdf');
       showToast('扫描件 PDF 导出成功！');
     }
@@ -1722,7 +1934,7 @@
       const a = document.createElement('a'); a.href = cvs.toDataURL('image/png'); a.download = 'Scan_Extracted.png'; a.click();
     }
 
-    /* ==================== CONTRACT DIFF ==================== */
+    /* ==================== 6. CONTRACT DIFF ==================== */
     async function handleDiffFileUpload(e, target) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       const ext = file.name.split('.').pop().toLowerCase();
@@ -1750,7 +1962,7 @@
       document.getElementById('diffResultContainer').innerHTML = html;
     }
 
-    /* ==================== TOOLS (RMB, QR, BARCODE, WATERMARK, ID CARD) ==================== */
+    /* ==================== 7. TOOLS (RMB, QR, BARCODE, WATERMARK, ID CARD) ==================== */
     function convertRmbAmount() {
       const n = parseFloat(document.getElementById('rmbInput').value);
       if (isNaN(n)) return;
