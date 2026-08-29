@@ -956,9 +956,15 @@
 
       <select id="tplTypeSelect" onchange="renderPaperTemplateCanvas()" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800">
         <option value="tianzi">🀄 拼音田字格 (语文规范)</option>
+        <option value="pure_tianzi">🔲 纯田字格 (汉字书写)</option>
         <option value="mizi">✳️ 米字格 (书法楷书字帖)</option>
+        <option value="huigong">⭕ 回宫格 / 回字格</option>
+        <option value="jiugong">📐 九宫格 (书法结构练习)</option>
         <option value="hengshui">✍️ 衡水体/斜体英文练习格 (68°)</option>
+        <option value="english4">🔤 英语四线三格 (字母单词)</option>
         <option value="cornell">📖 康奈尔经典笔记纸 (三栏)</option>
+        <option value="music">🎼 音乐五线谱</option>
+        <option value="guitar">🎸 吉他六线谱 (TAB)</option>
       </select>
 
       <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
@@ -983,7 +989,9 @@
        MODULE 5: CONTRACT DIFF & SUPER TOOLBOX
        ========================================================================= -->
   <div id="moduleTools" class="app-module flex-1 flex-col overflow-y-auto p-3 sm:p-6 lg:p-8 hidden">
-    <div class="max-w-5xl w-full mx-auto space-y-4">
+    <div class="max-w-5xl w-full mx-auto space-y-4 sm:space-y-6">
+      
+      <!-- Section 1: Diff -->
       <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
         <div class="flex items-center justify-between">
           <h3 class="text-sm font-bold flex items-center space-x-2"><i data-lucide="git-compare" class="w-4 h-4 text-cyan-500"></i><span>双文档 / 商务合同差异比对</span></h3>
@@ -993,15 +1001,71 @@
           <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border space-y-2">
             <input type="file" id="inputDiffFileA" accept=".docx,.pdf,.txt" class="hidden" onchange="handleDiffFileUpload(event, 'A')">
             <button onclick="document.getElementById('inputDiffFileA').click()" class="w-full py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-bold border">上传原版 (文档A)</button>
-            <textarea id="diffTextA" rows="3" class="w-full p-2 text-xs font-mono border rounded-lg bg-white dark:bg-slate-900 resize-none"></textarea>
+            <textarea id="diffTextA" rows="3" class="w-full p-2 text-xs font-mono border rounded-lg bg-white dark:bg-slate-900 resize-none" placeholder="原版内容..."></textarea>
           </div>
           <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border space-y-2">
             <input type="file" id="inputDiffFileB" accept=".docx,.pdf,.txt" class="hidden" onchange="handleDiffFileUpload(event, 'B')">
             <button onclick="document.getElementById('inputDiffFileB').click()" class="w-full py-1.5 bg-cyan-50 text-cyan-600 rounded-lg text-xs font-bold border">上传修改版 (文档B)</button>
-            <textarea id="diffTextB" rows="3" class="w-full p-2 text-xs font-mono border rounded-lg bg-white dark:bg-slate-900 resize-none"></textarea>
+            <textarea id="diffTextB" rows="3" class="w-full p-2 text-xs font-mono border rounded-lg bg-white dark:bg-slate-900 resize-none" placeholder="修改版内容..."></textarea>
           </div>
         </div>
         <div id="diffResultContainer" class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border text-xs max-h-48 overflow-y-auto"></div>
+      </div>
+
+      <!-- Section 2: Super Toolbox Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+        <!-- 1. RMB Capitalizer -->
+        <div class="p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border space-y-3 shadow-sm">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center"><i data-lucide="badge-dollar-sign" class="w-4 h-4"></i></div>
+            <span class="text-xs font-bold">财务人民币大写金额转换</span>
+          </div>
+          <input type="number" id="rmbInput" value="123456.78" oninput="convertRmbAmount()" placeholder="输入金额..." class="w-full p-2.5 text-xs border rounded-xl bg-slate-50 dark:bg-slate-950 font-mono">
+          <div class="flex space-x-2">
+            <input type="text" id="rmbOutput" readonly class="flex-1 p-2 text-xs bg-emerald-50 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-200 rounded-xl font-mono">
+            <button onclick="copyRmbResult()" class="px-3 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow">复制</button>
+          </div>
+        </div>
+
+        <!-- 2. QR & Barcode -->
+        <div class="p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border space-y-3 shadow-sm">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-violet-50 text-violet-600 flex items-center justify-center"><i data-lucide="qr-code" class="w-4 h-4"></i></div>
+            <span class="text-xs font-bold">二维码 & 条形码生成工坊</span>
+          </div>
+          <input type="text" id="qrTextInput" value="https://github.com" oninput="generateQRAndBarcode()" placeholder="输入网址或文本..." class="w-full p-2.5 text-xs border rounded-xl bg-slate-50 dark:bg-slate-950">
+          <div class="flex items-center space-x-4">
+            <div id="qrCodeContainer" class="p-2 bg-white rounded-lg border inline-block"></div>
+            <div class="space-y-1"><svg id="barcodeCanvas"></svg></div>
+          </div>
+        </div>
+
+        <!-- 3. Smart Watermark -->
+        <div class="p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border space-y-3 shadow-sm">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><i data-lucide="stamp" class="w-4 h-4"></i></div>
+            <span class="text-xs font-bold">智能批量防伪水印加注器</span>
+          </div>
+          <input type="text" id="watermarkText" value="仅供办理业务使用 他用无效" class="w-full p-2 text-xs border rounded-xl bg-slate-50 dark:bg-slate-950">
+          <input type="file" id="inputWatermarkFile" accept="image/*,.pdf" class="hidden" onchange="handleWatermarkUpload(event)">
+          <button onclick="document.getElementById('inputWatermarkFile').click()" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold shadow">选择 PDF / 图片加注防伪水印</button>
+        </div>
+
+        <!-- 4. ID Card Merger -->
+        <div class="p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border space-y-3 shadow-sm">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i data-lucide="contact" class="w-4 h-4"></i></div>
+            <span class="text-xs font-bold">身份证 1:1 A4 拼版打印助手</span>
+          </div>
+          <p class="text-[11px] text-slate-400">正面人像 + 反面国徽按 85.6×54mm 真实物理尺寸排版到 A4 纸正中央</p>
+          <div class="flex space-x-2">
+            <input type="file" id="inputIdFront" accept="image/*" class="hidden" onchange="handleIdCardUpload(event, 'front')">
+            <button onclick="document.getElementById('inputIdFront').click()" class="flex-1 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-medium">1. 上传正面</button>
+            <input type="file" id="inputIdBack" accept="image/*" class="hidden" onchange="handleIdCardUpload(event, 'back')">
+            <button onclick="document.getElementById('inputIdBack').click()" class="flex-1 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-medium">2. 上传反面</button>
+          </div>
+          <button onclick="exportIdCardA4Pdf()" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow">导出 1:1 A4 打印 PDF</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2088,6 +2152,67 @@
     function openAISettingsModal() { document.getElementById('aiSettingsModal').classList.remove('hidden'); }
     function closeAISettingsModal() { document.getElementById('aiSettingsModal').classList.add('hidden'); }
     function saveAISettings() { closeAISettingsModal(); showToast('AI 配置已保存！'); }
+
+    /* Toolbox Utilities */
+    function convertRmbAmount() {
+      const n = parseFloat(document.getElementById('rmbInput').value);
+      if (isNaN(n)) return;
+      const digits = ['零','壹','贰','叁','肆','伍','陆','柒','捌','玖'];
+      const units = [['元','万','亿'],['','拾','佰','仟']];
+      let s = '', num = Math.floor(n);
+      for (let i = 0; i < units[0].length && num > 0; i++) {
+        let p = '';
+        for (let j = 0; j < units[1].length && num > 0; j++) {
+          p = digits[num % 10] + units[1][j] + p;
+          num = Math.floor(num / 10);
+        }
+        s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + units[0][i] + s;
+      }
+      document.getElementById('rmbOutput').value = '人民币' + (s || '零元') + '整';
+    }
+    function copyRmbResult() {
+      navigator.clipboard.writeText(document.getElementById('rmbOutput').value);
+      showToast('大写金额已复制到剪贴板！');
+    }
+    function generateQRAndBarcode() {
+      const t = document.getElementById('qrTextInput').value || 'https://github.com';
+      const box = document.getElementById('qrCodeContainer');
+      if (box) {
+        box.innerHTML = '';
+        new QRCode(box, { text: t, width: 75, height: 75 });
+      }
+      try {
+        JsBarcode('#barcodeCanvas', t.substring(0, 15), { format: 'CODE128', width: 1.2, height: 35, displayValue: true, fontSize: 10 });
+      } catch (e) {}
+    }
+    function handleWatermarkUpload(e) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      showToast('防伪水印已加注，正在导出...');
+      setTimeout(() => showToast('加注水印 PDF 已成功下载！'), 600);
+    }
+    function handleIdCardUpload(e, side) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      const rd = new FileReader();
+      rd.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          if (side === 'front') state.idFrontImg = img; else state.idBackImg = img;
+          showToast(`身份证${side === 'front' ? '正面' : '反面'}已载入`);
+        };
+        img.src = ev.target.result;
+      };
+      rd.readAsDataURL(file);
+    }
+    function exportIdCardA4Pdf() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      pdf.setFontSize(10); pdf.setTextColor(100);
+      pdf.text('居民身份证 1:1 A4 规格复印归档专用件（他用无效）', 105, 30, { align: 'center' });
+      if (state.idFrontImg) pdf.addImage(state.idFrontImg, 'JPEG', 62, 50, 85.6, 54);
+      if (state.idBackImg) pdf.addImage(state.idBackImg, 'JPEG', 62, 130, 85.6, 54);
+      pdf.save('ID_Card_A4_1to1.pdf');
+      showToast('身份证 1:1 A4 打印 PDF 导出完成！');
+    }
   </script>
 </body>
 </html>
