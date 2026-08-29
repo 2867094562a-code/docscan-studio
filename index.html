@@ -198,12 +198,12 @@
             高颜值 · 极速 · 全能的<br><span class="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">线上办公增强超级工作台</span>
           </h2>
           <p class="text-xs sm:text-sm text-indigo-100/80 max-w-2xl leading-relaxed">
-            全面对齐 Microsoft Office & Google Docs 专业体验！包含 Word 格式刷/查找替换/公文排版、Excel 右键精准改列宽行高与公式计算、PPT 6大版式设计与全屏放映、PDF 标注及 18+ 练字作业纸。
+            全面对齐 Microsoft Office & Google Docs 专业体验！包含 Word 格式刷/查找替换/公文排版、Excel 右键精准改列宽行高与公式计算、PPT 更换背景/插入图片GIF视频音频/全屏放映、PDF 标注及 18+ 练字作业纸。
           </p>
           <div class="pt-1 max-w-md">
             <div class="relative flex items-center">
               <i data-lucide="search" class="w-4 h-4 text-indigo-300 absolute left-3"></i>
-              <input type="text" id="homeSearchInput" oninput="filterHomeCards(this.value)" placeholder="搜索功能 (如: Word, 格式刷, 列宽, PPT版式, 水印...)" class="w-full bg-white/15 focus:bg-white text-white focus:text-slate-900 placeholder-indigo-200 focus:placeholder-slate-400 rounded-xl pl-9 pr-3 py-2 text-xs font-medium border border-white/20 focus:border-white focus:outline-none transition shadow-inner">
+              <input type="text" id="homeSearchInput" oninput="filterHomeCards(this.value)" placeholder="搜索功能 (如: Word, 格式刷, 列宽, PPT背景, 插入视频, 水印...)" class="w-full bg-white/15 focus:bg-white text-white focus:text-slate-900 placeholder-indigo-200 focus:placeholder-slate-400 rounded-xl pl-9 pr-3 py-2 text-xs font-medium border border-white/20 focus:border-white focus:outline-none transition shadow-inner">
             </div>
           </div>
         </div>
@@ -242,11 +242,11 @@
         </div>
 
         <!-- PPT Studio -->
-        <div onclick="navigateModule('editor', 'ppt')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="ppt 幻灯片 演示 演讲 pptx 放映 字体 行距 版式 形状 备注 google slides">
+        <div onclick="navigateModule('editor', 'ppt')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="ppt 幻灯片 演示 演讲 pptx 放映 字体 背景 插入图片 插入gif 插入视频 插入音频 google slides">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="presentation" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PPT 在线演示文稿设计</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">对齐 Google Slides 体验！提供 6 款专业版式、插入形状卡片、演讲者备注、F5 全屏放映与导出 .pptx。</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">更换纯色/渐变/图片背景、插入JPG/PNG/GIF动图、视频与音频多媒体，支持全屏放映与导出 .pptx。</p>
           </div>
           <span class="text-[11px] font-bold text-amber-600 flex items-center space-x-1"><span>立即打开</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
@@ -511,7 +511,7 @@
           <p style="text-indent:0;font-weight:bold;margin-bottom:12px;">〔2026〕18号</p>
           <p style="text-indent:0;font-weight:bold;margin-bottom:16px;">各部门、各直属机构：</p>
           <p class="indent-2em" style="margin-bottom:12px;">为提升数字化协作与日常办公效率，现全面启用 Office Master Studio 一站式线上办公工作台。新电脑无需安装 WPS 或 Office 套件即可直接在线编辑 Word、Excel、PPT 和 PDF 文件。</p>
-          <p class="indent-2em" style="margin-bottom:12px;">【Office 标准体验全面对齐】Word 文档支持格式刷、查找替换、上标下标、自动生成目录；Excel 支持右键点击表头 A/B/C 或行号 1/2/3 精确输入数值修改列宽行高；PPT 升级 6 款专业版式、形状卡片、演讲者备注与全屏放映！</p>
+          <p class="indent-2em" style="margin-bottom:12px;">【Office 标准体验全面对齐】Word 文档支持格式刷、查找替换、上标下标、自动生成目录；Excel 支持右键点击表头 A/B/C 或行号 1/2/3 精确输入数值修改列宽行高；PPT 升级更换纯色/渐变/图片背景，支持插入 JPG/PNG/GIF 动图、视频与音频！</p>
           <div style="text-align:right;margin-top:36px;"><p style="margin-bottom:4px;">办公厅</p><p>2026年8月29日</p></div>
         </div>
       </div>
@@ -707,7 +707,7 @@
       </div>
     </div>
 
-    <!-- 3. PPT PRESENTATION STUDIO (全面向 Google Slides / Office PowerPoint 靠齐) -->
+    <!-- 3. PPT PRESENTATION STUDIO (全面支持背景更换、图片/GIF/视频/音频多媒体插入) -->
     <div id="subOfficePpt" class="office-sub-panel flex-1 flex flex-col sm:flex-row overflow-hidden hidden relative">
       <!-- Left Slide List Manager -->
       <div class="w-full sm:w-52 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex flex-col p-2.5 space-y-2 shrink-0 max-h-36 sm:max-h-none overflow-y-auto">
@@ -724,7 +724,7 @@
 
       <!-- PPT Editor Center Area -->
       <div class="flex-1 flex flex-col bg-slate-200/60 dark:bg-slate-950 overflow-hidden">
-        <!-- PPT Rich Toolbar (Aligned with Google Slides) -->
+        <!-- PPT Rich Toolbar (Aligned with Google Slides + Media Insert) -->
         <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between text-xs overflow-x-auto gap-2">
           <div class="flex items-center space-x-1.5 shrink-0">
             <!-- Slide Layout Selector -->
@@ -736,6 +736,31 @@
               <option value="stat_highlight">📐 版式: 关键数据与大指标</option>
               <option value="blank">📐 版式: 纯空白自由画布</option>
             </select>
+
+            <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
+
+            <!-- PPT Background Trigger -->
+            <button onclick="openPptBgModal()" class="px-2 py-1 bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 rounded font-bold flex items-center space-x-1 shrink-0" title="更换幻灯片背景 (纯色、高质感渐变、自定义图片/GIF背景)">
+              <i data-lucide="image" class="w-3.5 h-3.5 text-purple-600"></i><span>🎨 更换背景</span>
+            </button>
+
+            <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
+
+            <!-- Insert Media Inputs (Hidden) -->
+            <input type="file" id="inputPptSlideImage" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden" onchange="handlePptInsertImage(event)">
+            <input type="file" id="inputPptSlideVideo" accept="video/mp4,video/webm,video/ogg,video/quicktime" class="hidden" onchange="handlePptInsertVideo(event)">
+            <input type="file" id="inputPptSlideAudio" accept="audio/mp3,audio/wav,audio/ogg,audio/aac,audio/m4a" class="hidden" onchange="handlePptInsertAudio(event)">
+
+            <!-- Insert Media Buttons -->
+            <button onclick="document.getElementById('inputPptSlideImage').click()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium flex items-center space-x-1 shrink-0" title="插入 JPG / PNG / GIF 动图">
+              <i data-lucide="image-plus" class="w-3.5 h-3.5 text-blue-500"></i><span>+图片/GIF</span>
+            </button>
+            <button onclick="document.getElementById('inputPptSlideVideo').click()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium flex items-center space-x-1 shrink-0" title="插入 MP4 / WebM 本地视频">
+              <i data-lucide="video" class="w-3.5 h-3.5 text-rose-500"></i><span>+视频</span>
+            </button>
+            <button onclick="document.getElementById('inputPptSlideAudio').click()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium flex items-center space-x-1 shrink-0" title="插入 MP3 / WAV 旁白背景音乐">
+              <i data-lucide="music" class="w-3.5 h-3.5 text-amber-500"></i><span>+音频</span>
+            </button>
 
             <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
 
@@ -759,24 +784,10 @@
             <select id="pptFontSizeSelect" onchange="changePptFontSize(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium shrink-0">
               <option value="16px">正文字号: 16px</option>
               <option value="18px">正文字号: 18px</option>
-              <option value="20px">正文字号: 20px</option>
+              <option value="20px">标题字号: 20px</option>
               <option value="24px">标题字号: 24px</option>
               <option value="28px">大标字号: 28px</option>
             </select>
-
-            <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
-
-            <!-- Insert Shape / Card Components -->
-            <button onclick="insertPptCard('highlight')" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium flex items-center space-x-1 shrink-0"><i data-lucide="square" class="w-3 h-3 text-indigo-500"></i><span>+卡片</span></button>
-            <button onclick="insertPptCard('bullet')" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium flex items-center space-x-1 shrink-0"><i data-lucide="list" class="w-3 h-3 text-emerald-500"></i><span>+要点</span></button>
-
-            <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
-
-            <!-- PPT Theme Buttons -->
-            <button onclick="setPptTheme('indigo')" class="px-2 py-1 bg-indigo-50 text-indigo-600 rounded font-medium shrink-0">科技蓝</button>
-            <button onclick="setPptTheme('dark')" class="px-2 py-1 bg-slate-800 text-white rounded font-medium shrink-0">商务黑</button>
-            <button onclick="setPptTheme('minimal')" class="px-2 py-1 bg-slate-100 text-slate-700 rounded font-medium shrink-0">极简白</button>
-            <button onclick="setPptTheme('emerald')" class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded font-medium shrink-0">高雅绿</button>
           </div>
 
           <button onclick="runPptSlideShow()" class="px-3.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold flex items-center space-x-1.5 shrink-0 shadow"><i data-lucide="play" class="w-3.5 h-3.5"></i><span>放映 (F5)</span></button>
@@ -784,24 +795,29 @@
 
         <!-- Slide Canvas Viewport -->
         <div class="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 overflow-auto" oncontextmenu="handlePptContextMenu(event)">
-          <div id="pptSlideCanvas" class="w-full max-w-[880px] aspect-video bg-white dark:bg-slate-900 shadow-2xl rounded-xl p-6 sm:p-12 border border-slate-200 dark:border-slate-800 flex flex-col justify-between relative transition-all duration-200">
+          <div id="pptSlideCanvas" class="w-full max-w-[880px] aspect-video bg-white dark:bg-slate-900 shadow-2xl rounded-xl p-6 sm:p-12 border border-slate-200 dark:border-slate-800 flex flex-col justify-between relative transition-all duration-200 overflow-hidden">
             <!-- Slide Header / Title -->
-            <div id="pptSlideContentWrapper" class="flex-1 flex flex-col justify-between">
+            <div id="pptSlideContentWrapper" class="flex-1 flex flex-col justify-between overflow-y-auto">
               <div>
                 <input type="text" id="pptSlideTitle" value="2026年度业务发展规划汇报" oninput="saveCurrentSlideData()" class="w-full text-lg sm:text-3xl font-extrabold bg-transparent border-b border-transparent hover:border-slate-300 focus:border-indigo-500 focus:outline-none pb-2 text-slate-800 dark:text-slate-100 transition">
-                <div id="pptCustomBodyArea" class="mt-4">
-                  <textarea id="pptSlideBody" oninput="saveCurrentSlideData()" rows="6" class="w-full text-xs sm:text-base bg-transparent border-none focus:outline-none resize-none text-slate-600 dark:text-slate-300 leading-relaxed font-sans" placeholder="输入幻灯片要点...">• 核心业务全链路数字化升级\n• 跨部门协同流转效率提升 45%\n• 100% 浏览器本地化数据安全保障\n• 打造新一代超级轻量办公工作台</textarea>
+                
+                <div id="pptCustomBodyArea" class="mt-3">
+                  <textarea id="pptSlideBody" oninput="saveCurrentSlideData()" rows="4" class="w-full text-xs sm:text-base bg-transparent border-none focus:outline-none resize-none text-slate-600 dark:text-slate-300 leading-relaxed font-sans" placeholder="输入幻灯片要点...">• 核心业务全链路数字化升级\n• 跨部门协同流转效率提升 45%\n• 100% 浏览器本地化数据安全保障\n• 打造新一代超级轻量办公工作台</textarea>
                 </div>
+
+                <!-- Slide Inserted Media Elements Container (Images, GIF, Video, Audio) -->
+                <div id="pptMediaElementsList" class="mt-3 space-y-2"></div>
               </div>
             </div>
+            
             <!-- Slide Footer -->
-            <div class="flex justify-between items-center text-[10px] sm:text-xs text-slate-400 border-t border-slate-200 dark:border-slate-800 pt-2 sm:pt-3">
+            <div class="flex justify-between items-center text-[10px] sm:text-xs text-slate-400 border-t border-slate-200/40 pt-2 shrink-0">
               <span class="font-semibold text-indigo-600 dark:text-indigo-400">Office Master Studio · Slides</span>
               <span id="pptSlidePageNum" class="font-mono">Slide 1 / 1</span>
             </div>
           </div>
 
-          <!-- Speaker Notes Collapsible Area (Aligned with Office/Google Docs) -->
+          <!-- Speaker Notes Collapsible Area -->
           <div class="w-full max-w-[880px] mt-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 shadow-sm">
             <div class="flex items-center justify-between text-xs font-bold text-slate-500 mb-1">
               <span class="flex items-center space-x-1"><i data-lucide="message-square" class="w-3.5 h-3.5 text-amber-500"></i><span>演讲者备注 (Speaker Notes)</span></span>
@@ -812,19 +828,72 @@
         </div>
       </div>
 
+      <!-- PPT Background Setting Modal (更换背景) -->
+      <div id="pptBgModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closePptBgModal()">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
+          <div class="flex items-center justify-between border-b pb-2.5">
+            <h3 class="text-sm font-bold flex items-center space-x-1.5"><i data-lucide="palette" class="w-4 h-4 text-purple-600"></i><span>自定义幻灯片背景 (Background)</span></h3>
+            <button onclick="closePptBgModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+          </div>
+
+          <!-- 1. Solid Colors -->
+          <div class="space-y-1.5">
+            <label class="font-bold text-slate-700 dark:text-slate-300">1. 纯色背景 (Solid Color)</label>
+            <div class="flex items-center space-x-2">
+              <input type="color" id="pptCustomBgColorInput" value="#ffffff" onchange="setPptSlideBg('color', this.value)" class="w-8 h-8 rounded border cursor-pointer">
+              <div class="flex flex-wrap gap-1.5">
+                <button onclick="setPptSlideBg('color', '#ffffff')" class="px-2 py-1 bg-white text-slate-800 border rounded font-medium">纯白</button>
+                <button onclick="setPptSlideBg('color', '#0f172a')" class="px-2 py-1 bg-slate-900 text-white rounded font-medium">深黑</button>
+                <button onclick="setPptSlideBg('color', '#1e1b4b')" class="px-2 py-1 bg-indigo-950 text-indigo-200 rounded font-medium">深蓝</button>
+                <button onclick="setPptSlideBg('color', '#022c22')" class="px-2 py-1 bg-emerald-950 text-emerald-200 rounded font-medium">墨绿</button>
+                <button onclick="setPptSlideBg('color', '#fefce8')" class="px-2 py-1 bg-amber-50 text-amber-900 border rounded font-medium">浅米黄</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Gradients -->
+          <div class="space-y-1.5 pt-2 border-t">
+            <label class="font-bold text-slate-700 dark:text-slate-300">2. 高质感渐变色背景 (Gradient)</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%)')" class="p-2 rounded-lg text-white font-medium text-[11px] shadow" style="background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81);">🌌 科技深蓝</button>
+              <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #2e1065 0%, #4c1d95 50%, #831843 100%)')" class="p-2 rounded-lg text-white font-medium text-[11px] shadow" style="background: linear-gradient(135deg, #2e1065, #4c1d95, #831843);">🌆 晚霞紫粉</button>
+              <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #022c22 0%, #064e3b 50%, #065f46 100%)')" class="p-2 rounded-lg text-white font-medium text-[11px] shadow" style="background: linear-gradient(135deg, #022c22, #064e3b, #065f46);">🌲 翡翠深绿</button>
+              <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #451a03 0%, #78350f 50%, #92400e 100%)')" class="p-2 rounded-lg text-white font-medium text-[11px] shadow" style="background: linear-gradient(135deg, #451a03, #78350f, #92400e);">🌅 暖阳金橙</button>
+              <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)')" class="p-2 rounded-lg text-slate-800 font-medium text-[11px] shadow border" style="background: linear-gradient(135deg, #f8fafc, #e2e8f0);">📄 极简雅白</button>
+              <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #18181b 0%, #27272a 100%)')" class="p-2 rounded-lg text-white font-medium text-[11px] shadow" style="background: linear-gradient(135deg, #18181b, #27272a);">🌑 商务深灰</button>
+            </div>
+          </div>
+
+          <!-- 3. Image / GIF Background -->
+          <div class="space-y-1.5 pt-2 border-t">
+            <label class="font-bold text-slate-700 dark:text-slate-300">3. 上传自定义图片/动图背景 (JPG / PNG / GIF / WebP)</label>
+            <input type="file" id="inputPptBgImageFile" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden" onchange="handlePptCustomBgImage(event)">
+            <button onclick="document.getElementById('inputPptBgImageFile').click()" class="w-full py-2 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-xl font-bold flex items-center justify-center space-x-1.5">
+              <i data-lucide="upload" class="w-4 h-4"></i><span>选择本地图片 / GIF 作为背景</span>
+            </button>
+          </div>
+
+          <!-- Apply Scope -->
+          <div class="pt-2 border-t flex items-center justify-between">
+            <button onclick="applyBgToAllSlides()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg font-semibold">应用到全部幻灯片</button>
+            <button onclick="closePptBgModal()" class="px-4 py-1.5 bg-indigo-600 text-white rounded-lg font-bold shadow">完成</button>
+          </div>
+        </div>
+      </div>
+
       <!-- PPT Custom Right-Click Context Menu -->
       <div id="pptContextMenu" onclick="event.stopPropagation()" class="fixed z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-1.5 text-xs text-slate-700 dark:text-slate-200 w-56 hidden divide-y divide-slate-100 dark:divide-slate-800">
         <div class="py-1 space-y-0.5">
-          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">📽️ 幻灯片管理</div>
+          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">📽️ 幻灯片操作</div>
+          <button onclick="openPptBgModal(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-purple-50 text-purple-600 flex items-center space-x-1.5 font-bold"><i data-lucide="palette" class="w-3.5 h-3.5"></i><span>🎨 更换当前背景...</span></button>
+          <button onclick="document.getElementById('inputPptSlideImage').click(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center space-x-1.5"><i data-lucide="image-plus" class="w-3.5 h-3.5 text-blue-500"></i><span>插入图片 / GIF动图</span></button>
+          <button onclick="document.getElementById('inputPptSlideVideo').click(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center space-x-1.5"><i data-lucide="video" class="w-3.5 h-3.5 text-rose-500"></i><span>插入本地视频 (MP4)</span></button>
+          <button onclick="document.getElementById('inputPptSlideAudio').click(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center space-x-1.5"><i data-lucide="music" class="w-3.5 h-3.5 text-amber-500"></i><span>插入背景音频 (MP3)</span></button>
+        </div>
+        <div class="py-1 space-y-0.5">
           <button onclick="addPptSlide(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center space-x-1.5 font-medium"><i data-lucide="plus" class="w-3.5 h-3.5"></i><span>新建一页幻灯片</span></button>
           <button onclick="duplicateCurrentSlide(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center space-x-1.5 font-medium"><i data-lucide="copy" class="w-3.5 h-3.5"></i><span>复制当前幻灯片</span></button>
           <button onclick="runPptSlideShow(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 flex items-center space-x-1.5 font-bold"><i data-lucide="play" class="w-3.5 h-3.5"></i><span>全屏放映 (F5)</span></button>
-        </div>
-        <div class="py-1 space-y-0.5">
-          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">↕️ 幻灯片文字行间距</div>
-          <button onclick="setPptLineHeight('1.2')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>紧凑行距 (1.2倍)</span></button>
-          <button onclick="setPptLineHeight('1.6')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between font-bold text-indigo-600"><span>标准行距 (1.6倍)</span></button>
-          <button onclick="setPptLineHeight('2.0')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>宽松行距 (2.0倍)</span></button>
         </div>
       </div>
     </div>
@@ -1084,7 +1153,7 @@
       <!-- Section 1: Diff -->
       <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
         <div class="flex items-center justify-between">
-          <h3 class="text-sm sm:base font-bold flex items-center space-x-2"><i data-lucide="git-compare" class="w-4 h-4 text-cyan-500"></i><span>双文档 / 商务合同专业差异比对</span></h3>
+          <h3 class="text-sm sm:text-base font-bold flex items-center space-x-2"><i data-lucide="git-compare" class="w-4 h-4 text-cyan-500"></i><span>双文档 / 商务合同专业差异比对</span></h3>
           <button onclick="runDocumentDiffAction()" class="px-3.5 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-xs font-bold shadow">开始比对</button>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1210,13 +1279,19 @@
           layout: 'title_content',
           title: '2026年度业务发展规划汇报',
           body: '• 核心业务全链路数字化升级\n• 跨部门协同流转效率提升 45%\n• 100% 浏览器本地化数据安全保障\n• 打造新一代超级轻量办公工作台',
-          notes: '本页重点强调纯前端本地运行对商业安全的保障'
+          notes: '本页重点强调纯前端本地运行对商业安全的保障',
+          bgType: 'gradient',
+          bgValue: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%)',
+          media: []
         },
         {
           layout: 'two_col',
           title: '战略目标与实施路径对比',
           body: '【左栏：当前业务痛点】\n• 新电脑缺乏办公套件\n• 文件格式互相转换繁琐\n• 公文排版缺乏统一标准\n\n【右栏：解决方案与成效】\n• 即开即用无需安装任何软件\n• 内置 20+ 全能格式转换工具\n• 国标红头与仿宋公文一键排版',
-          notes: '引导领导关注左右栏对比数据'
+          notes: '引导领导关注左右栏对比数据',
+          bgType: 'color',
+          bgValue: '#ffffff',
+          media: []
         }
       ],
       currentSlideIdx: 0,
@@ -1240,7 +1315,6 @@
       updateWordStats();
       setTimeout(fitTplWidth, 50);
 
-      // Keyboard Shortcut support (Ctrl+F for Find/Replace, F5 for PPT Show)
       document.addEventListener('keydown', e => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
           if (state.currentOfficeTool === 'word') {
@@ -1423,7 +1497,6 @@
       }
     }
 
-    /* Format Painter (格式刷) */
     function toggleFormatPainter() {
       const editor = document.getElementById('wordEditorDoc');
       const btn = document.getElementById('btnFormatPainter');
@@ -1476,12 +1549,11 @@
             node.style.fontStyle = f.fontStyle;
           }
           showToast('格式刷已成功应用！');
-          toggleFormatPainter(); // reset
+          toggleFormatPainter();
         }
       }
     }
 
-    /* Find & Replace */
     function toggleFindReplaceBar() {
       const bar = document.getElementById('wordFindReplaceBar');
       bar.classList.toggle('hidden');
@@ -1496,7 +1568,7 @@
         const found = window.find(q, false, false, true, false, true, false);
         document.getElementById('findMatchResultLabel').innerText = found ? '已定位到匹配项' : '未找到更多匹配';
       } else {
-        showToast('已在当前页面检索: ' + q);
+        showToast('已检索: ' + q);
       }
     }
     function executeReplaceOne() {
@@ -1525,7 +1597,6 @@
       updateWordStats();
     }
 
-    /* Table of Contents Generator */
     function generateDocTableOfContents() {
       const editor = document.getElementById('wordEditorDoc');
       const headers = editor.querySelectorAll('h1, h2, h3');
@@ -1546,18 +1617,12 @@
       updateWordStats();
     }
 
-    /* Page Margins */
     function setDocPageMargins(type) {
       const editor = document.getElementById('wordEditorDoc');
-      if (type === 'gov') {
-        editor.style.padding = '37mm 28mm';
-      } else if (type === 'narrow') {
-        editor.style.padding = '12.7mm 12.7mm';
-      } else if (type === 'wide') {
-        editor.style.padding = '38mm 38mm';
-      } else {
-        editor.style.padding = '25.4mm 25.4mm';
-      }
+      if (type === 'gov') editor.style.padding = '37mm 28mm';
+      else if (type === 'narrow') editor.style.padding = '12.7mm 12.7mm';
+      else if (type === 'wide') editor.style.padding = '38mm 38mm';
+      else editor.style.padding = '25.4mm 25.4mm';
       showToast('页边距已更新');
     }
 
@@ -1574,8 +1639,7 @@
       const x = (mouseX + menuWidth > window.innerWidth) ? (window.innerWidth - menuWidth - 12) : mouseX;
       const y = (mouseY + menuHeight > window.innerHeight) ? (window.innerHeight - menuHeight - 12) : mouseY;
       
-      menu.style.left = `${x}px`;
-      menu.style.top = `${y}px`;
+      menu.style.left = `${x}px`; menu.style.top = `${y}px`;
       menu.classList.remove('hidden');
     }
 
@@ -1681,9 +1745,7 @@
       document.getElementById('wordEditorDoc').focus();
       document.execCommand('hiliteColor', false, color);
     }
-    function insertDocImage() {
-      document.getElementById('inputWordDocImage').click();
-    }
+    function insertDocImage() { document.getElementById('inputWordDocImage').click(); }
     function handleWordDocImageUpload(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       const rd = new FileReader();
@@ -2100,15 +2162,16 @@
       closeAllContextMenus();
     }
 
-    /* ==================== 3. PPT PRESENTATION STUDIO (Aligned with Google Slides) ==================== */
+    /* ==================== 3. PPT PRESENTATION STUDIO (Aligned with Google Slides + Media Insert) ==================== */
     function renderPptSlidesList() {
       const list = document.getElementById('pptThumbnailsList');
       if (!list) return;
       let html = '';
       state.pptSlides.forEach((s, idx) => {
         const isCur = idx === state.currentSlideIdx;
+        const mediaBadge = (s.media && s.media.length) ? `<span class="text-[9px] px-1 bg-indigo-100 text-indigo-700 rounded">${s.media.length}素材</span>` : '';
         html += `<div onclick="selectPptSlide(${idx})" class="p-2 rounded-xl border text-left cursor-pointer transition ${isCur ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950 font-bold shadow-sm' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300'}">
-          <div class="flex items-center justify-between text-[10px] text-slate-400 mb-0.5"><span>Slide ${idx + 1}</span><span class="text-[9px] px-1 bg-slate-100 dark:bg-slate-700 rounded">${s.layout || '正文'}</span></div>
+          <div class="flex items-center justify-between text-[10px] text-slate-400 mb-0.5"><span>Slide ${idx + 1}</span><div class="flex items-center space-x-1">${mediaBadge}<span class="text-[9px] px-1 bg-slate-100 dark:bg-slate-700 rounded">${s.layout || '正文'}</span></div></div>
           <div class="text-xs truncate">${s.title || '无标题幻灯片'}</div>
         </div>`;
       });
@@ -2121,7 +2184,10 @@
         layout: 'title_content',
         title: `第 ${state.pptSlides.length + 1} 部分规划`,
         body: '• 重点任务推进实施\n• 质量考核与成果验收\n• 跨部门敏捷协同',
-        notes: ''
+        notes: '',
+        bgType: 'color',
+        bgValue: '#ffffff',
+        media: []
       });
       state.currentSlideIdx = state.pptSlides.length - 1;
       renderPptSlidesList();
@@ -2158,6 +2224,190 @@
       document.getElementById('pptSpeakerNotes').value = s.notes || '';
       document.getElementById('pptLayoutSelect').value = s.layout || 'title_content';
       document.getElementById('pptSlidePageNum').innerText = `Slide ${state.currentSlideIdx + 1} / ${state.pptSlides.length}`;
+
+      // Apply Background Styling
+      applySlideBackgroundToCanvas(s);
+
+      // Render Inserted Media Elements (Images / GIFs, Videos, Audios)
+      renderPptSlideMediaElements(s);
+    }
+
+    function applySlideBackgroundToCanvas(s) {
+      const canvas = document.getElementById('pptSlideCanvas');
+      if (!canvas) return;
+
+      canvas.style.backgroundImage = 'none';
+      canvas.style.backgroundColor = 'transparent';
+
+      if (s.bgType === 'image') {
+        canvas.style.backgroundImage = `url("${s.bgValue}")`;
+        canvas.style.backgroundSize = 'cover';
+        canvas.style.backgroundPosition = 'center';
+        canvas.classList.remove('bg-white', 'dark:bg-slate-900');
+        // Ensure text readability
+        document.getElementById('pptSlideTitle').style.color = '#ffffff';
+        document.getElementById('pptSlideBody').style.color = '#f1f5f9';
+      } else if (s.bgType === 'gradient') {
+        canvas.style.background = s.bgValue;
+        canvas.classList.remove('bg-white', 'dark:bg-slate-900');
+        document.getElementById('pptSlideTitle').style.color = '#ffffff';
+        document.getElementById('pptSlideBody').style.color = '#f1f5f9';
+      } else if (s.bgType === 'color') {
+        canvas.style.backgroundColor = s.bgValue;
+        canvas.classList.remove('bg-white', 'dark:bg-slate-900');
+        const isDark = isColorDark(s.bgValue);
+        document.getElementById('pptSlideTitle').style.color = isDark ? '#ffffff' : '#1e293b';
+        document.getElementById('pptSlideBody').style.color = isDark ? '#e2e8f0' : '#475569';
+      } else {
+        canvas.className = 'w-full max-w-[880px] aspect-video bg-white dark:bg-slate-900 shadow-2xl rounded-xl p-6 sm:p-12 border border-slate-200 dark:border-slate-800 flex flex-col justify-between relative transition-all duration-200 overflow-hidden';
+      }
+    }
+
+    function isColorDark(hex) {
+      if (!hex || !hex.startsWith('#')) return false;
+      const c = hex.substring(1);
+      const rgb = parseInt(c, 16);
+      const r = (rgb >> 16) & 0xff;
+      const g = (rgb >>  8) & 0xff;
+      const b = (rgb >>  0) & 0xff;
+      const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      return luma < 128;
+    }
+
+    /* Background Modal Functions */
+    function openPptBgModal() {
+      document.getElementById('pptBgModal').classList.remove('hidden');
+    }
+    function closePptBgModal() {
+      document.getElementById('pptBgModal').classList.add('hidden');
+    }
+
+    function setPptSlideBg(type, val) {
+      const s = state.pptSlides[state.currentSlideIdx];
+      if (!s) return;
+      s.bgType = type;
+      s.bgValue = val;
+      applySlideBackgroundToCanvas(s);
+      showToast('幻灯片背景已更新！');
+    }
+
+    function handlePptCustomBgImage(e) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      const rd = new FileReader();
+      rd.onload = ev => {
+        setPptSlideBg('image', ev.target.result);
+      };
+      rd.readAsDataURL(file);
+    }
+
+    function applyBgToAllSlides() {
+      const cur = state.pptSlides[state.currentSlideIdx];
+      if (!cur) return;
+      state.pptSlides.forEach(s => {
+        s.bgType = cur.bgType;
+        s.bgValue = cur.bgValue;
+      });
+      showToast('已将当前背景应用到全部幻灯片！');
+      closePptBgModal();
+    }
+
+    /* Media Elements Handling (Images/GIF, Video, Audio) */
+    function handlePptInsertImage(e) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      const rd = new FileReader();
+      rd.onload = ev => {
+        const s = state.pptSlides[state.currentSlideIdx];
+        if (!s.media) s.media = [];
+        s.media.push({
+          id: Date.now(),
+          type: 'image',
+          name: file.name,
+          src: ev.target.result
+        });
+        renderPptSlidesList();
+        showToast('图片 / GIF 动图已成功插入幻灯片！');
+      };
+      rd.readAsDataURL(file);
+    }
+
+    function handlePptInsertVideo(e) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      const rd = new FileReader();
+      rd.onload = ev => {
+        const s = state.pptSlides[state.currentSlideIdx];
+        if (!s.media) s.media = [];
+        s.media.push({
+          id: Date.now(),
+          type: 'video',
+          name: file.name,
+          src: ev.target.result
+        });
+        renderPptSlidesList();
+        showToast('视频已成功插入幻灯片！');
+      };
+      rd.readAsDataURL(file);
+    }
+
+    function handlePptInsertAudio(e) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      const rd = new FileReader();
+      rd.onload = ev => {
+        const s = state.pptSlides[state.currentSlideIdx];
+        if (!s.media) s.media = [];
+        s.media.push({
+          id: Date.now(),
+          type: 'audio',
+          name: file.name,
+          src: ev.target.result
+        });
+        renderPptSlidesList();
+        showToast('音频已成功插入幻灯片！');
+      };
+      rd.readAsDataURL(file);
+    }
+
+    function removePptMedia(id) {
+      const s = state.pptSlides[state.currentSlideIdx];
+      if (!s || !s.media) return;
+      s.media = s.media.filter(m => m.id !== id);
+      renderPptSlidesList();
+      showToast('已移除该多媒体素材');
+    }
+
+    function renderPptSlideMediaElements(s) {
+      const container = document.getElementById('pptMediaElementsList');
+      if (!container) return;
+      if (!s.media || !s.media.length) {
+        container.innerHTML = '';
+        return;
+      }
+
+      let html = '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">';
+      s.media.forEach(m => {
+        if (m.type === 'image') {
+          html += `<div class="relative group rounded-xl overflow-hidden border border-slate-200/60 bg-black/20 shadow-md flex items-center justify-center max-h-48">
+            <img src="${m.src}" alt="${m.name}" class="max-h-44 object-contain rounded-lg" />
+            <button onclick="removePptMedia(${m.id})" class="absolute top-1.5 right-1.5 p-1 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition shadow" title="删除图片"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </div>`;
+        } else if (m.type === 'video') {
+          html += `<div class="relative group rounded-xl overflow-hidden border border-slate-200/60 bg-black/30 shadow-md p-1.5">
+            <video controls playsinline src="${m.src}" class="w-full max-h-40 rounded-lg bg-black"></video>
+            <button onclick="removePptMedia(${m.id})" class="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition shadow" title="删除视频"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </div>`;
+        } else if (m.type === 'audio') {
+          html += `<div class="relative group rounded-xl border border-slate-200/60 bg-indigo-50/80 dark:bg-slate-800/80 p-2 shadow-md flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shrink-0"><i data-lucide="music" class="w-4 h-4"></i></div>
+            <div class="flex-1 overflow-hidden">
+              <div class="text-[11px] font-bold truncate text-slate-800 dark:text-slate-100 mb-1">${m.name || '背景音频'}</div>
+              <audio controls src="${m.src}" class="w-full h-7"></audio>
+            </div>
+            <button onclick="removePptMedia(${m.id})" class="p-1 text-red-500 hover:bg-red-50 rounded" title="删除音频"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </div>`;
+        }
+      });
+      html += '</div>';
+      container.innerHTML = html;
+      lucide.createIcons();
     }
 
     function saveCurrentSlideData() {
@@ -2187,25 +2437,6 @@
       showToast('幻灯片版式已切换！');
     }
 
-    function insertPptCard(type) {
-      const body = document.getElementById('pptSlideBody');
-      if (type === 'highlight') {
-        body.value += '\n\n【重要亮点】\n• 关键指标达成与重大突破说明';
-      } else {
-        body.value += '\n• 新增待办要点清单项';
-      }
-      saveCurrentSlideData();
-      showToast('已插入组件卡片');
-    }
-
-    function setPptTheme(theme) {
-      const c = document.getElementById('pptSlideCanvas');
-      if (theme === 'dark') c.className = 'w-full max-w-[880px] aspect-video bg-slate-900 text-white shadow-2xl rounded-xl p-6 sm:p-12 border border-slate-700 flex flex-col justify-between';
-      else if (theme === 'indigo') c.className = 'w-full max-w-[880px] aspect-video bg-gradient-to-br from-indigo-900 to-slate-900 text-white shadow-2xl rounded-xl p-6 sm:p-12 border border-indigo-700 flex flex-col justify-between';
-      else if (theme === 'emerald') c.className = 'w-full max-w-[880px] aspect-video bg-gradient-to-br from-teal-900 to-slate-900 text-white shadow-2xl rounded-xl p-6 sm:p-12 border border-teal-700 flex flex-col justify-between';
-      else c.className = 'w-full max-w-[880px] aspect-video bg-white text-slate-800 shadow-2xl rounded-xl p-6 sm:p-12 border border-slate-200 flex flex-col justify-between';
-    }
-
     function changePptFont(font) {
       const c = document.getElementById('pptSlideCanvas');
       if (c) c.style.fontFamily = font;
@@ -2227,7 +2458,7 @@
       const menu = document.getElementById('pptContextMenu');
       if (!menu) return;
       const mouseX = e.clientX, mouseY = e.clientY;
-      const menuWidth = 224, menuHeight = 240;
+      const menuWidth = 224, menuHeight = 280;
       const x = (mouseX + menuWidth > window.innerWidth) ? (window.innerWidth - menuWidth - 12) : mouseX;
       const y = (mouseY + menuHeight > window.innerHeight) ? (window.innerHeight - menuHeight - 12) : mouseY;
       menu.style.left = `${x}px`; menu.style.top = `${y}px`;
