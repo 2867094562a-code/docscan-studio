@@ -84,6 +84,56 @@
       cursor: crosshair !important;
     }
 
+    /* ==================== Xiaomi HyperOS & Windows Fluent Physics Animations ==================== */
+    :root {
+      --ease-hyperos: cubic-bezier(0.2, 0.8, 0.2, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-fluent: cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    @keyframes hyperosModuleFadeIn {
+      from { opacity: 0; transform: translateY(14px) scale(0.992); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .app-module:not(.hidden) {
+      animation: hyperosModuleFadeIn 0.38s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes hyperosAmbientGlow {
+      0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.6; }
+      50% { transform: scale(1.12) translate(-20px, 15px); opacity: 0.9; }
+    }
+    .ambient-glow-orb {
+      animation: hyperosAmbientGlow 14s ease-in-out infinite alternate;
+    }
+
+    .home-card {
+      position: relative;
+      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease;
+      will-change: transform, box-shadow;
+    }
+    .home-card:hover {
+      transform: translateY(-5px) scale(1.015);
+      box-shadow: 0 18px 36px -10px rgba(99, 102, 241, 0.16), 0 6px 16px -2px rgba(0, 0, 0, 0.04);
+    }
+    .home-card:active {
+      transform: translateY(-1px) scale(0.985);
+      transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .dark .home-card:hover {
+      box-shadow: 0 18px 36px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(99, 102, 241, 0.35);
+    }
+
+    .home-cat-btn, .nav-module-btn {
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.2s ease, color 0.2s ease, box-shadow 0.25s ease;
+    }
+    .home-cat-btn:hover, .nav-module-btn:hover {
+      transform: translateY(-1.5px);
+    }
+    .home-cat-btn:active, .nav-module-btn:active {
+      transform: scale(0.95);
+    }
+
     /* Billing System Table & Input Styles */
     .bill-container {
       width: 100%;
@@ -93,7 +143,7 @@
       border-radius: 16px;
       padding: 36px 40px;
       position: relative;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
     .dark .bill-container {
       background: #0f172a;
@@ -252,23 +302,28 @@
   <div id="moduleHome" class="app-module flex-1 flex-col overflow-y-auto p-3 sm:p-6 lg:p-8">
     <div class="max-w-6xl w-full mx-auto space-y-4 sm:space-y-6">
       
-      <!-- Hero Banner -->
-      <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-indigo-900 via-indigo-800 to-purple-900 text-white p-5 sm:p-8 shadow-2xl border border-indigo-700/50">
+      <!-- Hero Banner with HyperOS Fluid Ambient Glow & Win10 Acrylic Polish -->
+      <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 text-white p-5 sm:p-8 shadow-2xl border border-indigo-500/30">
+        <!-- HyperOS Ambient Glow Background Orbs -->
+        <div class="absolute -top-24 -left-24 w-80 h-80 bg-indigo-500/25 rounded-full blur-3xl pointer-events-none ambient-glow-orb"></div>
+        <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-purple-500/25 rounded-full blur-3xl pointer-events-none ambient-glow-orb" style="animation-delay: -7s;"></div>
+        <div class="absolute top-1/2 right-1/4 w-52 h-52 bg-pink-500/15 rounded-full blur-2xl pointer-events-none ambient-glow-orb" style="animation-delay: -3s;"></div>
+
         <div class="relative z-10 space-y-2.5 sm:space-y-3">
-          <div class="inline-flex items-center space-x-2 px-2.5 py-1 bg-white/10 backdrop-blur-md rounded-full text-[11px] font-medium text-indigo-200">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[11px] font-medium text-indigo-200 border border-white/15 shadow-sm">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>100% 浏览器本地离线计算 · 个人与商业隐私绝对安全</span>
+            <span>100% 浏览器本地离线计算 · 个人与商业隐私绝对安全 · 澎湃流畅动效</span>
           </div>
           <h2 class="text-xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
             高颜值 · 极速 · 全能的<br><span class="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">线上办公增强超级工作台</span>
           </h2>
-          <p class="text-xs sm:text-sm text-indigo-100/80 max-w-2xl leading-relaxed">
-            全面对齐 Office & Google Docs 专业体验！全新内置智能账单与发货清单系统（带价格记忆与自动学习库、尺码拖拽排序、Excel/长图导出及横向A4打印）。
+          <p class="text-xs sm:text-sm text-indigo-100/85 max-w-2xl leading-relaxed">
+            全面对齐 Office & Google Docs 专业体验！内置智能账单系统、全向格式互转、独立印章抠图、18+ 作业纸字帖库与 AI 智能识别强化。
           </p>
           <div class="pt-1 max-w-md">
             <div class="relative flex items-center">
               <i data-lucide="search" class="w-4 h-4 text-indigo-300 absolute left-3"></i>
-              <input type="text" id="homeSearchInput" oninput="filterHomeCards(this.value)" placeholder="搜索功能 (如: 发货单, 账单, Word, 格式刷, 列宽, PPT背景...)" class="w-full bg-white/15 focus:bg-white text-white focus:text-slate-900 placeholder-indigo-200 focus:placeholder-slate-400 rounded-xl pl-9 pr-3 py-2 text-xs font-medium border border-white/20 focus:border-white focus:outline-none transition shadow-inner">
+              <input type="text" id="homeSearchInput" oninput="filterHomeCards(this.value)" placeholder="搜索功能 (如: 发货单, 账单, Word, 格式刷, 列宽, 字帖, 五线谱...)" class="w-full bg-white/15 focus:bg-white text-white focus:text-slate-900 placeholder-indigo-200 focus:placeholder-slate-400 rounded-xl pl-9 pr-3 py-2 text-xs font-medium border border-white/20 focus:border-white focus:outline-none transition shadow-inner">
             </div>
           </div>
         </div>
@@ -1433,8 +1488,18 @@
           <option value="cornell">📖 康奈尔笔记纸 (经典三栏)</option>
           <option value="cuoti">📝 错题整理本 (题目与订正分析)</option>
           <option value="grid">▦ 方格文稿纸 (20x20 作文纸)</option>
-          <option value="music">🎼 音乐五线谱</option>
-          <option value="guitar">🎸 吉他六线谱 (TAB)</option>
+          <option value="music">🎼 音乐五线谱 (全页铺满)</option>
+          <option value="guitar">🎸 吉他六线谱 TAB (全页铺满)</option>
+        </select>
+      </div>
+
+      <!-- Paper Size Selector (A4, A3, A5) -->
+      <div class="space-y-1">
+        <label class="text-[11px] font-bold text-slate-500">2. 纸张规格尺寸 (A3 / A4 / A5)</label>
+        <select id="tplPaperSizeSelect" onchange="renderPaperTemplateCanvas()" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-bold">
+          <option value="a4" selected>📄 A4 标准规格 (210 × 297 mm · 最常用)</option>
+          <option value="a3">📰 A3 大幅面规格 (297 × 420 mm · 试卷/大字帖)</option>
+          <option value="a5">📑 A5 便携小本规格 (148 × 210 mm · 记事练字)</option>
         </select>
       </div>
 
@@ -1445,6 +1510,37 @@
             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>✍️ 字帖描红临摹水印</span>
           </label>
           <input type="checkbox" id="tplTraceEnabled" checked onchange="renderPaperTemplateCanvas()" class="rounded text-teal-600">
+        </div>
+
+        <!-- Master & System Fonts Selector -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-[10px] text-slate-400 font-bold">临摹字体 (大师名家 / 系统字体)：</span>
+            <button onclick="loadPcLocalFontsForTemplates()" class="text-[10px] text-indigo-600 hover:underline">🔍 读取本机</button>
+          </div>
+          <select id="tplFontSelect" onchange="renderPaperTemplateCanvas()" class="w-full p-1.5 border rounded-lg text-xs bg-white dark:bg-slate-900 font-medium">
+            <optgroup label="👑 经典书法名家大师字体 (手机/PC全适配)">
+              <option value='"KaiTi", "STKaiti", "楷体", serif' selected>👑 规范正楷 (教育部字帖楷体)</option>
+              <option value='"WangXizhi", "Xingkai", "STXingkai", "华文行楷", "KaiTi", cursive'>👑 王羲之《兰亭序》行楷书风</option>
+              <option value='"YanZhenqing", "STKaiti", "楷体", "DFKai-SB", serif'>👑 颜真卿《多宝塔碑》楷书风</option>
+              <option value='"LiuGongquan", "SimSun", "STSong", "Songti SC", serif'>👑 柳公权《玄秘塔碑》柳体风</option>
+              <option value='"OuyangXun", "STKaiti", "KaiTi", serif'>👑 欧阳询《九成宫醴泉铭》欧体风</option>
+              <option value='"ZhaoMengfu", "STXingkai", "KaiTi", cursive'>👑 赵孟頫《胆巴碑》赵体行书</option>
+              <option value='"Shoujin", "FZShouJinTi-S10S", "STKaiti", serif'>👑 宋徽宗《千字文》瘦金体风</option>
+              <option value='"Segoe Script", "Brush Script MT", "Caveat", "Dancing Script", cursive'>👑 衡水中学高考英语手写斜体</option>
+              <option value='"YouYuan", "Yuanti SC", "幼圆", sans-serif'>👑 幼圆可爱卡通书写体</option>
+            </optgroup>
+            <optgroup label="🖥️ PC 本机电脑系统常用字体" id="tplLocalFontsGroup">
+              <option value='"Microsoft YaHei", "微软雅黑", sans-serif'>微软雅黑 (Microsoft YaHei)</option>
+              <option value='"SimSun", "宋体", serif'>宋体 (SimSun)</option>
+              <option value='"SimHei", "黑体", sans-serif'>黑体 (SimHei)</option>
+              <option value='"FangSong", "仿宋", serif'>仿宋 (FangSong)</option>
+              <option value='Arial, sans-serif'>Arial (英文规范)</option>
+              <option value='"Times New Roman", serif'>Times New Roman (衬线)</option>
+              <option value='"Segoe UI", sans-serif'>Segoe UI (现代界面)</option>
+              <option value='Georgia, serif'>Georgia (典雅英文)</option>
+            </optgroup>
+          </select>
         </div>
         
         <div>
@@ -1486,7 +1582,7 @@
       </div>
 
       <div class="space-y-1">
-        <label class="text-[11px] font-bold text-slate-500">2. 作业纸网格线条颜色</label>
+        <label class="text-[11px] font-bold text-slate-500">3. 作业纸网格线条颜色</label>
         <select id="tplGridColor" onchange="renderPaperTemplateCanvas()" class="w-full p-1.5 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-medium">
           <option value="#dc2626">🔴 经典朱砂红 (书法描红)</option>
           <option value="#16a34a">🟢 墨绿护眼色 (护眼作业)</option>
@@ -3267,11 +3363,9 @@
       try {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('l', 'mm', 'a4');
-        // If current ppt slides exist or converting state
         if (state.pptSlides && state.pptSlides.length) {
           state.pptSlides.forEach((s, idx) => {
             if (idx > 0) pdf.addPage();
-            // Header / background
             pdf.setFillColor(245, 247, 250);
             pdf.rect(0, 0, 297, 210, 'F');
             pdf.setFontSize(22);
@@ -3463,7 +3557,7 @@
       }
     }
 
-    /* Template & Calligraphy Tracing Canvas Studio (300 DPI A4) */
+    /* Template & Calligraphy Tracing Canvas Studio */
     function setTplPresetText(preset) {
       const el = document.getElementById('tplTraceText');
       if (!el) return;
@@ -3483,7 +3577,15 @@
     function renderPaperTemplateCanvas() {
       const cvs = document.getElementById('templatePaperCanvas'); if (!cvs) return;
       const c = cvs.getContext('2d');
-      const w = 2480, h = 3508;
+      
+      // Dynamic Paper Size: A3, A4, A5
+      const paperSize = document.getElementById('tplPaperSizeSelect')?.value || 'a4';
+      let w = 2480, h = 3508;
+      if (paperSize === 'a3') {
+        w = 3508; h = 4960;
+      } else if (paperSize === 'a5') {
+        w = 1748; h = 2480;
+      }
       cvs.width = w; cvs.height = h;
 
       // 1. Clear Canvas Background
@@ -3498,18 +3600,19 @@
       const traceStyle = document.getElementById('tplTraceStyle')?.value || 'red';
       const traceOpacity = parseFloat(document.getElementById('tplTraceOpacity')?.value || '0.45');
       const repeatFill = document.getElementById('tplRepeatFill')?.checked ?? true;
+      const selectedFont = document.getElementById('tplFontSelect')?.value || '"KaiTi", "STKaiti", "楷体", serif';
 
       // 3. Draw Header
       c.fillStyle = gridColor;
-      c.font = 'bold 36px "KaiTi", "STKaiti", "楷体", serif';
+      c.font = `bold ${Math.round(w * 0.015)}px ${selectedFont}`;
       c.textAlign = 'left';
-      c.fillText('姓名：__________    班级：__________    日期：__________    成绩：__________', 160, 140);
+      c.fillText('姓名：__________    班级：__________    日期：__________    成绩：__________', Math.round(w * 0.06), Math.round(h * 0.04));
 
       c.lineWidth = 1.5;
       c.strokeStyle = gridColor;
       c.beginPath();
-      c.moveTo(160, 165);
-      c.lineTo(w - 160, 165);
+      c.moveTo(Math.round(w * 0.06), Math.round(h * 0.048));
+      c.lineTo(w - Math.round(w * 0.06), Math.round(h * 0.048));
       c.stroke();
 
       // Tracing Text Char Cursor
@@ -3525,12 +3628,12 @@
         return '';
       }
 
-      function drawCharWatermark(char, cx, cy, size, fontName) {
+      function drawCharWatermark(char, cx, cy, size, fontOverride) {
         if (!traceEnabled || !char) return;
         c.save();
         c.textAlign = 'center';
         c.textBaseline = 'middle';
-        c.font = `bold ${size}px ${fontName || '"KaiTi", "STKaiti", "楷体", serif'}`;
+        c.font = `bold ${size}px ${fontOverride || selectedFont}`;
 
         if (traceStyle === 'outline') {
           c.strokeStyle = gridColor === '#16a34a' ? `rgba(22, 163, 74, ${Math.min(1, traceOpacity + 0.3)})` : `rgba(220, 38, 38, ${Math.min(1, traceOpacity + 0.3)})`;
@@ -3540,7 +3643,7 @@
           c.fillStyle = `rgba(71, 85, 105, ${traceOpacity})`;
           c.fillText(char, cx, cy);
         } else {
-          // Default Red
+          // Default Red / Accent
           if (gridColor === '#16a34a') {
             c.fillStyle = `rgba(22, 163, 74, ${traceOpacity})`;
           } else if (gridColor === '#0284c7') {
@@ -3555,17 +3658,17 @@
         c.restore();
       }
 
-      // 4. Render Specific Template Layout
+      // Render 12+ Template Types
       if (tplType === 'tianzi') {
-        // 🀄 拼音田字格 (Pinyin 4 lines top + Tianzige bottom)
-        const marginX = 140, startY = 220;
-        const cell = 180, pinyinH = 65, rowGap = 35;
-        const cols = Math.floor((w - marginX * 2) / cell);
-        const rowH = pinyinH + cell + rowGap;
-        const rows = Math.floor((h - startY - 120) / rowH);
+        const marginX = Math.round(w * 0.06), startY = Math.round(h * 0.065);
+        const cell = Math.round((w - marginX * 2) / 8);
+        const pinyinH = Math.round(cell * 0.35);
+        const totalRowH = pinyinH + cell + Math.round(w * 0.012);
+        const cols = 8;
+        const rows = Math.floor((h - startY - 120) / totalRowH);
 
         for (let r = 0; r < rows; r++) {
-          const yPinyin = startY + r * rowH;
+          const yPinyin = startY + r * totalRowH;
           const yCell = yPinyin + pinyinH;
 
           for (let col = 0; col < cols; col++) {
