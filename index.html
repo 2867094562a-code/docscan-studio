@@ -862,17 +862,25 @@
         </div>
 
         <div class="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 overflow-auto">
-          <div id="pptSlideCanvas" class="w-full max-w-[880px] aspect-video bg-white dark:bg-slate-900 shadow-2xl rounded-xl p-6 sm:p-12 border border-slate-200 dark:border-slate-800 flex flex-col justify-between relative transition-all duration-200 overflow-hidden">
-            <div id="pptSlideContentWrapper" class="flex-1 flex flex-col justify-between overflow-y-auto">
+          <!-- PPT Canvas with Relative Layer for Media Elements -->
+          <div id="pptSlideCanvas" class="w-full max-w-[880px] aspect-video bg-white dark:bg-slate-900 shadow-2xl rounded-xl p-6 sm:p-12 border border-slate-200 dark:border-slate-800 flex flex-col justify-between relative transition-all duration-200 overflow-hidden select-none">
+            
+            <!-- Background Dark Overlay for text legibility if needed -->
+            <div id="pptSlideBgOverlay" class="absolute inset-0 pointer-events-none transition-all z-0 bg-transparent"></div>
+
+            <div id="pptSlideContentWrapper" class="flex-1 flex flex-col justify-between z-10 pointer-events-auto">
               <div>
                 <input type="text" id="pptSlideTitle" value="2026年度业务发展规划汇报" oninput="saveCurrentSlideData()" class="w-full text-lg sm:text-3xl font-extrabold bg-transparent border-b border-transparent hover:border-slate-300 focus:border-indigo-500 focus:outline-none pb-2 text-slate-800 dark:text-slate-100 transition">
                 <div id="pptCustomBodyArea" class="mt-3">
                   <textarea id="pptSlideBody" oninput="saveCurrentSlideData()" rows="4" class="w-full text-xs sm:text-base bg-transparent border-none focus:outline-none resize-none text-slate-600 dark:text-slate-300 leading-relaxed font-sans"></textarea>
                 </div>
-                <div id="pptMediaElementsList" class="mt-3 space-y-2"></div>
               </div>
             </div>
-            <div class="flex justify-between items-center text-[10px] text-slate-400 border-t border-slate-200/40 pt-2 shrink-0">
+
+            <!-- Absolute Draggable Media Layer -->
+            <div id="pptMediaElementsLayer" class="absolute inset-0 pointer-events-none z-20 overflow-hidden"></div>
+
+            <div class="flex justify-between items-center text-[10px] text-slate-400 border-t border-slate-200/40 pt-2 shrink-0 z-10">
               <span class="font-semibold text-indigo-600">Office Master Studio · Slides</span>
               <span id="pptSlidePageNum" class="font-mono">Slide 1 / 1</span>
             </div>
@@ -880,18 +888,124 @@
         </div>
       </div>
 
-      <!-- PPT Background Setting Modal -->
+      <!-- PPT Custom Background Setting Modal (全面自定义背景) -->
       <div id="pptBgModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closePptBgModal()">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-5 space-y-3 shadow-2xl border border-slate-200 text-xs" onclick="event.stopPropagation()">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
           <div class="flex items-center justify-between border-b pb-2">
-            <h3 class="text-sm font-bold flex items-center space-x-1.5"><i data-lucide="palette" class="w-4 h-4 text-purple-600"></i><span>自定义幻灯片背景</span></h3>
-            <button onclick="closePptBgModal()" class="p-1 text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button>
+            <h3 class="text-sm font-bold flex items-center space-x-1.5 text-purple-600"><i data-lucide="palette" class="w-4 h-4"></i><span>自定义幻灯片背景 (全面支持自定义)</span></h3>
+            <button onclick="closePptBgModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
           </div>
-          <div class="grid grid-cols-3 gap-2">
-            <button onclick="setPptSlideBg('color', '#ffffff')" class="p-2 bg-white text-slate-800 border rounded font-medium">纯白</button>
-            <button onclick="setPptSlideBg('color', '#0f172a')" class="p-2 bg-slate-900 text-white rounded font-medium">深黑</button>
-            <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #0f172a, #1e1b4b, #312e81)')" class="p-2 rounded text-white font-medium" style="background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81);">科技深蓝</button>
+
+          <!-- Tab 1: Custom Image / GIF Background -->
+          <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border space-y-2.5">
+            <span class="font-bold text-slate-700 dark:text-slate-200 flex items-center space-x-1"><i data-lucide="image" class="w-3.5 h-3.5 text-blue-500"></i><span>1. 上传自定义本地图片/GIF动图背景</span></span>
+            <div class="flex items-center space-x-2">
+              <input type="file" id="inputPptCustomBgImage" accept="image/*" class="hidden" onchange="handlePptCustomBgUpload(event)">
+              <button onclick="document.getElementById('inputPptCustomBgImage').click()" class="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold flex items-center justify-center space-x-1.5 shadow-sm"><i data-lucide="upload" class="w-3.5 h-3.5"></i><span>选择本地图片 / 动态 GIF 作为背景</span></button>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-500">
+              <div class="flex items-center space-x-1">
+                <span>铺满方式:</span>
+                <select id="pptBgSizeSelect" onchange="updatePptBgStyle()" class="p-1 border rounded bg-white dark:bg-slate-900 text-xs">
+                  <option value="cover">等比居中填满 (Cover)</option>
+                  <option value="contain">等比完整显示 (Contain)</option>
+                  <option value="100% 100%">拉伸填满 (Stretch)</option>
+                </select>
+              </div>
+              <div class="flex items-center space-x-1">
+                <span>暗色遮罩:</span>
+                <input type="range" id="pptBgOverlayRange" min="0" max="80" value="0" oninput="updatePptBgOverlay(this.value)" class="w-20">
+              </div>
+            </div>
           </div>
+
+          <!-- Tab 2: Custom Solid Color Picker -->
+          <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border space-y-2.5">
+            <span class="font-bold text-slate-700 dark:text-slate-200 flex items-center space-x-1"><i data-lucide="pipette" class="w-3.5 h-3.5 text-emerald-500"></i><span>2. 任意自定义纯色拾色器</span></span>
+            <div class="flex items-center space-x-3">
+              <input type="color" id="pptCustomColorPicker" value="#ffffff" oninput="applyPptCustomSolidColor(this.value)" class="w-10 h-8 rounded cursor-pointer border">
+              <input type="text" id="pptCustomColorHex" value="#ffffff" onchange="applyPptCustomSolidColor(this.value)" class="w-24 p-1.5 border rounded-lg font-mono text-xs text-center bg-white dark:bg-slate-900">
+              
+              <!-- Quick Color Palette -->
+              <div class="flex items-center space-x-1.5 flex-1 justify-end">
+                <button onclick="applyPptCustomSolidColor('#ffffff')" class="w-5 h-5 rounded-full bg-white border shadow-sm" title="纯白"></button>
+                <button onclick="applyPptCustomSolidColor('#0f172a')" class="w-5 h-5 rounded-full bg-slate-900 border border-slate-700 shadow-sm" title="深邃黑"></button>
+                <button onclick="applyPptCustomSolidColor('#1e1b4b')" class="w-5 h-5 rounded-full bg-indigo-950 border shadow-sm" title="商务深蓝"></button>
+                <button onclick="applyPptCustomSolidColor('#f8fafc')" class="w-5 h-5 rounded-full bg-slate-100 border shadow-sm" title="浅灰白"></button>
+                <button onclick="applyPptCustomSolidColor('#022c22')" class="w-5 h-5 rounded-full bg-emerald-950 border shadow-sm" title="墨绿"></button>
+                <button onclick="applyPptCustomSolidColor('#3b0764')" class="w-5 h-5 rounded-full bg-purple-950 border shadow-sm" title="贵族紫"></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Custom Gradient Maker -->
+          <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border space-y-2.5">
+            <span class="font-bold text-slate-700 dark:text-slate-200 flex items-center space-x-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-purple-500"></i><span>3. 自定义炫彩渐变背景</span></span>
+            <div class="flex items-center space-x-2">
+              <span class="text-slate-400">起始色:</span>
+              <input type="color" id="pptGradCol1" value="#0f172a" oninput="applyPptCustomGradient()" class="w-7 h-7 rounded border">
+              <span class="text-slate-400">终止色:</span>
+              <input type="color" id="pptGradCol2" value="#312e81" oninput="applyPptCustomGradient()" class="w-7 h-7 rounded border">
+              <span class="text-slate-400">角度:</span>
+              <select id="pptGradAngle" onchange="applyPptCustomGradient()" class="p-1 border rounded text-xs bg-white dark:bg-slate-900">
+                <option value="135deg">135° 对角</option>
+                <option value="90deg">90° 垂直</option>
+                <option value="180deg">180° 水平</option>
+                <option value="45deg">45° 仰角</option>
+              </select>
+            </div>
+            
+            <!-- Curated Gradients -->
+            <div class="grid grid-cols-4 gap-1.5 pt-1">
+              <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #0f172a, #1e1b4b, #312e81)')" class="p-1.5 rounded-lg text-white font-bold text-[10px] truncate" style="background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81);">科技深蓝</button>
+              <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #1e293b, #0f766e)')" class="p-1.5 rounded-lg text-white font-bold text-[10px] truncate" style="background: linear-gradient(135deg, #1e293b, #0f766e);">极光碧青</button>
+              <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #311042, #701a75)')" class="p-1.5 rounded-lg text-white font-bold text-[10px] truncate" style="background: linear-gradient(135deg, #311042, #701a75);">暮色紫霞</button>
+              <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #431407, #7c2d12)')" class="p-1.5 rounded-lg text-white font-bold text-[10px] truncate" style="background: linear-gradient(135deg, #431407, #7c2d12);">经典商务金棕</button>
+            </div>
+          </div>
+
+          <!-- Bottom Actions -->
+          <div class="flex items-center justify-between pt-2 border-t">
+            <label class="flex items-center space-x-1.5 text-xs text-slate-600 dark:text-slate-300 font-bold cursor-pointer select-none">
+              <input type="checkbox" id="pptApplyBgToAll" class="rounded text-purple-600">
+              <span>同时应用到全部幻灯片</span>
+            </label>
+            <button onclick="closePptBgModal()" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold shadow">完成设置</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PPT Media Element Floating Customizer Toolbar -->
+      <div id="pptMediaToolbar" class="fixed z-40 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-1.5 text-xs text-slate-700 dark:text-slate-200 hidden items-center space-x-1.5 divide-x divide-slate-100 dark:divide-slate-800 backdrop-blur-md">
+        <!-- Width Controls -->
+        <div class="flex items-center space-x-1 px-1">
+          <span class="text-[10px] font-bold text-slate-400">尺寸:</span>
+          <button onclick="adjustSelectedMediaWidth(-30)" class="w-5 h-5 rounded hover:bg-slate-100 flex items-center justify-center font-bold text-xs">-</button>
+          <span id="pptMediaWidthLabel" class="font-mono text-[11px] font-bold text-indigo-600 w-12 text-center">260px</span>
+          <button onclick="adjustSelectedMediaWidth(30)" class="w-5 h-5 rounded hover:bg-slate-100 flex items-center justify-center font-bold text-xs">+</button>
+        </div>
+
+        <!-- Border Radius -->
+        <div class="flex items-center space-x-1 px-1.5">
+          <span class="text-[10px] font-bold text-slate-400">圆角:</span>
+          <button onclick="setSelectedMediaRadius(0)" class="px-1.5 py-0.5 rounded text-[10px] hover:bg-slate-100">0</button>
+          <button onclick="setSelectedMediaRadius(12)" class="px-1.5 py-0.5 rounded text-[10px] hover:bg-slate-100 font-bold text-indigo-600">圆角</button>
+          <button onclick="setSelectedMediaRadius(999)" class="px-1.5 py-0.5 rounded text-[10px] hover:bg-slate-100">胶囊</button>
+        </div>
+
+        <!-- Shadow / Border -->
+        <div class="flex items-center space-x-1 px-1.5">
+          <button onclick="toggleSelectedMediaShadow()" class="p-1 rounded hover:bg-indigo-50 text-[11px] font-medium" title="切换阴影效果">阴影</button>
+          <button onclick="toggleSelectedMediaBorder()" class="p-1 rounded hover:bg-indigo-50 text-[11px] font-medium" title="切换精美边框">边框</button>
+        </div>
+
+        <!-- Media Specific Video/Audio controls -->
+        <div id="pptMediaSpecificActions" class="flex items-center space-x-1 px-1.5"></div>
+
+        <!-- Layer / Delete -->
+        <div class="flex items-center space-x-1 pl-1.5">
+          <button onclick="bringSelectedMediaToFront()" class="p-1 rounded hover:bg-slate-100" title="置于顶层"><i data-lucide="arrow-up-to-line" class="w-3.5 h-3.5"></i></button>
+          <button onclick="deleteSelectedMediaElement()" class="p-1 rounded hover:bg-red-50 text-red-500 font-bold" title="删除此元素"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
         </div>
       </div>
     </div>
@@ -2265,56 +2379,378 @@
       applySlideBackgroundToCanvas(s);
       renderPptSlideMediaElements(s);
     }
-    function applySlideBackgroundToCanvas(s) {
-      const c = document.getElementById('pptSlideCanvas'); if (!c) return;
-      if (s.bgType === 'gradient') c.style.background = s.bgValue;
-      else if (s.bgType === 'color') c.style.backgroundColor = s.bgValue;
-    }
+
+    /* PPT Custom Background System */
     function openPptBgModal() { document.getElementById('pptBgModal').classList.remove('hidden'); }
     function closePptBgModal() { document.getElementById('pptBgModal').classList.add('hidden'); }
-    function setPptSlideBg(type, val) {
-      const s = state.pptSlides[state.currentSlideIdx]; if (!s) return;
-      s.bgType = type; s.bgValue = val; applySlideBackgroundToCanvas(s); showToast('背景已更新');
+
+    function applySlideBackgroundToCanvas(s) {
+      const c = document.getElementById('pptSlideCanvas'); if (!c) return;
+      const overlay = document.getElementById('pptSlideBgOverlay');
+      if (s.bgType === 'image') {
+        c.style.backgroundColor = 'transparent';
+        c.style.backgroundImage = `url("${s.bgValue}")`;
+        c.style.backgroundSize = s.bgSize || 'cover';
+        c.style.backgroundPosition = 'center';
+        c.style.backgroundRepeat = 'no-repeat';
+      } else if (s.bgType === 'gradient') {
+        c.style.backgroundImage = s.bgValue;
+        c.style.backgroundColor = 'transparent';
+      } else {
+        c.style.backgroundImage = 'none';
+        c.style.backgroundColor = s.bgValue || '#ffffff';
+      }
+      if (overlay) {
+        const opacity = (s.bgOverlay || 0) / 100;
+        overlay.style.backgroundColor = `rgba(0, 0, 0, ${opacity})`;
+      }
     }
+
+    function setPptSlideBg(type, val, extra = {}) {
+      const applyAll = document.getElementById('pptApplyBgToAll')?.checked;
+      const targets = applyAll ? state.pptSlides : [state.pptSlides[state.currentSlideIdx]];
+      targets.forEach(s => {
+        if (!s) return;
+        s.bgType = type;
+        s.bgValue = val;
+        if (extra.size) s.bgSize = extra.size;
+        if (extra.overlay !== undefined) s.bgOverlay = extra.overlay;
+      });
+      applySlideBackgroundToCanvas(state.pptSlides[state.currentSlideIdx]);
+      showToast(applyAll ? '背景已应用到全部幻灯片！' : '幻灯片背景已更新！');
+    }
+
+    function handlePptCustomBgUpload(e) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      const rd = new FileReader();
+      rd.onload = ev => {
+        const size = document.getElementById('pptBgSizeSelect')?.value || 'cover';
+        const overlay = parseInt(document.getElementById('pptBgOverlayRange')?.value || '0');
+        setPptSlideBg('image', ev.target.result, { size, overlay });
+      };
+      rd.readAsDataURL(file);
+    }
+
+    function updatePptBgStyle() {
+      const s = state.pptSlides[state.currentSlideIdx]; if (!s || s.bgType !== 'image') return;
+      s.bgSize = document.getElementById('pptBgSizeSelect').value;
+      applySlideBackgroundToCanvas(s);
+    }
+
+    function updatePptBgOverlay(val) {
+      const s = state.pptSlides[state.currentSlideIdx]; if (!s) return;
+      s.bgOverlay = parseInt(val);
+      applySlideBackgroundToCanvas(s);
+    }
+
+    function applyPptCustomSolidColor(hex) {
+      document.getElementById('pptCustomColorHex').value = hex;
+      document.getElementById('pptCustomColorPicker').value = hex;
+      setPptSlideBg('color', hex);
+    }
+
+    function applyPptCustomGradient() {
+      const c1 = document.getElementById('pptGradCol1').value;
+      const c2 = document.getElementById('pptGradCol2').value;
+      const angle = document.getElementById('pptGradAngle').value;
+      const grad = `linear-gradient(${angle}, ${c1}, ${c2})`;
+      setPptSlideBg('gradient', grad);
+    }
+
+    /* PPT Interactive & Customizable Media System */
+    let selectedMediaId = null;
+
     function handlePptInsertImage(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       const rd = new FileReader();
       rd.onload = ev => {
         const s = state.pptSlides[state.currentSlideIdx]; if (!s.media) s.media = [];
-        s.media.push({ id: Date.now(), type: 'image', name: file.name, src: ev.target.result });
-        renderPptSlidesList(); showToast('图片已插入幻灯片');
+        const newItem = {
+          id: 'm_' + Date.now(),
+          type: 'image',
+          name: file.name,
+          src: ev.target.result,
+          x: 120 + (s.media.length * 20),
+          y: 80 + (s.media.length * 20),
+          width: 280,
+          borderRadius: 8,
+          shadow: true,
+          border: false,
+          zIndex: 10 + s.media.length
+        };
+        s.media.push(newItem);
+        renderPptSlideMediaElements(s);
+        selectMediaElement(newItem.id);
+        showToast('图片已插入，可自由拖拽移动与调节尺寸！');
       };
       rd.readAsDataURL(file);
     }
+
     function handlePptInsertVideo(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       const rd = new FileReader();
       rd.onload = ev => {
         const s = state.pptSlides[state.currentSlideIdx]; if (!s.media) s.media = [];
-        s.media.push({ id: Date.now(), type: 'video', name: file.name, src: ev.target.result });
-        renderPptSlidesList(); showToast('视频已插入幻灯片');
+        const newItem = {
+          id: 'm_' + Date.now(),
+          type: 'video',
+          name: file.name,
+          src: ev.target.result,
+          x: 140,
+          y: 90,
+          width: 320,
+          borderRadius: 12,
+          shadow: true,
+          border: false,
+          zIndex: 10 + s.media.length,
+          autoplay: false,
+          loop: true,
+          muted: false
+        };
+        s.media.push(newItem);
+        renderPptSlideMediaElements(s);
+        selectMediaElement(newItem.id);
+        showToast('视频已插入，支持拖拽移动与播放控制自定义！');
       };
       rd.readAsDataURL(file);
     }
+
     function handlePptInsertAudio(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       const rd = new FileReader();
       rd.onload = ev => {
         const s = state.pptSlides[state.currentSlideIdx]; if (!s.media) s.media = [];
-        s.media.push({ id: Date.now(), type: 'audio', name: file.name, src: ev.target.result });
-        renderPptSlidesList(); showToast('音频已插入幻灯片');
+        const newItem = {
+          id: 'm_' + Date.now(),
+          type: 'audio',
+          name: file.name,
+          src: ev.target.result,
+          x: 100,
+          y: 160,
+          width: 260,
+          borderRadius: 999,
+          shadow: true,
+          border: true,
+          zIndex: 10 + s.media.length,
+          loop: true,
+          volume: 1.0
+        };
+        s.media.push(newItem);
+        renderPptSlideMediaElements(s);
+        selectMediaElement(newItem.id);
+        showToast('音频已插入，支持拖拽定位与背景循环播放！');
       };
       rd.readAsDataURL(file);
     }
+
     function renderPptSlideMediaElements(s) {
-      const container = document.getElementById('pptMediaElementsList'); if (!container) return;
-      if (!s.media || !s.media.length) { container.innerHTML = ''; return; }
-      container.innerHTML = s.media.map(m => {
-        if (m.type === 'image') return `<div class="p-1 border rounded inline-block"><img src="${m.src}" class="max-h-36 object-contain rounded"/></div>`;
-        if (m.type === 'video') return `<video controls src="${m.src}" class="max-h-40 rounded bg-black"></video>`;
-        if (m.type === 'audio') return `<audio controls src="${m.src}" class="w-full"></audio>`;
+      const layer = document.getElementById('pptMediaElementsLayer'); if (!layer) return;
+      if (!s.media || !s.media.length) { layer.innerHTML = ''; hidePptMediaToolbar(); return; }
+      
+      layer.innerHTML = s.media.map(m => {
+        const isSel = m.id === selectedMediaId;
+        const shadowCls = m.shadow ? 'shadow-2xl' : 'shadow-none';
+        const borderCls = m.border ? 'border-2 border-indigo-400 dark:border-indigo-500' : 'border border-slate-200/50 dark:border-slate-700/50';
+        const selBorderCls = isSel ? 'ring-2 ring-indigo-500 ring-offset-2 ring-offset-white dark:ring-offset-slate-900' : '';
+        
+        let innerMedia = '';
+        if (m.type === 'image') {
+          innerMedia = `<img src="${m.src}" class="w-full h-auto pointer-events-none select-none block" style="border-radius:${m.borderRadius}px;" />`;
+        } else if (m.type === 'video') {
+          innerMedia = `
+            <video controls ${m.loop?'loop':''} ${m.muted?'muted':''} ${m.autoplay?'autoplay':''} src="${m.src}" class="w-full h-auto block bg-black" style="border-radius:${m.borderRadius}px;"></video>
+          `;
+        } else if (m.type === 'audio') {
+          innerMedia = `
+            <div class="p-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white flex items-center space-x-2 shadow-lg" style="border-radius:${m.borderRadius}px;">
+              <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center animate-pulse"><i data-lucide="disc" class="w-4 h-4 text-white"></i></div>
+              <div class="flex-1 truncate text-xs font-bold">${m.name || '背景音乐.mp3'}</div>
+              <audio controls src="${m.src}" ${m.loop?'loop':''} class="h-6 w-28"></audio>
+            </div>
+          `;
+        }
+
+        return `
+          <div id="${m.id}" 
+               onmousedown="startDragPptMedia(event, '${m.id}')"
+               onclick="selectMediaElement('${m.id}', event)"
+               class="absolute pointer-events-auto cursor-move transition-shadow duration-150 ${shadowCls} ${borderCls} ${selBorderCls} group"
+               style="left:${m.x}px; top:${m.y}px; width:${m.width}px; z-index:${m.zIndex||10}; border-radius:${m.borderRadius}px; background:#ffffff;">
+            ${innerMedia}
+            <div class="absolute -top-2.5 -right-2.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center cursor-pointer shadow-md opacity-0 group-hover:opacity-100 transition" onclick="deleteMediaById('${m.id}', event)" title="删除">×</div>
+          </div>
+        `;
       }).join('');
+      lucide.createIcons();
     }
+
+    /* Dragging Media Logic */
+    let draggingMediaObj = null;
+    function startDragPptMedia(e, id) {
+      if (e.target.tagName.toLowerCase() === 'video' || e.target.tagName.toLowerCase() === 'audio') return;
+      e.stopPropagation();
+      selectMediaElement(id);
+      const s = state.pptSlides[state.currentSlideIdx];
+      const m = s?.media?.find(item => item.id === id);
+      if (!m) return;
+      
+      const startX = e.clientX, startY = e.clientY;
+      const initialLeft = m.x, initialTop = m.y;
+      
+      function onMouseMove(ev) {
+        const dx = ev.clientX - startX, dy = ev.clientY - startY;
+        m.x = Math.max(0, Math.min(600, initialLeft + dx));
+        m.y = Math.max(0, Math.min(380, initialTop + dy));
+        const el = document.getElementById(id);
+        if (el) { el.style.left = m.x + 'px'; el.style.top = m.y + 'px'; }
+        positionMediaToolbar(el);
+      }
+      
+      function onMouseUp() {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      }
+      
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    }
+
+    function selectMediaElement(id, ev) {
+      if (ev) ev.stopPropagation();
+      selectedMediaId = id;
+      const s = state.pptSlides[state.currentSlideIdx];
+      const m = s?.media?.find(item => item.id === id);
+      if (!m) return hidePptMediaToolbar();
+
+      renderPptSlideMediaElements(s);
+      const el = document.getElementById(id);
+      if (el) positionMediaToolbar(el);
+
+      document.getElementById('pptMediaWidthLabel').innerText = m.width + 'px';
+      
+      // Update specific toolbar actions for video/audio
+      const specificArea = document.getElementById('pptMediaSpecificActions');
+      if (m.type === 'video') {
+        specificArea.innerHTML = `
+          <button onclick="toggleVideoLoop()" class="px-1.5 py-0.5 rounded text-[10px] ${m.loop?'bg-indigo-100 text-indigo-700 font-bold':'text-slate-500'}">循环</button>
+          <button onclick="toggleVideoMuted()" class="px-1.5 py-0.5 rounded text-[10px] ${m.muted?'bg-indigo-100 text-indigo-700 font-bold':'text-slate-500'}">静音</button>
+        `;
+      } else if (m.type === 'audio') {
+        specificArea.innerHTML = `
+          <button onclick="toggleAudioLoop()" class="px-1.5 py-0.5 rounded text-[10px] ${m.loop?'bg-indigo-100 text-indigo-700 font-bold':'text-slate-500'}">循环播放</button>
+        `;
+      } else {
+        specificArea.innerHTML = '';
+      }
+    }
+
+    function positionMediaToolbar(el) {
+      const tb = document.getElementById('pptMediaToolbar');
+      if (!tb || !el) return;
+      const rect = el.getBoundingClientRect();
+      tb.style.left = `${Math.max(10, rect.left)}px`;
+      tb.style.top = `${Math.max(60, rect.top - 48)}px`;
+      tb.classList.remove('hidden');
+      tb.classList.add('flex');
+    }
+
+    function hidePptMediaToolbar() {
+      const tb = document.getElementById('pptMediaToolbar');
+      if (tb) { tb.classList.add('hidden'); tb.classList.remove('flex'); }
+    }
+
+    function adjustSelectedMediaWidth(delta) {
+      const s = state.pptSlides[state.currentSlideIdx];
+      const m = s?.media?.find(item => item.id === selectedMediaId);
+      if (!m) return;
+      m.width = Math.max(80, Math.min(750, m.width + delta));
+      renderPptSlideMediaElements(s);
+      selectMediaElement(m.id);
+    }
+
+    function setSelectedMediaRadius(r) {
+      const s = state.pptSlides[state.currentSlideIdx];
+      const m = s?.media?.find(item => item.id === selectedMediaId);
+      if (!m) return;
+      m.borderRadius = r;
+      renderPptSlideMediaElements(s);
+      selectMediaElement(m.id);
+    }
+
+    function toggleSelectedMediaShadow() {
+      const s = state.pptSlides[state.currentSlideIdx];
+      const m = s?.media?.find(item => item.id === selectedMediaId);
+      if (!m) return;
+      m.shadow = !m.shadow;
+      renderPptSlideMediaElements(s);
+      selectMediaElement(m.id);
+    }
+
+    function toggleSelectedMediaBorder() {
+      const s = state.pptSlides[state.currentSlideIdx];
+      const m = s?.media?.find(item => item.id === selectedMediaId);
+      if (!m) return;
+      m.border = !m.border;
+      renderPptSlideMediaElements(s);
+      selectMediaElement(m.id);
+    }
+
+    function toggleVideoLoop() {
+      const s = state.pptSlides[state.currentSlideIdx];
+      const m = s?.media?.find(item => item.id === selectedMediaId);
+      if (!m) return;
+      m.loop = !m.loop;
+      renderPptSlideMediaElements(s);
+      selectMediaElement(m.id);
+      showToast(m.loop ? '已开启视频循环播放' : '已关闭循环播放');
+    }
+
+    function toggleVideoMuted() {
+      const s = state.pptSlides[state.currentSlideIdx];
+      const m = s?.media?.find(item => item.id === selectedMediaId);
+      if (!m) return;
+      m.muted = !m.muted;
+      renderPptSlideMediaElements(s);
+      selectMediaElement(m.id);
+      showToast(m.muted ? '已静音视频' : '已开启视频声音');
+    }
+
+    function toggleAudioLoop() {
+      const s = state.pptSlides[state.currentSlideIdx];
+      const m = s?.media?.find(item => item.id === selectedMediaId);
+      if (!m) return;
+      m.loop = !m.loop;
+      renderPptSlideMediaElements(s);
+      selectMediaElement(m.id);
+      showToast(m.loop ? '已开启音频循环播放' : '已关闭音频循环');
+    }
+
+    function bringSelectedMediaToFront() {
+      const s = state.pptSlides[state.currentSlideIdx];
+      const m = s?.media?.find(item => item.id === selectedMediaId);
+      if (!m) return;
+      const maxZ = Math.max(10, ...s.media.map(item => item.zIndex || 10));
+      m.zIndex = maxZ + 1;
+      renderPptSlideMediaElements(s);
+      selectMediaElement(m.id);
+      showToast('已置于顶层');
+    }
+
+    function deleteSelectedMediaElement() {
+      if (selectedMediaId) deleteMediaById(selectedMediaId);
+    }
+
+    function deleteMediaById(id, ev) {
+      if (ev) ev.stopPropagation();
+      const s = state.pptSlides[state.currentSlideIdx];
+      if (!s || !s.media) return;
+      s.media = s.media.filter(item => item.id !== id);
+      selectedMediaId = null;
+      hidePptMediaToolbar();
+      renderPptSlideMediaElements(s);
+      showToast('已删除此多媒体元素');
+    }
+
     function saveCurrentSlideData() {
       const s = state.pptSlides[state.currentSlideIdx]; if (!s) return;
       s.title = document.getElementById('pptSlideTitle').value;
