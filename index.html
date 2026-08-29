@@ -1508,6 +1508,7 @@
         <label class="text-[11px] font-bold text-slate-500">1. 作业纸与书法格类型</label>
         <select id="tplTypeSelect" onchange="onTplTypeChange(this.value)" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-bold">
           <option value="tianzi">🀄 拼音田字格 (拼音在上+汉字在下)</option>
+          <option value="rizi">🔢 幼小衔接日字格 (阿拉伯数字0~9书写规范格)</option>
           <option value="pure_tianzi">🔲 经典田字格 (汉字规范书写)</option>
           <option value="mizi" selected>✳️ 经典米字格 (书法楷书字帖)</option>
           <option value="huigong">⭕ 回宫格 / 回字格 (间架结构)</option>
@@ -1652,6 +1653,7 @@
           <div class="flex justify-between items-center mb-1">
             <span class="text-[10px] text-slate-400">自定义描红文本：</span>
             <div class="flex space-x-1 text-[10px]">
+              <button onclick="setTplPresetText('数字')" class="text-teal-600 hover:underline font-bold">0~9数字</button>
               <button onclick="setTplPresetText('千字文')" class="text-teal-600 hover:underline">千字文</button>
               <button onclick="setTplPresetText('三字经')" class="text-teal-600 hover:underline">三字经</button>
               <button onclick="setTplPresetText('古诗')" class="text-teal-600 hover:underline">静夜思</button>
@@ -3700,7 +3702,9 @@
     function setTplPresetText(preset) {
       const el = document.getElementById('tplTraceText');
       if (!el) return;
-      if (preset === '千字文') {
+      if (preset === '数字') {
+        el.value = '0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9';
+      } else if (preset === '千字文') {
         el.value = '天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳 云腾致雨 露结为霜 金生丽水 玉出昆冈';
       } else if (preset === '三字经') {
         el.value = '人之初 性本善 性相近 习相远 苟不教 性乃迁 教之道 贵以专 昔孟母 择邻处 子不学 断机杼 窦燕山 有义方';
@@ -3727,6 +3731,7 @@
 
     // Default Recommended Grid Dimensions for Each Template
     function getTplDefaultGrid(tplType, paperSize = 'a4') {
+      if (tplType === 'rizi') return { cols: 12, rows: 14 };
       if (tplType === 'tianzi') return { cols: 8, rows: 10 };
       if (tplType === 'mizi' || tplType === 'pure_tianzi' || tplType === 'huigong' || tplType === 'jiugong') return { cols: 8, rows: 12 };
       if (tplType === 'grid') return { cols: 20, rows: 24 };
@@ -3744,6 +3749,13 @@
       const rowsInp = document.getElementById('tplRowsInput');
       if (colsInp) colsInp.value = def.cols;
       if (rowsInp) rowsInp.value = def.rows;
+
+      if (val === 'rizi') {
+        const textInp = document.getElementById('tplTraceText');
+        if (textInp && (!textInp.value || textInp.value.startsWith('天地玄黄'))) {
+          textInp.value = '0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9';
+        }
+      }
       renderPaperTemplateCanvas();
     }
 
@@ -3770,7 +3782,15 @@
       if (autoLock) {
         const marginX = Math.round(w * 0.06);
         const startY = Math.round(h * 0.065);
-        if (tplType === 'tianzi') {
+        if (tplType === 'rizi') {
+          const colGap = Math.round(w * 0.008);
+          const cellW = (w - marginX * 2 - (cols - 1) * colGap) / cols;
+          const cellH = cellW * 1.35;
+          const rowGap = Math.round(w * 0.01);
+          const recRows = Math.max(1, Math.floor((h - startY - 120 * scale) / (cellH + rowGap)));
+          const rowsInp = document.getElementById('tplRowsInput');
+          if (rowsInp) rowsInp.value = recRows;
+        } else if (tplType === 'tianzi') {
           const cell = (w - marginX * 2) / cols;
           const pinyinH = cell * 0.35;
           const totalRowH = pinyinH + cell + Math.round(w * 0.012);
@@ -3808,7 +3828,15 @@
       if (autoLock) {
         const marginX = Math.round(w * 0.06);
         const startY = Math.round(h * 0.065);
-        if (tplType === 'tianzi') {
+        if (tplType === 'rizi') {
+          const rowGap = Math.round(w * 0.01);
+          const cellH = ((h - startY - 120 * scale) / rows) - rowGap;
+          const cellW = cellH / 1.35;
+          const colGap = Math.round(w * 0.008);
+          const recCols = Math.max(1, Math.floor((w - marginX * 2 + colGap) / (cellW + colGap)));
+          const colsInp = document.getElementById('tplColsInput');
+          if (colsInp) colsInp.value = recCols;
+        } else if (tplType === 'tianzi') {
           const totalRowH = (h - startY - 120 * scale) / rows;
           const cell = (totalRowH - Math.round(w * 0.012)) / 1.35;
           const recCols = Math.max(1, Math.floor((w - marginX * 2) / cell));
@@ -3837,7 +3865,14 @@
       showToast('已恢复为最佳标准推荐行列！');
     }
 
+    // High Performance Rendering with requestAnimationFrame
+    let tplRenderTimer = null;
     function renderPaperTemplateCanvas() {
+      if (tplRenderTimer) cancelAnimationFrame(tplRenderTimer);
+      tplRenderTimer = requestAnimationFrame(renderPaperTemplateCanvasDirect);
+    }
+
+    function renderPaperTemplateCanvasDirect() {
       const cvs = document.getElementById('templatePaperCanvas'); if (!cvs) return;
       const c = cvs.getContext('2d');
       
@@ -3945,10 +3980,47 @@
         c.restore();
       }
 
-      // 5. Render 12+ Template Types with Scaled Borders, Dashes, and Custom Rows/Cols
+      // 5. Render 13+ Template Types with Scaled Borders, Dashes, and Custom Rows/Cols
       const tipsEl = document.getElementById('tplGridSizeTips');
 
-      if (tplType === 'tianzi') {
+      if (tplType === 'rizi') {
+        // 🔢 幼小衔接日字格 (数字规范书写格 0~9，中间水平虚线分割)
+        const cols = customCols;
+        const rows = customRows;
+        const marginX = Math.round(w * 0.06);
+        const startY = Math.round(h * 0.065);
+        const colGap = Math.round(w * 0.008);
+        const rowGap = Math.round(w * 0.01);
+        const cellW = Math.round((w - marginX * 2 - (cols - 1) * colGap) / cols);
+        const cellH = Math.round(cellW * 1.35);
+        if (tipsEl) tipsEl.innerText = `日字格: ${cellW}x${cellH}px · ${cols}列 x ${rows}行 (共 ${cols * rows} 格)`;
+
+        for (let r = 0; r < rows; r++) {
+          const y = startY + r * (cellH + rowGap);
+          if (y + cellH > h - Math.round(40 * scale)) break;
+
+          for (let col = 0; col < cols; col++) {
+            const x = marginX + col * (cellW + colGap);
+
+            // Outer rectangular border (proportional stroke)
+            c.strokeStyle = gridColor;
+            c.lineWidth = Math.max(1.8, Math.round(2.5 * scale));
+            c.strokeRect(x, y, cellW, cellH);
+
+            // Middle horizontal dashed line (divides into upper and lower half)
+            c.lineWidth = Math.max(1.0, Math.round(1.2 * scale));
+            c.setLineDash([Math.round(6 * scale), Math.round(6 * scale)]);
+            c.beginPath();
+            c.moveTo(x, y + cellH / 2);
+            c.lineTo(x + cellW, y + cellH / 2);
+            c.stroke();
+            c.setLineDash([]);
+
+            const char = getNextChar();
+            drawCharWatermark(char, x + cellW / 2, y + cellH / 2 + 2 * scale, Math.round(cellH * 0.72));
+          }
+        }
+      } else if (tplType === 'tianzi') {
         // 🀄 拼音田字格 (拼音在上 + 汉字在下)
         const cols = customCols;
         const rows = customRows;
