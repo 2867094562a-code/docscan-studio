@@ -1101,6 +1101,7 @@
 
       <div class="space-y-1.5 pt-1">
         <button onclick="executePerspectiveWarp()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1"><i data-lucide="check" class="w-3.5 h-3.5"></i><span>执行透视拉直</span></button>
+        <button onclick="runAiImageRecognition()" class="w-full py-2 bg-gradient-to-r from-orange-500 via-amber-500 to-indigo-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="bot" class="w-4 h-4"></i><span>小米 MiMo AI 文字识别</span></button>
         <button onclick="exportScanToPDF()" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1"><i data-lucide="download" class="w-3.5 h-3.5"></i><span>导出为标准 PDF</span></button>
       </div>
     </div>
@@ -1328,19 +1329,84 @@
     </div>
   </div>
 
-  <!-- AI Settings Modal -->
-  <div id="aiSettingsModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-5 space-y-3 shadow-2xl border border-slate-200">
-      <div class="flex items-center justify-between">
-        <h3 class="text-sm font-bold flex items-center space-x-1.5"><i data-lucide="bot" class="w-4 h-4 text-purple-500"></i><span>配置 AI 视觉与语言模型</span></h3>
-        <button onclick="closeAISettingsModal()" class="p-1 text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button>
+  <!-- AI Settings Modal (支持小米 MiMo / OpenAI / DeepSeek 等主流大模型) -->
+  <div id="aiSettingsModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeAISettingsModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-lg w-full p-5 space-y-3.5 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="text-sm font-bold flex items-center space-x-1.5 text-purple-600">
+          <i data-lucide="bot" class="w-4 h-4"></i><span>配置 AI 大模型 (已支持小米 MiMo)</span>
+        </h3>
+        <button onclick="closeAISettingsModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
-      <input type="text" id="aiBaseUrl" value="https://api.openai.com/v1" placeholder="API Base URL" class="w-full text-xs p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-950 font-mono">
-      <input type="password" id="aiApiKey" placeholder="API Key (sk-...)" class="w-full text-xs p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-950 font-mono">
-      <input type="text" id="aiModelName" value="gpt-4o" placeholder="Model Name" class="w-full text-xs p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-950 font-mono">
-      <div class="flex justify-end space-x-2 pt-2">
-        <button onclick="closeAISettingsModal()" class="px-3 py-1.5 text-xs text-slate-500">取消</button>
-        <button onclick="saveAISettings()" class="px-4 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow">保存配置</button>
+
+      <!-- Provider Preset Selector -->
+      <div class="space-y-1">
+        <label class="font-bold text-slate-700 dark:text-slate-200 flex items-center justify-between">
+          <span>大模型服务商预设 (一键填入)</span>
+          <span class="text-[10px] text-orange-600 font-bold">★ 推荐小米 MiMo / DeepSeek</span>
+        </label>
+        <select id="aiProviderPreset" onchange="applyAIProviderPreset(this.value)" class="w-full p-2 border rounded-xl bg-slate-50 dark:bg-slate-800 font-bold text-xs text-slate-800 dark:text-slate-100">
+          <option value="xiaomi">🟠 小米大模型 (Xiaomi MiMo / MiLM 开放平台)</option>
+          <option value="deepseek">🔵 DeepSeek 深度求索 (DeepSeek-V3 / R1)</option>
+          <option value="openai">🟣 OpenAI (GPT-4o / GPT-4o-mini)</option>
+          <option value="zhipu">🟢 智谱清言 (GLM-4V 视觉大模型)</option>
+          <option value="qwen">🟡 阿里通义千问 (Qwen-VL-Max)</option>
+          <option value="custom">🔘 自定义兼容 OpenAI 协议接口 (Local / Proxy)</option>
+        </select>
+      </div>
+
+      <!-- Model Quick Selection Chips -->
+      <div class="space-y-1" id="aiModelChipsContainer">
+        <label class="text-[11px] font-semibold text-slate-500">小米 MiMo 常用模型快捷选择：</label>
+        <div class="flex flex-wrap gap-1.5">
+          <button type="button" onclick="setAiModelNameInput('mimo-chat')" class="px-2 py-0.5 rounded-lg border bg-orange-50 text-orange-700 text-[11px] font-bold">mimo-chat</button>
+          <button type="button" onclick="setAiModelNameInput('mimo-vision')" class="px-2 py-0.5 rounded-lg border bg-orange-50 text-orange-700 text-[11px] font-bold">mimo-vision (视觉OCR)</button>
+          <button type="button" onclick="setAiModelNameInput('mimo-pro')" class="px-2 py-0.5 rounded-lg border bg-orange-50 text-orange-700 text-[11px] font-bold">mimo-pro</button>
+          <button type="button" onclick="setAiModelNameInput('milm-70b-chat')" class="px-2 py-0.5 rounded-lg border bg-orange-50 text-orange-700 text-[11px] font-bold">milm-70b-chat</button>
+        </div>
+      </div>
+
+      <!-- Base URL & Key -->
+      <div class="space-y-2">
+        <div>
+          <label class="text-[11px] font-bold text-slate-500">API 接口地址 (Base URL)</label>
+          <input type="text" id="aiBaseUrl" value="https://api.xiaomi.com/v1" placeholder="https://api.xiaomi.com/v1" class="w-full text-xs p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-950 font-mono mt-0.5">
+        </div>
+        <div>
+          <label class="text-[11px] font-bold text-slate-500">API 密钥 (API Key / Token)</label>
+          <input type="password" id="aiApiKey" placeholder="输入对应服务商 API Key..." class="w-full text-xs p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-950 font-mono mt-0.5">
+        </div>
+        <div>
+          <label class="text-[11px] font-bold text-slate-500">模型名称 (Model Identifier)</label>
+          <input type="text" id="aiModelName" value="mimo-vision" placeholder="如 mimo-vision, mimo-chat" class="w-full text-xs p-2.5 border rounded-xl bg-slate-50 dark:bg-slate-950 font-mono mt-0.5">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t">
+        <button onclick="testAiConnection()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center space-x-1"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>测试连通性</span></button>
+        <div class="flex space-x-2">
+          <button onclick="closeAISettingsModal()" class="px-3 py-1.5 text-xs text-slate-500">取消</button>
+          <button onclick="saveAISettings()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow">保存配置</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Recognition Result Modal -->
+  <div id="aiOcrResultModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeAiOcrResultModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-5 space-y-3 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="text-sm font-bold flex items-center space-x-1.5 text-indigo-600"><i data-lucide="bot" class="w-4 h-4"></i><span>AI 视觉智能识别结果 (小米 MiMo 驱动)</span></h3>
+        <button onclick="closeAiOcrResultModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <textarea id="aiOcrResultText" rows="8" class="w-full p-3 font-mono text-xs border rounded-xl bg-slate-50 dark:bg-slate-950 resize-none outline-none focus:border-indigo-500 leading-relaxed"></textarea>
+      
+      <div class="flex items-center justify-between pt-2">
+        <span class="text-[11px] text-slate-400">已由大模型精确提取文档结构与文字内容</span>
+        <div class="flex space-x-2">
+          <button onclick="copyAiOcrText()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg font-bold text-slate-700">复制全文</button>
+          <button onclick="insertAiOcrToWord()" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold shadow">插入到 Word 编辑器</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2962,10 +3028,219 @@
       }).join('');
     }
 
-    /* AI */
-    function openAISettingsModal() { document.getElementById('aiSettingsModal').classList.remove('hidden'); }
-    function closeAISettingsModal() { document.getElementById('aiSettingsModal').classList.add('hidden'); }
-    function saveAISettings() { closeAISettingsModal(); showToast('AI 配置已保存！'); }
+    /* AI Large Language & Vision Models (Xiaomi MiMo, DeepSeek, OpenAI, etc.) */
+    const AI_PROVIDERS = {
+      xiaomi: {
+        baseUrl: 'https://api.xiaomi.com/v1',
+        defaultModel: 'mimo-vision',
+        models: ['mimo-chat', 'mimo-vision', 'mimo-pro', 'milm-70b-chat'],
+        name: '小米大模型 (Xiaomi MiMo)'
+      },
+      deepseek: {
+        baseUrl: 'https://api.deepseek.com/v1',
+        defaultModel: 'deepseek-chat',
+        models: ['deepseek-chat', 'deepseek-reasoner'],
+        name: 'DeepSeek 深度求索'
+      },
+      openai: {
+        baseUrl: 'https://api.openai.com/v1',
+        defaultModel: 'gpt-4o',
+        models: ['gpt-4o', 'gpt-4o-mini', 'o1-preview'],
+        name: 'OpenAI'
+      },
+      zhipu: {
+        baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
+        defaultModel: 'glm-4v',
+        models: ['glm-4v', 'glm-4-plus', 'glm-4-flash'],
+        name: '智谱清言'
+      },
+      qwen: {
+        baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+        defaultModel: 'qwen-vl-max',
+        models: ['qwen-vl-max', 'qwen-vl-plus', 'qwen-plus'],
+        name: '阿里通义千问'
+      },
+      custom: {
+        baseUrl: 'http://localhost:11434/v1',
+        defaultModel: 'mimo-vision',
+        models: ['mimo-vision', 'llama3', 'qwen2'],
+        name: '自定义 OpenAI 兼容接口'
+      }
+    };
+
+    function openAISettingsModal() {
+      loadAISettings();
+      document.getElementById('aiSettingsModal').classList.remove('hidden');
+    }
+    function closeAISettingsModal() {
+      document.getElementById('aiSettingsModal').classList.add('hidden');
+    }
+
+    function applyAIProviderPreset(providerKey) {
+      const p = AI_PROVIDERS[providerKey];
+      if (!p) return;
+      document.getElementById('aiBaseUrl').value = p.baseUrl;
+      document.getElementById('aiModelName').value = p.defaultModel;
+      
+      const chipsContainer = document.getElementById('aiModelChipsContainer');
+      if (chipsContainer) {
+        chipsContainer.innerHTML = `
+          <label class="text-[11px] font-semibold text-slate-500">${p.name} 常用模型快捷选择：</label>
+          <div class="flex flex-wrap gap-1.5">
+            ${p.models.map(m => `
+              <button type="button" onclick="setAiModelNameInput('${m}')" class="px-2 py-0.5 rounded-lg border bg-orange-50 dark:bg-slate-800 text-orange-700 dark:text-orange-300 text-[11px] font-bold hover:bg-orange-100">${m}</button>
+            `).join('')}
+          </div>
+        `;
+      }
+      showToast(`已切换至 ${p.name} 预设！`);
+    }
+
+    function setAiModelNameInput(name) {
+      document.getElementById('aiModelName').value = name;
+      showToast(`已选模型: ${name}`);
+    }
+
+    function saveAISettings() {
+      const cfg = {
+        provider: document.getElementById('aiProviderPreset').value,
+        baseUrl: document.getElementById('aiBaseUrl').value.trim(),
+        apiKey: document.getElementById('aiApiKey').value.trim(),
+        model: document.getElementById('aiModelName').value.trim()
+      };
+      localStorage.setItem('docscan_ai_config', JSON.stringify(cfg));
+      closeAISettingsModal();
+      showToast('AI 模型配置已成功保存！');
+    }
+
+    function loadAISettings() {
+      const saved = localStorage.getItem('docscan_ai_config');
+      if (saved) {
+        try {
+          const cfg = JSON.parse(saved);
+          if (cfg.provider) {
+            document.getElementById('aiProviderPreset').value = cfg.provider;
+            applyAIProviderPreset(cfg.provider);
+          }
+          if (cfg.baseUrl) document.getElementById('aiBaseUrl').value = cfg.baseUrl;
+          if (cfg.apiKey) document.getElementById('aiApiKey').value = cfg.apiKey;
+          if (cfg.model) document.getElementById('aiModelName').value = cfg.model;
+        } catch (e) {}
+      }
+    }
+
+    async function testAiConnection() {
+      const baseUrl = document.getElementById('aiBaseUrl').value.trim().replace(/\/+$/, '');
+      const apiKey = document.getElementById('aiApiKey').value.trim();
+      const model = document.getElementById('aiModelName').value.trim();
+
+      if (!baseUrl) return showToast('请输入 API Base URL');
+      if (!apiKey) return showToast('请输入 API Key');
+
+      showToast('正在测试与大模型服务器连通性...');
+      try {
+        const res = await fetch(`${baseUrl}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: model || 'mimo-chat',
+            messages: [{ role: 'user', content: 'Ping' }],
+            max_tokens: 5
+          })
+        });
+
+        if (res.ok) {
+          showToast('✅ 连通成功！大模型接口响应正常！');
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          showToast(`❌ 连接失败 (${res.status}): ${errData.error?.message || res.statusText}`);
+        }
+      } catch (err) {
+        showToast('❌ 请求异常: ' + err.message);
+      }
+    }
+
+    async function runAiImageRecognition() {
+      if (!state.scanImg) return showToast('请先导入要识别的文档图片');
+      
+      const saved = localStorage.getItem('docscan_ai_config');
+      const cfg = saved ? JSON.parse(saved) : {};
+      const baseUrl = (cfg.baseUrl || 'https://api.xiaomi.com/v1').replace(/\/+$/, '');
+      const apiKey = cfg.apiKey;
+      const model = cfg.model || 'mimo-vision';
+
+      const cvs = document.getElementById('scanMainCanvas');
+      const imgBase64 = cvs.toDataURL('image/jpeg', 0.85);
+
+      if (!apiKey) {
+        // Prompt helpful setup guide or simulate intelligent extraction
+        openAISettingsModal();
+        showToast('💡 请先填入您的 API Key（如小米 MiMo / OpenAI）即可开启在线识别');
+        return;
+      }
+
+      showToast(`正在通过 ${model} 进行 AI 视觉识别...`);
+
+      try {
+        const res = await fetch(`${baseUrl}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: [
+              {
+                role: 'user',
+                content: [
+                  { type: 'text', text: '请精确提取并识别出本图片中的所有文字内容，保持原始段落排版结构，并直接输出识别出的文字：' },
+                  { type: 'image_url', image_url: { url: imgBase64 } }
+                ]
+              }
+            ],
+            max_tokens: 2000
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const recognizedText = data.choices?.[0]?.message?.content || '未识别出有效文字';
+          openAiOcrResultModal(recognizedText);
+          showToast('AI 视觉识别完成！');
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          showToast(`识别请求失败: ${errData.error?.message || res.statusText}`);
+        }
+      } catch (err) {
+        showToast('请求异常: ' + err.message);
+      }
+    }
+
+    function openAiOcrResultModal(text) {
+      document.getElementById('aiOcrResultText').value = text;
+      document.getElementById('aiOcrResultModal').classList.remove('hidden');
+    }
+    function closeAiOcrResultModal() {
+      document.getElementById('aiOcrResultModal').classList.add('hidden');
+    }
+    function copyAiOcrText() {
+      navigator.clipboard.writeText(document.getElementById('aiOcrResultText').value);
+      showToast('识别文字已复制到剪贴板！');
+    }
+    function insertAiOcrToWord() {
+      const text = document.getElementById('aiOcrResultText').value;
+      if (!text) return;
+      const html = text.split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${l.trim()}</p>`).join('');
+      document.getElementById('wordEditorDoc').innerHTML += html;
+      closeAiOcrResultModal();
+      navigateModule('editor');
+      switchOfficeSubTool('word');
+      showToast('识别内容已成功插入到 Word 文档正文！');
+    }
 
     /* Toolbox Utilities */
     function convertRmbAmount() {
