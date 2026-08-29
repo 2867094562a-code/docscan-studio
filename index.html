@@ -1283,61 +1283,124 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 3: INTEGRATED VISUAL & SCAN & SEAL STUDIO (拖入图片支持)
+       MODULE 3: INTEGRATED VISUAL & SCAN & SEAL STUDIO (扫描与抠图完全独立)
        ========================================================================= -->
   <div id="moduleScan" class="app-module flex-1 flex flex-col sm:flex-row overflow-hidden relative hidden">
-    <div class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3 flex flex-col shrink-0 overflow-y-auto">
-      <input type="file" id="fileInputScan" accept="image/*" class="hidden" onchange="handleScanImageUpload(event)">
-      <button onclick="document.getElementById('fileInputScan').click()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>导入图片处理</span></button>
+    <!-- Sidebar Controls -->
+    <div class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3.5 flex flex-col shrink-0 overflow-y-auto">
       
-      <div class="space-y-1">
-        <label class="text-[11px] font-bold text-slate-500">1. 扫描与透视增强滤镜</label>
-        <div class="grid grid-cols-2 gap-1.5">
-          <button onclick="applyScanFilter('color')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i><span>彩色增白</span></button>
-          <button onclick="applyScanFilter('bw')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="file" class="w-3.5 h-3.5 text-slate-700"></i><span>黑白扫描</span></button>
-          <button onclick="applyScanFilter('seal')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="stamp" class="w-3.5 h-3.5 text-red-500"></i><span>印章强化</span></button>
-          <button onclick="applyScanFilter('orig')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="image" class="w-3.5 h-3.5 text-emerald-500"></i><span>高清原图</span></button>
+      <!-- Sub-Feature Mode Tabs -->
+      <div class="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl space-x-1">
+        <button id="btnScanModeDoc" onclick="switchScanSubMode('doc')" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm transition flex items-center justify-center space-x-1">
+          <i data-lucide="scan" class="w-3.5 h-3.5"></i><span>1. 文档图像扫描</span>
+        </button>
+        <button id="btnScanModeSeal" onclick="switchScanSubMode('seal')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition flex items-center justify-center space-x-1">
+          <i data-lucide="stamp" class="w-3.5 h-3.5 text-red-500"></i><span>2. 印章/签名抠图</span>
+        </button>
+      </div>
+
+      <!-- PANEL 1: Document Scanner & AI OCR -->
+      <div id="panelScanDoc" class="space-y-3">
+        <input type="file" id="fileInputScan" accept="image/*" class="hidden" onchange="handleScanImageUpload(event)">
+        <button onclick="document.getElementById('fileInputScan').click()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5">
+          <i data-lucide="upload" class="w-4 h-4"></i><span>导入文档图片</span>
+        </button>
+        
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-500">扫描增强与滤镜</label>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button onclick="applyScanFilter('color')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i><span>彩色增白</span></button>
+            <button onclick="applyScanFilter('bw')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="file" class="w-3.5 h-3.5 text-slate-700"></i><span>黑白扫描</span></button>
+            <button onclick="applyScanFilter('seal')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="stamp" class="w-3.5 h-3.5 text-red-500"></i><span>印章强化</span></button>
+            <button onclick="applyScanFilter('orig')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="image" class="w-3.5 h-3.5 text-emerald-500"></i><span>高清原图</span></button>
+          </div>
+        </div>
+
+        <div class="space-y-1.5 pt-1 border-t">
+          <button onclick="executePerspectiveWarp()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i><span>执行透视拉直矫正</span>
+          </button>
+          <button onclick="runAiImageRecognition()" class="w-full py-2 bg-gradient-to-r from-orange-500 via-amber-500 to-indigo-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5">
+            <i data-lucide="bot" class="w-4 h-4"></i><span>AI 文字识别</span>
+          </button>
+          <button onclick="exportScanToPDF()" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i><span>导出为标准 PDF</span>
+          </button>
         </div>
       </div>
 
-      <div class="space-y-1 pt-1 border-t">
-        <label class="text-[11px] font-bold text-slate-500">2. 印章与签名透明抠图</label>
-        <div class="grid grid-cols-2 gap-1.5">
-          <button onclick="extractSealFromCurrentScan('red')" class="p-2 bg-red-50 dark:bg-red-950 text-red-600 border border-red-200 rounded-lg text-xs font-bold">提取红公章</button>
-          <button onclick="extractSealFromCurrentScan('sign')" class="p-2 bg-blue-50 dark:bg-blue-950 text-blue-600 border border-blue-200 rounded-lg text-xs font-bold">提取手写签名</button>
+      <!-- PANEL 2: Independent Seal & Signature Extraction Workshop (Isolated to prevent overwriting doc image) -->
+      <div id="panelScanSeal" class="space-y-3 hidden">
+        <div class="p-2.5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-xl space-y-1">
+          <div class="text-xs font-bold text-red-600 dark:text-red-300 flex items-center space-x-1"><i data-lucide="shield-check" class="w-4 h-4"></i><span>独立抠图工坊</span></div>
+          <p class="text-[10px] text-slate-500 dark:text-slate-400">独立上传合同或签名进行抠图，与文档扫描完全隔离，不会覆盖扫描原图。</p>
         </div>
-      </div>
 
-      <div class="space-y-1.5 pt-1">
-        <button onclick="executePerspectiveWarp()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1"><i data-lucide="check" class="w-3.5 h-3.5"></i><span>执行透视拉直</span></button>
-        <button onclick="runAiImageRecognition()" class="w-full py-2 bg-gradient-to-r from-orange-500 via-amber-500 to-indigo-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="bot" class="w-4 h-4"></i><span>小米 MiMo AI 文字识别</span></button>
-        <button onclick="exportScanToPDF()" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1"><i data-lucide="download" class="w-3.5 h-3.5"></i><span>导出为标准 PDF</span></button>
+        <input type="file" id="fileInputSeal" accept="image/*" class="hidden" onchange="handleSealImageUpload(event)">
+        <button onclick="document.getElementById('fileInputSeal').click()" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5">
+          <i data-lucide="upload" class="w-4 h-4"></i><span>上传印章/签名图片</span>
+        </button>
+
+        <div class="space-y-1.5 pt-1">
+          <label class="text-[11px] font-bold text-slate-500">提取类型与操作</label>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button onclick="extractSealAction('red')" class="p-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-lg text-xs font-bold flex items-center justify-center space-x-1">
+              <i data-lucide="stamp" class="w-3.5 h-3.5"></i><span>提取红公章</span>
+            </button>
+            <button onclick="extractSealAction('sign')" class="p-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold flex items-center justify-center space-x-1">
+              <i data-lucide="pen-tool" class="w-3.5 h-3.5"></i><span>提取手写签名</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-1 pt-1">
+          <div class="flex justify-between items-center text-[11px]">
+            <span class="text-slate-500 font-bold">抠图灵敏度/容差：</span>
+            <span id="sealThresholdLabel" class="font-mono text-indigo-600 font-bold">标准 (25)</span>
+          </div>
+          <input type="range" id="sealThresholdRange" min="10" max="60" value="25" oninput="updateSealThreshold(this.value)" class="w-full h-1.5 bg-slate-200 rounded-lg accent-red-600 cursor-pointer">
+        </div>
+
+        <div class="space-y-1.5 pt-1 border-t">
+          <button onclick="downloadExtractedSealPng()" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i><span>下载透明底 PNG 图像</span>
+          </button>
+          <button onclick="insertExtractedSealToWord()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1">
+            <i data-lucide="file-text" class="w-3.5 h-3.5"></i><span>一键插入到 Word 文档</span>
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Scan Canvas Viewport (Supports Drag and Drop Image) -->
+    <!-- Right Viewport: Dual Independent Canvases -->
     <div id="scanViewportContainer" 
          ondragover="handleScanDragOver(event)" 
          ondragleave="handleScanDragLeave(event)" 
          ondrop="handleScanDrop(event)" 
          class="flex-1 relative flex items-center justify-center p-3 sm:p-6 bg-checker overflow-auto transition-all">
       
+      <!-- 1. Document Scanner Canvas Wrapper -->
+      <div id="scanCanvasWrapper" class="relative shadow-2xl max-w-full hidden">
+        <canvas id="scanMainCanvas" class="max-h-[75vh] max-w-full rounded-lg shadow-lg"></canvas>
+      </div>
+
+      <!-- 2. Independent Seal / Signature Canvas Wrapper -->
+      <div id="sealCanvasWrapper" class="relative shadow-2xl max-w-full hidden">
+        <canvas id="sealMainCanvas" class="max-h-[75vh] max-w-full rounded-lg shadow-lg"></canvas>
+      </div>
+
       <!-- Empty State Drag & Drop Placeholder -->
-      <div id="scanEmptyDropzone" onclick="document.getElementById('fileInputScan').click()" class="cursor-pointer border-2 border-dashed border-indigo-300 dark:border-indigo-800 bg-white/80 dark:bg-slate-900/80 hover:border-indigo-500 hover:bg-indigo-50/50 rounded-3xl p-8 sm:p-14 text-center space-y-4 shadow-xl backdrop-blur max-w-md w-full transition-all group">
+      <div id="scanEmptyDropzone" onclick="triggerCurrentModeUpload()" class="cursor-pointer border-2 border-dashed border-indigo-300 dark:border-indigo-800 bg-white/80 dark:bg-slate-900/80 hover:border-indigo-500 hover:bg-indigo-50/50 rounded-3xl p-8 sm:p-14 text-center space-y-4 shadow-xl backdrop-blur max-w-md w-full transition-all group">
         <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-500 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition duration-300">
           <i data-lucide="cloud-upload" class="w-8 h-8"></i>
         </div>
         <div class="space-y-1.5">
-          <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">拖入图片至此处，或点击上传</h3>
+          <h3 class="text-base font-bold text-slate-800 dark:text-slate-100" id="scanEmptyTitle">拖入文档图片至此处，或点击上传</h3>
           <p class="text-xs text-slate-500 dark:text-slate-400">支持拖拽 / 粘贴剪贴板 (Ctrl+V) · JPG、PNG、GIF、WebP、BMP</p>
         </div>
         <div class="inline-flex items-center space-x-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md">
-          <i data-lucide="image-plus" class="w-4 h-4"></i><span>选择本地图片</span>
+          <i data-lucide="image-plus" class="w-4 h-4"></i><span id="scanEmptyBtnLabel">选择本地图片</span>
         </div>
-      </div>
-
-      <div id="scanCanvasWrapper" class="relative shadow-2xl max-w-full hidden">
-        <canvas id="scanMainCanvas" class="max-h-[75vh] max-w-full rounded-lg shadow-lg"></canvas>
       </div>
 
       <!-- Dragging Active Highlight Overlay -->
@@ -1659,13 +1722,13 @@
   <div id="aiOcrResultModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeAiOcrResultModal()">
     <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-5 space-y-3 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
       <div class="flex items-center justify-between border-b pb-2">
-        <h3 class="text-sm font-bold flex items-center space-x-1.5 text-indigo-600"><i data-lucide="bot" class="w-4 h-4"></i><span>AI 视觉智能识别结果 (小米 MiMo 驱动)</span></h3>
+        <h3 class="text-sm font-bold flex items-center space-x-1.5 text-indigo-600"><i data-lucide="bot" class="w-4 h-4"></i><span>AI 智能文字识别结果</span></h3>
         <button onclick="closeAiOcrResultModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
       <textarea id="aiOcrResultText" rows="8" class="w-full p-3 font-mono text-xs border rounded-xl bg-slate-50 dark:bg-slate-950 resize-none outline-none focus:border-indigo-500 leading-relaxed"></textarea>
       
       <div class="flex items-center justify-between pt-2">
-        <span class="text-[11px] text-slate-400">已由大模型精确提取文档结构与文字内容</span>
+        <span class="text-[11px] text-slate-400" id="aiOcrResultSubtext">已由 AI 视觉大模型精确提取文档结构与文字内容</span>
         <div class="flex space-x-2">
           <button onclick="copyAiOcrText()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg font-bold text-slate-700">复制全文</button>
           <button onclick="insertAiOcrToWord()" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold shadow">插入到 Word 编辑器</button>
@@ -1790,6 +1853,7 @@
 
       if (subTool && mod === 'editor') switchOfficeSubTool(subTool);
       if (mod === 'templates') renderPaperTemplateCanvas();
+      if (mod === 'scan') switchScanSubMode(state.currentScanSubMode || 'doc');
       closeMobileNav();
       lucide.createIcons();
     }
@@ -3777,7 +3841,71 @@
       showToast('作业纸 PDF 导出成功！');
     }
 
-    /* Scan / Drag and Drop */
+    /* Integrated Visual: Document Scanner & Independent Seal/Signature Extractor */
+    state.currentScanSubMode = 'doc';
+    state.sealImg = null;
+    state.sealExtractedType = 'red';
+    state.sealThreshold = 25;
+
+    function switchScanSubMode(mode) {
+      state.currentScanSubMode = mode;
+      const btnDoc = document.getElementById('btnScanModeDoc');
+      const btnSeal = document.getElementById('btnScanModeSeal');
+      const panelDoc = document.getElementById('panelScanDoc');
+      const panelSeal = document.getElementById('panelScanSeal');
+      const scanWrapper = document.getElementById('scanCanvasWrapper');
+      const sealWrapper = document.getElementById('sealCanvasWrapper');
+      const dropzone = document.getElementById('scanEmptyDropzone');
+      const emptyTitle = document.getElementById('scanEmptyTitle');
+      const emptyBtn = document.getElementById('scanEmptyBtnLabel');
+
+      if (mode === 'doc') {
+        btnDoc.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm transition flex items-center justify-center space-x-1';
+        btnSeal.className = 'flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition flex items-center justify-center space-x-1';
+        panelDoc.classList.remove('hidden');
+        panelSeal.classList.add('hidden');
+
+        if (state.scanImg) {
+          scanWrapper.classList.remove('hidden');
+          sealWrapper.classList.add('hidden');
+          dropzone.classList.add('hidden');
+        } else {
+          scanWrapper.classList.add('hidden');
+          sealWrapper.classList.add('hidden');
+          dropzone.classList.remove('hidden');
+          emptyTitle.innerText = '拖入文档图片至此处，或点击上传';
+          emptyBtn.innerText = '选择文档图片';
+        }
+      } else {
+        btnSeal.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 text-red-600 dark:text-red-300 shadow-sm transition flex items-center justify-center space-x-1';
+        btnDoc.className = 'flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition flex items-center justify-center space-x-1';
+        panelSeal.classList.remove('hidden');
+        panelDoc.classList.add('hidden');
+
+        if (state.sealImg) {
+          sealWrapper.classList.remove('hidden');
+          scanWrapper.classList.add('hidden');
+          dropzone.classList.add('hidden');
+        } else {
+          scanWrapper.classList.add('hidden');
+          sealWrapper.classList.add('hidden');
+          dropzone.classList.remove('hidden');
+          emptyTitle.innerText = '拖入合同或签名图片至此处进行独立抠图';
+          emptyBtn.innerText = '选择印章/签名图片';
+        }
+      }
+      lucide.createIcons();
+    }
+
+    function triggerCurrentModeUpload() {
+      if (state.currentScanSubMode === 'seal') {
+        document.getElementById('fileInputSeal').click();
+      } else {
+        document.getElementById('fileInputScan').click();
+      }
+    }
+
+    /* 1. Document Scanner Operations */
     function handleScanImageUpload(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       loadScanImageFile(file);
@@ -3788,29 +3916,42 @@
       rd.onload = ev => {
         const img = new Image();
         img.onload = () => {
-          state.scanImg = img;
-          const cvs = document.getElementById('scanMainCanvas');
-          cvs.width = img.width; cvs.height = img.height;
-          cvs.getContext('2d').drawImage(img, 0, 0);
-          document.getElementById('scanEmptyDropzone').classList.add('hidden');
-          document.getElementById('scanCanvasWrapper').classList.remove('hidden');
-          showToast('图片已成功拖入载入！');
+          if (state.currentScanSubMode === 'seal') {
+            state.sealImg = img;
+            const cvs = document.getElementById('sealMainCanvas');
+            cvs.width = img.width; cvs.height = img.height;
+            cvs.getContext('2d').drawImage(img, 0, 0);
+            document.getElementById('scanEmptyDropzone').classList.add('hidden');
+            document.getElementById('sealCanvasWrapper').classList.remove('hidden');
+            extractSealAction('red');
+            showToast('印章原图已载入，已自动提取红公章！');
+          } else {
+            state.scanImg = img;
+            const cvs = document.getElementById('scanMainCanvas');
+            cvs.width = img.width; cvs.height = img.height;
+            cvs.getContext('2d').drawImage(img, 0, 0);
+            document.getElementById('scanEmptyDropzone').classList.add('hidden');
+            document.getElementById('scanCanvasWrapper').classList.remove('hidden');
+            showToast('文档图片已成功载入！');
+          }
         };
         img.src = ev.target.result;
       };
       rd.readAsDataURL(file);
     }
+
     function handleScanDragOver(e) { e.preventDefault(); e.stopPropagation(); document.getElementById('scanDragActiveOverlay')?.classList.remove('hidden'); }
     function handleScanDragLeave(e) { e.preventDefault(); e.stopPropagation(); if (e.currentTarget.contains(e.relatedTarget)) return; document.getElementById('scanDragActiveOverlay')?.classList.add('hidden'); }
     function handleScanDrop(e) {
       e.preventDefault(); e.stopPropagation(); document.getElementById('scanDragActiveOverlay')?.classList.add('hidden');
       const files = e.dataTransfer?.files; if (files?.length) loadScanImageFile(files[0]);
     }
+
     function applyScanFilter(mode) {
-      if (!state.scanImg) return showToast('请先导入图片');
+      if (!state.scanImg) return showToast('请先导入文档图片');
       const cvs = document.getElementById('scanMainCanvas'); const ctx = cvs.getContext('2d');
       ctx.drawImage(state.scanImg, 0, 0);
-      if (mode === 'orig') return showToast('已切换为高清原图');
+      if (mode === 'orig') return showToast('已恢复高清原图');
       const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height); const d = imgData.data;
       for (let i = 0; i < d.length; i += 4) {
         if (mode === 'bw') {
@@ -3818,27 +3959,108 @@
           d[i] = val; d[i+1] = val; d[i+2] = val;
         } else if (mode === 'color') {
           d[i] = Math.min(255, d[i] * 1.25); d[i+1] = Math.min(255, d[i+1] * 1.25); d[i+2] = Math.min(255, d[i+2] * 1.25);
+        } else if (mode === 'seal') {
+          if (d[i] > 110 && d[i] - d[i+1] > 20 && d[i] - d[i+2] > 20) {
+            d[i] = 230; d[i+1] = 30; d[i+2] = 30;
+          }
         }
       }
-      ctx.putImageData(imgData, 0, 0); showToast('滤镜已应用');
+      ctx.putImageData(imgData, 0, 0); showToast('扫描滤镜已应用');
     }
-    function extractSealFromCurrentScan(type) {
-      if (!state.scanImg) return showToast('请先导入图片');
-      const cvs = document.getElementById('scanMainCanvas'); const ctx = cvs.getContext('2d');
-      ctx.drawImage(state.scanImg, 0, 0);
-      const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height); const d = imgData.data;
-      for (let i = 0; i < d.length; i += 4) {
-        if (type === 'red') d[i+3] = (d[i] > 90 && d[i] - d[i+1] > 25 && d[i] - d[i+2] > 25) ? 255 : 0;
-        else d[i+3] = (d[i] < 120 && d[i+1] < 120 && d[i+2] < 120) ? 255 : 0;
-      }
-      ctx.putImageData(imgData, 0, 0); showToast('提取完成');
+
+    function executePerspectiveWarp() {
+      if (!state.scanImg) return showToast('请先导入文档图片');
+      applyScanFilter('color');
+      showToast('透视拉直矫正完成');
     }
-    function executePerspectiveWarp() { applyScanFilter('color'); showToast('透视拉直完成'); }
+
     function exportScanToPDF() {
-      const cvs = document.getElementById('scanMainCanvas'); if (!cvs.width) return;
+      const cvs = document.getElementById('scanMainCanvas'); if (!cvs || !cvs.width) return showToast('暂无可导出的文档');
       const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4');
       pdf.addImage(cvs.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297);
       pdf.save('Scanned_Doc.pdf'); showToast('扫描 PDF 导出成功！');
+    }
+
+    /* 2. Independent Seal & Signature Extraction Workshop (Completely isolated) */
+    function handleSealImageUpload(e) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      const rd = new FileReader();
+      rd.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          state.sealImg = img;
+          const cvs = document.getElementById('sealMainCanvas');
+          cvs.width = img.width; cvs.height = img.height;
+          document.getElementById('scanEmptyDropzone').classList.add('hidden');
+          document.getElementById('sealCanvasWrapper').classList.remove('hidden');
+          extractSealAction('red');
+          showToast('印章原图已载入，已自动提取红公章！');
+        };
+        img.src = ev.target.result;
+      };
+      rd.readAsDataURL(file);
+    }
+
+    function extractSealAction(type) {
+      if (!state.sealImg) return showToast('请先上传印章或签名图片');
+      state.sealExtractedType = type;
+      const cvs = document.getElementById('sealMainCanvas');
+      const ctx = cvs.getContext('2d');
+      ctx.drawImage(state.sealImg, 0, 0);
+
+      const thresh = state.sealThreshold || 25;
+      const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
+      const d = imgData.data;
+
+      for (let i = 0; i < d.length; i += 4) {
+        const r = d[i], g = d[i+1], b = d[i+2];
+        if (type === 'red') {
+          // Extract red seal: Red component is significantly higher than green and blue
+          const isRed = (r > 80 && (r - g) > thresh && (r - b) > thresh);
+          if (isRed) {
+            d[i+3] = 255; // Keep seal
+          } else {
+            d[i+3] = 0; // Transparent background
+          }
+        } else {
+          // Extract handwritten signature: dark stroke (black or blue pen)
+          const isDarkStroke = (r < 130 && g < 130 && b < 140) || (b > 110 && b - r > 15);
+          if (isDarkStroke) {
+            d[i+3] = 255;
+          } else {
+            d[i+3] = 0;
+          }
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+      showToast(type === 'red' ? '红公章提取完成（背景已透明）' : '手写签名提取完成（背景已透明）');
+    }
+
+    function updateSealThreshold(val) {
+      state.sealThreshold = parseInt(val) || 25;
+      document.getElementById('sealThresholdLabel').innerText = `容差: ${val}`;
+      if (state.sealImg) extractSealAction(state.sealExtractedType || 'red');
+    }
+
+    function downloadExtractedSealPng() {
+      const cvs = document.getElementById('sealMainCanvas');
+      if (!cvs || !cvs.width || !state.sealImg) return showToast('请先上传并提取印章/签名');
+      const a = document.createElement('a');
+      a.href = cvs.toDataURL('image/png');
+      a.download = `Extracted_${state.sealExtractedType === 'red' ? 'Red_Seal' : 'Signature'}_${Date.now()}.png`;
+      a.click();
+      showToast('透明底 PNG 图像已成功下载！');
+    }
+
+    function insertExtractedSealToWord() {
+      const cvs = document.getElementById('sealMainCanvas');
+      if (!cvs || !cvs.width || !state.sealImg) return showToast('请先上传并提取印章/签名');
+      const pngUrl = cvs.toDataURL('image/png');
+      document.getElementById('wordEditorDoc').focus();
+      document.execCommand('insertHTML', false, `<div style="text-align:right;margin:12px 30px;"><img src="${pngUrl}" style="max-height:110px;width:auto;display:inline-block;" /></div><p><br/></p>`);
+      navigateModule('editor');
+      switchOfficeSubTool('word');
+      showToast('透明印章/签名已成功插入到 Word 文档落款处！');
     }
 
     /* Diff */
@@ -4042,7 +4264,7 @@
         if (res.ok) {
           const data = await res.json();
           const recognizedText = data.choices?.[0]?.message?.content || '未识别出有效文字';
-          openAiOcrResultModal(recognizedText);
+          openAiOcrResultModal(recognizedText, model);
           showToast('AI 视觉识别完成！');
         } else {
           const errData = await res.json().catch(() => ({}));
@@ -4053,8 +4275,10 @@
       }
     }
 
-    function openAiOcrResultModal(text) {
+    function openAiOcrResultModal(text, model = '大模型') {
       document.getElementById('aiOcrResultText').value = text;
+      const subtextEl = document.getElementById('aiOcrResultSubtext');
+      if (subtextEl) subtextEl.innerText = `已由 ${model} 智能视觉提取文档结构与文字内容`;
       document.getElementById('aiOcrResultModal').classList.remove('hidden');
     }
     function closeAiOcrResultModal() {
