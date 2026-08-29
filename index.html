@@ -392,18 +392,35 @@
       
       <!-- Top Action Toolbar (Screen Only) -->
       <div class="no-print bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap items-center justify-between gap-2.5 text-xs">
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-2 flex-wrap gap-y-2">
+          <!-- Industry Template Presets -->
+          <select id="billingTemplateSelect" onchange="billingApp.loadIndustryTemplate(this.value)" class="p-1.5 rounded-xl border border-orange-200 bg-orange-50/70 text-orange-700 font-bold outline-none">
+            <option value="clothing">👚 行业模板: 服装鞋帽尺码单 (S/M/L/XL/2XL)</option>
+            <option value="general">📦 行业模板: 商超百货数码单 (台/套/件/箱)</option>
+            <option value="hardware">🏗️ 行业模板: 建材五金工程单 (吨/米/包/件)</option>
+            <option value="fresh">🍽️ 行业模板: 餐饮生鲜配送单 (斤/公斤/箱)</option>
+          </select>
+
           <div class="flex border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden focus-within:border-orange-500 transition">
-            <input type="text" id="newSizeInput" class="w-24 px-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 outline-none text-slate-800 dark:text-slate-100 font-bold" placeholder="新尺码/规格...">
-            <button onclick="billingApp.addSize()" class="bg-orange-50 dark:bg-orange-950/60 hover:bg-orange-100 dark:hover:bg-orange-900 text-orange-600 dark:text-orange-300 px-3 py-1.5 text-xs font-bold transition border-l border-slate-200 dark:border-slate-700">+ 添加列</button>
+            <input type="text" id="newSizeInput" class="w-20 px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 outline-none text-slate-800 dark:text-slate-100 font-bold" placeholder="新规格...">
+            <button onclick="billingApp.addSize()" class="bg-orange-50 dark:bg-orange-950/60 hover:bg-orange-100 dark:hover:bg-orange-900 text-orange-600 dark:text-orange-300 px-2.5 py-1.5 text-xs font-bold transition border-l border-slate-200 dark:border-slate-700">+ 列</button>
           </div>
-          <button onclick="billingApp.addRow()" class="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="plus" class="w-3.5 h-3.5"></i><span>增加一行</span></button>
+          <button onclick="billingApp.addRow()" class="px-2.5 py-1.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="plus" class="w-3.5 h-3.5"></i><span>增加一行</span></button>
+          <button onclick="billingApp.openBatchPasteModal()" class="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl font-bold flex items-center space-x-1" title="直接从 Excel / WPS 复制表格批量粘贴导入"><i data-lucide="clipboard" class="w-3.5 h-3.5 text-blue-500"></i><span>批量导入</span></button>
           <button onclick="billingApp.openPriceDictModal()" class="px-2.5 py-1.5 bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-300 border border-purple-200 dark:border-purple-800 rounded-xl font-bold flex items-center space-x-1" title="查看自动记录的商品单价记忆库"><i data-lucide="brain" class="w-3.5 h-3.5"></i><span>价格记忆库</span></button>
+          <button onclick="billingApp.openDraftsModal()" class="px-2.5 py-1.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-xl font-bold flex items-center space-x-1" title="查看与切换多份已保存的单据草稿"><i data-lucide="folder-clock" class="w-3.5 h-3.5"></i><span>历史草稿箱</span></button>
         </div>
 
         <div class="flex items-center space-x-1.5 sm:space-x-2">
-          <button onclick="window.print()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="printer" class="w-3.5 h-3.5"></i><span>打印单据 (A4)</span></button>
-          <button onclick="billingApp.exportImage()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="camera" class="w-3.5 h-3.5"></i><span>生成图片</span></button>
+          <!-- Seal Watermark Toggle -->
+          <label class="flex items-center space-x-1 px-2 py-1 bg-red-50 text-red-600 border border-red-200 rounded-xl font-bold cursor-pointer select-none">
+            <input type="checkbox" id="billingStampToggle" onchange="billingApp.toggleOfficialStamp(this.checked)" class="rounded text-red-600">
+            <span>加盖电子印章</span>
+          </label>
+
+          <button onclick="billingApp.saveCurrentAsDraft()" class="px-2.5 py-1.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-xl font-bold flex items-center space-x-1" title="将当前单据保存至草稿箱"><i data-lucide="save" class="w-3.5 h-3.5"></i><span>存草稿</span></button>
+          <button onclick="window.print()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="printer" class="w-3.5 h-3.5"></i><span>打印 (A4)</span></button>
+          <button onclick="billingApp.exportImage()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="camera" class="w-3.5 h-3.5"></i><span>生成长图</span></button>
           <button onclick="billingApp.exportExcel()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i><span>导出 Excel</span></button>
           <button onclick="billingApp.exportPdf()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="file-down" class="w-3.5 h-3.5"></i><span>导出 PDF</span></button>
           <button onclick="billingApp.reset()" class="px-2 py-1.5 text-slate-400 hover:text-red-500 transition font-medium flex items-center space-x-1" title="清空所有单据"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i><span>清空</span></button>
@@ -412,7 +429,16 @@
 
       <!-- Main Bill Printable Container -->
       <div class="flex justify-center">
-        <div class="bill-container" id="billingCaptureTarget">
+        <div class="bill-container relative" id="billingCaptureTarget">
+          
+          <!-- Optional Electronic Official Seal Overlay -->
+          <div id="billingStampOverlay" class="hidden absolute right-12 bottom-20 pointer-events-none select-none z-10 opacity-85 rotate-[-12deg]">
+            <div class="w-32 h-32 rounded-full border-4 border-dashed border-red-600 flex flex-col items-center justify-center text-red-600 shadow-inner bg-red-50/20 backdrop-blur-[1px]">
+              <span class="text-[10px] font-extrabold tracking-widest uppercase">★ 业务专用章 ★</span>
+              <span class="text-xs font-black my-0.5">发货对账讫</span>
+              <span class="text-[9px] font-mono font-bold">OFFICE STUDIO</span>
+            </div>
+          </div>
           
           <!-- Title Header -->
           <div class="flex flex-col sm:flex-row justify-between sm:items-center pb-4 mb-6 border-b-2 border-slate-200 dark:border-slate-800 gap-2">
@@ -500,6 +526,44 @@
       <div class="flex justify-between items-center pt-2">
         <button onclick="billingApp.clearPriceDict()" class="px-3 py-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50 rounded-lg font-medium">清空记忆库</button>
         <button onclick="billingApp.closePriceDictModal()" class="px-4 py-1.5 bg-purple-600 text-white rounded-lg font-bold shadow">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drafts & History Manager Modal (历史单据草稿箱) -->
+  <div id="billingDraftsModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="billingApp.closeDraftsModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-5 space-y-3 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="text-sm font-bold flex items-center space-x-1.5 text-amber-600"><i data-lucide="folder-clock" class="w-4 h-4"></i><span>历史单据草稿箱 (本地保存)</span></h3>
+        <button onclick="billingApp.closeDraftsModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <p class="text-[11px] text-slate-400">可将常用客户单据或未完成账单保存为草稿，随时调取、修改或重新打印！</p>
+      
+      <div class="max-h-64 overflow-y-auto border rounded-xl divide-y dark:divide-slate-800" id="billingDraftsList"></div>
+      
+      <div class="flex justify-between items-center pt-2">
+        <button onclick="billingApp.saveCurrentAsDraft()" class="px-3 py-1.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-lg font-bold flex items-center space-x-1"><i data-lucide="plus" class="w-3 h-3"></i><span>将当前单据存为新草稿</span></button>
+        <button onclick="billingApp.closeDraftsModal()" class="px-4 py-1.5 bg-amber-600 text-white rounded-lg font-bold shadow">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Batch Paste from Excel Modal (Excel表格批量导入) -->
+  <div id="billingBatchPasteModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="billingApp.closeBatchPasteModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-5 space-y-3 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="text-sm font-bold flex items-center space-x-1.5 text-blue-600"><i data-lucide="clipboard-paste" class="w-4 h-4"></i><span>从 Excel / WPS 复制批量粘贴导入</span></h3>
+        <button onclick="billingApp.closeBatchPasteModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <p class="text-[11px] text-slate-400">在 Excel 中复制多行多列数据（包括款号、各尺码数量、单价），直接粘贴到下方框中即可一键批量导入：</p>
+      
+      <textarea id="billingBatchPasteTextarea" rows="6" placeholder="例如粘贴格式 (Tab分隔)：
+款号A	10	20	15	5	98.0
+款号B	5	12	8	0	128.0" class="w-full p-3 font-mono text-xs border rounded-xl bg-slate-50 dark:bg-slate-950 resize-none outline-none focus:border-blue-500"></textarea>
+      
+      <div class="flex justify-end space-x-2 pt-2">
+        <button onclick="billingApp.closeBatchPasteModal()" class="px-3 py-1.5 text-slate-500">取消</button>
+        <button onclick="billingApp.executeBatchPaste()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold shadow">立即解析导入</button>
       </div>
     </div>
   </div>
@@ -608,7 +672,14 @@
           <input type="file" id="inputWordDocImage" accept="image/*" class="hidden" onchange="handleWordDocImageUpload(event)">
           <button onclick="insertDocImage()" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded hover:bg-indigo-50 font-medium flex items-center space-x-1"><i data-lucide="image" class="w-3 h-3 text-indigo-500"></i><span>+图片</span></button>
           <button onclick="insertWordTable()" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded hover:bg-indigo-50 font-medium flex items-center space-x-1"><i data-lucide="table" class="w-3 h-3 text-emerald-500"></i><span>+表格</span></button>
+          <button onclick="insertGovRedHeaderBlock()" class="px-2 py-0.5 bg-red-50 text-red-600 border border-red-200 rounded font-bold hover:bg-red-100 flex items-center space-x-1"><i data-lucide="award" class="w-3 h-3 text-red-500"></i><span>+红头发文</span></button>
           <button onclick="generateDocTableOfContents()" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded hover:bg-indigo-50 font-medium flex items-center space-x-1"><i data-lucide="list-tree" class="w-3 h-3 text-purple-500"></i><span>+自动目录</span></button>
+
+          <div class="h-3.5 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
+
+          <!-- TTS Speech Playback -->
+          <button onclick="toggleWordTextToSpeech()" id="btnWordTTS" class="px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded font-bold flex items-center space-x-1"><i data-lucide="volume-2" class="w-3 h-3"></i><span id="wordTTSText">🔊 语音朗读</span></button>
+          <button onclick="openWordDetailedStatsModal()" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 border rounded font-semibold text-slate-700 dark:text-slate-200 flex items-center space-x-1"><i data-lucide="bar-chart-2" class="w-3 h-3 text-blue-500"></i><span>字数详情</span></button>
 
           <div class="h-3.5 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
 
@@ -690,6 +761,13 @@
 
           <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
 
+          <!-- Formula Shortcuts -->
+          <button onclick="insertExcelFormulaTemplate('SUM')" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 text-indigo-600 rounded text-[11px] font-bold font-mono">Σ求和</button>
+          <button onclick="insertExcelFormulaTemplate('AVERAGE')" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 text-indigo-600 rounded text-[11px] font-bold font-mono">x̄平均</button>
+          <button onclick="insertExcelFormulaTemplate('COUNT')" class="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 text-indigo-600 rounded text-[11px] font-bold font-mono">🔢计数</button>
+
+          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
+
           <div class="flex items-center space-x-1 bg-slate-50 dark:bg-slate-800/80 px-2 py-0.5 rounded-lg border text-[11px]">
             <span class="text-slate-500 font-semibold" id="excelColInputLabel">A列宽:</span>
             <input type="number" id="excelColWidthInput" min="40" max="600" value="120" onchange="setSpecificColWidth(this.value)" class="w-12 bg-white dark:bg-slate-900 border rounded px-1 text-center font-mono text-xs font-bold text-indigo-600">
@@ -704,6 +782,7 @@
         </div>
 
         <div class="flex items-center space-x-1 shrink-0">
+          <button onclick="exportExcelToCSV()" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded font-semibold text-[11px]">导出 CSV</button>
           <button onclick="insertExcelRow()" class="px-2 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded font-semibold text-[11px]">+行</button>
           <button onclick="insertExcelCol()" class="px-2 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded font-semibold text-[11px]">+列</button>
         </div>
@@ -1066,6 +1145,71 @@
           </div>
           <button onclick="exportIdCardA4Pdf()" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow">导出 1:1 A4 打印 PDF</button>
         </div>
+
+        <!-- 5. PDF Merge -->
+        <div class="p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border space-y-3 shadow-sm">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center"><i data-lucide="layers" class="w-4 h-4"></i></div>
+            <span class="text-xs font-bold">PDF 多文件极速合并工坊</span>
+          </div>
+          <p class="text-[11px] text-slate-400">选择多个 PDF 文件，系统将按顺序合并为一个规整的完整 PDF 文档</p>
+          <input type="file" id="inputPdfMergeFiles" accept=".pdf" multiple class="hidden" onchange="handlePdfMergeFiles(event)">
+          <button onclick="document.getElementById('inputPdfMergeFiles').click()" class="w-full py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="plus-circle" class="w-4 h-4"></i><span>选择多个 PDF 文件合并导出</span></button>
+        </div>
+
+        <!-- 6. TTS Studio -->
+        <div class="p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border space-y-3 shadow-sm">
+          <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center"><i data-lucide="volume-2" class="w-4 h-4"></i></div>
+            <span class="text-xs font-bold">智能文字转语音 / 朗读工坊 (TTS)</span>
+          </div>
+          <textarea id="toolboxTtsText" rows="2" class="w-full p-2 text-xs border rounded-xl bg-slate-50 dark:bg-slate-950 resize-none" placeholder="输入要朗读的文本内容..."></textarea>
+          <div class="flex space-x-2">
+            <button onclick="playToolboxTts()" class="flex-1 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1"><i data-lucide="play" class="w-3.5 h-3.5"></i><span>开始朗读</span></button>
+            <button onclick="stopToolboxTts()" class="px-4 py-1.5 bg-slate-200 dark:bg-slate-800 rounded-xl text-xs font-semibold">停止</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Word Detailed Word Counter Modal -->
+  <div id="wordDetailedStatsModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeWordDetailedStatsModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-5 space-y-3 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="text-sm font-bold flex items-center space-x-1.5 text-blue-600"><i data-lucide="bar-chart-2" class="w-4 h-4"></i><span>文档字数与版面详细统计</span></h3>
+        <button onclick="closeWordDetailedStatsModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="grid grid-cols-2 gap-3" id="wordDetailedStatsGrid">
+        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border">
+          <div class="text-[10px] text-slate-400">中文字符数</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-slate-100 font-mono" id="statCnChars">0</div>
+        </div>
+        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border">
+          <div class="text-[10px] text-slate-400">英文单词数</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-slate-100 font-mono" id="statEnWords">0</div>
+        </div>
+        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border">
+          <div class="text-[10px] text-slate-400">标点与数字数</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-slate-100 font-mono" id="statNumPunct">0</div>
+        </div>
+        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border">
+          <div class="text-[10px] text-slate-400">段落总数</div>
+          <div class="text-xl font-bold text-slate-800 dark:text-slate-100 font-mono" id="statParagraphs">0</div>
+        </div>
+        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border col-span-2 flex justify-between items-center">
+          <div>
+            <div class="text-[10px] text-slate-400">预计正常阅读时长</div>
+            <div class="text-sm font-bold text-indigo-600" id="statReadTime">约 1 分钟</div>
+          </div>
+          <div class="text-right">
+            <div class="text-[10px] text-slate-400">预计演讲播报时长</div>
+            <div class="text-sm font-bold text-purple-600" id="statSpeechTime">约 1.5 分钟</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end pt-2">
+        <button onclick="closeWordDetailedStatsModal()" class="px-4 py-1.5 bg-blue-600 text-white rounded-lg font-bold shadow">确定</button>
       </div>
     </div>
   </div>
@@ -1570,6 +1714,153 @@
           this.closePriceDictModal();
           showToast('价格记忆库已清空');
         }
+      },
+
+      toggleOfficialStamp(show) {
+        const stamp = document.getElementById('billingStampOverlay');
+        if (stamp) {
+          if (show) stamp.classList.remove('hidden');
+          else stamp.classList.add('hidden');
+        }
+      },
+
+      loadIndustryTemplate(type) {
+        if (type === 'clothing') {
+          this.state.sizes = ["S", "M", "L", "XL", "2XL"];
+          this.state.rows = [
+            { id: "r_1", style: "春季纯棉休闲T恤", data: { S: 10, M: 25, L: 30, XL: 15, "2XL": 5 }, price: 45, remark: "现货已验" },
+            { id: "r_2", style: "宽松工装直筒长裤", data: { S: 5, M: 18, L: 22, XL: 12, "2XL": 4 }, price: 88, remark: "黑色加厚" }
+          ];
+        } else if (type === 'general') {
+          this.state.sizes = ["台", "套", "件", "箱", "均码"];
+          this.state.rows = [
+            { id: "r_1", style: "无线静音充电鼠标", data: { "台": 50, "套": 0, "件": 0, "箱": 2, "均码": 0 }, price: 29.9, remark: "黑色磨砂" },
+            { id: "r_2", style: "机械键盘红轴104键", data: { "台": 20, "套": 0, "件": 0, "箱": 1, "均码": 0 }, price: 159, remark: "RGB背光" }
+          ];
+        } else if (type === 'hardware') {
+          this.state.sizes = ["吨", "米", "包", "件", "套"];
+          this.state.rows = [
+            { id: "r_1", style: "HRB400螺纹钢 Φ18", data: { "吨": 12, "米": 0, "包": 0, "件": 0, "套": 0 }, price: 3850, remark: "国标保检" },
+            { id: "r_2", style: "PPR冷热水管 Φ25", data: { "吨": 0, "米": 600, "包": 10, "件": 0, "套": 0 }, price: 6.8, remark: "工程阻燃" }
+          ];
+        } else if (type === 'fresh') {
+          this.state.sizes = ["斤", "公斤", "框", "箱", "包"];
+          this.state.rows = [
+            { id: "r_1", style: "山东红富士苹果(特级)", data: { "斤": 0, "公斤": 0, "框": 0, "箱": 30, "包": 0 }, price: 65, remark: "冷链配送" },
+            { id: "r_2", style: "阳光玫瑰葡萄", data: { "斤": 120, "公斤": 0, "框": 6, "箱": 0, "包": 0 }, price: 16.5, remark: "清晨采摘" }
+          ];
+        }
+        this.save();
+        this.renderHeader();
+        this.renderBody();
+        this.calc();
+        showToast('已载入所选行业模板！');
+      },
+
+      saveCurrentAsDraft() {
+        const client = this.state.client || '未命名客户';
+        const draftId = 'draft_' + Date.now();
+        const drafts = JSON.parse(localStorage.getItem('scm_v18_saved_drafts') || '[]');
+        drafts.unshift({
+          id: draftId,
+          savedAt: new Date().toLocaleString(),
+          client: client,
+          title: this.state.title,
+          date: this.state.date,
+          itemCount: this.state.rows.length,
+          grandAmt: document.getElementById('billingGrandAmt').innerText,
+          state: JSON.parse(JSON.stringify(this.state))
+        });
+        localStorage.setItem('scm_v18_saved_drafts', JSON.stringify(drafts.slice(0, 30)));
+        showToast('当前单据已成功保存为草稿！');
+      },
+
+      openDraftsModal() {
+        const modal = document.getElementById('billingDraftsModal');
+        const list = document.getElementById('billingDraftsList');
+        const drafts = JSON.parse(localStorage.getItem('scm_v18_saved_drafts') || '[]');
+        if (!drafts.length) {
+          list.innerHTML = '<div class="p-4 text-center text-slate-400">暂无保存的草稿，点击“存草稿”即可随时备份单据！</div>';
+        } else {
+          list.innerHTML = drafts.map(d => `
+            <div class="p-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800">
+              <div>
+                <div class="font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
+                  <span>${d.client || '无客户名'}</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 font-normal">${d.date}</span>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-0.5">${d.savedAt} · 共 ${d.itemCount} 项 · 总金额: ¥${d.grandAmt}</div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button onclick="billingApp.loadDraft('${d.id}')" class="px-2.5 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded font-bold hover:bg-indigo-100">调取此单</button>
+                <button onclick="billingApp.deleteDraft('${d.id}')" class="p-1 text-slate-300 hover:text-red-500 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+              </div>
+            </div>`).join('');
+        }
+        modal.classList.remove('hidden');
+        lucide.createIcons();
+      },
+
+      closeDraftsModal() { document.getElementById('billingDraftsModal').classList.add('hidden'); },
+
+      loadDraft(id) {
+        const drafts = JSON.parse(localStorage.getItem('scm_v18_saved_drafts') || '[]');
+        const target = drafts.find(d => d.id === id);
+        if (target && target.state) {
+          this.state = target.state;
+          this.save();
+          this.renderHeader();
+          this.renderBody();
+          this.calc();
+          this.closeDraftsModal();
+          showToast(`已成功调取【${target.client}】草稿单据！`);
+        }
+      },
+
+      deleteDraft(id) {
+        let drafts = JSON.parse(localStorage.getItem('scm_v18_saved_drafts') || '[]');
+        drafts = drafts.filter(d => d.id !== id);
+        localStorage.setItem('scm_v18_saved_drafts', JSON.stringify(drafts));
+        this.openDraftsModal();
+        showToast('已删除此草稿');
+      },
+
+      openBatchPasteModal() { document.getElementById('billingBatchPasteModal').classList.remove('hidden'); },
+      closeBatchPasteModal() { document.getElementById('billingBatchPasteModal').classList.add('hidden'); },
+
+      executeBatchPaste() {
+        const text = document.getElementById('billingBatchPasteTextarea').value.trim();
+        if (!text) return showToast('请粘贴 Excel 表格数据');
+        const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+        let count = 0;
+        lines.forEach((line, idx) => {
+          const cells = line.split('\t').map(c => c.trim());
+          if (cells.length >= 1) {
+            const style = cells[0];
+            const price = parseFloat(cells[cells.length - 1]) || 0;
+            const data = {};
+            this.state.sizes.forEach((s, sIdx) => {
+              if (cells[sIdx + 1] !== undefined) {
+                const val = parseFloat(cells[sIdx + 1]);
+                if (!isNaN(val)) data[s] = val;
+              }
+            });
+            this.state.rows.push({
+              id: 'r_p_' + Date.now() + '_' + idx,
+              style: style,
+              data: data,
+              price: price || (this.priceDict[style] || ''),
+              remark: ''
+            });
+            count++;
+          }
+        });
+        this.save();
+        this.renderBody();
+        this.calc();
+        this.closeBatchPasteModal();
+        document.getElementById('billingBatchPasteTextarea').value = '';
+        showToast(`已成功批量导入 ${count} 行数据！`);
       }
     };
 
@@ -1772,6 +2063,68 @@
       const html = '<table border="1" style="width:100%;border-collapse:collapse;margin:15px 0;"><thead><tr><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;">序号</th><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;">主要工作事项</th><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;">责任部门</th></tr></thead><tbody><tr><td style="border:1px solid #cbd5e1;padding:8px;text-align:center;">1</td><td style="border:1px solid #cbd5e1;padding:8px;">线上智能账单与办公套件系统</td><td style="border:1px solid #cbd5e1;padding:8px;">综合部</td></tr></tbody></table><p><br/></p>';
       document.getElementById('wordEditorDoc').focus(); document.execCommand('insertHTML', false, html);
     }
+    function insertGovRedHeaderBlock() {
+      const redHeaderHtml = `
+        <div class="gov-red-header-wrapper" style="text-align:center;margin-bottom:24px;border-bottom:3px double #dc2626;padding-bottom:16px;">
+          <div style="font-family:'SimHei',黑体,sans-serif;color:#dc2626;font-size:28px;font-weight:900;letter-spacing:4px;margin-bottom:8px;">× × 市 人 民 政 府 文 件</div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;color:#334155;font-weight:bold;padding:0 8px;margin-top:12px;">
+            <span>×政发〔2026〕18号</span>
+            <span>签发人：张 华</span>
+          </div>
+        </div>
+        <p><br/></p>
+      `;
+      const el = document.getElementById('wordEditorDoc');
+      el.focus();
+      document.execCommand('insertHTML', false, redHeaderHtml);
+      showToast('国标红头公文头已插入！');
+      updateWordStats();
+    }
+    let isWordTtsPlaying = false;
+    function toggleWordTextToSpeech() {
+      if (!('speechSynthesis' in window)) return showToast('当前浏览器不支持语音合成 (TTS)');
+      if (isWordTtsPlaying) {
+        window.speechSynthesis.cancel();
+        isWordTtsPlaying = false;
+        document.getElementById('wordTTSText').innerText = '🔊 语音朗读';
+        showToast('语音朗读已停止');
+      } else {
+        const text = document.getElementById('wordEditorDoc').innerText;
+        if (!text.trim()) return showToast('文档内容为空');
+        window.speechSynthesis.cancel();
+        const ut = new SpeechSynthesisUtterance(text);
+        ut.lang = 'zh-CN';
+        ut.rate = 1.0;
+        ut.onend = () => {
+          isWordTtsPlaying = false;
+          document.getElementById('wordTTSText').innerText = '🔊 语音朗读';
+        };
+        window.speechSynthesis.speak(ut);
+        isWordTtsPlaying = true;
+        document.getElementById('wordTTSText').innerText = '⏹ 停止朗读';
+        showToast('正在朗读文档正文...');
+      }
+    }
+    function openWordDetailedStatsModal() {
+      const text = document.getElementById('wordEditorDoc')?.innerText || '';
+      const cnChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+      const enWords = (text.match(/[a-zA-Z]+/g) || []).length;
+      const numPunct = (text.match(/[0-9，。！？；：、“”‘’（）《》,.!?;:'"()]/g) || []).length;
+      const paras = text.split('\n').filter(l => l.trim().length > 0).length;
+      const readMin = Math.max(1, Math.ceil(text.length / 350));
+      const speechMin = Math.max(1, Math.ceil(text.length / 220));
+
+      document.getElementById('statCnChars').innerText = cnChars;
+      document.getElementById('statEnWords').innerText = enWords;
+      document.getElementById('statNumPunct').innerText = numPunct;
+      document.getElementById('statParagraphs').innerText = paras;
+      document.getElementById('statReadTime').innerText = `约 ${readMin} 分钟`;
+      document.getElementById('statSpeechTime').innerText = `约 ${speechMin} 分钟`;
+      document.getElementById('wordDetailedStatsModal').classList.remove('hidden');
+    }
+    function closeWordDetailedStatsModal() {
+      document.getElementById('wordDetailedStatsModal').classList.add('hidden');
+    }
     function cleanDocumentSpaces() {
       const el = document.getElementById('wordEditorDoc');
       el.innerHTML = el.innerHTML.replace(/([\u4e00-\u9fa5])([a-zA-Z0-9])/g, '$1 $2').replace(/([a-zA-Z0-9])([\u4e00-\u9fa5])/g, '$1 $2');
@@ -1786,9 +2139,34 @@
     function updateWordStats() {
       const el = document.getElementById('wordEditorDoc'); if (!el) return;
       const text = el.innerText || '';
-      document.getElementById('wordDocStatsInfo').innerText = `字数: ${text.length} | 段落: ${text.split('\n').filter(l=>l.trim()).length}`;
+      document.getElementById('wordDocStatsInfo').innerText = `字数: ${text.length} | 字符: ${text.replace(/\s/g, '').length} | 段落: ${text.split('\n').filter(l=>l.trim()).length}`;
     }
     function printCurrentWordDoc() { window.print(); }
+
+    /* Excel Formula Helpers & CSV Export */
+    function insertExcelFormulaTemplate(fn) {
+      const activeLabel = document.getElementById('excelActiveCellLabel').innerText || 'A1';
+      const colChar = activeLabel.charAt(0);
+      let formula = '';
+      if (fn === 'SUM') formula = `=SUM(${colChar}1:${colChar}5)`;
+      else if (fn === 'AVERAGE') formula = `=AVERAGE(${colChar}1:${colChar}5)`;
+      else if (fn === 'COUNT') formula = `=COUNT(${colChar}1:${colChar}5)`;
+      document.getElementById('excelFormulaInput').value = formula;
+      handleExcelFormulaInput(formula);
+      showToast(`已插入 ${fn} 公式模板`);
+    }
+    function exportExcelToCSV() {
+      let csvContent = "\uFEFF";
+      state.excelData.forEach(row => {
+        csvContent += row.map(cell => `"${(cell || '').replace(/"/g, '""')}"`).join(",") + "\r\n";
+      });
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "Spreadsheet_Data.csv";
+      link.click();
+      showToast('CSV 文件导出成功！');
+    }
 
     /* Excel Spreadsheet */
     function initExcelGrid() {
@@ -2212,6 +2590,55 @@
       if (state.idBackImg) pdf.addImage(state.idBackImg, 'JPEG', 62, 130, 85.6, 54);
       pdf.save('ID_Card_A4_1to1.pdf');
       showToast('身份证 1:1 A4 打印 PDF 导出完成！');
+    }
+
+    /* Toolbox TTS */
+    function playToolboxTts() {
+      if (!('speechSynthesis' in window)) return showToast('当前浏览器不支持语音合成');
+      const text = document.getElementById('toolboxTtsText').value.trim();
+      if (!text) return showToast('请输入要朗读的文本');
+      window.speechSynthesis.cancel();
+      const ut = new SpeechSynthesisUtterance(text);
+      ut.lang = 'zh-CN';
+      window.speechSynthesis.speak(ut);
+      showToast('开始语音播报...');
+    }
+    function stopToolboxTts() {
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      showToast('语音已停止');
+    }
+
+    /* PDF Merge */
+    async function handlePdfMergeFiles(e) {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+      e.target.value = '';
+      if (files.length < 2) return showToast('请至少选择 2 个 PDF 文件进行合并');
+      showToast(`正在合并 ${files.length} 个 PDF 文件...`);
+      try {
+        const { jsPDF } = window.jspdf;
+        const outPdf = new jsPDF('p', 'mm', 'a4');
+        let isFirst = true;
+
+        for (let i = 0; i < files.length; i++) {
+          const ab = await files[i].arrayBuffer();
+          const doc = await pdfjsLib.getDocument({ data: ab }).promise;
+          for (let p = 1; p <= doc.numPages; p++) {
+            const page = await doc.getPage(p);
+            const vp = page.getViewport({ scale: 1.5 });
+            const cvs = document.createElement('canvas');
+            cvs.width = vp.width; cvs.height = vp.height;
+            await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
+            if (!isFirst) outPdf.addPage();
+            outPdf.addImage(cvs.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297);
+            isFirst = false;
+          }
+        }
+        outPdf.save(`Merged_Document_${Date.now()}.pdf`);
+        showToast('PDF 多文件合并导出成功！');
+      } catch (err) {
+        showToast('PDF 合并失败: ' + err.message);
+      }
     }
   </script>
 </body>
