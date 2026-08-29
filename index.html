@@ -714,7 +714,7 @@
 
       <!-- Action Buttons -->
       <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-        <input type="file" id="inputOfficeFileOpen" class="hidden" onchange="handleOfficeFileOpen(event)">
+        <input type="file" id="inputOfficeFileOpen" accept=".docx,.xlsx,.xls,.csv,.pptx,.ppt,.pdf,.txt" class="hidden" onchange="handleOfficeFileOpen(event)">
         <button onclick="triggerOfficeFileOpen()" class="px-2 sm:px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-medium flex items-center space-x-1">
           <i data-lucide="folder-open" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">打开</span>
         </button>
@@ -2214,19 +2214,7 @@
       },
 
       convertToRmbChinese(n) {
-        if (isNaN(n) || n === 0) return '人民币零元整';
-        const digits = ['零','壹','贰','叁','肆','伍','陆','柒','捌','玖'];
-        const units = [['元','万','亿'],['','拾','佰','仟']];
-        let s = '', num = Math.floor(n);
-        for (let i = 0; i < units[0].length && num > 0; i++) {
-          let p = '';
-          for (let j = 0; j < units[1].length && num > 0; j++) {
-            p = digits[num % 10] + units[1][j] + p;
-            num = Math.floor(num / 10);
-          }
-          s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + units[0][i] + s;
-        }
-        return '人民币' + (s || '零元') + '整';
+        return digitToChinese(n);
       },
 
       renderAll() { this.renderHeader(); this.renderBody(); this.updateTotalCalc(); },
@@ -2350,6 +2338,9 @@
           pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 10, 10, 277, 190);
           pdf.save(`${this.state.client || '发货单'}_${this.state.date}.pdf`);
           showToast('对账单 PDF 导出完成！');
+        }).catch(err => {
+          document.body.classList.remove('capturing');
+          showToast('PDF 导出失败: ' + err);
         });
       },
 
@@ -2802,8 +2793,16 @@
     }
     function cleanDocumentSpaces() {
       const el = document.getElementById('wordEditorDoc');
-      el.innerHTML = el.innerHTML.replace(/([\u4e00-\u9fa5])([a-zA-Z0-9])/g, '$1 $2').replace(/([a-zA-Z0-9])([\u4e00-\u9fa5])/g, '$1 $2');
-      showToast('中英文盘古空格清洗完成');
+      if (!el) return;
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+      let node;
+      while (node = walker.nextNode()) {
+        node.nodeValue = node.nodeValue
+          .replace(/([一-龥])([a-zA-Z0-9])/g, '$1 $2')
+          .replace(/([a-zA-Z0-9])([一-龥])/g, '$1 $2');
+      }
+      showToast('中英文盘古空格规范清洗完成！');
+      updateWordStats();
     }
     function setDocPaperTheme(theme) {
       const el = document.getElementById('wordEditorDoc');
@@ -2833,7 +2832,7 @@
     function exportExcelToCSV() {
       let csvContent = "\uFEFF";
       state.excelData.forEach(row => {
-        csvContent += row.map(cell => `"${(cell || '').replace(/"/g, '""')}"`).join(",") + "\r\n";
+        csvContent += row.map(cell => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(",") + "\r\n";
       });
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
@@ -2861,7 +2860,7 @@
       for (let r = 0; r < rowCount; r++) {
         html += `<tr style="height: ${state.excelRowHeights[r]||32}px;"><td oncontextmenu="handleExcelRowHeaderContextMenu(event, ${r})" class="p-1 bg-slate-50 border border-slate-300 text-center font-bold cursor-pointer"><span>${r + 1}</span></td>`;
         for (let c = 0; c < colCount; c++) {
-          const val = state.excelData[r]?.[c] || '';
+          const val = state.excelData[r]?.[c] ?? '';
           html += `<td contenteditable="true" onfocus="selectExcelCell(${r}, ${c}, '${String.fromCharCode(65 + c)}${r + 1}', this)" oninput="updateExcelCell(${r}, ${c}, this.innerText)" class="editor-sheet-cell p-1.5 border border-slate-200 overflow-hidden leading-tight">${val}</td>`;
         }
         html += '</tr>';
@@ -3345,18 +3344,48 @@
     async function handleOfficeFileOpen(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
       const ext = file.name.split('.').pop().toLowerCase();
-      if (ext === 'docx') {
-        const ab = await file.arrayBuffer();
-        const res = await mammoth.convertToHtml({ arrayBuffer: ab });
-        document.getElementById('wordEditorDoc').innerHTML = res.value;
-        switchOfficeSubTool('word'); showToast('Word 已打开');
-      } else if (['xlsx', 'xls', 'csv'].includes(ext)) {
-        const ab = await file.arrayBuffer();
-        const wb = XLSX.read(ab, { type: 'array' });
-        state.excelData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
-        initExcelGrid(); switchOfficeSubTool('excel'); showToast('Excel 已打开');
+      showToast(`正在打开 ${file.name}...`);
+      try {
+        if (ext === 'docx') {
+          const ab = await file.arrayBuffer();
+          const res = await mammoth.convertToHtml({ arrayBuffer: ab });
+          document.getElementById('wordEditorDoc').innerHTML = res.value || '<p>文档无内容</p>';
+          switchOfficeSubTool('word'); showToast('Word 文档已打开！');
+          updateWordStats();
+        } else if (ext === 'txt') {
+          const txt = await file.text();
+          const html = txt.split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${l.trim()}</p>`).join('');
+          document.getElementById('wordEditorDoc').innerHTML = html || '<p>文档无内容</p>';
+          switchOfficeSubTool('word'); showToast('纯文本已载入 Word 编辑器！');
+          updateWordStats();
+        } else if (['xlsx', 'xls', 'csv'].includes(ext)) {
+          const ab = await file.arrayBuffer();
+          const wb = XLSX.read(ab, { type: 'array' });
+          state.excelData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+          initExcelGrid(); switchOfficeSubTool('excel'); showToast('Excel 表格已打开！');
+        } else if (ext === 'pdf') {
+          const ab = await file.arrayBuffer();
+          state.pdfDoc = await pdfjsLib.getDocument({ data: ab }).promise;
+          state.pdfPageNum = 1;
+          renderPdfViewerPage();
+          switchOfficeSubTool('pdf');
+          showToast(`PDF 文档已打开 (共 ${state.pdfDoc.numPages} 页)！`);
+        } else if (['pptx', 'ppt'].includes(ext)) {
+          state.pptSlides = [
+            { layout: 'title_content', title: file.name.replace(/\.[^/.]+$/, ''), body: '• 演示文稿已成功载入\n• 您可以在此编辑幻灯片内容、更换背景或插入多媒体', notes: '', bgType: 'gradient', bgValue: 'linear-gradient(135deg, #1e1b4b, #312e81)', media: [] }
+          ];
+          state.currentSlideIdx = 0;
+          renderPptSlidesList();
+          switchOfficeSubTool('ppt');
+          showToast('PPT 演示文稿已载入！');
+        } else {
+          showToast('暂不支持此格式，请选择 docx/xlsx/pptx/pdf/txt 格式文件');
+        }
+      } catch (err) {
+        showToast('打开文件失败: ' + err.message);
       }
     }
+
     async function exportCurrentOfficeDocument() {
       if (state.currentOfficeTool === 'word') {
         const text = document.getElementById('wordEditorDoc').innerText;
@@ -3379,6 +3408,17 @@
         });
         await pptx.writeFile({ fileName: `Presentation_${Date.now()}.pptx` });
         showToast('PPT 导出完成！');
+      } else if (state.currentOfficeTool === 'pdf') {
+        const cvs = document.getElementById('pdfViewerCanvas');
+        if (cvs && cvs.width) {
+          const a = document.createElement('a');
+          a.href = cvs.toDataURL('image/jpeg', 0.95);
+          a.download = `PDF_Page_${state.pdfPageNum || 1}.jpg`;
+          a.click();
+          showToast('当前 PDF 页面已导出为高清图片！');
+        } else {
+          showToast('暂无可导出的 PDF 页面');
+        }
       }
     }
 
@@ -4779,21 +4819,74 @@
     }
 
     /* Toolbox Utilities */
-    function convertRmbAmount() {
-      const n = parseFloat(document.getElementById('rmbInput').value);
-      if (isNaN(n)) return;
-      const digits = ['零','壹','贰','叁','肆','伍','陆','柒','捌','玖'];
-      const units = [['元','万','亿'],['','拾','佰','仟']];
-      let s = '', num = Math.floor(n);
-      for (let i = 0; i < units[0].length && num > 0; i++) {
-        let p = '';
-        for (let j = 0; j < units[1].length && num > 0; j++) {
-          p = digits[num % 10] + units[1][j] + p;
-          num = Math.floor(num / 10);
-        }
-        s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + units[0][i] + s;
+    function digitToChinese(money) {
+      const cnNums = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+      const cnIntRadice = ['', '拾', '佰', '仟'];
+      const cnIntUnits = ['', '万', '亿', '兆'];
+      const cnDecUnits = ['角', '分'];
+      const cnInteger = '整';
+      const cnIntLast = '元';
+      const maxNum = 999999999999999.99;
+
+      let integerNum;
+      let decimalNum;
+      let chineseStr = '';
+      let parts;
+
+      if (money === '' || isNaN(money)) return '人民币零元整';
+      money = parseFloat(money);
+      if (money >= maxNum) return '超出最大处理金额';
+      if (money === 0) return '人民币零元整';
+
+      money = money.toString();
+      if (money.indexOf('.') === -1) {
+        integerNum = money;
+        decimalNum = '';
+      } else {
+        parts = money.split('.');
+        integerNum = parts[0];
+        decimalNum = parts[1].substr(0, 2);
       }
-      document.getElementById('rmbOutput').value = '人民币' + (s || '零元') + '整';
+
+      if (parseInt(integerNum, 10) > 0) {
+        let zeroCount = 0;
+        const IntLen = integerNum.length;
+        for (let i = 0; i < IntLen; i++) {
+          const n = integerNum.substr(i, 1);
+          const p = IntLen - i - 1;
+          const q = Math.floor(p / 4);
+          const m = p % 4;
+          if (n === '0') {
+            zeroCount++;
+          } else {
+            if (zeroCount > 0) chineseStr += cnNums[0];
+            zeroCount = 0;
+            chineseStr += cnNums[parseInt(n, 10)] + cnIntRadice[m];
+          }
+          if (m === 0 && zeroCount < 4) chineseStr += cnIntUnits[q];
+        }
+        chineseStr += cnIntLast;
+      }
+
+      if (decimalNum !== '') {
+        const decLen = decimalNum.length;
+        for (let i = 0; i < decLen; i++) {
+          const n = decimalNum.substr(i, 1);
+          if (n !== '0') chineseStr += cnNums[Number(n)] + cnDecUnits[i];
+        }
+      }
+
+      if (chineseStr === '') chineseStr = cnNums[0] + cnIntLast + cnInteger;
+      else if (decimalNum === '' || decimalNum === '00' || decimalNum === '0') chineseStr += cnInteger;
+
+      return '人民币' + chineseStr;
+    }
+
+    function convertRmbAmount() {
+      const n = document.getElementById('rmbInput')?.value;
+      const res = digitToChinese(n);
+      const out = document.getElementById('rmbOutput');
+      if (out) out.value = res;
     }
     function copyRmbResult() {
       navigator.clipboard.writeText(document.getElementById('rmbOutput').value);
