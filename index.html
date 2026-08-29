@@ -51,17 +51,32 @@
     del.diff-del { background-color: #fee2e2; color: #b91c1c; text-decoration: line-through; padding: 2px 4px; border-radius: 3px; }
     .editor-sheet-cell:focus { outline: 2px solid #4f46e5; z-index: 10; }
     
-    /* Document Editor Typography (No forced global text-indent to let user control via right-click) */
+    /* Document Editor Typography (No !important to allow dynamic inline font/size changes) */
     .gov-doc-mode {
-      font-family: "FangSong", "仿宋", "STFangsong", "仿宋_GB2312", serif !important;
-      line-height: 1.8 !important; font-size: 16px !important;
+      font-family: "FangSong", "仿宋", "STFangsong", "仿宋_GB2312", serif;
+      line-height: 1.8;
+      font-size: 16px;
     }
     .gov-doc-mode h1 {
-      font-family: "SimHei", "黑体", "STHeiti", sans-serif !important;
-      font-size: 22px !important; text-align: center; color: #dc2626 !important; font-weight: bold; margin-bottom: 20px;
+      font-family: "SimHei", "黑体", "STHeiti", sans-serif;
+      font-size: 22px;
+      text-align: center;
+      color: #dc2626;
+      font-weight: bold;
+      margin-bottom: 20px;
     }
-    .indent-2em { text-indent: 2em !important; }
-    .indent-0 { text-indent: 0 !important; }
+    .indent-2em { text-indent: 2em; }
+    .indent-0 { text-indent: 0; }
+
+    /* Table Column/Row Resizer Handles */
+    .col-resizer-handle {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 5px; cursor: col-resize; user-select: none; z-index: 5;
+    }
+    .col-resizer-handle:hover, .col-resizer-handle.resizing { background: #4f46e5; }
+    .row-resizer-handle {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 5px; cursor: row-resize; user-select: none; z-index: 5;
+    }
+    .row-resizer-handle:hover, .row-resizer-handle.resizing { background: #4f46e5; }
   </style>
 </head>
 <body class="h-full bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden select-none pb-14 xl:pb-0" onclick="closeAllContextMenus()">
@@ -207,37 +222,37 @@
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="file-text" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">Word 在线文档 & 公文排版</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">PC端读取本机字体、右键灵活调节行距与缩进、仿宋公文与富文本编辑。</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">选中文本实时更改字体、精确字号、右键调行距与首行缩进、仿宋公文排版。</p>
           </div>
           <span class="text-[11px] font-bold text-blue-600 flex items-center space-x-1"><span>立即打开</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
         <!-- Excel Editor -->
-        <div onclick="navigateModule('editor', 'excel')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="excel 表格 工作簿 公式 计算 xlsx csv">
+        <div onclick="navigateModule('editor', 'excel')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="excel 表格 工作簿 公式 计算 列宽 行高 拖拽 xlsx csv">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="sheet" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">Excel 在线表格与公式</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">网格单元格、fx 公式计算、增删行列、打开与导出 .xlsx 工作簿。</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">支持鼠标拖拽或输入精确自定义单列宽、单行高，字体颜色对齐与公式计算。</p>
           </div>
           <span class="text-[11px] font-bold text-emerald-600 flex items-center space-x-1"><span>立即打开</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
         <!-- PPT Studio -->
-        <div onclick="navigateModule('editor', 'ppt')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="ppt 幻灯片 演示 演讲 pptx 放映">
+        <div onclick="navigateModule('editor', 'ppt')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="ppt 幻灯片 演示 演讲 pptx 放映 字体 行距">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="presentation" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PPT 在线演示文稿设计</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">16:9 画布、幻灯片管理、多款主题配色、F5 全屏放映与导出 .pptx。</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">16:9 画布、同步 Word 全套富文本字体、行距与对齐、F5 全屏放映与导出 .pptx。</p>
           </div>
           <span class="text-[11px] font-bold text-amber-600 flex items-center space-x-1"><span>立即打开</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
         <!-- PDF Viewer -->
-        <div onclick="navigateModule('editor', 'pdf')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-red-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="pdf 查看 阅读 批注 浏览">
+        <div onclick="navigateModule('editor', 'pdf')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-red-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="pdf 查看 阅读 批注 浏览 缩放 旋转">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-50 dark:bg-red-950/60 text-red-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="file-check" class="w-5 h-5"></i></div>
-            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 在线查看与轻批注</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">本地解析上传 PDF 文档，逐页翻页高清查看与缩放浏览。</p>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 在线查看与批注</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">同步字体与字号设置、页面缩放、顺时针旋转 90°、逐页高清浏览与打印。</p>
           </div>
           <span class="text-[11px] font-bold text-red-600 flex items-center space-x-1"><span>立即打开</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
@@ -245,7 +260,7 @@
         <!-- Word -> PDF -->
         <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="word 转 pdf docx 转 pdf 格式转换">
           <div>
-            <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="file-type-2" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center"><i data-lucide="file-type-2" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">Word (.docx) 转 PDF</h4>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">解析本地 Word 文档段落结构并转换为标准高清 PDF。</p>
           </div>
@@ -255,7 +270,7 @@
         <!-- Excel -> PDF -->
         <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="excel 转 pdf xlsx 转 pdf 报表">
           <div>
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="table-properties" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center"><i data-lucide="table-properties" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">Excel (.xlsx) 转 PDF</h4>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">工作簿表格自动排版生成美观整齐的高清 PDF 报表。</p>
           </div>
@@ -452,7 +467,7 @@
           <p style="text-indent:0;font-weight:bold;margin-bottom:12px;">〔2026〕18号</p>
           <p style="text-indent:0;font-weight:bold;margin-bottom:16px;">各部门、各直属机构：</p>
           <p class="indent-2em" style="margin-bottom:12px;">为提升数字化协作与日常办公效率，现全面启用 Office Master Studio 一站式线上办公工作台。新电脑无需安装 WPS 或 Office 套件即可直接在线编辑 Word、Excel、PPT 和 PDF 文件。</p>
-          <p class="indent-2em" style="margin-bottom:12px;">【全模块右键排版升级】在 Word、Excel 表格、PPT 演示文稿及 PDF 中单击鼠标右键，均可随时调整行距（1.0倍~2.0倍）、首行缩进（无缩进/2字符/4字符）、文字对齐及字体样式；PC端支持一键读取电脑本机安装的全部字体库！</p>
+          <p class="indent-2em" style="margin-bottom:12px;">【全模块排版与表格增强】选中任意文本即可实时应用字体（仿宋、宋体、黑体、微软雅黑、楷体等）及字号；Excel表格全面支持鼠标拖拽与精准数字自定义单列宽、单行高；PPT与PDF同步支持全套富文本工具！</p>
           <div style="text-align:right;margin-top:36px;"><p style="margin-bottom:4px;">办公厅</p><p>2026年8月29日</p></div>
         </div>
       </div>
@@ -497,72 +512,125 @@
       </div>
     </div>
 
-    <!-- 2. EXCEL SPREADSHEET EDITOR (支持字体切换、行距与右键单元格菜单) -->
+    <!-- 2. EXCEL SPREADSHEET EDITOR (支持独立调整列宽/行高、拖拽分界线与全套富文本同步) -->
     <div id="subOfficeExcel" class="office-sub-panel flex-1 flex flex-col overflow-hidden hidden relative">
-      <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 flex items-center space-x-2 text-xs overflow-x-auto">
+      <!-- Excel Toolbar Row 1: Font, Size, Align, Color, Row/Col size inputs -->
+      <div class="p-1.5 sm:p-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between space-x-2 text-xs overflow-x-auto">
         <div class="flex items-center space-x-1 shrink-0">
-          <button onclick="insertExcelRow()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium">+ 行</button>
-          <button onclick="insertExcelCol()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium">+ 列</button>
-          <button onclick="deleteExcelRow()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded font-medium text-red-500">删行</button>
+          <!-- Excel Font Selector -->
+          <select id="excelFontFamilySelect" onchange="changeExcelActiveCellFont(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium font-select-element shrink-0">
+            <optgroup label="🌟 常用核心字体">
+              <option value="'Microsoft YaHei', 微软雅黑">微软雅黑 (高清表格)</option>
+              <option value="FangSong, 仿宋, STFangsong">仿宋 (正式公文)</option>
+              <option value="SimSun, 宋体">宋体</option>
+              <option value="SimHei, 黑体">黑体 (表头加粗)</option>
+              <option value="KaiTi, 楷体">楷体</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="'Courier New', monospace">等宽财务数字</option>
+            </optgroup>
+          </select>
+
+          <button onclick="loadAllSystemLocalFonts()" class="px-2 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border border-indigo-200 rounded font-semibold text-[11px] hidden sm:flex items-center space-x-1 shrink-0">
+            <i data-lucide="laptop" class="w-3 h-3"></i><span>本机字体</span>
+          </button>
+
+          <!-- Excel Font Size -->
+          <select id="excelFontSizeSelect" onchange="changeExcelActiveCellFontSize(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium shrink-0">
+            <option value="12px">12px (标准)</option>
+            <option value="14px">14px (醒目)</option>
+            <option value="16px">16px (表头)</option>
+            <option value="18px">18px (大标)</option>
+            <option value="10px">10px (紧凑)</option>
+          </select>
+
+          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
+
+          <!-- Bold, Italic, Alignments -->
+          <button onclick="toggleExcelActiveCellBold()" class="p-1 rounded hover:bg-slate-100 font-bold" title="加粗">B</button>
+          <button onclick="toggleExcelActiveCellItalic()" class="p-1 rounded hover:bg-slate-100 italic" title="斜体">I</button>
+          <button onclick="setExcelCellAlign('left')" class="p-1 rounded hover:bg-slate-100" title="靠左"><i data-lucide="align-left" class="w-3.5 h-3.5"></i></button>
+          <button onclick="setExcelCellAlign('center')" class="p-1 rounded hover:bg-slate-100" title="居中"><i data-lucide="align-center" class="w-3.5 h-3.5"></i></button>
+          <button onclick="setExcelCellAlign('right')" class="p-1 rounded hover:bg-slate-100" title="靠右"><i data-lucide="align-right" class="w-3.5 h-3.5"></i></button>
+
+          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
+
+          <!-- Color Pickers -->
+          <div class="flex items-center space-x-0.5" title="文字颜色">
+            <label class="cursor-pointer p-1 rounded hover:bg-slate-100 flex items-center">
+              <i data-lucide="palette" class="w-3.5 h-3.5 text-indigo-600"></i>
+              <input type="color" onchange="changeExcelActiveCellColor(this.value)" value="#1e293b" class="opacity-0 w-0 h-0">
+            </label>
+          </div>
+          <div class="flex items-center space-x-0.5" title="单元格背景填充">
+            <button onclick="setExcelActiveCellBg('#fef08a')" class="w-3.5 h-3.5 rounded bg-yellow-200 border border-yellow-400" title="黄色填充"></button>
+            <button onclick="setExcelActiveCellBg('#bbf7d0')" class="w-3.5 h-3.5 rounded bg-green-200 border border-green-400" title="绿色填充"></button>
+            <button onclick="setExcelActiveCellBg('#bae6fd')" class="w-3.5 h-3.5 rounded bg-sky-200 border border-sky-400" title="蓝色填充"></button>
+            <button onclick="setExcelActiveCellBg('transparent')" class="px-1 text-[10px] text-slate-400 hover:text-slate-600" title="无填充">无</button>
+          </div>
+
+          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
+
+          <!-- Column Width & Row Height Direct Inputs -->
+          <div class="flex items-center space-x-1 bg-slate-50 dark:bg-slate-800/80 px-2 py-0.5 rounded-lg border text-[11px]">
+            <span class="text-slate-500">列宽:</span>
+            <input type="number" id="excelColWidthInput" min="40" max="600" value="120" onchange="setSpecificColWidth(this.value)" class="w-12 bg-white dark:bg-slate-900 border rounded px-1 text-center font-mono text-xs">
+            <span class="text-slate-400">px</span>
+          </div>
+
+          <div class="flex items-center space-x-1 bg-slate-50 dark:bg-slate-800/80 px-2 py-0.5 rounded-lg border text-[11px]">
+            <span class="text-slate-500">行高:</span>
+            <input type="number" id="excelRowHeightInput" min="20" max="300" value="34" onchange="setSpecificRowHeight(this.value)" class="w-12 bg-white dark:bg-slate-900 border rounded px-1 text-center font-mono text-xs">
+            <span class="text-slate-400">px</span>
+          </div>
         </div>
 
-        <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
-
-        <!-- Excel Font Selector -->
-        <select id="excelFontFamilySelect" onchange="changeExcelFont(this.value)" class="text-xs p-1 rounded bg-white dark:bg-slate-800 border font-medium font-select-element shrink-0">
-          <optgroup label="🌟 常用核心字体">
-            <option value="'Microsoft YaHei', 微软雅黑">微软雅黑</option>
-            <option value="FangSong, 仿宋, STFangsong">仿宋</option>
-            <option value="SimSun, 宋体">宋体</option>
-            <option value="SimHei, 黑体">黑体</option>
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="'Courier New', monospace">等宽数字</option>
-          </optgroup>
-        </select>
-
-        <button onclick="loadAllSystemLocalFonts()" class="px-2 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border border-indigo-200 rounded font-semibold text-[11px] hidden sm:flex items-center space-x-1 shrink-0">
-          <i data-lucide="laptop" class="w-3 h-3"></i><span>本机字体</span>
-        </button>
-
-        <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 shrink-0"></div>
-
-        <!-- Excel Formula Bar -->
-        <span class="font-bold font-mono text-indigo-600 shrink-0" id="excelActiveCellLabel">A1</span>
-        <div class="flex-1 min-w-[140px] flex items-center bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 px-2 py-1">
-          <span class="text-slate-400 font-mono mr-1.5 italic font-bold">fx</span>
-          <input type="text" id="excelFormulaInput" oninput="handleExcelFormulaInput(this.value)" placeholder="输入数值或公式..." class="w-full bg-transparent text-xs font-mono focus:outline-none">
+        <div class="flex items-center space-x-1 shrink-0">
+          <button onclick="insertExcelRow()" class="px-2 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded font-semibold text-[11px]">+行</button>
+          <button onclick="insertExcelCol()" class="px-2 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded font-semibold text-[11px]">+列</button>
+          <button onclick="deleteExcelRow()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded text-[11px] text-red-500">删行</button>
+          <button onclick="deleteExcelCol()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded text-[11px] text-red-500">删列</button>
         </div>
       </div>
 
-      <div class="flex-1 overflow-auto bg-white dark:bg-slate-900" id="excelGridContainer" oncontextmenu="handleExcelContextMenu(event)">
-        <table id="excelTableElement" class="w-full text-xs border-collapse border border-slate-300 dark:border-slate-700 font-mono"></table>
+      <!-- Excel Formula Row -->
+      <div class="px-2 py-1.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 flex items-center space-x-2 text-xs">
+        <span class="font-bold font-mono text-indigo-600 shrink-0 px-2 py-0.5 bg-white dark:bg-slate-800 rounded border" id="excelActiveCellLabel">A1</span>
+        <div class="flex-1 flex items-center bg-white dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 px-2.5 py-1">
+          <span class="text-slate-400 font-mono mr-2 italic font-bold">fx</span>
+          <input type="text" id="excelFormulaInput" oninput="handleExcelFormulaInput(this.value)" placeholder="输入单元格数值、公式 (如 =SUM(C2:C4))..." class="w-full bg-transparent text-xs font-mono focus:outline-none">
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-auto bg-white dark:bg-slate-900 select-text" id="excelGridContainer" oncontextmenu="handleExcelContextMenu(event)">
+        <table id="excelTableElement" class="w-full text-xs border-collapse border border-slate-300 dark:border-slate-700 font-mono table-fixed"></table>
       </div>
 
       <!-- Excel Custom Right-Click Context Menu -->
-      <div id="excelContextMenu" onclick="event.stopPropagation()" class="fixed z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-1.5 text-xs text-slate-700 dark:text-slate-200 w-52 hidden divide-y divide-slate-100 dark:divide-slate-800">
+      <div id="excelContextMenu" onclick="event.stopPropagation()" class="fixed z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-1.5 text-xs text-slate-700 dark:text-slate-200 w-56 hidden divide-y divide-slate-100 dark:divide-slate-800">
         <div class="py-1 space-y-0.5">
-          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">📊 表格行列操作</div>
-          <button onclick="insertExcelRow(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>在下方插入行</span><span class="text-[10px] text-slate-400">+Row</span></button>
-          <button onclick="insertExcelCol(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>在右侧插入列</span><span class="text-[10px] text-slate-400">+Col</span></button>
-          <button onclick="deleteExcelRow(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-red-50 text-red-500 flex items-center justify-between font-semibold"><span>删除整行</span><span class="text-[10px]">-Row</span></button>
+          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">📊 独立列宽与行高调整</div>
+          <button onclick="promptSpecificColWidth()" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between font-medium"><span>设置当前列宽 (px)...</span><span class="text-[10px] text-indigo-600">自定义</span></button>
+          <button onclick="promptSpecificRowHeight()" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between font-medium"><span>设置当前行高 (px)...</span><span class="text-[10px] text-indigo-600">自定义</span></button>
+          <button onclick="autoFitCurrentColWidth()" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>自动适应当前列宽</span></button>
         </div>
         <div class="py-1 space-y-0.5">
-          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">📐 单元格对齐与行高</div>
+          <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">➕ 插入与删除行列</div>
+          <button onclick="insertExcelRow(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>在下方插入新行</span><span class="text-[10px] text-slate-400">+Row</span></button>
+          <button onclick="insertExcelCol(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>在右侧插入新列</span><span class="text-[10px] text-slate-400">+Col</span></button>
+          <button onclick="deleteExcelRow(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-red-50 text-red-500 flex items-center justify-between font-semibold"><span>删除当前整行</span><span class="text-[10px]">-Row</span></button>
+          <button onclick="deleteExcelCol(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-red-50 text-red-500 flex items-center justify-between font-semibold"><span>删除当前整列</span><span class="text-[10px]">-Col</span></button>
+        </div>
+        <div class="py-1 space-y-0.5">
           <div class="grid grid-cols-3 gap-1 px-1">
-            <button onclick="setExcelCellAlign('left')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center font-medium">靠左</button>
-            <button onclick="setExcelCellAlign('center')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center font-medium">居中</button>
-            <button onclick="setExcelCellAlign('right')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center font-medium">靠右</button>
-          </div>
-          <div class="grid grid-cols-3 gap-1 px-1 pt-1">
-            <button onclick="setExcelRowHeight('8px')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center text-[10px]">紧凑行距</button>
-            <button onclick="setExcelRowHeight('12px')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center text-[10px]">标准行距</button>
-            <button onclick="setExcelRowHeight('18px')" class="p-1 rounded bg-slate-50 dark:bg-slate-800 text-center text-[10px]">宽松行距</button>
+            <button onclick="setExcelCellAlign('left')" class="p-1 rounded bg-slate-50 text-center font-medium">靠左</button>
+            <button onclick="setExcelCellAlign('center')" class="p-1 rounded bg-slate-50 text-center font-medium">居中</button>
+            <button onclick="setExcelCellAlign('right')" class="p-1 rounded bg-slate-50 text-center font-medium">靠右</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 3. PPT PRESENTATION STUDIO (支持字体切换、行距与右键幻灯片菜单) -->
+    <!-- 3. PPT PRESENTATION STUDIO (全面同步 Word 字体、字号、颜色、行距与对齐) -->
     <div id="subOfficePpt" class="office-sub-panel flex-1 flex flex-col sm:flex-row overflow-hidden hidden relative">
       <div class="w-full sm:w-48 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex flex-col p-2.5 sm:p-3 space-y-2 shrink-0 max-h-32 sm:max-h-none overflow-y-auto">
         <div class="flex items-center justify-between">
@@ -573,6 +641,7 @@
       </div>
 
       <div class="flex-1 flex flex-col bg-slate-200/60 dark:bg-slate-950 overflow-hidden">
+        <!-- PPT Synchronized Rich Toolbar -->
         <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center space-x-2 text-xs overflow-x-auto">
           <!-- PPT Font Family Selector -->
           <select id="pptFontFamilySelect" onchange="changePptFont(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium font-select-element shrink-0">
@@ -582,6 +651,7 @@
               <option value="FangSong, 仿宋">仿宋 (正式汇报)</option>
               <option value="KaiTi, 楷体">楷体 (文化典雅)</option>
               <option value="Arial, sans-serif">Arial</option>
+              <option value="'Times New Roman', serif">Times New Roman</option>
             </optgroup>
           </select>
 
@@ -589,23 +659,42 @@
             <i data-lucide="laptop" class="w-3 h-3"></i><span>本机字体</span>
           </button>
 
-          <div class="h-4 w-px bg-slate-300 mx-1 shrink-0"></div>
+          <!-- PPT Font Size -->
+          <select id="pptFontSizeSelect" onchange="changePptFontSize(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium shrink-0">
+            <option value="16px">正文字号: 16px</option>
+            <option value="18px">正文字号: 18px</option>
+            <option value="20px">标题字号: 20px</option>
+            <option value="24px">标题字号: 24px</option>
+            <option value="28px">大标字号: 28px</option>
+          </select>
+
+          <div class="h-4 w-px bg-slate-300 mx-0.5 shrink-0"></div>
+
+          <!-- PPT Line Height Selector -->
+          <select id="pptLineHeightSelect" onchange="setPptLineHeight(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium shrink-0">
+            <option value="1.6">行距: 1.6倍 (标准)</option>
+            <option value="1.2">行距: 1.2倍 (紧凑)</option>
+            <option value="1.8">行距: 1.8倍</option>
+            <option value="2.0">行距: 2.0倍 (宽松)</option>
+          </select>
+
+          <div class="h-4 w-px bg-slate-300 mx-0.5 shrink-0"></div>
 
           <!-- PPT Theme Buttons -->
           <button onclick="setPptTheme('indigo')" class="px-2 py-1 bg-indigo-50 text-indigo-600 rounded font-medium shrink-0">科技蓝</button>
           <button onclick="setPptTheme('dark')" class="px-2 py-1 bg-slate-800 text-white rounded font-medium shrink-0">商务黑</button>
           <button onclick="setPptTheme('minimal')" class="px-2 py-1 bg-slate-100 text-slate-700 rounded font-medium shrink-0">极简白</button>
           
-          <div class="h-4 w-px bg-slate-300 mx-1 shrink-0"></div>
+          <div class="h-4 w-px bg-slate-300 mx-0.5 shrink-0"></div>
           
           <button onclick="runPptSlideShow()" class="px-3 py-1 bg-emerald-600 text-white rounded font-bold flex items-center space-x-1 shrink-0"><i data-lucide="play" class="w-3.5 h-3.5"></i><span>放映 (F5)</span></button>
         </div>
 
         <div class="flex-1 flex items-center justify-center p-3 sm:p-6 overflow-auto" oncontextmenu="handlePptContextMenu(event)">
-          <div id="pptSlideCanvas" class="w-full max-w-[860px] aspect-video bg-white dark:bg-slate-900 shadow-2xl rounded-xl p-5 sm:p-12 border border-slate-200 dark:border-slate-800 flex flex-col justify-between relative">
+          <div id="pptSlideCanvas" class="w-full max-w-[860px] aspect-video bg-white dark:bg-slate-900 shadow-2xl rounded-xl p-5 sm:p-12 border border-slate-200 dark:border-slate-800 flex flex-col justify-between relative transition-colors duration-200">
             <div>
               <input type="text" id="pptSlideTitle" value="2026年度业务发展规划汇报" oninput="saveCurrentSlideData()" class="w-full text-lg sm:text-3xl font-extrabold bg-transparent border-b border-transparent hover:border-slate-300 focus:border-indigo-500 focus:outline-none pb-1.5 text-slate-800 dark:text-slate-100">
-              <textarea id="pptSlideBody" oninput="saveCurrentSlideData()" rows="4" class="w-full text-xs sm:text-base mt-3 bg-transparent border-none focus:outline-none resize-none text-slate-600 dark:text-slate-300 leading-relaxed font-sans" placeholder="输入幻灯片要点...">• 核心业务全链路数字化升级\n• 跨部门协同流转效率提升 45%\n• 100% 浏览器本地化数据安全保障\n• 打造新一代超级轻量办公工作台</textarea>
+              <textarea id="pptSlideBody" oninput="saveCurrentSlideData()" rows="5" class="w-full text-xs sm:text-base mt-4 bg-transparent border-none focus:outline-none resize-none text-slate-600 dark:text-slate-300 leading-relaxed font-sans" placeholder="输入幻灯片要点...">• 核心业务全链路数字化升级\n• 跨部门协同流转效率提升 45%\n• 100% 浏览器本地化数据安全保障\n• 打造新一代超级轻量办公工作台</textarea>
             </div>
             <div class="flex justify-between items-center text-[10px] sm:text-xs text-slate-400 border-t border-slate-200 dark:border-slate-800 pt-2 sm:pt-3">
               <span>Office Master Studio</span>
@@ -619,19 +708,19 @@
       <div id="pptContextMenu" onclick="event.stopPropagation()" class="fixed z-50 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-xl p-1.5 text-xs text-slate-700 dark:text-slate-200 w-52 hidden divide-y divide-slate-100 dark:divide-slate-800">
         <div class="py-1 space-y-0.5">
           <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">↕️ 幻灯片行间距</div>
-          <button onclick="setPptLineHeight('1.2')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>紧凑行距 (1.2倍)</span></button>
-          <button onclick="setPptLineHeight('1.6')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between font-bold text-indigo-600"><span>标准行距 (1.6倍)</span></button>
-          <button onclick="setPptLineHeight('2.0')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center justify-between"><span>宽松行距 (2.0倍)</span></button>
+          <button onclick="setPptLineHeight('1.2')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>紧凑行距 (1.2倍)</span></button>
+          <button onclick="setPptLineHeight('1.6')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between font-bold text-indigo-600"><span>标准行距 (1.6倍)</span></button>
+          <button onclick="setPptLineHeight('2.0')" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center justify-between"><span>宽松行距 (2.0倍)</span></button>
         </div>
         <div class="py-1 space-y-0.5">
           <div class="px-2 py-0.5 text-[10px] font-bold text-slate-400">📽️ 幻灯片操作</div>
-          <button onclick="addPptSlide(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950 flex items-center space-x-1.5 font-medium"><i data-lucide="plus" class="w-3.5 h-3.5"></i><span>新建一页幻灯片</span></button>
+          <button onclick="addPptSlide(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-indigo-50 flex items-center space-x-1.5 font-medium"><i data-lucide="plus" class="w-3.5 h-3.5"></i><span>新建一页幻灯片</span></button>
           <button onclick="runPptSlideShow(); closeAllContextMenus();" class="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 text-emerald-600 flex items-center space-x-1.5 font-medium"><i data-lucide="play" class="w-3.5 h-3.5"></i><span>全屏放映 (F5)</span></button>
         </div>
       </div>
     </div>
 
-    <!-- 4. PDF VIEWER (支持缩放、旋转、字体批注与右键菜单) -->
+    <!-- 4. PDF VIEWER (同步 Word 字体设置与缩放旋转) -->
     <div id="subOfficePdf" class="office-sub-panel flex-1 flex flex-col overflow-hidden hidden relative">
       <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between text-xs px-3 sm:px-4 overflow-x-auto">
         <div class="flex items-center space-x-2 shrink-0">
@@ -996,6 +1085,9 @@
       contextTargetElement: null,
       pdfScale: 1.5,
       pdfRotation: 0,
+      activeExcelCell: { r: 0, c: 0 },
+      excelColWidths: [100, 150, 160, 120, 120, 110, 110, 110],
+      excelRowHeights: [36, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32],
       excelData: [
         ['部门', '项目名称', '预算 (万元)', '执行进度', '状态'],
         ['技术部', 'Office 工作台 3.0', '15.00', '100%', '已完成'],
@@ -1212,11 +1304,12 @@
     }
 
     function setParagraphIndent(indentVal) {
-      document.getElementById('wordEditorDoc').focus();
+      const editor = document.getElementById('wordEditorDoc');
+      editor.focus();
       let target = state.contextTargetElement;
-      if (!target || !document.getElementById('wordEditorDoc').contains(target)) {
+      if (!target || !editor.contains(target)) {
         const sel = window.getSelection();
-        if (sel.rangeCount) target = sel.anchorNode?.parentElement;
+        if (sel && sel.rangeCount) target = sel.anchorNode?.parentElement;
       }
       const p = target ? target.closest('p, div, li, h1, h2, h3, blockquote') : null;
       if (p) {
@@ -1230,18 +1323,19 @@
     }
 
     function setParagraphLineHeight(lhVal) {
-      document.getElementById('wordEditorDoc').focus();
+      const editor = document.getElementById('wordEditorDoc');
+      editor.focus();
       let target = state.contextTargetElement;
-      if (!target || !document.getElementById('wordEditorDoc').contains(target)) {
+      if (!target || !editor.contains(target)) {
         const sel = window.getSelection();
-        if (sel.rangeCount) target = sel.anchorNode?.parentElement;
+        if (sel && sel.rangeCount) target = sel.anchorNode?.parentElement;
       }
       const p = target ? target.closest('p, div, li, h1, h2, h3, blockquote') : null;
       if (p) {
         p.style.lineHeight = lhVal;
         showToast(`当前段落行间距已调整为 ${lhVal} 倍`);
       } else {
-        document.getElementById('wordEditorDoc').style.lineHeight = lhVal;
+        editor.style.lineHeight = lhVal;
         showToast(`全文行间距已调整为 ${lhVal} 倍`);
       }
       closeAllContextMenus();
@@ -1254,21 +1348,54 @@
       updateWordStats();
     }
 
+    /* Reliable Font Changing with Selection & Node Hierarchy Handling */
     function changeDocFont(font) {
-      document.getElementById('wordEditorDoc').focus();
-      document.execCommand('fontName', false, font);
+      const editor = document.getElementById('wordEditorDoc');
+      editor.focus();
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+        document.execCommand('styleWithCSS', false, true);
+        document.execCommand('fontName', false, font);
+        
+        // Ensure immediate inline style override on selection
+        const range = sel.getRangeAt(0);
+        let node = range.commonAncestorContainer;
+        if (node.nodeType === 3) node = node.parentElement;
+        if (node && node !== editor) {
+          node.style.fontFamily = font;
+        }
+      } else {
+        const target = state.contextTargetElement || editor;
+        target.style.fontFamily = font;
+      }
       updateWordStats();
+      showToast('字体已实时应用！');
     }
 
     function changeDocFontSize(sizePx) {
-      document.getElementById('wordEditorDoc').focus();
+      const editor = document.getElementById('wordEditorDoc');
+      editor.focus();
       const sel = window.getSelection();
-      if (!sel.rangeCount) return;
-      const range = sel.getRangeAt(0);
-      const span = document.createElement('span');
-      span.style.fontSize = sizePx;
-      span.appendChild(range.extractContents());
-      range.insertNode(span);
+      if (sel && sel.rangeCount > 0 && !sel.isCollapsed) {
+        document.execCommand('styleWithCSS', false, true);
+        document.execCommand('fontSize', false, '7');
+        const fonts = editor.querySelectorAll('font[size="7"], span');
+        fonts.forEach(el => {
+          if (el.getAttribute('size') === '7' || sel.containsNode(el, true)) {
+            el.removeAttribute('size');
+            el.style.fontSize = sizePx;
+          }
+        });
+        const range = sel.getRangeAt(0);
+        let node = range.commonAncestorContainer;
+        if (node.nodeType === 3) node = node.parentElement;
+        if (node && node !== editor) {
+          node.style.fontSize = sizePx;
+        }
+      } else {
+        const target = state.contextTargetElement || editor;
+        target.style.fontSize = sizePx;
+      }
       updateWordStats();
     }
 
@@ -1401,23 +1528,41 @@
       window.print();
     }
 
-    /* ==================== 2. EXCEL SPREADSHEET EDITOR ==================== */
+    /* ==================== 2. EXCEL ADVANCED SPREADSHEET EDITOR ==================== */
     function initExcelGrid() {
       const table = document.getElementById('excelTableElement');
       if (!table) return;
-      let html = '<thead><tr class="bg-slate-100 dark:bg-slate-800"><th class="w-10 p-2 border border-slate-300 dark:border-slate-700 text-center font-bold">#</th>';
+      
       const colCount = Math.max(8, (state.excelData[0]?.length || 0) + 2);
+      const rowCount = Math.max(12, state.excelData.length + 3);
+
+      // Ensure widths & heights arrays
+      while (state.excelColWidths.length < colCount) state.excelColWidths.push(110);
+      while (state.excelRowHeights.length < rowCount) state.excelRowHeights.push(32);
+
+      let html = '<colgroup><col style="width:42px;">';
       for (let c = 0; c < colCount; c++) {
-        html += `<th class="p-2 border border-slate-300 dark:border-slate-700 text-center font-bold">${String.fromCharCode(65 + c)}</th>`;
+        html += `<col style="width: ${state.excelColWidths[c]}px;">`;
+      }
+      html += '</colgroup><thead><tr class="bg-slate-100 dark:bg-slate-800" style="height: 32px;"><th class="w-10 p-1 border border-slate-300 dark:border-slate-700 text-center font-bold">#</th>';
+      
+      for (let c = 0; c < colCount; c++) {
+        html += `<th class="relative p-1 border border-slate-300 dark:border-slate-700 text-center font-bold select-none text-slate-700 dark:text-slate-200" style="width: ${state.excelColWidths[c]}px;">
+          <span>${String.fromCharCode(65 + c)}</span>
+          <div class="col-resizer-handle" onmousedown="initColDrag(event, ${c})"></div>
+        </th>`;
       }
       html += '</tr></thead><tbody>';
 
-      const rowCount = Math.max(12, state.excelData.length + 3);
       for (let r = 0; r < rowCount; r++) {
-        html += `<tr><td class="p-2 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 text-center text-slate-400 font-bold">${r + 1}</td>`;
+        const rowH = state.excelRowHeights[r] || 32;
+        html += `<tr style="height: ${rowH}px;"><td class="relative p-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 text-center text-slate-400 font-bold select-none">
+          <span>${r + 1}</span>
+          <div class="row-resizer-handle" onmousedown="initRowDrag(event, ${r})"></div>
+        </td>`;
         for (let c = 0; c < colCount; c++) {
           const val = state.excelData[r]?.[c] || '';
-          html += `<td contenteditable="true" onfocus="selectExcelCell('${String.fromCharCode(65 + c)}${r + 1}', this)" oninput="updateExcelCell(${r}, ${c}, this.innerText)" class="editor-sheet-cell p-2 border border-slate-200 dark:border-slate-800 hover:bg-indigo-50/30">${val}</td>`;
+          html += `<td contenteditable="true" onfocus="selectExcelCell(${r}, ${c}, '${String.fromCharCode(65 + c)}${r + 1}', this)" oninput="updateExcelCell(${r}, ${c}, this.innerText)" class="editor-sheet-cell p-1.5 border border-slate-200 dark:border-slate-800 hover:bg-indigo-50/30 overflow-hidden leading-tight">${val}</td>`;
         }
         html += '</tr>';
       }
@@ -1425,48 +1570,169 @@
       table.innerHTML = html;
     }
 
-    function selectExcelCell(label, el) {
+    function selectExcelCell(r, c, label, el) {
+      state.activeExcelCell = { r, c };
+      state.activeExcelEl = el;
       document.getElementById('excelActiveCellLabel').innerText = label;
       document.getElementById('excelFormulaInput').value = el.innerText;
-      state.activeExcelEl = el;
+      
+      // Update Toolbar Inputs with active col width & row height
+      const wInput = document.getElementById('excelColWidthInput');
+      const hInput = document.getElementById('excelRowHeightInput');
+      if (wInput) wInput.value = state.excelColWidths[c] || 110;
+      if (hInput) hInput.value = state.excelRowHeights[r] || 32;
     }
+
+    function setSpecificColWidth(val) {
+      const c = state.activeExcelCell.c;
+      const num = parseInt(val) || 110;
+      state.excelColWidths[c] = Math.max(40, Math.min(800, num));
+      initExcelGrid();
+      showToast(`已设置第 ${String.fromCharCode(65 + c)} 列宽度为 ${state.excelColWidths[c]}px`);
+    }
+
+    function setSpecificRowHeight(val) {
+      const r = state.activeExcelCell.r;
+      const num = parseInt(val) || 32;
+      state.excelRowHeights[r] = Math.max(20, Math.min(400, num));
+      initExcelGrid();
+      showToast(`已设置第 ${r + 1} 行高度为 ${state.excelRowHeights[r]}px`);
+    }
+
+    function promptSpecificColWidth() {
+      const c = state.activeExcelCell.c;
+      const cur = state.excelColWidths[c] || 110;
+      const val = prompt(`请输入第 ${String.fromCharCode(65 + c)} 列的列宽 (像素 px):`, cur);
+      if (val) setSpecificColWidth(val);
+      closeAllContextMenus();
+    }
+
+    function promptSpecificRowHeight() {
+      const r = state.activeExcelCell.r;
+      const cur = state.excelRowHeights[r] || 32;
+      const val = prompt(`请输入第 ${r + 1} 行的行高 (像素 px):`, cur);
+      if (val) setSpecificRowHeight(val);
+      closeAllContextMenus();
+    }
+
+    function autoFitCurrentColWidth() {
+      const c = state.activeExcelCell.c;
+      let maxLen = 4;
+      for (let r = 0; r < state.excelData.length; r++) {
+        const str = String(state.excelData[r]?.[c] || '');
+        maxLen = Math.max(maxLen, str.length);
+      }
+      state.excelColWidths[c] = Math.max(70, Math.min(400, maxLen * 15 + 30));
+      initExcelGrid();
+      closeAllContextMenus();
+      showToast(`已自动适应第 ${String.fromCharCode(65 + c)} 列宽`);
+    }
+
+    /* Drag-to-resize Column Width */
+    function initColDrag(e, colIndex) {
+      e.stopPropagation();
+      e.preventDefault();
+      const startX = e.clientX;
+      const startWidth = state.excelColWidths[colIndex] || 110;
+      const onMouseMove = ev => {
+        const delta = ev.clientX - startX;
+        state.excelColWidths[colIndex] = Math.max(45, startWidth + delta);
+        initExcelGrid();
+      };
+      const onMouseUp = () => {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      };
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    }
+
+    /* Drag-to-resize Row Height */
+    function initRowDrag(e, rowIndex) {
+      e.stopPropagation();
+      e.preventDefault();
+      const startY = e.clientY;
+      const startHeight = state.excelRowHeights[rowIndex] || 32;
+      const onMouseMove = ev => {
+        const delta = ev.clientY - startY;
+        state.excelRowHeights[rowIndex] = Math.max(22, startHeight + delta);
+        initExcelGrid();
+      };
+      const onMouseUp = () => {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      };
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    }
+
     function handleExcelFormulaInput(val) {
       if (state.activeExcelEl) state.activeExcelEl.innerText = val;
+      const { r, c } = state.activeExcelCell;
+      if (!state.excelData[r]) state.excelData[r] = [];
+      state.excelData[r][c] = val;
     }
     function updateExcelCell(r, c, val) {
       if (!state.excelData[r]) state.excelData[r] = [];
       state.excelData[r][c] = val;
     }
     function insertExcelRow() {
-      state.excelData.push(new Array(state.excelData[0]?.length || 5).fill(''));
+      const colCount = Math.max(8, state.excelColWidths.length);
+      state.excelData.push(new Array(colCount).fill(''));
+      state.excelRowHeights.push(32);
       initExcelGrid();
       showToast('已插入新行');
     }
     function insertExcelCol() {
       state.excelData.forEach(r => r.push(''));
+      state.excelColWidths.push(110);
       initExcelGrid();
       showToast('已插入新列');
     }
     function deleteExcelRow() {
-      if (state.excelData.length > 1) state.excelData.pop();
+      if (state.excelData.length > 1) {
+        state.excelData.pop();
+        state.excelRowHeights.pop();
+      }
       initExcelGrid();
       showToast('已删除末尾行');
     }
+    function deleteExcelCol() {
+      state.excelData.forEach(r => { if (r.length > 1) r.pop(); });
+      if (state.excelColWidths.length > 1) state.excelColWidths.pop();
+      initExcelGrid();
+      showToast('已删除末尾列');
+    }
 
-    function changeExcelFont(font) {
-      const grid = document.getElementById('excelGridContainer');
-      if (grid) grid.style.fontFamily = font;
-      showToast('表格字体已更新');
+    function changeExcelActiveCellFont(font) {
+      if (state.activeExcelEl) state.activeExcelEl.style.fontFamily = font;
+      else document.getElementById('excelTableElement').style.fontFamily = font;
+      showToast('表格字体已实时应用！');
+    }
+    function changeExcelActiveCellFontSize(sz) {
+      if (state.activeExcelEl) state.activeExcelEl.style.fontSize = sz;
+    }
+    function toggleExcelActiveCellBold() {
+      if (!state.activeExcelEl) return;
+      state.activeExcelEl.style.fontWeight = state.activeExcelEl.style.fontWeight === 'bold' ? 'normal' : 'bold';
+    }
+    function toggleExcelActiveCellItalic() {
+      if (!state.activeExcelEl) return;
+      state.activeExcelEl.style.fontStyle = state.activeExcelEl.style.fontStyle === 'italic' ? 'normal' : 'italic';
+    }
+    function changeExcelActiveCellColor(color) {
+      if (state.activeExcelEl) state.activeExcelEl.style.color = color;
+    }
+    function setExcelActiveCellBg(color) {
+      if (state.activeExcelEl) state.activeExcelEl.style.backgroundColor = color;
     }
     function handleExcelContextMenu(e) {
       e.preventDefault();
       closeAllContextMenus();
       const menu = document.getElementById('excelContextMenu');
       if (!menu) return;
-      state.activeExcelEl = e.target.closest('td') || state.activeExcelEl;
-      
       const mouseX = e.clientX, mouseY = e.clientY;
-      const menuWidth = 210, menuHeight = 220;
+      const menuWidth = 224, menuHeight = 260;
       const x = (mouseX + menuWidth > window.innerWidth) ? (window.innerWidth - menuWidth - 12) : mouseX;
       const y = (mouseY + menuHeight > window.innerHeight) ? (window.innerHeight - menuHeight - 12) : mouseY;
       menu.style.left = `${x}px`; menu.style.top = `${y}px`;
@@ -1475,11 +1741,6 @@
     function setExcelCellAlign(align) {
       if (state.activeExcelEl) state.activeExcelEl.style.textAlign = align;
       closeAllContextMenus();
-    }
-    function setExcelRowHeight(pad) {
-      document.querySelectorAll('.editor-sheet-cell').forEach(td => td.style.padding = `${pad} 8px`);
-      closeAllContextMenus();
-      showToast('表格行高已调整');
     }
 
     /* ==================== 3. PPT PRESENTATION STUDIO ==================== */
@@ -1525,7 +1786,17 @@
     function changePptFont(font) {
       const c = document.getElementById('pptSlideCanvas');
       if (c) c.style.fontFamily = font;
-      showToast('幻灯片字体已更新');
+      showToast('幻灯片字体已实时应用！');
+    }
+    function changePptFontSize(sz) {
+      const body = document.getElementById('pptSlideBody');
+      if (body) body.style.fontSize = sz;
+    }
+    function setPptLineHeight(lh) {
+      const body = document.getElementById('pptSlideBody');
+      if (body) body.style.lineHeight = lh;
+      closeAllContextMenus();
+      showToast(`PPT 行间距已调整为 ${lh} 倍`);
     }
     function handlePptContextMenu(e) {
       e.preventDefault();
@@ -1538,12 +1809,6 @@
       const y = (mouseY + menuHeight > window.innerHeight) ? (window.innerHeight - menuHeight - 12) : mouseY;
       menu.style.left = `${x}px`; menu.style.top = `${y}px`;
       menu.classList.remove('hidden');
-    }
-    function setPptLineHeight(lh) {
-      const body = document.getElementById('pptSlideBody');
-      if (body) body.style.lineHeight = lh;
-      closeAllContextMenus();
-      showToast(`PPT 行间距已调整为 ${lh} 倍`);
     }
     function runPptSlideShow() {
       const elem = document.getElementById('pptSlideCanvas');
