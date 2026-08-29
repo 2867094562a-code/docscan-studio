@@ -1249,30 +1249,84 @@
        ========================================================================= -->
   <div id="moduleTemplates" class="app-module flex-1 flex-col sm:flex-row overflow-hidden hidden">
     <div class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3 flex flex-col shrink-0 overflow-y-auto">
-      <span class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-1.5"><i data-lucide="grid" class="w-4 h-4 text-teal-500"></i><span>18+ 作业纸与字帖模板</span></span>
+      <span class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-1.5"><i data-lucide="grid" class="w-4 h-4 text-teal-500"></i><span>18+ 作业纸与字帖模板库</span></span>
 
-      <select id="tplTypeSelect" onchange="renderPaperTemplateCanvas()" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800">
-        <option value="tianzi">🀄 拼音田字格 (语文规范)</option>
-        <option value="pure_tianzi">🔲 纯田字格 (汉字书写)</option>
-        <option value="mizi">✳️ 米字格 (书法楷书字帖)</option>
-        <option value="huigong">⭕ 回宫格 / 回字格</option>
-        <option value="jiugong">📐 九宫格 (书法结构练习)</option>
-        <option value="hengshui">✍️ 衡水体/斜体英文练习格 (68°)</option>
-        <option value="english4">🔤 英语四线三格 (字母单词)</option>
-        <option value="cornell">📖 康奈尔经典笔记纸 (三栏)</option>
-        <option value="music">🎼 音乐五线谱</option>
-        <option value="guitar">🎸 吉他六线谱 (TAB)</option>
-      </select>
-
-      <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
-        <div class="flex items-center justify-between">
-          <label class="text-[11px] font-bold">✍️ 字帖描红临摹水印</label>
-          <input type="checkbox" id="tplTraceEnabled" checked onchange="renderPaperTemplateCanvas()" class="rounded text-teal-600">
-        </div>
-        <input type="text" id="tplTraceText" value="天地玄黄 宇宙洪荒 日月盈昃 辰宿列张" oninput="renderPaperTemplateCanvas()" class="w-full p-2 border rounded-lg text-xs bg-white dark:bg-slate-900">
+      <div class="space-y-1">
+        <label class="text-[11px] font-bold text-slate-500">1. 作业纸与书法格类型</label>
+        <select id="tplTypeSelect" onchange="renderPaperTemplateCanvas()" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-bold">
+          <option value="tianzi">🀄 拼音田字格 (拼音在上+汉字在下)</option>
+          <option value="pure_tianzi">🔲 经典田字格 (汉字规范书写)</option>
+          <option value="mizi" selected>✳️ 经典米字格 (书法楷书字帖)</option>
+          <option value="huigong">⭕ 回宫格 / 回字格 (间架结构)</option>
+          <option value="jiugong">📐 九宫格 (书法结构重心练习)</option>
+          <option value="hengshui">✍️ 衡水体/斜体英文练习格 (68°)</option>
+          <option value="english4">🔤 英语四线三格 (字母单词)</option>
+          <option value="cornell">📖 康奈尔笔记纸 (经典三栏)</option>
+          <option value="cuoti">📝 错题整理本 (题目与订正分析)</option>
+          <option value="grid">▦ 方格文稿纸 (20x20 作文纸)</option>
+          <option value="music">🎼 音乐五线谱</option>
+          <option value="guitar">🎸 吉他六线谱 (TAB)</option>
+        </select>
       </div>
 
-      <button onclick="exportTemplateToPDF()" class="w-full py-2.5 bg-teal-600 text-white rounded-xl text-xs font-bold shadow">导出 300 DPI 打印 PDF</button>
+      <!-- Tracing Watermark Customization -->
+      <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
+        <div class="flex items-center justify-between">
+          <label class="text-[11px] font-bold text-teal-700 dark:text-teal-300 flex items-center space-x-1">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>✍️ 字帖描红临摹水印</span>
+          </label>
+          <input type="checkbox" id="tplTraceEnabled" checked onchange="renderPaperTemplateCanvas()" class="rounded text-teal-600">
+        </div>
+        
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-[10px] text-slate-400">自定义描红文本：</span>
+            <div class="flex space-x-1 text-[10px]">
+              <button onclick="setTplPresetText('千字文')" class="text-teal-600 hover:underline">千字文</button>
+              <button onclick="setTplPresetText('三字经')" class="text-teal-600 hover:underline">三字经</button>
+              <button onclick="setTplPresetText('古诗')" class="text-teal-600 hover:underline">静夜思</button>
+              <button onclick="setTplPresetText('英文')" class="text-teal-600 hover:underline">English</button>
+            </div>
+          </div>
+          <textarea id="tplTraceText" rows="3" oninput="renderPaperTemplateCanvas()" class="w-full p-2 border rounded-lg text-xs bg-white dark:bg-slate-900 resize-none font-mono" placeholder="输入自定义汉字、拼音或英文句子...">天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏</textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1.5">
+          <div>
+            <span class="text-[10px] text-slate-400">描红临摹样式：</span>
+            <select id="tplTraceStyle" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900">
+              <option value="red">🔴 楷体淡红描红</option>
+              <option value="gray">⚪ 浅灰淡印临摹</option>
+              <option value="outline">⭕ 空心双钩描边</option>
+            </select>
+          </div>
+          <div>
+            <span class="text-[10px] text-slate-400">水印透明度：</span>
+            <select id="tplTraceOpacity" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900">
+              <option value="0.25">极淡 (25%)</option>
+              <option value="0.45" selected>标准 (45%)</option>
+              <option value="0.7">深浓 (70%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
+          <span>循环填满整页：</span>
+          <input type="checkbox" id="tplRepeatFill" checked onchange="renderPaperTemplateCanvas()" class="rounded text-teal-600">
+        </div>
+      </div>
+
+      <div class="space-y-1">
+        <label class="text-[11px] font-bold text-slate-500">2. 作业纸网格线条颜色</label>
+        <select id="tplGridColor" onchange="renderPaperTemplateCanvas()" class="w-full p-1.5 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-medium">
+          <option value="#dc2626">🔴 经典朱砂红 (书法描红)</option>
+          <option value="#16a34a">🟢 墨绿护眼色 (护眼作业)</option>
+          <option value="#0284c7">🔵 典雅青蓝色</option>
+          <option value="#475569">⚫ 沉稳铅灰黑</option>
+        </select>
+      </div>
+
+      <button onclick="exportTemplateToPDF()" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="download" class="w-4 h-4"></i><span>导出 300 DPI 高清 PDF</span></button>
     </div>
 
     <div id="tplCanvasContainer" class="flex-1 p-4 overflow-auto bg-slate-200/60 dark:bg-slate-950 flex justify-center items-start">
@@ -1629,6 +1683,7 @@
       });
 
       if (subTool && mod === 'editor') switchOfficeSubTool(subTool);
+      if (mod === 'templates') renderPaperTemplateCanvas();
       closeMobileNav();
       lucide.createIcons();
     }
@@ -3238,32 +3293,382 @@
       }
     }
 
-    /* Template Canvas */
+    /* Template & Calligraphy Tracing Canvas Studio (300 DPI A4) */
+    function setTplPresetText(preset) {
+      const el = document.getElementById('tplTraceText');
+      if (!el) return;
+      if (preset === '千字文') {
+        el.value = '天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳 云腾致雨 露结为霜 金生丽水 玉出昆冈';
+      } else if (preset === '三字经') {
+        el.value = '人之初 性本善 性相近 习相远 苟不教 性乃迁 教之道 贵以专 昔孟母 择邻处 子不学 断机杼 窦燕山 有义方';
+      } else if (preset === '古诗') {
+        el.value = '床前明月光 疑是地上霜 举头望明月 低头思故乡 春眠不觉晓 处处闻啼鸟 夜来风雨声 花落知多少';
+      } else if (preset === '英文') {
+        el.value = 'Continuous effort not strength or intelligence is the key to unlocking our potential Knowledge is power Practice makes perfect';
+      }
+      renderPaperTemplateCanvas();
+      showToast(`已载入《${preset}》预设描红文本！`);
+    }
+
     function renderPaperTemplateCanvas() {
       const cvs = document.getElementById('templatePaperCanvas'); if (!cvs) return;
-      const c = cvs.getContext('2d'); const w = 2480, h = 3508; cvs.width = w; cvs.height = h;
-      c.fillStyle = '#ffffff'; c.fillRect(0, 0, w, h);
-      c.strokeStyle = '#dc2626'; c.fillStyle = '#dc2626';
-      const margin = 140, cell = 170;
-      const cols = Math.floor((w - margin * 2) / cell);
-      const rows = Math.floor((h - margin * 2) / (cell * 1.35));
-      for (let r = 0; r < rows; r++) {
-        const y = margin + r * cell * 1.35;
-        for (let col = 0; col < cols; col++) {
-          const x = margin + col * cell;
-          c.lineWidth = 3; c.strokeRect(x, y, cell, cell);
-          c.lineWidth = 1.5; c.setLineDash([8, 8]);
-          c.beginPath(); c.moveTo(x + cell/2, y); c.lineTo(x + cell/2, y + cell);
-          c.moveTo(x, y + cell/2); c.lineTo(x + cell, y + cell/2); c.stroke();
+      const c = cvs.getContext('2d');
+      const w = 2480, h = 3508;
+      cvs.width = w; cvs.height = h;
+
+      // 1. Clear Canvas Background
+      c.fillStyle = '#ffffff';
+      c.fillRect(0, 0, w, h);
+
+      // 2. Read Configuration
+      const tplType = document.getElementById('tplTypeSelect')?.value || 'mizi';
+      const gridColor = document.getElementById('tplGridColor')?.value || '#dc2626';
+      const traceEnabled = document.getElementById('tplTraceEnabled')?.checked ?? true;
+      const traceRawText = (document.getElementById('tplTraceText')?.value || '').replace(/\s+/g, '');
+      const traceStyle = document.getElementById('tplTraceStyle')?.value || 'red';
+      const traceOpacity = parseFloat(document.getElementById('tplTraceOpacity')?.value || '0.45');
+      const repeatFill = document.getElementById('tplRepeatFill')?.checked ?? true;
+
+      // 3. Draw Header
+      c.fillStyle = gridColor;
+      c.font = 'bold 36px "KaiTi", "STKaiti", "楷体", serif';
+      c.textAlign = 'left';
+      c.fillText('姓名：__________    班级：__________    日期：__________    成绩：__________', 160, 140);
+
+      c.lineWidth = 1.5;
+      c.strokeStyle = gridColor;
+      c.beginPath();
+      c.moveTo(160, 165);
+      c.lineTo(w - 160, 165);
+      c.stroke();
+
+      // Tracing Text Char Cursor
+      let charIdx = 0;
+      function getNextChar() {
+        if (!traceRawText.length) return '';
+        if (charIdx < traceRawText.length) {
+          return traceRawText[charIdx++];
+        } else if (repeatFill) {
+          charIdx = 0;
+          return traceRawText[charIdx++];
+        }
+        return '';
+      }
+
+      function drawCharWatermark(char, cx, cy, size, fontName) {
+        if (!traceEnabled || !char) return;
+        c.save();
+        c.textAlign = 'center';
+        c.textBaseline = 'middle';
+        c.font = `bold ${size}px ${fontName || '"KaiTi", "STKaiti", "楷体", serif'}`;
+
+        if (traceStyle === 'outline') {
+          c.strokeStyle = gridColor === '#16a34a' ? `rgba(22, 163, 74, ${Math.min(1, traceOpacity + 0.3)})` : `rgba(220, 38, 38, ${Math.min(1, traceOpacity + 0.3)})`;
+          c.lineWidth = 3.5;
+          c.strokeText(char, cx, cy);
+        } else if (traceStyle === 'gray') {
+          c.fillStyle = `rgba(71, 85, 105, ${traceOpacity})`;
+          c.fillText(char, cx, cy);
+        } else {
+          // Default Red
+          if (gridColor === '#16a34a') {
+            c.fillStyle = `rgba(22, 163, 74, ${traceOpacity})`;
+          } else if (gridColor === '#0284c7') {
+            c.fillStyle = `rgba(2, 132, 199, ${traceOpacity})`;
+          } else if (gridColor === '#475569') {
+            c.fillStyle = `rgba(71, 85, 105, ${traceOpacity})`;
+          } else {
+            c.fillStyle = `rgba(220, 38, 38, ${traceOpacity})`;
+          }
+          c.fillText(char, cx, cy);
+        }
+        c.restore();
+      }
+
+      // 4. Render Specific Template Layout
+      if (tplType === 'tianzi') {
+        // 🀄 拼音田字格 (Pinyin 4 lines top + Tianzige bottom)
+        const marginX = 140, startY = 220;
+        const cell = 180, pinyinH = 65, rowGap = 35;
+        const cols = Math.floor((w - marginX * 2) / cell);
+        const rowH = pinyinH + cell + rowGap;
+        const rows = Math.floor((h - startY - 120) / rowH);
+
+        for (let r = 0; r < rows; r++) {
+          const yPinyin = startY + r * rowH;
+          const yCell = yPinyin + pinyinH;
+
+          for (let col = 0; col < cols; col++) {
+            const x = marginX + col * cell;
+
+            // 1. Pinyin 4-line grid
+            c.strokeStyle = gridColor;
+            c.lineWidth = 2;
+            c.strokeRect(x, yPinyin, cell, pinyinH);
+            // 2 inner dashed lines for pinyin
+            c.lineWidth = 1;
+            c.setLineDash([6, 6]);
+            c.beginPath();
+            c.moveTo(x, yPinyin + pinyinH / 3); c.lineTo(x + cell, yPinyin + pinyinH / 3);
+            c.moveTo(x, yPinyin + (pinyinH * 2) / 3); c.lineTo(x + cell, yPinyin + (pinyinH * 2) / 3);
+            c.stroke();
+            c.setLineDash([]);
+
+            // 2. Tianzi Cell
+            c.lineWidth = 2.5;
+            c.strokeRect(x, yCell, cell, cell);
+            // Dashed Cross
+            c.lineWidth = 1.2;
+            c.setLineDash([8, 8]);
+            c.beginPath();
+            c.moveTo(x + cell / 2, yCell); c.lineTo(x + cell / 2, yCell + cell);
+            c.moveTo(x, yCell + cell / 2); c.lineTo(x + cell, yCell + cell / 2);
+            c.stroke();
+            c.setLineDash([]);
+
+            // Tracing Text
+            const char = getNextChar();
+            drawCharWatermark(char, x + cell / 2, yCell + cell / 2 + 5, 130);
+          }
+        }
+      } else if (tplType === 'mizi' || tplType === 'pure_tianzi' || tplType === 'huigong' || tplType === 'jiugong') {
+        // ✳️ 米字格 / 田字格 / 回宫格 / 九宫格
+        const marginX = 140, startY = 220;
+        const cell = 180, rowGap = 26;
+        const cols = Math.floor((w - marginX * 2) / cell);
+        const rows = Math.floor((h - startY - 120) / (cell + rowGap));
+
+        for (let r = 0; r < rows; r++) {
+          const y = startY + r * (cell + rowGap);
+          for (let col = 0; col < cols; col++) {
+            const x = marginX + col * cell;
+
+            // Outer square
+            c.strokeStyle = gridColor;
+            c.lineWidth = 2.8;
+            c.strokeRect(x, y, cell, cell);
+
+            if (tplType === 'mizi') {
+              // Diagonal + Cross Dashed
+              c.lineWidth = 1.2;
+              c.setLineDash([7, 7]);
+              c.beginPath();
+              c.moveTo(x + cell / 2, y); c.lineTo(x + cell / 2, y + cell);
+              c.moveTo(x, y + cell / 2); c.lineTo(x + cell, y + cell / 2);
+              c.moveTo(x, y); c.lineTo(x + cell, y + cell);
+              c.moveTo(x + cell, y); c.lineTo(x, y + cell);
+              c.stroke();
+              c.setLineDash([]);
+            } else if (tplType === 'pure_tianzi') {
+              // Cross Dashed
+              c.lineWidth = 1.2;
+              c.setLineDash([8, 8]);
+              c.beginPath();
+              c.moveTo(x + cell / 2, y); c.lineTo(x + cell / 2, y + cell);
+              c.moveTo(x, y + cell / 2); c.lineTo(x + cell, y + cell / 2);
+              c.stroke();
+              c.setLineDash([]);
+            } else if (tplType === 'huigong') {
+              // Inner Square
+              const innerW = cell * 0.55;
+              const offset = (cell - innerW) / 2;
+              c.lineWidth = 1.8;
+              c.setLineDash([6, 6]);
+              c.strokeRect(x + offset, y + offset, innerW, innerW);
+              c.setLineDash([]);
+            } else if (tplType === 'jiugong') {
+              // 3x3 Dashed
+              c.lineWidth = 1.2;
+              c.setLineDash([6, 6]);
+              c.beginPath();
+              c.moveTo(x + cell / 3, y); c.lineTo(x + cell / 3, y + cell);
+              c.moveTo(x + (cell * 2) / 3, y); c.lineTo(x + (cell * 2) / 3, y + cell);
+              c.moveTo(x, y + cell / 3); c.lineTo(x + cell, y + cell / 3);
+              c.moveTo(x, y + (cell * 2) / 3); c.lineTo(x + cell, y + (cell * 2) / 3);
+              c.stroke();
+              c.setLineDash([]);
+            }
+
+            // Tracing Text
+            const char = getNextChar();
+            drawCharWatermark(char, x + cell / 2, y + cell / 2 + 5, 130);
+          }
+        }
+      } else if (tplType === 'hengshui' || tplType === 'english4') {
+        // ✍️ 衡水体 (68° slanted lines) / 英语四线三格
+        const marginX = 140, startY = 220;
+        const rowH = 120, spaceH = 40, rowGap = 50;
+        const rows = Math.floor((h - startY - 140) / (rowH + rowGap));
+
+        for (let r = 0; r < rows; r++) {
+          const y = startY + r * (rowH + rowGap);
+          c.strokeStyle = gridColor;
+
+          // 4 lines
+          for (let l = 0; l < 4; l++) {
+            c.lineWidth = (l === 2) ? 2.5 : 1.5; // Base line bold
+            c.setLineDash(l === 1 || l === 2 ? [] : [8, 8]);
+            c.beginPath();
+            c.moveTo(marginX, y + l * spaceH);
+            c.lineTo(w - marginX, y + l * spaceH);
+            c.stroke();
+          }
           c.setLineDash([]);
+
+          // If Hengshui slant guides (68°)
+          if (tplType === 'hengshui') {
+            c.strokeStyle = `rgba(148, 163, 184, 0.45)`;
+            c.lineWidth = 1;
+            const slantOffset = Math.tan((90 - 68) * Math.PI / 180) * rowH;
+            for (let x = marginX; x < w - marginX; x += 110) {
+              c.beginPath();
+              c.moveTo(x + slantOffset, y);
+              c.lineTo(x, y + rowH);
+              c.stroke();
+            }
+          }
+
+          // English Tracing Text
+          if (traceEnabled) {
+            let rowText = '';
+            for (let k = 0; k < 18; k++) {
+              const ch = getNextChar();
+              if (ch) rowText += ch + ' ';
+            }
+            if (rowText.trim()) {
+              c.save();
+              c.font = tplType === 'hengshui' ? 'italic 54px "Times New Roman", serif' : '52px "Arial", sans-serif';
+              c.fillStyle = traceStyle === 'gray' ? `rgba(100, 116, 139, ${traceOpacity})` : `rgba(220, 38, 38, ${traceOpacity})`;
+              c.textAlign = 'left';
+              c.fillText(rowText, marginX + 30, y + spaceH * 2 + 10);
+              c.restore();
+            }
+          }
+        }
+      } else if (tplType === 'cornell') {
+        // 📖 康奈尔经典笔记纸 (三栏布局)
+        const startY = 220, bottomH = 500, cueW = 600;
+        const mainW = w - 280 - cueW;
+        c.strokeStyle = gridColor;
+
+        // Top border
+        c.lineWidth = 3;
+        c.strokeRect(140, startY, w - 280, h - startY - 140);
+
+        // Vertical Cue Split Line
+        c.beginPath();
+        c.moveTo(140 + cueW, startY);
+        c.lineTo(140 + cueW, h - 140 - bottomH);
+        c.stroke();
+
+        // Horizontal Summary Split Line
+        c.beginPath();
+        c.moveTo(140, h - 140 - bottomH);
+        c.lineTo(w - 140, h - 140 - bottomH);
+        c.stroke();
+
+        // Labels
+        c.fillStyle = gridColor;
+        c.font = 'bold 30px sans-serif';
+        c.fillText('【线索栏 / 重点关键词】', 160, startY + 50);
+        c.fillText('【主笔记栏 / 课堂核心记录】', 140 + cueW + 40, startY + 50);
+        c.fillText('【总结概括栏 / SUMMARY】', 160, h - 140 - bottomH + 50);
+
+        // Lines in Main Notes & Cue Area
+        c.strokeStyle = `rgba(148, 163, 184, 0.35)`;
+        c.lineWidth = 1.5;
+        for (let y = startY + 80; y < h - 140 - bottomH; y += 65) {
+          c.beginPath();
+          c.moveTo(140 + cueW, y);
+          c.lineTo(w - 140, y);
+          c.stroke();
+        }
+      } else if (tplType === 'cuoti') {
+        // 📝 错题整理本 (3 大卡片)
+        const startY = 220, cardH = 960, gap = 45;
+        for (let i = 0; i < 3; i++) {
+          const y = startY + i * (cardH + gap);
+          c.strokeStyle = gridColor;
+          c.lineWidth = 2.5;
+          c.strokeRect(140, y, w - 280, cardH);
+
+          // Header line
+          c.fillStyle = `rgba(220, 38, 38, 0.08)`;
+          c.fillRect(140, y, w - 280, 60);
+          c.fillStyle = gridColor;
+          c.font = 'bold 28px sans-serif';
+          c.fillText(`错题序号 #${i + 1}    科目：________    错因分类：□ 审题不清  □ 概念混淆  □ 运算失误  □ 难度过高`, 160, y + 40);
+
+          // Split left & right
+          c.beginPath();
+          c.moveTo(140 + (w - 280) * 0.48, y + 60);
+          c.lineTo(140 + (w - 280) * 0.48, y + cardH);
+          c.stroke();
+
+          c.font = 'bold 26px sans-serif';
+          c.fillText('【原题呈现 & 错误解法】', 160, y + 105);
+          c.fillText('【标准正解 & 考点剖析 & 举一反三】', 140 + (w - 280) * 0.48 + 30, y + 105);
+        }
+      } else if (tplType === 'grid') {
+        // ▦ 方格作文稿纸 (20 x 20)
+        const marginX = 140, startY = 220;
+        const cell = 105;
+        const cols = 20, rows = 24;
+        for (let r = 0; r < rows; r++) {
+          const y = startY + r * (cell + 15);
+          for (let col = 0; col < cols; col++) {
+            const x = marginX + col * cell;
+            c.strokeStyle = gridColor;
+            c.lineWidth = 2;
+            c.strokeRect(x, y, cell, cell);
+
+            const char = getNextChar();
+            drawCharWatermark(char, x + cell / 2, y + cell / 2 + 3, 75);
+          }
+        }
+      } else if (tplType === 'music' || tplType === 'guitar') {
+        // 🎼 五线谱 / 六线谱
+        const startY = 240, linesCount = (tplType === 'music' ? 5 : 6);
+        const staveGap = linesCount === 5 ? 18 : 16;
+        const blockGap = 200;
+        const stavesCount = 9;
+
+        for (let s = 0; s < stavesCount; s++) {
+          const y = startY + s * blockGap;
+          c.strokeStyle = gridColor;
+          c.lineWidth = 2;
+
+          for (let l = 0; l < linesCount; l++) {
+            c.beginPath();
+            c.moveTo(140, y + l * staveGap);
+            c.lineTo(w - 140, y + l * staveGap);
+            c.stroke();
+          }
+
+          // Side bar
+          c.beginPath();
+          c.moveTo(140, y); c.lineTo(140, y + (linesCount - 1) * staveGap);
+          c.moveTo(w - 140, y); c.lineTo(w - 140, y + (linesCount - 1) * staveGap);
+          c.stroke();
+
+          // Clef / TAB title
+          c.fillStyle = gridColor;
+          c.font = 'bold 36px serif';
+          c.fillText(tplType === 'music' ? '𝄞' : 'TAB', 160, y + (linesCount - 1) * staveGap / 2 + 12);
         }
       }
     }
+
     function exportTemplateToPDF() {
       const cvs = document.getElementById('templatePaperCanvas');
-      const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4');
-      pdf.addImage(cvs.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297);
-      pdf.save('Paper_Template_A4.pdf'); showToast('作业纸 PDF 导出成功！');
+      if (!cvs) return;
+      showToast('正在导出 300 DPI 矢量级作业纸 PDF...');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      pdf.addImage(cvs.toDataURL('image/jpeg', 0.96), 'JPEG', 0, 0, 210, 297);
+      const tplName = document.getElementById('tplTypeSelect')?.value || 'Template';
+      pdf.save(`Paper_Template_${tplName}_A4.pdf`);
+      showToast('作业纸 PDF 导出成功！');
     }
 
     /* Scan / Drag and Drop */
