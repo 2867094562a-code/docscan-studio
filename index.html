@@ -3685,11 +3685,23 @@
       showToast(`已载入《${preset}》预设描红文本！`);
     }
 
+    function hexToRgba(hex, alpha = 1) {
+      if (!hex) return `rgba(220, 38, 38, ${alpha})`;
+      if (hex.startsWith('rgba') || hex.startsWith('rgb')) return hex;
+      let s = hex.replace('#', '');
+      if (s.length === 3) s = s.split('').map(x => x + x).join('');
+      const num = parseInt(s, 16);
+      const r = (num >> 16) & 255;
+      const g = (num >> 8) & 255;
+      const b = num & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
     function renderPaperTemplateCanvas() {
       const cvs = document.getElementById('templatePaperCanvas'); if (!cvs) return;
       const c = cvs.getContext('2d');
       
-      // Dynamic Paper Size: A3, A4, A5
+      // 1. Dynamic Paper Size (A3, A4, A5)
       const paperSize = document.getElementById('tplPaperSizeSelect')?.value || 'a4';
       let w = 2480, h = 3508;
       if (paperSize === 'a3') {
@@ -3699,27 +3711,29 @@
       }
       cvs.width = w; cvs.height = h;
 
-      // 1. Clear Canvas Background
+      // 2. Clear Canvas Background (Pure White)
       c.fillStyle = '#ffffff';
       c.fillRect(0, 0, w, h);
 
-      // 2. Read Configuration
+      // 3. Read All Independent Settings (Strictly decoupled!)
       const tplType = document.getElementById('tplTypeSelect')?.value || 'mizi';
-      const gridColor = document.getElementById('tplGridColor')?.value || '#dc2626';
+      const gridColor = document.getElementById('tplGridColor')?.value || '#dc2626'; // ONLY for grid lines
       const traceEnabled = document.getElementById('tplTraceEnabled')?.checked ?? true;
       const traceRawText = (document.getElementById('tplTraceText')?.value || '').replace(/\s+/g, '');
-      const traceStyle = document.getElementById('tplTraceStyle')?.value || 'red';
+      const traceStyle = document.getElementById('tplTraceStyle')?.value || 'solid'; // 'solid' | 'outline' | 'dashed'
+      const traceColor = document.getElementById('tplTraceColor')?.value || '#dc2626'; // Strictly independent watermark color!
       const traceOpacity = parseFloat(document.getElementById('tplTraceOpacity')?.value || '0.45');
+      const fontWeight = parseInt(document.getElementById('tplFontWeight')?.value || '400', 10);
       const repeatFill = document.getElementById('tplRepeatFill')?.checked ?? true;
-      const selectedFont = document.getElementById('tplFontSelect')?.value || '"KaiTi", "STKaiti", "楷体", serif';
+      const selectedFont = document.getElementById('tplFontSelect')?.value || "'Ma Shan Zheng', 'STKaiti', 'KaiTi', serif";
 
-      // 3. Draw Header
+      // 4. Draw Header Information Bar (strictly uses gridColor)
       c.fillStyle = gridColor;
-      c.font = `bold ${Math.round(w * 0.015)}px ${selectedFont}`;
+      c.font = `bold ${Math.round(w * 0.015)}px "KaiTi", "STKaiti", serif`;
       c.textAlign = 'left';
       c.fillText('姓名：__________    班级：__________    日期：__________    成绩：__________', Math.round(w * 0.06), Math.round(h * 0.04));
 
-      c.lineWidth = 1.5;
+      c.lineWidth = 1.8;
       c.strokeStyle = gridColor;
       c.beginPath();
       c.moveTo(Math.round(w * 0.06), Math.round(h * 0.048));
@@ -3739,38 +3753,56 @@
         return '';
       }
 
+      // Draw Watermark: Strictly uses traceColor, traceStyle, fontWeight, never touches gridColor!
       function drawCharWatermark(char, cx, cy, size, fontOverride) {
         if (!traceEnabled || !char) return;
         c.save();
         c.textAlign = 'center';
         c.textBaseline = 'middle';
-        c.font = `bold ${size}px ${fontOverride || selectedFont}`;
+        
+        const fontName = fontOverride || selectedFont;
+        // In Canvas, web fonts match reliably with normal weight
+        c.font = `normal ${size}px ${fontName}`;
+        const strokeColor = hexToRgba(traceColor, traceOpacity);
 
         if (traceStyle === 'outline') {
-          c.strokeStyle = gridColor === '#16a34a' ? `rgba(22, 163, 74, ${Math.min(1, traceOpacity + 0.3)})` : `rgba(220, 38, 38, ${Math.min(1, traceOpacity + 0.3)})`;
-          c.lineWidth = 3.5;
+          // ⭕ 空心双钩描边
+          const outlineW = Math.max(1.8, Math.round(size * (fontWeight / 400) * 0.024));
+          c.lineWidth = outlineW;
+          c.strokeStyle = strokeColor;
           c.strokeText(char, cx, cy);
-        } else if (traceStyle === 'gray') {
-          c.fillStyle = `rgba(71, 85, 105, ${traceOpacity})`;
+        } else if (traceStyle === 'dashed') {
+          // 〰️ 虚线引笔描线: visible dashed outline + subtle interior guide
+          const dashW = Math.max(2.0, Math.round(size * (fontWeight / 400) * 0.022));
+          c.lineWidth = dashW;
+          c.strokeStyle = strokeColor;
+          c.setLineDash([Math.round(size * 0.07), Math.round(size * 0.045)]);
+          c.strokeText(char, cx, cy);
+          c.setLineDash([]);
+          c.fillStyle = hexToRgba(traceColor, Math.max(0.06, traceOpacity * 0.18));
           c.fillText(char, cx, cy);
         } else {
-          // Default Red / Accent
-          if (gridColor === '#16a34a') {
-            c.fillStyle = `rgba(22, 163, 74, ${traceOpacity})`;
-          } else if (gridColor === '#0284c7') {
-            c.fillStyle = `rgba(2, 132, 199, ${traceOpacity})`;
-          } else if (gridColor === '#475569') {
-            c.fillStyle = `rgba(71, 85, 105, ${traceOpacity})`;
-          } else {
-            c.fillStyle = `rgba(220, 38, 38, ${traceOpacity})`;
-          }
+          // 🔴 饱满实心填墨 (solid)
+          c.fillStyle = strokeColor;
           c.fillText(char, cx, cy);
+
+          // Physical stroke weight adjustment (100 ~ 900)
+          if (fontWeight >= 600) {
+            const extraW = Math.max(1.5, Math.round(size * ((fontWeight - 400) / 400) * 0.038));
+            c.lineWidth = extraW;
+            c.strokeStyle = strokeColor;
+            c.strokeText(char, cx, cy);
+          } else if (fontWeight <= 300) {
+            c.fillStyle = hexToRgba(traceColor, Math.max(0.12, traceOpacity * (fontWeight / 400)));
+            c.fillText(char, cx, cy);
+          }
         }
         c.restore();
       }
 
-      // Render 12+ Template Types
+      // 5. Render 12+ Template Types
       if (tplType === 'tianzi') {
+        // 🀄 拼音田字格 (拼音在上 + 汉字在下)
         const marginX = Math.round(w * 0.06), startY = Math.round(h * 0.065);
         const cell = Math.round((w - marginX * 2) / 8);
         const pinyinH = Math.round(cell * 0.35);
@@ -3789,7 +3821,6 @@
             c.strokeStyle = gridColor;
             c.lineWidth = 2;
             c.strokeRect(x, yPinyin, cell, pinyinH);
-            // 2 inner dashed lines for pinyin
             c.lineWidth = 1;
             c.setLineDash([6, 6]);
             c.beginPath();
@@ -3801,7 +3832,6 @@
             // 2. Tianzi Cell
             c.lineWidth = 2.5;
             c.strokeRect(x, yCell, cell, cell);
-            // Dashed Cross
             c.lineWidth = 1.2;
             c.setLineDash([8, 8]);
             c.beginPath();
@@ -3810,16 +3840,16 @@
             c.stroke();
             c.setLineDash([]);
 
-            // Tracing Text
             const char = getNextChar();
-            drawCharWatermark(char, x + cell / 2, yCell + cell / 2 + 5, 130);
+            drawCharWatermark(char, x + cell / 2, yCell + cell / 2 + 5, Math.round(cell * 0.72));
           }
         }
       } else if (tplType === 'mizi' || tplType === 'pure_tianzi' || tplType === 'huigong' || tplType === 'jiugong') {
         // ✳️ 米字格 / 田字格 / 回宫格 / 九宫格
-        const marginX = 140, startY = 220;
-        const cell = 180, rowGap = 26;
-        const cols = Math.floor((w - marginX * 2) / cell);
+        const marginX = Math.round(w * 0.06), startY = Math.round(h * 0.065);
+        const cell = Math.round((w - marginX * 2) / 8);
+        const rowGap = Math.round(w * 0.01);
+        const cols = 8;
         const rows = Math.floor((h - startY - 120) / (cell + rowGap));
 
         for (let r = 0; r < rows; r++) {
@@ -3827,13 +3857,11 @@
           for (let col = 0; col < cols; col++) {
             const x = marginX + col * cell;
 
-            // Outer square
             c.strokeStyle = gridColor;
             c.lineWidth = 2.8;
             c.strokeRect(x, y, cell, cell);
 
             if (tplType === 'mizi') {
-              // Diagonal + Cross Dashed
               c.lineWidth = 1.2;
               c.setLineDash([7, 7]);
               c.beginPath();
@@ -3844,7 +3872,6 @@
               c.stroke();
               c.setLineDash([]);
             } else if (tplType === 'pure_tianzi') {
-              // Cross Dashed
               c.lineWidth = 1.2;
               c.setLineDash([8, 8]);
               c.beginPath();
@@ -3853,7 +3880,6 @@
               c.stroke();
               c.setLineDash([]);
             } else if (tplType === 'huigong') {
-              // Inner Square
               const innerW = cell * 0.55;
               const offset = (cell - innerW) / 2;
               c.lineWidth = 1.8;
@@ -3861,36 +3887,34 @@
               c.strokeRect(x + offset, y + offset, innerW, innerW);
               c.setLineDash([]);
             } else if (tplType === 'jiugong') {
-              // 3x3 Dashed
               c.lineWidth = 1.2;
               c.setLineDash([6, 6]);
+              const third = cell / 3;
               c.beginPath();
-              c.moveTo(x + cell / 3, y); c.lineTo(x + cell / 3, y + cell);
-              c.moveTo(x + (cell * 2) / 3, y); c.lineTo(x + (cell * 2) / 3, y + cell);
-              c.moveTo(x, y + cell / 3); c.lineTo(x + cell, y + cell / 3);
-              c.moveTo(x, y + (cell * 2) / 3); c.lineTo(x + cell, y + (cell * 2) / 3);
+              c.moveTo(x + third, y); c.lineTo(x + third, y + cell);
+              c.moveTo(x + third * 2, y); c.lineTo(x + third * 2, y + cell);
+              c.moveTo(x, y + third); c.lineTo(x + cell, y + third);
+              c.moveTo(x, y + third * 2); c.lineTo(x + cell, y + third * 2);
               c.stroke();
               c.setLineDash([]);
             }
 
-            // Tracing Text
             const char = getNextChar();
-            drawCharWatermark(char, x + cell / 2, y + cell / 2 + 5, 130);
+            drawCharWatermark(char, x + cell / 2, y + cell / 2 + 5, Math.round(cell * 0.72));
           }
         }
       } else if (tplType === 'hengshui' || tplType === 'english4') {
         // ✍️ 衡水体 (68° slanted lines) / 英语四线三格
-        const marginX = 140, startY = 220;
-        const rowH = 120, spaceH = 40, rowGap = 50;
+        const marginX = Math.round(w * 0.06), startY = Math.round(h * 0.065);
+        const rowH = Math.round(w * 0.05), spaceH = rowH / 3, rowGap = Math.round(w * 0.02);
         const rows = Math.floor((h - startY - 140) / (rowH + rowGap));
 
         for (let r = 0; r < rows; r++) {
           const y = startY + r * (rowH + rowGap);
           c.strokeStyle = gridColor;
 
-          // 4 lines
           for (let l = 0; l < 4; l++) {
-            c.lineWidth = (l === 2) ? 2.5 : 1.5; // Base line bold
+            c.lineWidth = (l === 2) ? 2.5 : 1.5;
             c.setLineDash(l === 1 || l === 2 ? [] : [8, 8]);
             c.beginPath();
             c.moveTo(marginX, y + l * spaceH);
@@ -3899,7 +3923,6 @@
           }
           c.setLineDash([]);
 
-          // If Hengshui slant guides (68°)
           if (tplType === 'hengshui') {
             c.strokeStyle = `rgba(148, 163, 184, 0.45)`;
             c.lineWidth = 1;
@@ -3912,7 +3935,6 @@
             }
           }
 
-          // English Tracing Text
           if (traceEnabled) {
             let rowText = '';
             for (let k = 0; k < 18; k++) {
@@ -3921,44 +3943,44 @@
             }
             if (rowText.trim()) {
               c.save();
-              c.font = tplType === 'hengshui' ? 'italic 54px "Times New Roman", serif' : '52px "Arial", sans-serif';
-              c.fillStyle = traceStyle === 'gray' ? `rgba(100, 116, 139, ${traceOpacity})` : `rgba(220, 38, 38, ${traceOpacity})`;
+              const engFont = tplType === 'hengshui' ? `'Dancing Script', 'Caveat', 'Segoe Script', cursive` : selectedFont;
+              c.font = `normal ${Math.round(rowH * 0.44)}px ${engFont}`;
+              const strokeColor = hexToRgba(traceColor, traceOpacity);
+              c.fillStyle = strokeColor;
               c.textAlign = 'left';
               c.fillText(rowText, marginX + 30, y + spaceH * 2 + 10);
+              if (fontWeight >= 600) {
+                c.lineWidth = Math.max(1, Math.round(rowH * 0.015 * ((fontWeight - 400) / 400)));
+                c.strokeStyle = strokeColor;
+                c.strokeText(rowText, marginX + 30, y + spaceH * 2 + 10);
+              }
               c.restore();
             }
           }
         }
       } else if (tplType === 'cornell') {
         // 📖 康奈尔经典笔记纸 (三栏布局)
-        const startY = 220, bottomH = 500, cueW = 600;
-        const mainW = w - 280 - cueW;
+        const startY = Math.round(h * 0.065), bottomH = Math.round(h * 0.14), cueW = Math.round(w * 0.24);
         c.strokeStyle = gridColor;
-
-        // Top border
         c.lineWidth = 3;
         c.strokeRect(140, startY, w - 280, h - startY - 140);
 
-        // Vertical Cue Split Line
         c.beginPath();
         c.moveTo(140 + cueW, startY);
         c.lineTo(140 + cueW, h - 140 - bottomH);
         c.stroke();
 
-        // Horizontal Summary Split Line
         c.beginPath();
         c.moveTo(140, h - 140 - bottomH);
         c.lineTo(w - 140, h - 140 - bottomH);
         c.stroke();
 
-        // Labels
         c.fillStyle = gridColor;
-        c.font = 'bold 30px sans-serif';
+        c.font = `bold ${Math.round(w * 0.013)}px ${selectedFont}`;
         c.fillText('【线索栏 / 重点关键词】', 160, startY + 50);
         c.fillText('【主笔记栏 / 课堂核心记录】', 140 + cueW + 40, startY + 50);
         c.fillText('【总结概括栏 / SUMMARY】', 160, h - 140 - bottomH + 50);
 
-        // Lines in Main Notes & Cue Area
         c.strokeStyle = `rgba(148, 163, 184, 0.35)`;
         c.lineWidth = 1.5;
         for (let y = startY + 80; y < h - 140 - bottomH; y += 65) {
@@ -3969,58 +3991,62 @@
         }
       } else if (tplType === 'cuoti') {
         // 📝 错题整理本 (3 大卡片)
-        const startY = 220, cardH = 960, gap = 45;
+        const startY = Math.round(h * 0.065), cardH = Math.round((h - startY - 200) / 3), gap = 45;
         for (let i = 0; i < 3; i++) {
           const y = startY + i * (cardH + gap);
           c.strokeStyle = gridColor;
           c.lineWidth = 2.5;
           c.strokeRect(140, y, w - 280, cardH);
 
-          // Header line
-          c.fillStyle = `rgba(220, 38, 38, 0.08)`;
+          c.fillStyle = hexToRgba(gridColor, 0.08);
           c.fillRect(140, y, w - 280, 60);
           c.fillStyle = gridColor;
-          c.font = 'bold 28px sans-serif';
+          c.font = `bold ${Math.round(w * 0.012)}px ${selectedFont}`;
           c.fillText(`错题序号 #${i + 1}    科目：________    错因分类：□ 审题不清  □ 概念混淆  □ 运算失误  □ 难度过高`, 160, y + 40);
 
-          // Split left & right
           c.beginPath();
           c.moveTo(140 + (w - 280) * 0.48, y + 60);
           c.lineTo(140 + (w - 280) * 0.48, y + cardH);
           c.stroke();
 
-          c.font = 'bold 26px sans-serif';
+          c.font = `bold ${Math.round(w * 0.011)}px ${selectedFont}`;
           c.fillText('【原题呈现 & 错误解法】', 160, y + 105);
           c.fillText('【标准正解 & 考点剖析 & 举一反三】', 140 + (w - 280) * 0.48 + 30, y + 105);
         }
       } else if (tplType === 'grid') {
-        // ▦ 方格作文稿纸 (20 x 20)
-        const marginX = 140, startY = 220;
-        const cell = 105;
-        const cols = 20, rows = 24;
+        // ▦ 方格作文稿纸 (20 列)
+        const marginX = Math.round(w * 0.06), startY = Math.round(h * 0.065);
+        const cols = 20;
+        const cell = Math.round((w - marginX * 2) / cols);
+        const rows = Math.floor((h - startY - 100) / (cell + 14));
         for (let r = 0; r < rows; r++) {
-          const y = startY + r * (cell + 15);
+          const y = startY + r * (cell + 14);
           for (let col = 0; col < cols; col++) {
             const x = marginX + col * cell;
             c.strokeStyle = gridColor;
-            c.lineWidth = 2;
+            c.lineWidth = 1.8;
             c.strokeRect(x, y, cell, cell);
 
             const char = getNextChar();
-            drawCharWatermark(char, x + cell / 2, y + cell / 2 + 3, 75);
+            drawCharWatermark(char, x + cell / 2, y + cell / 2 + 3, Math.round(cell * 0.72));
           }
         }
       } else if (tplType === 'music' || tplType === 'guitar') {
-        // 🎼 五线谱 / 六线谱
-        const startY = 240, linesCount = (tplType === 'music' ? 5 : 6);
-        const staveGap = linesCount === 5 ? 18 : 16;
-        const blockGap = 200;
-        const stavesCount = 9;
+        // 🎼 音乐五线谱 / 吉他六线谱 (全页铺满动态计算)
+        const startY = Math.round(h * 0.07);
+        const linesCount = (tplType === 'music' ? 5 : 6);
+        const staveGap = Math.round(w * 0.007);
+        const staveHeight = (linesCount - 1) * staveGap;
+        const bottomMargin = Math.round(h * 0.05);
+        const availableH = h - startY - bottomMargin;
+        const targetBlockGap = Math.round(w * 0.08);
+        const stavesCount = Math.max(6, Math.floor(availableH / targetBlockGap));
+        const actualBlockGap = availableH / (stavesCount - 0.2);
 
         for (let s = 0; s < stavesCount; s++) {
-          const y = startY + s * blockGap;
+          const y = startY + s * actualBlockGap;
           c.strokeStyle = gridColor;
-          c.lineWidth = 2;
+          c.lineWidth = Math.max(1.5, w * 0.0008);
 
           for (let l = 0; l < linesCount; l++) {
             c.beginPath();
@@ -4029,17 +4055,41 @@
             c.stroke();
           }
 
-          // Side bar
           c.beginPath();
-          c.moveTo(140, y); c.lineTo(140, y + (linesCount - 1) * staveGap);
-          c.moveTo(w - 140, y); c.lineTo(w - 140, y + (linesCount - 1) * staveGap);
+          c.moveTo(140, y); c.lineTo(140, y + staveHeight);
+          c.moveTo(w - 140, y); c.lineTo(w - 140, y + staveHeight);
           c.stroke();
 
-          // Clef / TAB title
           c.fillStyle = gridColor;
-          c.font = 'bold 36px serif';
-          c.fillText(tplType === 'music' ? '𝄞' : 'TAB', 160, y + (linesCount - 1) * staveGap / 2 + 12);
+          c.font = `bold ${Math.round(w * 0.016)}px serif`;
+          c.fillText(tplType === 'music' ? '𝄞' : 'TAB', 160, y + staveHeight / 2 + 12);
         }
+      }
+    }
+
+    async function loadPcLocalFontsForTemplates() {
+      if (!('queryLocalFonts' in window)) {
+        showToast('当前浏览器暂未支持直接枚举字体，已预设常用 Windows/macOS 系统字体');
+        return;
+      }
+      try {
+        showToast('正在读取本机电脑安装的字体库...');
+        const availableFonts = await window.queryLocalFonts();
+        const group = document.getElementById('tplLocalFontsGroup');
+        if (group && availableFonts.length) {
+          const unique = new Set();
+          const fontOptions = [];
+          availableFonts.forEach(f => {
+            if (!unique.has(f.family)) {
+              unique.add(f.family);
+              fontOptions.push(`<option value='"${f.family}", sans-serif'>${f.fullName || f.family}</option>`);
+            }
+          });
+          group.innerHTML = fontOptions.slice(0, 150).join('');
+          showToast(`已成功读取本机 ${unique.size} 款系统字体！`);
+        }
+      } catch (e) {
+        showToast('读取本机字体已取消或受限');
       }
     }
 
@@ -4047,12 +4097,23 @@
       const cvs = document.getElementById('templatePaperCanvas');
       if (!cvs) return;
       showToast('正在导出 300 DPI 矢量级作业纸 PDF...');
+      const paperSize = document.getElementById('tplPaperSizeSelect')?.value || 'a4';
       const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      pdf.addImage(cvs.toDataURL('image/jpeg', 0.96), 'JPEG', 0, 0, 210, 297);
+      const pdf = new jsPDF('p', 'mm', paperSize);
+      const pdfW = paperSize === 'a3' ? 297 : (paperSize === 'a5' ? 148 : 210);
+      const pdfH = paperSize === 'a3' ? 420 : (paperSize === 'a5' ? 210 : 297);
+      pdf.addImage(cvs.toDataURL('image/jpeg', 0.96), 'JPEG', 0, 0, pdfW, pdfH);
       const tplName = document.getElementById('tplTypeSelect')?.value || 'Template';
-      pdf.save(`Paper_Template_${tplName}_A4.pdf`);
-      showToast('作业纸 PDF 导出成功！');
+      pdf.save(`Paper_Template_${tplName}_${paperSize.toUpperCase()}.pdf`);
+      showToast(`${paperSize.toUpperCase()} 规格作业纸 PDF 导出成功！`);
+    }
+
+    if (document.fonts) {
+      document.fonts.ready.then(() => {
+        if (state.currentModule === 'templates') {
+          renderPaperTemplateCanvas();
+        }
+      });
     }
 
     /* Integrated Visual: Document Scanner & Independent Seal/Signature Extractor */
