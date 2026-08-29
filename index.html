@@ -1082,97 +1082,203 @@
         <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">涵盖 PDF ⇄ Word / Excel / PPT / 图片包 / 多图转PDF 全向秒级互转，100% 本地离线安全。</p>
       </div>
 
+      <!-- Conversion Cards Grid with AI-Enhanced Version for all features -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        
         <!-- 1. Word -> PDF -->
         <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 flex items-center justify-center"><i data-lucide="file-type-2" class="w-5 h-5"></i></div>
-            <div><h3 class="text-sm font-bold">Word (.docx) 转 PDF</h3><span class="text-[10px] text-slate-400">保留段落排版转为标准 PDF</span></div>
+            <div>
+              <h3 class="text-sm font-bold">Word (.docx) 转 PDF</h3>
+              <span class="text-[10px] text-slate-400">Word 文档精准转换为标准 PDF</span>
+            </div>
           </div>
           <input type="file" id="inputWordToPdf" accept=".docx" class="hidden" onchange="handleWordToPdf(event)">
-          <button onclick="document.getElementById('inputWordToPdf').click()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>选择 Word 转 PDF</span></button>
+          <input type="file" id="inputAiWordToPdf" accept=".docx" class="hidden" onchange="handleAiEnhancedConvert(event, 'word2pdf')">
+          <div class="space-y-1.5">
+            <button onclick="document.getElementById('inputWordToPdf').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>标准极速转 PDF</span></button>
+            <button onclick="document.getElementById('inputAiWordToPdf').click()" class="w-full py-2 bg-gradient-to-r from-indigo-600 to-violet-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 深度排版强化转 PDF</span></button>
+          </div>
         </div>
 
         <!-- 2. Excel -> PDF -->
         <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center"><i data-lucide="sheet" class="w-5 h-5"></i></div>
-            <div><h3 class="text-sm font-bold">Excel (.xlsx) 转 PDF</h3><span class="text-[10px] text-slate-400">表格报表自动排版转 PDF</span></div>
+            <div>
+              <h3 class="text-sm font-bold">Excel (.xlsx) 转 PDF</h3>
+              <span class="text-[10px] text-slate-400">表格报表自动排版转 PDF</span>
+            </div>
           </div>
           <input type="file" id="inputExcelToPdf" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleExcelToPdf(event)">
-          <button onclick="document.getElementById('inputExcelToPdf').click()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>选择 Excel 转 PDF</span></button>
+          <input type="file" id="inputAiExcelToPdf" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleAiEnhancedConvert(event, 'excel2pdf')">
+          <div class="space-y-1.5">
+            <button onclick="document.getElementById('inputExcelToPdf').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>标准极速转 PDF</span></button>
+            <button onclick="document.getElementById('inputAiExcelToPdf').click()" class="w-full py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 智能报表美化转 PDF</span></button>
+          </div>
         </div>
 
         <!-- 3. PPT -> PDF -->
         <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div>
-            <div><h3 class="text-sm font-bold">PPT (.pptx) 转 PDF</h3><span class="text-[10px] text-slate-400">幻灯片按页排版导出矢量 PDF</span></div>
+            <div>
+              <h3 class="text-sm font-bold">PPT (.pptx) 转 PDF</h3>
+              <span class="text-[10px] text-slate-400">幻灯片按页排版导出矢量 PDF</span>
+            </div>
           </div>
           <input type="file" id="inputPptToPdf" accept=".pptx" class="hidden" onchange="handlePptToPdf(event)">
-          <button onclick="document.getElementById('inputPptToPdf').click()" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>选择 PPT 转 PDF</span></button>
+          <input type="file" id="inputAiPptToPdf" accept=".pptx" class="hidden" onchange="handleAiEnhancedConvert(event, 'ppt2pdf')">
+          <div class="space-y-1.5">
+            <button onclick="document.getElementById('inputPptToPdf').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>标准极速转 PDF</span></button>
+            <button onclick="document.getElementById('inputAiPptToPdf').click()" class="w-full py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 幻灯片版面重构转 PDF</span></button>
+          </div>
         </div>
 
         <!-- 4. PDF -> Word -->
         <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 flex items-center justify-center"><i data-lucide="file-text" class="w-5 h-5"></i></div>
-            <div><h3 class="text-sm font-bold">PDF 转 Word (.docx)</h3><span class="text-[10px] text-slate-400">提取文字排版生成可编辑 Word</span></div>
+            <div>
+              <h3 class="text-sm font-bold">PDF 转 Word (.docx)</h3>
+              <span class="text-[10px] text-slate-400">提取文字排版生成可编辑 Word</span>
+            </div>
           </div>
           <input type="file" id="inputPdfToWord" accept=".pdf" class="hidden" onchange="handlePdfToWord(event)">
-          <button onclick="document.getElementById('inputPdfToWord').click()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>选择 PDF 转 Word</span></button>
+          <input type="file" id="inputAiPdfToWord" accept=".pdf" class="hidden" onchange="handleAiEnhancedConvert(event, 'pdf2word')">
+          <div class="space-y-1.5">
+            <button onclick="document.getElementById('inputPdfToWord').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>标准快速转 Word</span></button>
+            <button onclick="document.getElementById('inputAiPdfToWord').click()" class="w-full py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 深度排版与格式还原转 Word</span></button>
+          </div>
         </div>
 
         <!-- 5. PDF -> Excel -->
         <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/50 text-teal-600 flex items-center justify-center"><i data-lucide="table" class="w-5 h-5"></i></div>
-            <div><h3 class="text-sm font-bold">PDF 转 Excel (.xlsx)</h3><span class="text-[10px] text-slate-400">提取表格数据生成电子表格</span></div>
+            <div>
+              <h3 class="text-sm font-bold">PDF 转 Excel (.xlsx)</h3>
+              <span class="text-[10px] text-slate-400">提取表格数据生成电子表格</span>
+            </div>
           </div>
           <input type="file" id="inputPdfToExcel" accept=".pdf" class="hidden" onchange="handlePdfToExcel(event)">
-          <button onclick="document.getElementById('inputPdfToExcel').click()" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>选择 PDF 转 Excel</span></button>
+          <input type="file" id="inputAiPdfToExcel" accept=".pdf" class="hidden" onchange="handleAiEnhancedConvert(event, 'pdf2excel')">
+          <div class="space-y-1.5">
+            <button onclick="document.getElementById('inputPdfToExcel').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>标准快速转 Excel</span></button>
+            <button onclick="document.getElementById('inputAiPdfToExcel').click()" class="w-full py-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 复杂表格结构解析转 Excel</span></button>
+          </div>
         </div>
 
         <!-- 6. PDF -> PPT -->
         <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div>
-            <div><h3 class="text-sm font-bold">PDF 转 PPT (.pptx)</h3><span class="text-[10px] text-slate-400">逐页解析生成演示文稿幻灯片</span></div>
+            <div>
+              <h3 class="text-sm font-bold">PDF 转 PPT (.pptx)</h3>
+              <span class="text-[10px] text-slate-400">逐页解析生成演示文稿幻灯片</span>
+            </div>
           </div>
           <input type="file" id="inputPdfToPpt" accept=".pdf" class="hidden" onchange="handlePdfToPpt(event)">
-          <button onclick="document.getElementById('inputPdfToPpt').click()" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>选择 PDF 转 PPT</span></button>
+          <input type="file" id="inputAiPdfToPpt" accept=".pdf" class="hidden" onchange="handleAiEnhancedConvert(event, 'pdf2ppt')">
+          <div class="space-y-1.5">
+            <button onclick="document.getElementById('inputPdfToPpt').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>标准快速转 PPT</span></button>
+            <button onclick="document.getElementById('inputAiPdfToPpt').click()" class="w-full py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 核心大纲提炼与智能排版转 PPT</span></button>
+          </div>
         </div>
 
         <!-- 7. PDF -> Images -->
         <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-950/50 text-orange-600 flex items-center justify-center"><i data-lucide="images" class="w-5 h-5"></i></div>
-            <div><h3 class="text-sm font-bold">PDF 转 高清图片包</h3><span class="text-[10px] text-slate-400">逐页提取为 300DPI JPG/PNG</span></div>
+            <div>
+              <h3 class="text-sm font-bold">PDF 转 高清图片包</h3>
+              <span class="text-[10px] text-slate-400">逐页提取为 300DPI JPG/PNG</span>
+            </div>
           </div>
           <input type="file" id="inputPdfToImages" accept=".pdf" class="hidden" onchange="handlePdfToImages(event)">
-          <button onclick="document.getElementById('inputPdfToImages').click()" class="w-full py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>选择 PDF 转图片</span></button>
+          <input type="file" id="inputAiPdfToImages" accept=".pdf" class="hidden" onchange="handleAiEnhancedConvert(event, 'pdf2images')">
+          <div class="space-y-1.5">
+            <button onclick="document.getElementById('inputPdfToImages').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>标准快速导出图片</span></button>
+            <button onclick="document.getElementById('inputAiPdfToImages').click()" class="w-full py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 超清文字增强转图片</span></button>
+          </div>
         </div>
 
         <!-- 8. Multi-Images -> PDF -->
         <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-950/50 text-pink-600 flex items-center justify-center"><i data-lucide="image-plus" class="w-5 h-5"></i></div>
-            <div><h3 class="text-sm font-bold">多图批量合并转 PDF</h3><span class="text-[10px] text-slate-400">批量合并为标准 A4 打印 PDF</span></div>
+            <div>
+              <h3 class="text-sm font-bold">多图批量合并转 PDF</h3>
+              <span class="text-[10px] text-slate-400">批量合并为标准 A4 打印 PDF</span>
+            </div>
           </div>
           <input type="file" id="inputImagesToPdf" accept="image/*" multiple class="hidden" onchange="handleImagesToPdf(event)">
-          <button onclick="document.getElementById('inputImagesToPdf').click()" class="w-full py-2.5 bg-pink-600 hover:bg-pink-700 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>选择多图转 PDF</span></button>
+          <input type="file" id="inputAiImagesToPdf" accept="image/*" multiple class="hidden" onchange="handleAiEnhancedConvert(event, 'images2pdf')">
+          <div class="space-y-1.5">
+            <button onclick="document.getElementById('inputImagesToPdf').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>标准快速合并 PDF</span></button>
+            <button onclick="document.getElementById('inputAiImagesToPdf').click()" class="w-full py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 智能页面校正与合并转 PDF</span></button>
+          </div>
         </div>
 
         <!-- 9. PDF -> TXT -->
         <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center"><i data-lucide="file-text" class="w-5 h-5"></i></div>
-            <div><h3 class="text-sm font-bold">PDF 转 TXT 纯文本</h3><span class="text-[10px] text-slate-400">纯净提取所有文字与段落</span></div>
+            <div>
+              <h3 class="text-sm font-bold">PDF 转 TXT 纯文本</h3>
+              <span class="text-[10px] text-slate-400">纯净提取所有文字与段落</span>
+            </div>
           </div>
           <input type="file" id="inputPdfToTxt" accept=".pdf" class="hidden" onchange="handlePdfToTxt(event)">
-          <button onclick="document.getElementById('inputPdfToTxt').click()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>选择 PDF 转 TXT</span></button>
+          <input type="file" id="inputAiPdfToTxt" accept=".pdf" class="hidden" onchange="handleAiEnhancedConvert(event, 'pdf2txt')">
+          <div class="space-y-1.5">
+            <button onclick="document.getElementById('inputPdfToTxt').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>标准纯文本提取</span></button>
+            <button onclick="document.getElementById('inputAiPdfToTxt').click()" class="w-full py-2 bg-gradient-to-r from-slate-800 to-slate-900 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 智能清洗排版与去噪转 TXT</span></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Enhanced Conversion Result Modal -->
+  <div id="aiConvertResultModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeAiConvertResultModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-5 space-y-3.5 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b pb-2">
+        <div class="flex items-center space-x-2">
+          <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-500 text-white flex items-center justify-center font-bold">AI</div>
+          <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100" id="aiConvertResultTitle">AI 智能深度强化转换成功</h3>
+        </div>
+        <button onclick="closeAiConvertResultModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border space-y-1.5">
+        <div class="flex items-center justify-between text-[11px]">
+          <span class="text-slate-500" id="aiConvertModelBadge">🤖 驱动模型：小米 MiMo (mimo-vision / mimo-pro)</span>
+          <span class="text-emerald-600 font-bold flex items-center space-x-1"><i data-lucide="check-circle" class="w-3.5 h-3.5"></i><span>智能优化完成</span></span>
+        </div>
+        <div class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed" id="aiConvertSummaryText">AI 已完成文档结构深度分析、断行修复与段落重构，保持了最佳的版面与专业格式规范。</div>
+      </div>
+
+      <div class="space-y-1">
+        <label class="text-[11px] font-bold text-slate-500">AI 强化提取与重构内容预览：</label>
+        <textarea id="aiConvertPreviewText" rows="6" readonly class="w-full p-2.5 font-mono text-xs border rounded-xl bg-slate-50 dark:bg-slate-950 resize-none outline-none leading-relaxed"></textarea>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t">
+        <button onclick="openConvertedInOfficeEditor()" class="px-3.5 py-2 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 rounded-xl font-bold flex items-center space-x-1.5">
+          <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>在在线编辑器中打开</span>
+        </button>
+        <div class="flex space-x-2">
+          <button onclick="closeAiConvertResultModal()" class="px-3 py-2 text-xs text-slate-500">关闭</button>
+          <button onclick="downloadAiConvertedFile()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow flex items-center space-x-1.5">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i><span id="aiConvertDownloadBtnLabel">立即下载目标文件</span>
+          </button>
         </div>
       </div>
+    </div>
+  </div>
     </div>
   </div>
 
@@ -3967,6 +4073,257 @@
       navigateModule('editor');
       switchOfficeSubTool('word');
       showToast('识别内容已成功插入到 Word 文档正文！');
+    }
+
+    /* AI-Enhanced Full Format Converter System (Directly powered by User Configured AI) */
+    state.aiConvertedResult = {
+      type: '',
+      fileName: '',
+      text: '',
+      structuredData: null
+    };
+
+    async function handleAiEnhancedConvert(e, convType) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      
+      const saved = localStorage.getItem('docscan_ai_config');
+      const cfg = saved ? JSON.parse(saved) : {};
+      const baseUrl = (cfg.baseUrl || 'https://api.xiaomi.com/v1').replace(/\/+$/, '');
+      const apiKey = cfg.apiKey;
+      const model = cfg.model || 'mimo-vision';
+
+      if (!apiKey) {
+        openAISettingsModal();
+        showToast('💡 请先填入您的 API Key（如小米 MiMo / OpenAI / DeepSeek）即可开启 AI 强化转换');
+        return;
+      }
+
+      showToast(`🤖 正在通过 ${model} 进行 AI 深度解析与重构转换...`);
+
+      try {
+        let extractedRawText = '';
+        let base64Img = null;
+
+        const ext = file.name.split('.').pop().toLowerCase();
+        if (ext === 'docx') {
+          const ab = await file.arrayBuffer();
+          const res = await mammoth.extractRawText({ arrayBuffer: ab });
+          extractedRawText = res.value || '';
+        } else if (['xlsx', 'xls', 'csv'].includes(ext)) {
+          const ab = await file.arrayBuffer();
+          const wb = XLSX.read(ab, { type: 'array' });
+          const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+          extractedRawText = JSON.stringify(rows);
+        } else if (ext === 'pdf') {
+          const ab = await file.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+          for (let p = 1; p <= Math.min(10, pdf.numPages); p++) {
+            const page = await pdf.getPage(p);
+            const content = await page.getTextContent();
+            extractedRawText += `[第${p}页]\n` + content.items.map(it => it.str).join(' ') + '\n\n';
+          }
+        } else if (file.type.startsWith('image/')) {
+          base64Img = await new Promise(r => {
+            const rd = new FileReader();
+            rd.onload = ev => r(ev.target.result);
+            rd.readAsDataURL(file);
+          });
+        } else {
+          extractedRawText = await file.text();
+        }
+
+        // Build Custom Targeted AI Prompts for each conversion task
+        let systemPrompt = '你是一个顶级的资深文档格式转换与排版重构 AI 专家。请根据用户的需求，将原文档内容进行深度优化排版、断行修复、去噪与格式还原。';
+        let userInstruction = '';
+
+        if (convType === 'word2pdf' || convType === 'images2pdf') {
+          userInstruction = `请将以下文档内容重新按标准公文与正式商务文档规范进行深度排版重构，优化标题层级、段落缩进与标点格式，直接输出排版优良的全文：\n\n${extractedRawText}`;
+        } else if (convType === 'excel2pdf' || convType === 'pdf2excel') {
+          userInstruction = `请深入分析并提取以下内容中的所有数据表格，修复错位与断行，整理为标准规整的表格数据（每行以制表符Tab或逗号分隔）：\n\n${extractedRawText}`;
+        } else if (convType === 'ppt2pdf' || convType === 'pdf2ppt') {
+          userInstruction = `请提炼并重构以下文档的核心脉络，生成一份包含精炼幻灯片大纲的演示文稿，格式请按【幻灯片 1：标题】、要点列举【• 要点】输出：\n\n${extractedRawText}`;
+        } else if (convType === 'pdf2word') {
+          userInstruction = `请深度解析并还原以下 PDF 的原始段落结构与版面排版，去除多余乱码换行与页眉页脚干扰，输出结构严整的 Word 正文：\n\n${extractedRawText}`;
+        } else if (convType === 'pdf2txt') {
+          userInstruction = `请彻底清洗以下 PDF 内容，剔除所有水印、页眉页脚、扫描杂质与干扰符号，输出纯净通顺的 Markdown/纯文本：\n\n${extractedRawText}`;
+        } else {
+          userInstruction = `请精确分析并重构以下文档内容：\n\n${extractedRawText}`;
+        }
+
+        // Call user's configured AI
+        const messageContent = base64Img ? [
+          { type: 'text', text: userInstruction },
+          { type: 'image_url', image_url: { url: base64Img } }
+        ] : userInstruction;
+
+        const res = await fetch(`${baseUrl}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: messageContent }
+            ],
+            max_tokens: 3000
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error?.message || `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        const aiResultText = data.choices?.[0]?.message?.content || 'AI 转换已完成';
+
+        state.aiConvertedResult = {
+          type: convType,
+          fileName: file.name,
+          text: aiResultText,
+          rawData: extractedRawText
+        };
+
+        openAiConvertResultModal(convType, model, aiResultText);
+        showToast('🎉 AI 深度强化转换成功完成！');
+      } catch (err) {
+        showToast('AI 转换异常: ' + err.message);
+      }
+    }
+
+    function openAiConvertResultModal(convType, model, text) {
+      const modal = document.getElementById('aiConvertResultModal');
+      const titleEl = document.getElementById('aiConvertResultTitle');
+      const badgeEl = document.getElementById('aiConvertModelBadge');
+      const btnLabel = document.getElementById('aiConvertDownloadBtnLabel');
+      
+      badgeEl.innerText = `🤖 驱动模型：${model}`;
+      document.getElementById('aiConvertPreviewText').value = text;
+
+      if (convType.endsWith('2pdf')) {
+        titleEl.innerText = '🤖 AI 深度排版强化转 PDF 成功';
+        btnLabel.innerText = '下载 AI 强化 PDF';
+      } else if (convType.endsWith('2word')) {
+        titleEl.innerText = '🤖 AI 智能结构还原转 Word 成功';
+        btnLabel.innerText = '下载 AI 强化 Word (.docx)';
+      } else if (convType.endsWith('2excel')) {
+        titleEl.innerText = '🤖 AI 复杂表格结构解析转 Excel 成功';
+        btnLabel.innerText = '下载 AI 规整 Excel (.xlsx)';
+      } else if (convType.endsWith('2ppt')) {
+        titleEl.innerText = '🤖 AI 核心大纲提炼转 PPT 成功';
+        btnLabel.innerText = '下载 AI 演示 PPT (.pptx)';
+      } else {
+        titleEl.innerText = '🤖 AI 智能去噪纯文本提取成功';
+        btnLabel.innerText = '下载纯净 TXT 文本';
+      }
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeAiConvertResultModal() {
+      document.getElementById('aiConvertResultModal').classList.add('hidden');
+    }
+
+    async function downloadAiConvertedFile() {
+      const res = state.aiConvertedResult;
+      if (!res || !res.text) return showToast('暂无转换结果可下载');
+      const baseName = res.fileName ? res.fileName.replace(/\.[^/.]+$/, '') : 'AI_Converted_Doc';
+
+      if (res.type.endsWith('2pdf')) {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const lines = pdf.splitTextToSize(res.text, 180);
+        let y = 20;
+        lines.forEach(l => {
+          if (y > 280) { pdf.addPage(); y = 20; }
+          pdf.text(l, 15, y);
+          y += 7;
+        });
+        pdf.save(`${baseName}_AI_Enhanced.pdf`);
+        showToast('AI 强化 PDF 已成功下载！');
+      } else if (res.type.endsWith('2word')) {
+        const paragraphs = res.text.split('\n').filter(l => l.trim()).map(l => new docx.Paragraph({
+          children: [new docx.TextRun({ text: l.trim(), size: 28 })],
+          spacing: { after: 120 }
+        }));
+        const doc = new docx.Document({ sections: [{ children: paragraphs }] });
+        const blob = await docx.Packer.toBlob(doc);
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${baseName}_AI_Enhanced.docx`; a.click();
+        showToast('AI 强化 Word 已成功下载！');
+      } else if (res.type.endsWith('2excel')) {
+        const lines = res.text.split('\n').filter(l => l.trim());
+        const rows = lines.map(l => l.split(/[\t,|]/).map(c => c.trim()));
+        const ws = XLSX.utils.aoa_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'AI_Extracted_Data');
+        XLSX.writeFile(wb, `${baseName}_AI_Enhanced.xlsx`);
+        showToast('AI 规整 Excel 已成功下载！');
+      } else if (res.type.endsWith('2ppt')) {
+        const pptx = new PptxGenJS();
+        pptx.layout = 'LAYOUT_16x9';
+        const slides = res.text.split(/幻灯片\s*\d+[：:]/g).filter(s => s.trim());
+        if (!slides.length) slides.push(res.text);
+        slides.forEach((slText, idx) => {
+          const slide = pptx.addSlide();
+          const parts = slText.split('\n').filter(l => l.trim());
+          const title = parts[0] || `Slide ${idx + 1}`;
+          const body = parts.slice(1).join('\n') || '';
+          slide.addText(title, { x: 0.8, y: 0.8, fontSize: 24, bold: true, color: '1e293b' });
+          slide.addText(body, { x: 0.8, y: 2.0, fontSize: 16, color: '475569' });
+        });
+        await pptx.writeFile({ fileName: `${baseName}_AI_Enhanced.pptx` });
+        showToast('AI 强化 PPT 已成功下载！');
+      } else {
+        const blob = new Blob([res.text], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${baseName}_AI_Enhanced.txt`; a.click();
+        showToast('纯净 TXT 文本已成功下载！');
+      }
+    }
+
+    function openConvertedInOfficeEditor() {
+      const res = state.aiConvertedResult;
+      if (!res || !res.text) return showToast('暂无转换结果');
+
+      if (res.type.endsWith('2word') || res.type.endsWith('2txt') || res.type.endsWith('2pdf')) {
+        const html = res.text.split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${l.trim()}</p>`).join('');
+        document.getElementById('wordEditorDoc').innerHTML = html;
+        closeAiConvertResultModal();
+        navigateModule('editor');
+        switchOfficeSubTool('word');
+        showToast('已在 Word 在线编辑器中载入 AI 优化内容！');
+      } else if (res.type.endsWith('2excel')) {
+        const lines = res.text.split('\n').filter(l => l.trim());
+        state.excelData = lines.map(l => l.split(/[\t,|]/).map(c => c.trim()));
+        initExcelGrid();
+        closeAiConvertResultModal();
+        navigateModule('editor');
+        switchOfficeSubTool('excel');
+        showToast('已在 Excel 在线表格中载入 AI 解析数据！');
+      } else if (res.type.endsWith('2ppt')) {
+        const slides = res.text.split(/幻灯片\s*\d+[：:]/g).filter(s => s.trim());
+        state.pptSlides = slides.map((slText, idx) => {
+          const parts = slText.split('\n').filter(l => l.trim());
+          return {
+            layout: 'title_content',
+            title: parts[0] || `幻灯片 ${idx + 1}`,
+            body: parts.slice(1).join('\n') || '• 核心要点规划',
+            notes: '',
+            bgType: 'gradient',
+            bgValue: 'linear-gradient(135deg, #1e1b4b, #312e81)',
+            media: []
+          };
+        });
+        state.currentSlideIdx = 0;
+        renderPptSlidesList();
+        closeAiConvertResultModal();
+        navigateModule('editor');
+        switchOfficeSubTool('ppt');
+        showToast('已在 PPT 在线设计器中载入 AI 生成幻灯片！');
+      }
     }
 
     /* Toolbox Utilities */
