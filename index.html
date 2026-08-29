@@ -85,7 +85,7 @@
       </button>
     </div>
 
-    <!-- Desktop Nav Tabs (Consolidated 5 Major Workspaces) -->
+    <!-- Desktop Nav Tabs -->
     <nav class="hidden xl:flex items-center p-1 bg-slate-100 dark:bg-slate-800/90 rounded-xl border border-slate-200 dark:border-slate-700">
       <button onclick="navigateModule('home')" id="tabNavHome" class="nav-module-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300 flex items-center space-x-1.5">
         <i data-lucide="home" class="w-4 h-4"></i><span>首页</span>
@@ -161,7 +161,7 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 0: HOME PORTAL (全功能超级门户大厅)
+       MODULE 0: HOME PORTAL
        ========================================================================= -->
   <div id="moduleHome" class="app-module flex-1 flex-col overflow-y-auto p-3 sm:p-6 lg:p-8">
     <div class="max-w-6xl w-full mx-auto space-y-4 sm:space-y-6">
@@ -183,7 +183,7 @@
           <div class="pt-1 max-w-md">
             <div class="relative flex items-center">
               <i data-lucide="search" class="w-4 h-4 text-indigo-300 absolute left-3"></i>
-              <input type="text" id="homeSearchInput" oninput="filterHomeCards(this.value)" placeholder="搜索功能 (如: Word, 水印, Excel, 公文, 印章...)" class="w-full bg-white/15 focus:bg-white text-white focus:text-slate-900 placeholder-indigo-200 focus:placeholder-slate-400 rounded-xl pl-9 pr-3 py-2 text-xs font-medium border border-white/20 focus:border-white focus:outline-none transition shadow-inner">
+              <input type="text" id="homeSearchInput" oninput="filterHomeCards(this.value)" placeholder="搜索功能 (如: Word, 字体, 水印, Excel, 公文...)" class="w-full bg-white/15 focus:bg-white text-white focus:text-slate-900 placeholder-indigo-200 focus:placeholder-slate-400 rounded-xl pl-9 pr-3 py-2 text-xs font-medium border border-white/20 focus:border-white focus:outline-none transition shadow-inner">
             </div>
           </div>
         </div>
@@ -201,18 +201,17 @@
 
       <!-- Feature Cards Grid -->
       <div id="homeCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-        
-        <!-- 1. Word / Gov Doc Editor -->
-        <div onclick="navigateModule('editor', 'word')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="word 在线文档 编辑 富文本 docx 公文 仿宋 排版">
+        <!-- Word / Gov Doc Editor -->
+        <div onclick="navigateModule('editor', 'word')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="word 在线文档 编辑 富文本 docx 公文 仿宋 字体 排版">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="file-text" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">Word 在线文档 & 公文排版</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">免装 Office！打开/编辑 .docx，支持标准富文本与国标仿宋公文排版。</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">支持9款常用字体切换、字号、颜色、首行缩进、插入图片表格与仿宋公文排版。</p>
           </div>
           <span class="text-[11px] font-bold text-blue-600 flex items-center space-x-1"><span>立即打开</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
-        <!-- 2. Excel Editor -->
+        <!-- Excel Editor -->
         <div onclick="navigateModule('editor', 'excel')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="excel 表格 工作簿 公式 计算 xlsx csv">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="sheet" class="w-5 h-5"></i></div>
@@ -222,7 +221,7 @@
           <span class="text-[11px] font-bold text-emerald-600 flex items-center space-x-1"><span>立即打开</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
-        <!-- 3. PPT Studio -->
+        <!-- PPT Studio -->
         <div onclick="navigateModule('editor', 'ppt')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="ppt 幻灯片 演示 演讲 pptx 放映">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="presentation" class="w-5 h-5"></i></div>
@@ -232,7 +231,7 @@
           <span class="text-[11px] font-bold text-amber-600 flex items-center space-x-1"><span>立即打开</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
-        <!-- 4. PDF Viewer -->
+        <!-- PDF Viewer -->
         <div onclick="navigateModule('editor', 'pdf')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-red-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="pdf 查看 阅读 批注 浏览">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-50 dark:bg-red-950/60 text-red-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="file-check" class="w-5 h-5"></i></div>
@@ -242,7 +241,7 @@
           <span class="text-[11px] font-bold text-red-600 flex items-center space-x-1"><span>立即打开</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
-        <!-- 5. Word -> PDF -->
+        <!-- Word -> PDF -->
         <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="word 转 pdf docx 转 pdf 格式转换">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="file-type-2" class="w-5 h-5"></i></div>
@@ -252,7 +251,7 @@
           <span class="text-[11px] font-bold text-indigo-600 flex items-center space-x-1"><span>立即转换</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
-        <!-- 6. Excel -> PDF -->
+        <!-- Excel -> PDF -->
         <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="excel 转 pdf xlsx 转 pdf 报表">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="table-properties" class="w-5 h-5"></i></div>
@@ -262,27 +261,7 @@
           <span class="text-[11px] font-bold text-emerald-600 flex items-center space-x-1"><span>立即转换</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
-        <!-- 7. PPT -> PDF -->
-        <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="ppt 转 pdf pptx 讲义">
-          <div>
-            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="presentation" class="w-5 h-5"></i></div>
-            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PPT (.pptx) 转 PDF</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">演示文稿逐页渲染导出为标准讲义 PDF 文档。</p>
-          </div>
-          <span class="text-[11px] font-bold text-amber-600 flex items-center space-x-1"><span>立即转换</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
-        </div>
-
-        <!-- 8. Images -> PDF -->
-        <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-pink-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="多图转pdf 图片合并 合成pdf">
-          <div>
-            <div class="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-950/60 text-pink-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="image-plus" class="w-5 h-5"></i></div>
-            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">多图批量合并转 PDF</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">批量导入多张图片，自动排版并生成标准多页 PDF。</p>
-          </div>
-          <span class="text-[11px] font-bold text-pink-600 flex items-center space-x-1"><span>立即合并</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
-        </div>
-
-        <!-- 9. DocScan & Visual Studio -->
+        <!-- Visual Studio -->
         <div onclick="navigateModule('scan')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="visual" data-keywords="扫描 透视矫正 滤镜 图像转文档 印章 抠图 签名 ai 识别">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="scan-line" class="w-5 h-5"></i></div>
@@ -292,7 +271,7 @@
           <span class="text-[11px] font-bold text-indigo-600 flex items-center space-x-1"><span>立即进入</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
-        <!-- 10. Templates (18+) -->
+        <!-- Templates (18+) -->
         <div onclick="navigateModule('templates')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-teal-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="templates" data-keywords="作业纸 字帖 描红 田字格 米字格 衡水体 错题本 康奈尔 五线谱 计划表">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="grid" class="w-5 h-5"></i></div>
@@ -300,16 +279,6 @@
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">拼音田字格、米字格、衡水体、错题本、康奈尔、字帖描红与高清 PDF 导出。</p>
           </div>
           <span class="text-[11px] font-bold text-teal-600 flex items-center space-x-1"><span>浏览模版</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
-        </div>
-
-        <!-- 11. Security Toolbox & Diff -->
-        <div onclick="navigateModule('tools')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="tools" data-keywords="合同比对 diff 水印 防伪 身份证 拼版 人民币大写 二维码 条形码">
-          <div>
-            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="wrench" class="w-5 h-5"></i></div>
-            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">合同比对与办公安全工具箱</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">双文档/合同 Diff、防伪水印加注、身份证 1:1 拼版、人民币大写、二维码。</p>
-          </div>
-          <span class="text-[11px] font-bold text-amber-600 flex items-center space-x-1"><span>打开工具箱</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
       </div>
     </div>
@@ -323,7 +292,7 @@
     <div class="h-12 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 sm:px-6 flex items-center justify-between shrink-0">
       <div class="flex items-center space-x-1 sm:space-x-1.5 overflow-x-auto">
         <button onclick="switchOfficeSubTool('word')" id="btnOfficeWord" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 flex items-center space-x-1.5 shrink-0">
-          <i data-lucide="file-text" class="w-3.5 h-3.5"></i><span>📝 Word & 公文</span>
+          <i data-lucide="file-text" class="w-3.5 h-3.5"></i><span>📝 Word & 公文编辑器</span>
         </button>
         <button onclick="switchOfficeSubTool('excel')" id="btnOfficeExcel" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center space-x-1.5 shrink-0">
           <i data-lucide="sheet" class="w-3.5 h-3.5 text-emerald-500"></i><span>📊 Excel 表格</span>
@@ -342,46 +311,144 @@
         <button onclick="triggerOfficeFileOpen()" class="px-2 sm:px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-medium flex items-center space-x-1">
           <i data-lucide="folder-open" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">打开文件</span>
         </button>
+        <button onclick="printCurrentWordDoc()" class="px-2 sm:px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-medium flex items-center space-x-1" title="打印文档">
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i><span class="hidden md:inline">打印</span>
+        </button>
         <button onclick="exportCurrentOfficeDocument()" class="px-2.5 sm:px-3.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold shadow flex items-center space-x-1">
           <i data-lucide="download" class="w-3.5 h-3.5"></i><span>保存</span>
         </button>
       </div>
     </div>
 
-    <!-- 1. WORD & GOV FORMATTER INTEGRATED EDITOR -->
+    <!-- 1. WORD & GOV FORMATTER INTEGRATED EDITOR (全面强化字体与丰富排版) -->
     <div id="subOfficeWord" class="office-sub-panel flex-1 flex flex-col overflow-hidden">
-      <!-- Toolbar -->
-      <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-between overflow-x-auto text-xs gap-1">
+      <!-- Word Toolbar Row 1: Font, Size, Style, Color, Alignment -->
+      <div class="p-1.5 sm:p-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between overflow-x-auto text-xs gap-1">
         <div class="flex items-center space-x-1 shrink-0">
-          <!-- Toggle Mode: Standard Word vs Gov Document -->
-          <button onclick="toggleGovDocMode()" id="btnGovDocMode" class="px-2 py-1 rounded bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 font-bold border border-purple-300">仿宋公文模式</button>
-          <button onclick="execDocCmd('bold')" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 font-bold" title="加粗">B</button>
-          <button onclick="execDocCmd('italic')" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 italic" title="斜体">I</button>
-          <button onclick="execDocCmd('underline')" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 underline" title="下划线">U</button>
-          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
-          <select onchange="execDocCmd('formatBlock', this.value)" class="text-xs p-1 rounded bg-white dark:bg-slate-800 border">
-            <option value="p">正文</option>
-            <option value="h1">大标题 (H1)</option>
-            <option value="h2">二级标题 (H2)</option>
-            <option value="h3">三级标题 (H3)</option>
+          <!-- Mode Switcher -->
+          <button onclick="toggleGovDocMode()" id="btnGovDocMode" class="px-2 py-1 rounded bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 font-bold border border-purple-300 shrink-0">仿宋公文</button>
+          
+          <!-- Font Family Selector -->
+          <select id="docFontFamilySelect" onchange="changeDocFont(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium">
+            <option value="FangSong, 仿宋, STFangsong">字体: 仿宋 (公文正文)</option>
+            <option value="SimSun, 宋体, SimSun">字体: 宋体 (经典标准)</option>
+            <option value="SimHei, 黑体, STHeiti">字体: 黑体 (标题粗体)</option>
+            <option value="KaiTi, 楷体, STKaiti">字体: 楷体 (传统书法)</option>
+            <option value="'Microsoft YaHei', 微软雅黑">字体: 微软雅黑</option>
+            <option value="'PingFang SC', 苹方">字体: 苹方 / 鸿蒙</option>
+            <option value="Arial, sans-serif">字体: Arial (英文通用)</option>
+            <option value="'Times New Roman', serif">字体: Times New Roman</option>
+            <option value="'Courier New', monospace">字体: Courier 等宽</option>
           </select>
-          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
-          <button onclick="insertWordTable()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded text-[11px] font-medium">+表格</button>
-          <button onclick="cleanDocumentSpaces()" class="px-2 py-1 bg-white dark:bg-slate-800 border rounded text-[11px] font-medium">盘古清洗</button>
+
+          <!-- Font Size Selector -->
+          <select id="docFontSizeSelect" onchange="changeDocFontSize(this.value)" class="text-xs p-1 rounded bg-slate-50 dark:bg-slate-800 border font-medium">
+            <option value="16px">字号: 三号 (16px 公文)</option>
+            <option value="18px">字号: 小二 (18px)</option>
+            <option value="22px">字号: 二号 (22px 标题)</option>
+            <option value="26px">字号: 一号 (26px 大标)</option>
+            <option value="14px">字号: 四号 (14px)</option>
+            <option value="12px">字号: 小四 (12px 正文)</option>
+            <option value="10.5px">字号: 五号 (10.5px 备注)</option>
+          </select>
+
+          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
+
+          <!-- Basic Format Buttons -->
+          <button onclick="execDocCmd('bold')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 font-bold" title="加粗 (Ctrl+B)">B</button>
+          <button onclick="execDocCmd('italic')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 italic font-serif" title="斜体 (Ctrl+I)">I</button>
+          <button onclick="execDocCmd('underline')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 underline" title="下划线 (Ctrl+U)">U</button>
+          <button onclick="execDocCmd('strikeThrough')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 line-through" title="删除线">S</button>
+          
+          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
+
+          <!-- Text Color & Highlight -->
+          <div class="flex items-center space-x-0.5" title="文字颜色">
+            <label class="cursor-pointer p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center">
+              <i data-lucide="palette" class="w-3.5 h-3.5 text-indigo-600"></i>
+              <input type="color" onchange="changeDocTextColor(this.value)" value="#1e293b" class="opacity-0 w-0 h-0">
+            </label>
+          </div>
+          <div class="flex items-center space-x-0.5" title="文字高亮荧光笔">
+            <button onclick="changeDocHighlightColor('#fef08a')" class="w-4 h-4 rounded bg-yellow-200 border border-yellow-400" title="黄色高亮"></button>
+            <button onclick="changeDocHighlightColor('#bbf7d0')" class="w-4 h-4 rounded bg-green-200 border border-green-400" title="绿色高亮"></button>
+            <button onclick="changeDocHighlightColor('#bae6fd')" class="w-4 h-4 rounded bg-sky-200 border border-sky-400" title="蓝色高亮"></button>
+            <button onclick="changeDocHighlightColor('transparent')" class="px-1 text-[10px] text-slate-400 hover:text-slate-600" title="清除高亮">无</button>
+          </div>
+
+          <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
+
+          <!-- Alignments -->
+          <button onclick="execDocCmd('justifyLeft')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800" title="左对齐"><i data-lucide="align-left" class="w-3.5 h-3.5"></i></button>
+          <button onclick="execDocCmd('justifyCenter')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800" title="居中对齐"><i data-lucide="align-center" class="w-3.5 h-3.5"></i></button>
+          <button onclick="execDocCmd('justifyRight')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800" title="右对齐"><i data-lucide="align-right" class="w-3.5 h-3.5"></i></button>
+          <button onclick="execDocCmd('justifyFull')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800" title="两端对齐"><i data-lucide="align-justify" class="w-3.5 h-3.5"></i></button>
+          <button onclick="indentDocParagraph()" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800" title="增加缩进 (首行缩进)"><i data-lucide="indent" class="w-3.5 h-3.5"></i></button>
         </div>
+
         <div class="flex items-center space-x-1 shrink-0">
-          <button onclick="insertGovTag('〔2026〕18号')" class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded text-[10px]">+字号</button>
-          <button onclick="insertGovTag('各部门、各单位：')" class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded text-[10px]">+主送</button>
-          <button onclick="insertGovTag('2026年8月28日')" class="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded text-[10px]">+落款</button>
+          <button onclick="execDocCmd('undo')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500" title="撤销 (Ctrl+Z)"><i data-lucide="undo" class="w-3.5 h-3.5"></i></button>
+          <button onclick="execDocCmd('redo')" class="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500" title="重做 (Ctrl+Y)"><i data-lucide="redo" class="w-3.5 h-3.5"></i></button>
         </div>
       </div>
-      <!-- Editor Canvas Page (Responsive Width on Mobile) -->
+
+      <!-- Word Toolbar Row 2: Inserts, Cleaning, Templates & Background -->
+      <div class="px-2 py-1.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-between overflow-x-auto text-[11px] gap-1">
+        <div class="flex items-center space-x-1 shrink-0">
+          <!-- Insert Tools -->
+          <input type="file" id="inputWordDocImage" accept="image/*" class="hidden" onchange="handleWordDocImageUpload(event)">
+          <button onclick="insertDocImage()" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded hover:bg-indigo-50 font-medium flex items-center space-x-1"><i data-lucide="image" class="w-3 h-3 text-indigo-500"></i><span>+图片</span></button>
+          <button onclick="insertWordTable()" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded hover:bg-indigo-50 font-medium flex items-center space-x-1"><i data-lucide="table" class="w-3 h-3 text-emerald-500"></i><span>+表格</span></button>
+          <button onclick="insertDocLink()" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded hover:bg-indigo-50 font-medium flex items-center space-x-1"><i data-lucide="link" class="w-3 h-3 text-blue-500"></i><span>+链接</span></button>
+          <button onclick="insertDocQuote()" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded hover:bg-indigo-50 font-medium flex items-center space-x-1"><i data-lucide="quote" class="w-3 h-3 text-amber-500"></i><span>+引用</span></button>
+          <button onclick="insertDocTask()" class="px-2 py-0.5 bg-white dark:bg-slate-800 border rounded hover:bg-indigo-50 font-medium flex items-center space-x-1"><i data-lucide="check-square" class="w-3 h-3 text-teal-500"></i><span>+待办</span></button>
+          <button onclick="insertDocDivider()" class="px-1.5 py-0.5 bg-white dark:bg-slate-800 border rounded hover:bg-indigo-50 font-medium" title="插入分割线">― 分割线</button>
+          <button onclick="insertDocDateTime()" class="px-1.5 py-0.5 bg-white dark:bg-slate-800 border rounded hover:bg-indigo-50 font-medium" title="插入当前日期时间">📅 日期</button>
+
+          <div class="h-3.5 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
+
+          <!-- Clean & Gov tags -->
+          <button onclick="cleanDocumentSpaces()" class="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 rounded font-semibold border border-indigo-200">盘古清洗</button>
+          <button onclick="execDocCmd('removeFormat')" class="px-1.5 py-0.5 bg-white dark:bg-slate-800 border rounded text-slate-500">清除格式</button>
+          
+          <div class="h-3.5 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
+
+          <!-- Templates -->
+          <select onchange="loadWordTemplate(this.value); this.value='';" class="p-0.5 rounded bg-white dark:bg-slate-800 border text-[11px] font-medium text-purple-600">
+            <option value="">📑 载入经典模板...</option>
+            <option value="gov">【公文通知模板】</option>
+            <option value="weekly">【工作周报模板】</option>
+            <option value="meeting">【会议纪要模板】</option>
+          </select>
+        </div>
+
+        <!-- Paper Background Theme -->
+        <div class="flex items-center space-x-1 shrink-0 text-[10px]">
+          <span class="text-slate-400">底色:</span>
+          <button onclick="setDocPaperTheme('white')" class="w-3.5 h-3.5 rounded-full bg-white border shadow-sm" title="纯白"></button>
+          <button onclick="setDocPaperTheme('green')" class="w-3.5 h-3.5 rounded-full bg-green-100 border border-green-300 shadow-sm" title="护眼绿"></button>
+          <button onclick="setDocPaperTheme('yellow')" class="w-3.5 h-3.5 rounded-full bg-amber-100 border border-amber-300 shadow-sm" title="羊皮纸"></button>
+          <button onclick="setDocPaperTheme('dark')" class="w-3.5 h-3.5 rounded-full bg-slate-900 border border-slate-700 shadow-sm" title="夜间"></button>
+        </div>
+      </div>
+
+      <!-- Editor Canvas Page (Responsive Width) -->
       <div class="flex-1 overflow-y-auto bg-slate-200/60 dark:bg-slate-950 p-2 sm:p-6 flex justify-center">
-        <div id="wordEditorDoc" contenteditable="true" class="w-full max-w-[820px] min-h-[900px] bg-white dark:bg-slate-900 shadow-2xl rounded-sm p-5 sm:p-14 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 text-sm sm:text-base leading-relaxed focus:outline-none gov-doc-mode">
-          <h1 class="text-xl sm:text-2xl font-bold text-center mb-6">关于深化线上高效办公的指导意见</h1>
-          <p class="mb-4">各部门、各直属机构：</p>
-          <p class="mb-4">为提升数字化协作与日常办公效率，现全面启用 Office Master Studio 一站式线上办公工作台。新电脑无需安装 WPS 或 Office 套件即可直接在线编辑 Word、Excel、PPT 和 PDF 文件。</p>
-          <p class="mb-4">特此通知。</p>
+        <div id="wordEditorDoc" contenteditable="true" oninput="updateWordStats()" class="w-full max-w-[820px] min-h-[900px] bg-white dark:bg-slate-900 shadow-2xl rounded-sm p-6 sm:p-14 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 text-sm sm:text-base leading-relaxed focus:outline-none gov-doc-mode transition-colors duration-200">
+          <h1 style="text-align:center;color:#dc2626;font-family:'SimHei',sans-serif;font-size:24px;font-weight:bold;margin-bottom:20px;">关于深化线上高效办公的指导意见</h1>
+          <p style="text-indent:0;font-weight:bold;margin-bottom:12px;">〔2026〕18号</p>
+          <p style="text-indent:0;font-weight:bold;margin-bottom:16px;">各部门、各直属机构：</p>
+          <p style="text-indent:2em;margin-bottom:12px;">为提升数字化协作与日常办公效率，现全面启用 Office Master Studio 一站式线上办公工作台。新电脑无需安装 WPS 或 Office 套件即可直接在线编辑 Word、Excel、PPT 和 PDF 文件。</p>
+          <p style="text-indent:2em;margin-bottom:12px;">支持9款中英文字体切换、公文排版规范、字号颜色调整、表格与图片插入，100% 本地运行保障数据安全。</p>
+          <div style="text-align:right;margin-top:36px;"><p style="margin-bottom:4px;">办公厅</p><p>2026年8月29日</p></div>
+        </div>
+      </div>
+
+      <!-- Word Bottom Status Bar (Real-time Word Count & Reading Time) -->
+      <div class="h-7 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 flex items-center justify-between text-[11px] text-slate-400 shrink-0">
+        <div id="wordDocStatsInfo" class="font-mono truncate">字数: 142 | 字符: 218 | 段落: 6 | 预计阅读: 1分钟</div>
+        <div class="flex items-center space-x-2 shrink-0">
+          <span class="inline-flex items-center space-x-1 text-emerald-600"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>本地已就绪</span></span>
         </div>
       </div>
     </div>
@@ -458,7 +525,7 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 2: UNIVERSAL FORMAT CONVERTER HUB
+       MODULE 2: FORMAT CONVERTER HUB
        ========================================================================= -->
   <div id="moduleConvert" class="app-module flex-1 flex-col overflow-y-auto p-3 sm:p-6 lg:p-8 hidden">
     <div class="max-w-6xl w-full mx-auto space-y-4 sm:space-y-6">
@@ -493,7 +560,7 @@
         <!-- PPT -> PDF -->
         <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div>
             <div><h3 class="text-sm font-bold">PPT (.pptx) 转 PDF</h3><span class="text-[10px] text-slate-400">幻灯片转换为 PDF 讲义</span></div>
           </div>
           <input type="file" id="inputPptToPdf" accept=".pptx" class="hidden" onchange="handlePptToPdf(event)">
@@ -534,10 +601,9 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 3: INTEGRATED VISUAL & SCAN & SEAL STUDIO (图像扫描与印章提取工坊)
+       MODULE 3: INTEGRATED VISUAL & SCAN & SEAL STUDIO
        ========================================================================= -->
   <div id="moduleScan" class="app-module flex-1 flex flex-col sm:flex-row overflow-hidden relative hidden">
-    <!-- Left Scan & Seal Controls -->
     <div class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3 flex flex-col shrink-0 overflow-y-auto">
       <input type="file" id="fileInputScan" accept="image/*" class="hidden" onchange="handleScanImageUpload(event)">
       <button onclick="document.getElementById('fileInputScan').click()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="upload" class="w-4 h-4"></i><span>导入图片处理</span></button>
@@ -638,7 +704,7 @@
       </div>
     </div>
 
-    <!-- Paper Canvas Viewport (Auto-scaling on Mobile) -->
+    <!-- Paper Canvas Viewport -->
     <div id="tplCanvasContainer" class="flex-1 p-2 sm:p-6 overflow-auto bg-slate-200/60 dark:bg-slate-950 flex justify-center items-start">
       <div id="tplPaperWrapper" class="shadow-2xl bg-white transition-all duration-200 max-w-full">
         <canvas id="templatePaperCanvas" width="2480" height="3508" class="w-full h-auto"></canvas>
@@ -647,12 +713,12 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 5: INTEGRATED CONTRACT DIFF & SUPER TOOLBOX
+       MODULE 5: CONTRACT DIFF & SUPER TOOLBOX
        ========================================================================= -->
   <div id="moduleTools" class="app-module flex-1 flex-col overflow-y-auto p-3 sm:p-6 lg:p-8 hidden">
     <div class="max-w-5xl w-full mx-auto space-y-4 sm:space-y-6">
       
-      <!-- Section 1: Document & Contract Diff -->
+      <!-- Section 1: Diff -->
       <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
         <div class="flex items-center justify-between">
           <h3 class="text-sm sm:text-base font-bold flex items-center space-x-2"><i data-lucide="git-compare" class="w-4 h-4 text-cyan-500"></i><span>双文档 / 商务合同专业差异比对</span></h3>
@@ -785,6 +851,7 @@
       convertRmbAmount();
       generateQRAndBarcode();
       renderPaperTemplateCanvas();
+      updateWordStats();
       setTimeout(fitTplWidth, 50);
     });
 
@@ -870,7 +937,7 @@
       });
     }
 
-    /* ==================== OFFICE EDITORS (WORD+GOV, EXCEL, PPT, PDF) ==================== */
+    /* ==================== WORD & GOV DOCUMENT ADVANCED EDITOR ==================== */
     function switchOfficeSubTool(tool) {
       state.currentOfficeTool = tool;
       ['word', 'excel', 'ppt', 'pdf'].forEach(t => {
@@ -887,39 +954,177 @@
       lucide.createIcons();
     }
 
-    // Word & Gov Mode
     function toggleGovDocMode() {
       state.isGovMode = !state.isGovMode;
       const el = document.getElementById('wordEditorDoc');
       const btn = document.getElementById('btnGovDocMode');
       if (state.isGovMode) {
         el.classList.add('gov-doc-mode');
-        btn.innerText = '仿宋公文模式';
-        btn.className = 'px-2 py-1 rounded bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 font-bold border border-purple-300';
+        btn.innerText = '仿宋公文';
+        btn.className = 'px-2 py-1 rounded bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 font-bold border border-purple-300 shrink-0';
       } else {
         el.classList.remove('gov-doc-mode');
-        btn.innerText = '标准Word模式';
-        btn.className = 'px-2 py-1 rounded bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 font-medium border';
+        btn.innerText = '标准Word';
+        btn.className = 'px-2 py-1 rounded bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 font-medium border shrink-0';
       }
     }
+
     function execDocCmd(cmd, val = null) {
       document.getElementById('wordEditorDoc').focus();
       document.execCommand(cmd, false, val);
+      updateWordStats();
     }
-    function insertWordTable() {
-      const html = '<table border="1" style="width:100%;border-collapse:collapse;margin:15px 0;"><tr><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;">序号</th><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;">主要事项</th><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;">责任人</th><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;">完成时限</th></tr><tr><td style="border:1px solid #cbd5e1;padding:8px;text-align:center;">1</td><td style="border:1px solid #cbd5e1;padding:8px;">线上办公套件升级</td><td style="border:1px solid #cbd5e1;padding:8px;">项目组</td><td style="border:1px solid #cbd5e1;padding:8px;">本周内</td></tr></table>';
-      document.execCommand('insertHTML', false, html);
-    }
-    function insertGovTag(tag) {
+
+    function changeDocFont(font) {
       document.getElementById('wordEditorDoc').focus();
-      document.execCommand('insertHTML', false, `<p>${tag}</p>`);
+      document.execCommand('fontName', false, font);
+      updateWordStats();
     }
+
+    function changeDocFontSize(sizePx) {
+      document.getElementById('wordEditorDoc').focus();
+      const sel = window.getSelection();
+      if (!sel.rangeCount) return;
+      const range = sel.getRangeAt(0);
+      const span = document.createElement('span');
+      span.style.fontSize = sizePx;
+      span.appendChild(range.extractContents());
+      range.insertNode(span);
+      updateWordStats();
+    }
+
+    function changeDocTextColor(color) {
+      document.getElementById('wordEditorDoc').focus();
+      document.execCommand('foreColor', false, color);
+    }
+
+    function changeDocHighlightColor(color) {
+      document.getElementById('wordEditorDoc').focus();
+      document.execCommand('hiliteColor', false, color);
+    }
+
+    function indentDocParagraph() {
+      document.getElementById('wordEditorDoc').focus();
+      document.execCommand('indent', false, null);
+    }
+
+    function insertDocImage() {
+      document.getElementById('inputWordDocImage').click();
+    }
+    function handleWordDocImageUpload(e) {
+      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      const rd = new FileReader();
+      rd.onload = ev => {
+        document.getElementById('wordEditorDoc').focus();
+        const imgHtml = `<div style="text-align:center;margin:16px 0;"><img src="${ev.target.result}" style="max-width:100%;height:auto;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);display:inline-block;" /></div><p><br/></p>`;
+        document.execCommand('insertHTML', false, imgHtml);
+        showToast('图片已成功插入文档');
+        updateWordStats();
+      };
+      rd.readAsDataURL(file);
+    }
+
+    function insertWordTable() {
+      const html = '<table border="1" style="width:100%;border-collapse:collapse;margin:15px 0;"><thead><tr><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;font-weight:bold;">序号</th><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;font-weight:bold;">主要工作事项</th><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;font-weight:bold;">责任部门</th><th style="border:1px solid #cbd5e1;padding:8px;background:#f8fafc;font-weight:bold;">完成时限</th></tr></thead><tbody><tr><td style="border:1px solid #cbd5e1;padding:8px;text-align:center;">1</td><td style="border:1px solid #cbd5e1;padding:8px;">线上办公套件与字体功能升级</td><td style="border:1px solid #cbd5e1;padding:8px;">技术研发部</td><td style="border:1px solid #cbd5e1;padding:8px;">本周内</td></tr><tr><td style="border:1px solid #cbd5e1;padding:8px;text-align:center;">2</td><td style="border:1px solid #cbd5e1;padding:8px;">公文规范排版与模板核验</td><td style="border:1px solid #cbd5e1;padding:8px;">综合办公室</td><td style="border:1px solid #cbd5e1;padding:8px;">次周一</td></tr></tbody></table><p><br/></p>';
+      document.getElementById('wordEditorDoc').focus();
+      document.execCommand('insertHTML', false, html);
+      updateWordStats();
+    }
+
+    function insertDocLink() {
+      const url = prompt('请输入要插入的超链接 URL (例如 https://github.com):', 'https://');
+      if (url) {
+        document.getElementById('wordEditorDoc').focus();
+        document.execCommand('createLink', false, url);
+        updateWordStats();
+      }
+    }
+
+    function insertDocQuote() {
+      document.getElementById('wordEditorDoc').focus();
+      const quoteHtml = `<blockquote style="border-left:4px solid #4f46e5;padding:8px 16px;background:rgba(79,70,229,0.06);margin:12px 0;border-radius:0 8px 8px 0;color:#475569;font-style:italic;">请在此输入重要批注、引用或要点提示内容...</blockquote><p><br/></p>`;
+      document.execCommand('insertHTML', false, quoteHtml);
+      updateWordStats();
+    }
+
+    function insertDocTask() {
+      document.getElementById('wordEditorDoc').focus();
+      const taskHtml = `<p style="display:flex;align-items:center;gap:8px;margin:6px 0;"><input type="checkbox" style="width:16px;height:16px;accent-color:#4f46e5;" /> <span>待办事项任务内容...</span></p>`;
+      document.execCommand('insertHTML', false, taskHtml);
+      updateWordStats();
+    }
+
+    function insertDocDivider() {
+      document.getElementById('wordEditorDoc').focus();
+      document.execCommand('insertHorizontalRule', false, null);
+      updateWordStats();
+    }
+
+    function insertDocDateTime() {
+      document.getElementById('wordEditorDoc').focus();
+      const now = new Date();
+      const str = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      document.execCommand('insertText', false, str);
+      updateWordStats();
+    }
+
     function cleanDocumentSpaces() {
       const el = document.getElementById('wordEditorDoc');
       let html = el.innerHTML;
       html = html.replace(/([\u4e00-\u9fa5])([a-zA-Z0-9])/g, '$1 $2').replace(/([a-zA-Z0-9])([\u4e00-\u9fa5])/g, '$1 $2');
       el.innerHTML = html;
-      showToast('盘古空格清洗完成');
+      updateWordStats();
+      showToast('中英文盘古空格清洗完成');
+    }
+
+    function setDocPaperTheme(theme) {
+      const el = document.getElementById('wordEditorDoc');
+      if (theme === 'green') {
+        el.style.backgroundColor = '#f0fdf4';
+        el.style.color = '#14532d';
+      } else if (theme === 'yellow') {
+        el.style.backgroundColor = '#fefce8';
+        el.style.color = '#713f12';
+      } else if (theme === 'dark') {
+        el.style.backgroundColor = '#0f172a';
+        el.style.color = '#f8fafc';
+      } else {
+        el.style.backgroundColor = '#ffffff';
+        el.style.color = '#1e293b';
+      }
+      showToast('文档纸张底色已切换');
+    }
+
+    function loadWordTemplate(type) {
+      const el = document.getElementById('wordEditorDoc');
+      if (type === 'gov') {
+        el.innerHTML = `<h1 style="text-align:center;color:#dc2626;font-family:'SimHei',sans-serif;font-size:24px;font-weight:bold;margin-bottom:20px;">关于印发《2026年度数字化办公实施方案》的通知</h1><p style="text-indent:0;font-weight:bold;margin-bottom:12px;">〔2026〕28号</p><p style="text-indent:0;font-weight:bold;margin-bottom:16px;">各部门、各直属单位：</p><p style="text-indent:2em;margin-bottom:12px;">为贯彻落实数字化转型战略部署，全面提升全员线上办公协同效率，现将《2026年度数字化办公实施方案》印发给你们，请结合实际认真贯彻执行。</p><p style="text-indent:2em;margin-bottom:12px;">附件：2026年度数字化办公考核指标分解表</p><div style="text-align:right;margin-top:36px;"><p style="margin-bottom:4px;">办公厅</p><p>2026年8月29日</p></div>`;
+      } else if (type === 'weekly') {
+        el.innerHTML = `<h1 style="text-align:center;font-size:22px;font-weight:bold;margin-bottom:16px;">工作周报 (Weekly Report)</h1><p><strong>汇报人：</strong> 张三 &nbsp;&nbsp;|&nbsp;&nbsp; <strong>所属部门：</strong> 技术研发部 &nbsp;&nbsp;|&nbsp;&nbsp; <strong>汇报日期：</strong> 2026年8月第4周</p><hr style="margin:16px 0;"/><h2 style="font-size:16px;font-weight:bold;color:#4f46e5;margin:12px 0;">一、本周核心工作进展</h2><p style="display:flex;align-items:center;gap:8px;"><input type="checkbox" checked/> 完成 Office Master Studio 在线文档编辑器字体与排版全功能升级</p><p style="display:flex;align-items:center;gap:8px;"><input type="checkbox" checked/> 优化移动端自适应布局与防自动放大体验</p><h2 style="font-size:16px;font-weight:bold;color:#4f46e5;margin:16px 0 12px 0;">二、下周重点工作计划</h2><p style="display:flex;align-items:center;gap:8px;"><input type="checkbox"/> 推进跨端格式解析性能优化与自动化测试</p><h2 style="font-size:16px;font-weight:bold;color:#4f46e5;margin:16px 0 12px 0;">三、遇到的困难与需要支持</h2><p>目前各项进展顺利，无阻塞性风险。</p>`;
+      } else if (type === 'meeting') {
+        el.innerHTML = `<h1 style="text-align:center;font-size:22px;font-weight:bold;margin-bottom:16px;">会议纪要 (Meeting Minutes)</h1><p><strong>会议主题：</strong> 数字化协同工作流评审会议</p><p><strong>时间地点：</strong> 2026-08-29 10:00 &nbsp;|&nbsp; 线上会议室 A</p><p><strong>参会人员：</strong> 研发团队、产品团队、运营团队</p><hr style="margin:16px 0;"/><h2 style="font-size:16px;font-weight:bold;color:#2563eb;">一、主要议题讨论</h2><p style="text-indent:2em;">会议重点审议了新一代 Office 工作台的功能架构，各方一致认可纯前端本地离线运行对数据安全的保障。</p><h2 style="font-size:16px;font-weight:bold;color:#2563eb;">二、决议与后续行动项 (Action Items)</h2><table border="1" style="width:100%;border-collapse:collapse;margin:12px 0;"><tr><th style="padding:6px;background:#f1f5f9;">事项</th><th style="padding:6px;background:#f1f5f9;">责任人</th><th style="padding:6px;background:#f1f5f9;">截止时间</th></tr><tr><td style="padding:6px;">字体样式与排版工具上线发布</td><td style="padding:6px;">技术组</td><td style="padding:6px;">今日</td></tr></table>`;
+      }
+      updateWordStats();
+      showToast('模板已载入');
+    }
+
+    function updateWordStats() {
+      const el = document.getElementById('wordEditorDoc');
+      if (!el) return;
+      const text = el.innerText || '';
+      const charCount = text.length;
+      const wordCount = (text.match(/[\u4e00-\u9fa5]|[a-zA-Z0-9]+/g) || []).length;
+      const paras = text.split('\n').filter(p => p.trim()).length;
+      const readTime = Math.max(1, Math.ceil(wordCount / 300));
+      
+      const statsEl = document.getElementById('wordDocStatsInfo');
+      if (statsEl) {
+        statsEl.innerText = `字数: ${wordCount} | 字符: ${charCount} | 段落: ${paras} | 预计阅读: ${readTime}分钟`;
+      }
+    }
+
+    function printCurrentWordDoc() {
+      window.print();
     }
 
     // Excel Grid
@@ -1053,6 +1258,7 @@
         const res = await mammoth.convertToHtml({ arrayBuffer: ab });
         document.getElementById('wordEditorDoc').innerHTML = res.value;
         switchOfficeSubTool('word');
+        updateWordStats();
         showToast('Word 文档已打开');
       } else if (['xlsx', 'xls', 'csv'].includes(ext)) {
         const ab = await file.arrayBuffer();
