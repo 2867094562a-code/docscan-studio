@@ -1610,7 +1610,7 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 4: TEMPLATES STUDIO (18+ 作业纸与字帖描红库 - 完美移动端与PC全端自适应)
+       MODULE 4: TEMPLATES STUDIO (18+ 作业纸与字帖描红库 - 移动端与PC全端极速改字与预览)
        ========================================================================= -->
   <div id="moduleTemplates" class="app-module flex-1 flex-col sm:flex-row overflow-hidden hidden">
     
@@ -1629,8 +1629,8 @@
       </button>
     </div>
 
-    <!-- Left Sidebar: Configuration Controls Panel -->
-    <div id="tplSidebarPanel" class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3 flex flex-col shrink-0 overflow-y-auto sm:!flex">
+    <!-- Left Sidebar: Configuration Controls Panel (Smooth Full-Height Scroll on Mobile) -->
+    <div id="tplSidebarPanel" class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3 flex flex-col flex-1 sm:flex-initial overflow-y-auto pb-28 sm:pb-6 sm:!flex">
       <div class="flex items-center justify-between">
         <span class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-1.5">
           <i data-lucide="grid" class="w-4 h-4 text-teal-500"></i><span>18+ 作业纸与字帖模板库</span>
@@ -1697,13 +1697,34 @@
         </div>
       </div>
 
-      <!-- 4. Tracing Watermark Customization -->
+      <!-- 4. Tracing Watermark Customization (Text Input Placed Prominently at Top!) -->
       <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
         <div class="flex items-center justify-between">
           <label class="text-[11px] font-bold text-teal-700 dark:text-teal-300 flex items-center space-x-1">
-            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>4. 字帖描红临摹水印 (独立颜色)</span>
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>4. 字帖描红临摹水印 (核心文字与样式)</span>
           </label>
           <input type="checkbox" id="tplTraceEnabled" checked onchange="renderPaperTemplateCanvas()" class="rounded text-teal-600">
+        </div>
+
+        <!-- Prominent Watermark Text Area & Preset Buttons at TOP of Section 4 -->
+        <div class="p-2 bg-white dark:bg-slate-900 rounded-xl border border-teal-200 dark:border-teal-900/60 space-y-1.5 shadow-sm">
+          <div class="flex justify-between items-center">
+            <span class="text-[11px] font-bold text-teal-800 dark:text-teal-300 flex items-center space-x-1">
+              <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-teal-500"></i><span>临摹字帖文字内容：</span>
+            </span>
+            <div class="flex flex-wrap gap-1 text-[10px]">
+              <button onclick="setTplPresetText('数字')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded font-bold hover:underline">0~9数字</button>
+              <button onclick="setTplPresetText('千字文')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded font-bold hover:underline">千字文</button>
+              <button onclick="setTplPresetText('三字经')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded font-bold hover:underline">三字经</button>
+              <button onclick="setTplPresetText('古诗')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded font-bold hover:underline">静夜思</button>
+              <button onclick="setTplPresetText('英文')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded font-bold hover:underline">English</button>
+            </div>
+          </div>
+          <textarea id="tplTraceText" rows="3" oninput="syncTplTextInputs(this.value)" class="w-full p-2 border rounded-lg text-xs bg-slate-50 dark:bg-slate-950 resize-none font-mono focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 outline-none leading-relaxed" placeholder="输入自定义汉字、数字或英文句子...">天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳</textarea>
+          <div class="flex items-center justify-between text-[10px] text-slate-500">
+            <span>字帖循环铺满整页：</span>
+            <input type="checkbox" id="tplRepeatFill" checked onchange="renderPaperTemplateCanvas()" class="rounded text-teal-600">
+          </div>
         </div>
 
         <!-- Master & System Fonts Selector -->
@@ -1785,25 +1806,6 @@
             </select>
           </div>
         </div>
-        
-        <div>
-          <div class="flex justify-between items-center mb-1">
-            <span class="text-[10px] text-slate-400">自定义描红文本：</span>
-            <div class="flex space-x-1 text-[10px]">
-              <button onclick="setTplPresetText('数字')" class="text-teal-600 hover:underline font-bold">0~9数字</button>
-              <button onclick="setTplPresetText('千字文')" class="text-teal-600 hover:underline">千字文</button>
-              <button onclick="setTplPresetText('三字经')" class="text-teal-600 hover:underline">三字经</button>
-              <button onclick="setTplPresetText('古诗')" class="text-teal-600 hover:underline">静夜思</button>
-              <button onclick="setTplPresetText('英文')" class="text-teal-600 hover:underline">English</button>
-            </div>
-          </div>
-          <textarea id="tplTraceText" rows="3" oninput="renderPaperTemplateCanvas()" class="w-full p-2 border rounded-lg text-xs bg-white dark:bg-slate-900 resize-none font-mono" placeholder="输入自定义汉字、拼音或英文句子...">天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳</textarea>
-        </div>
-
-        <div class="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
-          <span>循环填满整页：</span>
-          <input type="checkbox" id="tplRepeatFill" checked onchange="renderPaperTemplateCanvas()" class="rounded text-teal-600">
-        </div>
       </div>
 
       <!-- 5. Isolated Paper Grid Lines Color -->
@@ -1833,19 +1835,55 @@
     <!-- Right Viewport: Paper Canvas Studio (Supports Mobile Responsive Full-width Pinch & Pan) -->
     <div id="tplCanvasContainer" class="hidden sm:!flex flex-1 p-2.5 sm:p-4 overflow-auto bg-slate-200/70 dark:bg-slate-950 flex flex-col items-center justify-start relative">
       
-      <!-- Mobile Floating Preview Ribbon -->
+      <!-- Mobile Floating Preview Ribbon with Quick Edit Button -->
       <div class="sm:hidden w-full mb-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur border border-slate-200 dark:border-slate-800 p-2 rounded-xl shadow-md flex items-center justify-between shrink-0">
-        <button onclick="switchTplMobileTab('config')" class="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold flex items-center space-x-1">
-          <i data-lucide="sliders" class="w-3.5 h-3.5"></i><span>修改参数</span>
-        </button>
-        <span class="text-[11px] font-bold text-teal-700 dark:text-teal-300" id="tplMobileCurrentBadge">300 DPI 实时字帖</span>
-        <button onclick="exportTemplateToPDF()" class="px-3 py-1.5 bg-teal-600 text-white rounded-lg text-xs font-bold shadow flex items-center space-x-1">
+        <div class="flex items-center space-x-1.5">
+          <button onclick="switchTplMobileTab('config')" class="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold flex items-center space-x-1">
+            <i data-lucide="sliders" class="w-3.5 h-3.5"></i><span>参数</span>
+          </button>
+          <button onclick="openTplQuickTextModal()" class="px-2.5 py-1.5 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-sm">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>✏️ 快速改字</span>
+          </button>
+        </div>
+        <span class="text-[11px] font-bold text-teal-700 dark:text-teal-300 truncate max-w-[110px]" id="tplMobileCurrentBadge">300 DPI 实时字帖</span>
+        <button onclick="exportTemplateToPDF()" class="px-2.5 py-1.5 bg-teal-600 text-white rounded-lg text-xs font-bold shadow flex items-center space-x-1">
           <i data-lucide="download" class="w-3.5 h-3.5"></i><span>下载PDF</span>
         </button>
       </div>
 
       <div id="tplPaperWrapper" class="shadow-2xl bg-white max-w-full rounded-sm overflow-hidden flex items-center justify-center">
         <canvas id="templatePaperCanvas" width="2480" height="3508" class="max-w-full h-auto block"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Edit Text Modal for Mobile & PC -->
+  <div id="tplQuickTextModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeTplQuickTextModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-4 space-y-3 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="text-sm font-bold flex items-center space-x-1.5 text-teal-700 dark:text-teal-300">
+          <i data-lucide="pen-tool" class="w-4 h-4 text-teal-500"></i><span>✏️ 快速修改字帖文字内容</span>
+        </h3>
+        <button onclick="closeTplQuickTextModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <div class="space-y-1.5">
+        <div class="flex flex-wrap gap-1.5 text-xs">
+          <span class="text-[11px] text-slate-400 font-bold self-center">快捷填入：</span>
+          <button onclick="setTplPresetText('数字')" class="px-2 py-1 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-100">0~9数字</button>
+          <button onclick="setTplPresetText('千字文')" class="px-2 py-1 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-100">千字文</button>
+          <button onclick="setTplPresetText('三字经')" class="px-2 py-1 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-100">三字经</button>
+          <button onclick="setTplPresetText('古诗')" class="px-2 py-1 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-100">静夜思</button>
+          <button onclick="setTplPresetText('英文')" class="px-2 py-1 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-100">English</button>
+        </div>
+        <textarea id="tplQuickTextarea" rows="5" oninput="syncTplTextInputs(this.value)" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 dark:bg-slate-950 resize-none font-mono focus:border-teal-500 outline-none leading-relaxed" placeholder="输入要临摹书写的自定义文字..."></textarea>
+      </div>
+
+      <div class="flex items-center justify-between pt-2 border-t">
+        <span class="text-[11px] text-slate-400">文字将实时更新在作业纸上</span>
+        <button onclick="closeTplQuickTextModal()" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow flex items-center space-x-1">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i><span>完成并查看</span>
+        </button>
       </div>
     </div>
   </div>
@@ -4203,21 +4241,43 @@
       lucide.createIcons();
     }
 
-    function setTplPresetText(preset) {
-      const el = document.getElementById('tplTraceText');
-      if (!el) return;
-      if (preset === '数字') {
-        el.value = '0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9';
-      } else if (preset === '千字文') {
-        el.value = '天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳 云腾致雨 露结为霜 金生丽水 玉出昆冈';
-      } else if (preset === '三字经') {
-        el.value = '人之初 性本善 性相近 习相远 苟不教 性乃迁 教之道 贵以专 昔孟母 择邻处 子不学 断机杼 窦燕山 有义方';
-      } else if (preset === '古诗') {
-        el.value = '床前明月光 疑是地上霜 举头望明月 低头思故乡 春眠不觉晓 处处闻啼鸟 夜来风雨声 花落知多少';
-      } else if (preset === '英文') {
-        el.value = 'Continuous effort not strength or intelligence is the key to unlocking our potential Knowledge is power Practice makes perfect';
-      }
+    function syncTplTextInputs(val) {
+      const el1 = document.getElementById('tplTraceText');
+      const el2 = document.getElementById('tplQuickTextarea');
+      if (el1 && el1.value !== val) el1.value = val;
+      if (el2 && el2.value !== val) el2.value = val;
       renderPaperTemplateCanvas();
+    }
+
+    function openTplQuickTextModal() {
+      const curText = document.getElementById('tplTraceText')?.value || '';
+      const quickArea = document.getElementById('tplQuickTextarea');
+      if (quickArea) quickArea.value = curText;
+      const modal = document.getElementById('tplQuickTextModal');
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeTplQuickTextModal() {
+      const modal = document.getElementById('tplQuickTextModal');
+      if (modal) modal.classList.add('hidden');
+      renderPaperTemplateCanvas();
+    }
+
+    function setTplPresetText(preset) {
+      let val = '';
+      if (preset === '数字') {
+        val = '0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9';
+      } else if (preset === '千字文') {
+        val = '天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳 云腾致雨 露结为霜 金生丽水 玉出昆冈';
+      } else if (preset === '三字经') {
+        val = '人之初 性本善 性相近 习相远 苟不教 性乃迁 教之道 贵以专 昔孟母 择邻处 子不学 断机杼 窦燕山 有义方';
+      } else if (preset === '古诗') {
+        val = '床前明月光 疑是地上霜 举头望明月 低头思故乡 春眠不觉晓 处处闻啼鸟 夜来风雨声 花落知多少';
+      } else if (preset === '英文') {
+        val = 'Continuous effort not strength or intelligence is the key to unlocking our potential Knowledge is power Practice makes perfect';
+      }
+      syncTplTextInputs(val);
       showToast(`已载入《${preset}》预设描红文本！`);
     }
 
