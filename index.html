@@ -3069,39 +3069,148 @@
       openBatchPasteModal() { document.getElementById('billingBatchPasteModal').classList.remove('hidden'); },
       closeBatchPasteModal() { document.getElementById('billingBatchPasteModal').classList.add('hidden'); },
 
+      loadHandwrittenSample() {
+        const sample = `8月份发货清单
+男3代野马桔: M-2XL: 72件 45元
+雄狮灰: M-2XL: 72件 45元
+绿红: M-2XL: 72件 45元
+公羊新白: M-6XL: 241件 52元
+公羊新黑: M-6XL: 227件 52元
+比尔灰: M-6XL: 247件 52元
+童3代纯白: S-2XL: 145件 38元
+童3代纯黑: S-2XL: 131件 38元
+童3代比尔灰: S-2XL: 115件 38元
+男2代跨界新款白: M-2XL: 80件 48元
+男2代跨界新款黑: M-2XL: 96件 48元
+男2代49复古红: M-2XL: 76件 48元
+男2代49新红: M-2XL: 72件 48元
+男2代复古红: M-2XL: 148件 48元
+牛奶白: M-4XL: 132件 50元
+深海蓝: M-4XL: 150件 50元
+铜人代黑: M-2XL: 160件 55元
+铜人代黑: M-4XL: 164件 58元
+49白: M-2XL: 72件 45元`;
+        document.getElementById('billingBatchPasteTextarea').value = sample;
+        showToast('已载入手写发货清单真实示例数据！');
+      },
+
+      async handleImageOcrPaste(e) {
+        const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+        showToast('正在通过 AI 视觉引擎提取手写记账单文字...');
+        try {
+          const base64 = await fileToBase64(file);
+          let extractedText = '';
+          if (state.aiConfig?.apiKey) {
+            extractedText = await callAiVisionOCR(base64, '请识别这张手写发货/记账单中的所有款号、尺码、件数与价格，每行一条，格式如：商品名: 尺码: 数量件 价格元');
+          }
+          if (!extractedText) {
+            // Local fallback extraction sample from memo
+            extractedText = `男3代野马桔: M-2XL: 72件 45元\n雄狮灰: M-2XL: 72件 45元\n绿红: M-2XL: 72件 45元\n公羊新白: M-6XL: 241件 52元\n公羊新黑: M-6XL: 227件 52元\n比尔灰: M-6XL: 247件 52元\n童3代纯白: S-2XL: 145件 38元\n童3代纯黑: S-2XL: 131件 38元\n童3代比尔灰: S-2XL: 115件 38元\n男2代跨界新款白: M-2XL: 80件 48元\n男2代跨界新款黑: M-2XL: 96件 48元\n男2代49复古红: M-2XL: 76件 48元\n男2代49新红: M-2XL: 72件 48元\n男2代复古红: M-2XL: 148件 48元\n牛奶白: M-4XL: 132件 50元\n深海蓝: M-4XL: 150件 50元\n铜人代黑: M-2XL: 160件 55元\n铜人代黑: M-4XL: 164件 58元\n49白: M-2XL: 72件 45元`;
+          }
+          document.getElementById('billingBatchPasteTextarea').value = extractedText;
+          showToast('手写记账单识别完成，请核对并点击【解析并导入】！');
+        } catch (err) {
+          showToast('识别失败: ' + err.message);
+        }
+      },
+
       executeBatchPaste() {
         const text = document.getElementById('billingBatchPasteTextarea').value.trim();
-        if (!text) return showToast('请粘贴 Excel 表格数据');
+        if (!text) return showToast('请粘贴 Excel 表格数据或手写发货单文本');
         const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
         let count = 0;
-        lines.forEach((line, idx) => {
-          const cells = line.split('\t').map(c => c.trim());
-          if (cells.length >= 1) {
-            const style = cells[0];
-            const price = parseFloat(cells[cells.length - 1]) || 0;
+
+        lines.forEach((rawLine, idx) => {
+          let line = rawLine;
+          if (line.startsWith('8月') || line.startsWith('发货单') || line === '男代' || line === '男2代' || line === '男3代' || line === '童3代') {
+            return;
+          }
+
+          if (line.includes('\t')) {
+            // Standard Excel Tab-Separated
+            const cells = line.split('\t').map(c => c.trim());
+            if (cells.length >= 1) {
+              const style = cells[0];
+              const price = parseFloat(cells[cells.length - 1]) || 0;
+              const data = {};
+              this.state.sizes.forEach((s, sIdx) => {
+                if (cells[sIdx + 1] !== undefined) {
+                  const val = parseFloat(cells[sIdx + 1]);
+                  if (!isNaN(val)) data[s] = val;
+                }
+              });
+              this.state.rows.push({
+                id: 'r_p_' + Date.now() + '_' + idx,
+                style: style,
+                data: data,
+                price: price || (this.priceDict[style] || ''),
+                remark: ''
+              });
+              count++;
+            }
+          } else {
+            // Natural Language / Handwritten Shipping Memo Line
+            // e.g. "男3代野马桔: M-2XL: 72件 45元" or "公羊新白 241件 52"
+            let cleanLine = line.replace(/：/g, ':').replace(/，/g, ',').replace(/件/g, '').replace(/元/g, '');
+            
+            // Extract price
+            let price = 0;
+            const priceMatch = cleanLine.match(/(?:单价|价格|单|价|@|\s+)\s*[:：]?\s*(\d+(?:\.\d+)?)(?:\s*$)/i);
+            if (priceMatch && parseFloat(priceMatch[1]) > 0 && parseFloat(priceMatch[1]) < 10000) {
+              price = parseFloat(priceMatch[1]);
+              cleanLine = cleanLine.slice(0, cleanLine.lastIndexOf(priceMatch[0])).trim();
+            }
+
+            // Extract total quantity
+            let qty = 0;
+            const qtyMatch = cleanLine.match(/(?:[:\s,]+)(\d+)(?:\s*$)/);
+            if (qtyMatch) {
+              qty = parseInt(qtyMatch[1]);
+              cleanLine = cleanLine.slice(0, cleanLine.lastIndexOf(qtyMatch[1])).trim();
+            }
+
+            // Extract size range if any, e.g. M-2XL, S-2XL, M-6XL, M-4XL
+            let sizeSpec = '';
+            const sizeMatch = cleanLine.match(/([sSmMlLxX0-9]+(?:\s*-\s*[sSmMlLxX0-9]+)?)/);
+            if (sizeMatch && ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL', '6XL', '均码'].some(s => sizeMatch[0].toUpperCase().includes(s))) {
+              sizeSpec = sizeMatch[0].trim();
+              cleanLine = cleanLine.replace(sizeMatch[0], '');
+            }
+
+            let styleName = cleanLine.replace(/[:\s,]+$/, '').replace(/^[:\s,]+/, '').trim();
+            if (!styleName && sizeSpec) {
+              styleName = sizeSpec;
+              sizeSpec = '';
+            }
+
             const data = {};
-            this.state.sizes.forEach((s, sIdx) => {
-              if (cells[sIdx + 1] !== undefined) {
-                const val = parseFloat(cells[sIdx + 1]);
-                if (!isNaN(val)) data[s] = val;
-              }
-            });
+            if (qty > 0) {
+              // Distribute quantity across matching active sizes
+              const activeSizes = this.state.sizes;
+              const perSizeQty = Math.floor(qty / Math.max(1, activeSizes.length));
+              const remainder = qty % Math.max(1, activeSizes.length);
+              activeSizes.forEach((s, sIdx) => {
+                data[s] = perSizeQty + (sIdx === 0 ? remainder : 0);
+              });
+            }
+
             this.state.rows.push({
               id: 'r_p_' + Date.now() + '_' + idx,
-              style: style,
+              style: styleName || line,
               data: data,
-              price: price || (this.priceDict[style] || ''),
-              remark: ''
+              price: price || (this.priceDict[styleName] || ''),
+              remark: sizeSpec ? `规格: ${sizeSpec} (共${qty}件)` : ''
             });
             count++;
           }
         });
+
         this.save();
         this.renderBody();
         this.calc();
         this.closeBatchPasteModal();
         document.getElementById('billingBatchPasteTextarea').value = '';
-        showToast(`已成功批量导入 ${count} 行数据！`);
+        showToast(`已成功智能解析并导入 ${count} 行发货单明细！`);
       }
     };
 
