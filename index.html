@@ -5091,6 +5091,60 @@
       });
     }
 
+    /* 1. Document Scanner & Seal Mode Switching */
+    function switchScanSubMode(mode) {
+      state.currentScanSubMode = mode;
+      const btnDoc = document.getElementById('btnScanModeDoc');
+      const btnSeal = document.getElementById('btnScanModeSeal');
+      const scanSide = document.getElementById('panelScanDoc');
+      const sealSide = document.getElementById('panelScanSeal');
+      const scanCvsWrap = document.getElementById('scanCanvasWrapper');
+      const sealCvsWrap = document.getElementById('sealCanvasWrapper');
+      const dropzone = document.getElementById('scanEmptyDropzone');
+
+      if (mode === 'doc') {
+        if (btnDoc) btnDoc.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm transition flex items-center justify-center space-x-1';
+        if (btnSeal) btnSeal.className = 'flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition flex items-center justify-center space-x-1';
+        if (scanSide) scanSide.classList.remove('hidden');
+        if (sealSide) sealSide.classList.add('hidden');
+        
+        if (state.scanImg) {
+          if (scanCvsWrap) scanCvsWrap.classList.remove('hidden');
+          if (sealCvsWrap) sealCvsWrap.classList.add('hidden');
+          if (dropzone) dropzone.classList.add('hidden');
+        } else {
+          if (scanCvsWrap) scanCvsWrap.classList.add('hidden');
+          if (sealCvsWrap) sealCvsWrap.classList.add('hidden');
+          if (dropzone) dropzone.classList.remove('hidden');
+        }
+      } else {
+        // mode === 'seal'
+        if (btnDoc) btnDoc.className = 'flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition flex items-center justify-center space-x-1';
+        if (btnSeal) btnSeal.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm transition flex items-center justify-center space-x-1';
+        if (scanSide) scanSide.classList.add('hidden');
+        if (sealSide) sealSide.classList.remove('hidden');
+        
+        if (state.sealImg) {
+          if (sealCvsWrap) sealCvsWrap.classList.remove('hidden');
+          if (scanCvsWrap) scanCvsWrap.classList.add('hidden');
+          if (dropzone) dropzone.classList.add('hidden');
+        } else {
+          if (scanCvsWrap) scanCvsWrap.classList.add('hidden');
+          if (sealCvsWrap) sealCvsWrap.classList.add('hidden');
+          if (dropzone) dropzone.classList.remove('hidden');
+        }
+      }
+      lucide.createIcons();
+    }
+
+    function triggerCurrentModeUpload() {
+      if (state.currentScanSubMode === 'seal') {
+        document.getElementById('fileInputSeal')?.click();
+      } else {
+        document.getElementById('fileInputScan')?.click();
+      }
+    }
+
     /* 1. Document Scanner Operations */
     function handleScanImageUpload(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
@@ -5793,9 +5847,7 @@ ${b.substring(0, 4000)}
       const model = cfg.model || 'mimo-vision';
 
       if (!apiKey) {
-        openAISettingsModal();
-        showToast('💡 请先填入您的 API Key（如小米 MiMo / OpenAI / DeepSeek）即可开启 AI 强化转换');
-        return;
+        showToast('💡 正在以本地高精引擎处理。配置 API Key（如小米 MiMo/DeepSeek）可开启云端大模型');
       }
 
       showToast(`🤖 正在通过 ${model} 进行 AI 深度解析与重构转换...`);
