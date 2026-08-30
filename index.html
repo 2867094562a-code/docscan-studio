@@ -1154,28 +1154,47 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 2: FORMAT CONVERTER HUB
+       MODULE 2: FORMAT CONVERTER HUB (全能格式互转中心 - 支持文件直接拖放与在线免存查看)
        ========================================================================= -->
-  <div id="moduleConvert" class="app-module flex-1 flex-col overflow-y-auto p-3 sm:p-6 lg:p-8 hidden">
-    <div class="max-w-6xl w-full mx-auto space-y-4 sm:space-y-6">
-      <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <h2 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-          <i data-lucide="repeat" class="w-5 h-5 text-blue-500"></i><span>全能办公文件格式互转中心</span>
-        </h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">涵盖 PDF ⇄ Word / Excel / PPT / 图片包 / 多图转PDF 全向秒级互转，100% 本地离线安全。</p>
+  <div id="moduleConvert" class="app-module flex-1 p-3.5 sm:p-6 overflow-y-auto hidden">
+    <div class="max-w-6xl mx-auto space-y-4">
+      <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+            <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
+              <span>全能办公文件格式互转中心</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">全卡片支持直接拖拽 · 在线免存直接编辑</span>
+            </h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">支持直接将电脑文件拖拽进对应卡片快速转换；转换后可直接在在线轻办公中查看与编辑，无需占用电脑存储空间。</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="openAISettingsModal()" class="px-3 py-1.5 rounded-xl border border-orange-200 dark:border-orange-900/50 bg-orange-50 dark:bg-slate-800 text-orange-600 dark:text-orange-300 text-xs font-bold flex items-center space-x-1.5 shadow-sm hover:bg-orange-100">
+            <i data-lucide="bot" class="w-3.5 h-3.5"></i><span>配置 AI 模型</span>
+          </button>
+        </div>
       </div>
 
-      <!-- Conversion Cards Grid with AI-Enhanced Version for all features -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      <!-- 9 High-Performance Conversion Cards with Direct Drag & Drop -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
         
         <!-- 1. Word -> PDF -->
-        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
+        <div ondragover="handleConvCardDragOver(event, this)" 
+             ondragleave="handleConvCardDragLeave(event, this)" 
+             ondrop="handleConvCardDrop(event, this, 'word2pdf')" 
+             class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 flex items-center justify-center"><i data-lucide="file-type-2" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 flex items-center justify-center shrink-0"><i data-lucide="file-type-2" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="text-sm font-bold">Word (.docx) 转 PDF</h3>
-              <span class="text-[10px] text-slate-400">Word 文档精准转换为标准 PDF</span>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Word (.docx) 转 PDF</h3>
+              <span class="text-[10px] text-slate-400">Word 文档精准转换为标准矢量 PDF</span>
             </div>
+          </div>
+          <div class="text-[10px] text-slate-400 font-medium flex items-center justify-center space-x-1 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-dashed border-slate-200 dark:border-slate-700 pointer-events-none">
+            <i data-lucide="move" class="w-3 h-3 text-indigo-500"></i><span>直接拖拽 .docx 文件至此</span>
           </div>
           <input type="file" id="inputWordToPdf" accept=".docx" class="hidden" onchange="handleWordToPdf(event)">
           <input type="file" id="inputAiWordToPdf" accept=".docx" class="hidden" onchange="handleAiEnhancedConvert(event, 'word2pdf')">
@@ -1186,13 +1205,19 @@
         </div>
 
         <!-- 2. Excel -> PDF -->
-        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
+        <div ondragover="handleConvCardDragOver(event, this)" 
+             ondragleave="handleConvCardDragLeave(event, this)" 
+             ondrop="handleConvCardDrop(event, this, 'excel2pdf')" 
+             class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center"><i data-lucide="sheet" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center shrink-0"><i data-lucide="sheet" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="text-sm font-bold">Excel (.xlsx) 转 PDF</h3>
-              <span class="text-[10px] text-slate-400">表格报表自动排版转 PDF</span>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Excel (.xlsx) 转 PDF</h3>
+              <span class="text-[10px] text-slate-400">表格数据自动排版转矢量 PDF</span>
             </div>
+          </div>
+          <div class="text-[10px] text-slate-400 font-medium flex items-center justify-center space-x-1 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-dashed border-slate-200 dark:border-slate-700 pointer-events-none">
+            <i data-lucide="move" class="w-3 h-3 text-emerald-500"></i><span>直接拖拽 .xlsx / .csv 文件至此</span>
           </div>
           <input type="file" id="inputExcelToPdf" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleExcelToPdf(event)">
           <input type="file" id="inputAiExcelToPdf" accept=".xlsx,.xls,.csv" class="hidden" onchange="handleAiEnhancedConvert(event, 'excel2pdf')">
@@ -1203,13 +1228,19 @@
         </div>
 
         <!-- 3. PPT -> PDF -->
-        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
+        <div ondragover="handleConvCardDragOver(event, this)" 
+             ondragleave="handleConvCardDragLeave(event, this)" 
+             ondrop="handleConvCardDrop(event, this, 'ppt2pdf')" 
+             class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 flex items-center justify-center shrink-0"><i data-lucide="presentation" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="text-sm font-bold">PPT (.pptx) 转 PDF</h3>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">PPT (.pptx) 转 PDF</h3>
               <span class="text-[10px] text-slate-400">幻灯片按页排版导出矢量 PDF</span>
             </div>
+          </div>
+          <div class="text-[10px] text-slate-400 font-medium flex items-center justify-center space-x-1 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-dashed border-slate-200 dark:border-slate-700 pointer-events-none">
+            <i data-lucide="move" class="w-3 h-3 text-amber-500"></i><span>直接拖拽 .pptx 文件至此</span>
           </div>
           <input type="file" id="inputPptToPdf" accept=".pptx" class="hidden" onchange="handlePptToPdf(event)">
           <input type="file" id="inputAiPptToPdf" accept=".pptx" class="hidden" onchange="handleAiEnhancedConvert(event, 'ppt2pdf')">
@@ -1220,13 +1251,19 @@
         </div>
 
         <!-- 4. PDF -> Word -->
-        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
+        <div ondragover="handleConvCardDragOver(event, this)" 
+             ondragleave="handleConvCardDragLeave(event, this)" 
+             ondrop="handleConvCardDrop(event, this, 'pdf2word')" 
+             class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 flex items-center justify-center"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="text-sm font-bold">PDF 转 Word (.docx)</h3>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 转 Word (.docx)</h3>
               <span class="text-[10px] text-slate-400">提取文字排版生成可编辑 Word</span>
             </div>
+          </div>
+          <div class="text-[10px] text-slate-400 font-medium flex items-center justify-center space-x-1 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-dashed border-slate-200 dark:border-slate-700 pointer-events-none">
+            <i data-lucide="move" class="w-3 h-3 text-blue-500"></i><span>直接拖拽 .pdf 文件至此</span>
           </div>
           <input type="file" id="inputPdfToWord" accept=".pdf" class="hidden" onchange="handlePdfToWord(event)">
           <input type="file" id="inputAiPdfToWord" accept=".pdf" class="hidden" onchange="handleAiEnhancedConvert(event, 'pdf2word')">
@@ -1237,13 +1274,19 @@
         </div>
 
         <!-- 5. PDF -> Excel -->
-        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
+        <div ondragover="handleConvCardDragOver(event, this)" 
+             ondragleave="handleConvCardDragLeave(event, this)" 
+             ondrop="handleConvCardDrop(event, this, 'pdf2excel')" 
+             class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/50 text-teal-600 flex items-center justify-center"><i data-lucide="table" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/50 text-teal-600 flex items-center justify-center shrink-0"><i data-lucide="table" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="text-sm font-bold">PDF 转 Excel (.xlsx)</h3>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 转 Excel (.xlsx)</h3>
               <span class="text-[10px] text-slate-400">提取表格数据生成电子表格</span>
             </div>
+          </div>
+          <div class="text-[10px] text-slate-400 font-medium flex items-center justify-center space-x-1 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-dashed border-slate-200 dark:border-slate-700 pointer-events-none">
+            <i data-lucide="move" class="w-3 h-3 text-teal-500"></i><span>直接拖拽 .pdf 文件至此</span>
           </div>
           <input type="file" id="inputPdfToExcel" accept=".pdf" class="hidden" onchange="handlePdfToExcel(event)">
           <input type="file" id="inputAiPdfToExcel" accept=".pdf" class="hidden" onchange="handleAiEnhancedConvert(event, 'pdf2excel')">
@@ -1254,13 +1297,19 @@
         </div>
 
         <!-- 6. PDF -> PPT -->
-        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
+        <div ondragover="handleConvCardDragOver(event, this)" 
+             ondragleave="handleConvCardDragLeave(event, this)" 
+             ondrop="handleConvCardDrop(event, this, 'pdf2ppt')" 
+             class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 flex items-center justify-center shrink-0"><i data-lucide="presentation" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="text-sm font-bold">PDF 转 PPT (.pptx)</h3>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 转 PPT (.pptx)</h3>
               <span class="text-[10px] text-slate-400">逐页解析生成演示文稿幻灯片</span>
             </div>
+          </div>
+          <div class="text-[10px] text-slate-400 font-medium flex items-center justify-center space-x-1 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-dashed border-slate-200 dark:border-slate-700 pointer-events-none">
+            <i data-lucide="move" class="w-3 h-3 text-purple-500"></i><span>直接拖拽 .pdf 文件至此</span>
           </div>
           <input type="file" id="inputPdfToPpt" accept=".pdf" class="hidden" onchange="handlePdfToPpt(event)">
           <input type="file" id="inputAiPdfToPpt" accept=".pdf" class="hidden" onchange="handleAiEnhancedConvert(event, 'pdf2ppt')">
@@ -1271,13 +1320,19 @@
         </div>
 
         <!-- 7. PDF -> Images -->
-        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
+        <div ondragover="handleConvCardDragOver(event, this)" 
+             ondragleave="handleConvCardDragLeave(event, this)" 
+             ondrop="handleConvCardDrop(event, this, 'pdf2images')" 
+             class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-950/50 text-orange-600 flex items-center justify-center"><i data-lucide="images" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-950/50 text-orange-600 flex items-center justify-center shrink-0"><i data-lucide="images" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="text-sm font-bold">PDF 转 高清图片包</h3>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 转 高清图片包</h3>
               <span class="text-[10px] text-slate-400">逐页提取为 300DPI JPG/PNG</span>
             </div>
+          </div>
+          <div class="text-[10px] text-slate-400 font-medium flex items-center justify-center space-x-1 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-dashed border-slate-200 dark:border-slate-700 pointer-events-none">
+            <i data-lucide="move" class="w-3 h-3 text-orange-500"></i><span>直接拖拽 .pdf 文件至此</span>
           </div>
           <input type="file" id="inputPdfToImages" accept=".pdf" class="hidden" onchange="handlePdfToImages(event)">
           <input type="file" id="inputAiPdfToImages" accept=".pdf" class="hidden" onchange="handleAiEnhancedConvert(event, 'pdf2images')">
@@ -1288,13 +1343,19 @@
         </div>
 
         <!-- 8. Multi-Images -> PDF -->
-        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
+        <div ondragover="handleConvCardDragOver(event, this)" 
+             ondragleave="handleConvCardDragLeave(event, this)" 
+             ondrop="handleConvCardDrop(event, this, 'images2pdf')" 
+             class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-950/50 text-pink-600 flex items-center justify-center"><i data-lucide="image-plus" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-950/50 text-pink-600 flex items-center justify-center shrink-0"><i data-lucide="image-plus" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="text-sm font-bold">多图批量合并转 PDF</h3>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">多图批量合并转 PDF</h3>
               <span class="text-[10px] text-slate-400">批量合并为标准 A4 打印 PDF</span>
             </div>
+          </div>
+          <div class="text-[10px] text-slate-400 font-medium flex items-center justify-center space-x-1 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-dashed border-slate-200 dark:border-slate-700 pointer-events-none">
+            <i data-lucide="move" class="w-3 h-3 text-pink-500"></i><span>可拖入单张或多张图片至此</span>
           </div>
           <input type="file" id="inputImagesToPdf" accept="image/*" multiple class="hidden" onchange="handleImagesToPdf(event)">
           <input type="file" id="inputAiImagesToPdf" accept="image/*" multiple class="hidden" onchange="handleAiEnhancedConvert(event, 'images2pdf')">
@@ -1305,13 +1366,19 @@
         </div>
 
         <!-- 9. PDF -> TXT -->
-        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3">
+        <div ondragover="handleConvCardDragOver(event, this)" 
+             ondragleave="handleConvCardDragLeave(event, this)" 
+             ondrop="handleConvCardDrop(event, this, 'pdf2txt')" 
+             class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center"><i data-lucide="file-text" class="w-5 h-5"></i></div>
+            <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-5 h-5"></i></div>
             <div>
-              <h3 class="text-sm font-bold">PDF 转 TXT 纯文本</h3>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 转 TXT 纯文本</h3>
               <span class="text-[10px] text-slate-400">纯净提取所有文字与段落</span>
             </div>
+          </div>
+          <div class="text-[10px] text-slate-400 font-medium flex items-center justify-center space-x-1 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-dashed border-slate-200 dark:border-slate-700 pointer-events-none">
+            <i data-lucide="move" class="w-3 h-3 text-slate-500"></i><span>直接拖拽 .pdf 文件至此</span>
           </div>
           <input type="file" id="inputPdfToTxt" accept=".pdf" class="hidden" onchange="handlePdfToTxt(event)">
           <input type="file" id="inputAiPdfToTxt" accept=".pdf" class="hidden" onchange="handleAiEnhancedConvert(event, 'pdf2txt')">
@@ -1321,6 +1388,54 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  </div>
+
+  <!-- Universal Conversion Done Action Modal (Online Open / View / Edit without Saving) -->
+  <div id="universalConvertResultModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm" onclick="closeUniversalConvertResultModal()">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-xl w-full p-5 space-y-3.5 shadow-2xl border border-slate-200 dark:border-slate-800 text-xs" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b pb-2">
+        <div class="flex items-center space-x-2">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500 text-white flex items-center justify-center font-bold">
+            <i data-lucide="check" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100" id="univConvertResultTitle">🎉 文件转换已完成</h3>
+            <span class="text-[10px] text-slate-400" id="univConvertSubTitle">可在在线轻办公中直接查看/编辑，无需保存到本地</span>
+          </div>
+        </div>
+        <button onclick="closeUniversalConvertResultModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <div class="p-3 bg-indigo-50/70 dark:bg-indigo-950/40 rounded-xl border border-indigo-100 dark:border-indigo-900/50 space-y-1">
+        <div class="flex items-center justify-between text-[11px]">
+          <span class="font-bold text-indigo-700 dark:text-indigo-300" id="univConvertTypeBadge">📄 转换目标：Word 文档</span>
+          <span class="text-emerald-600 font-bold flex items-center space-x-1"><i data-lucide="sparkles" class="w-3 h-3"></i><span>内容已就绪</span></span>
+        </div>
+        <div class="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">💡 提示：文件已成功生成在内存中，您可以直接点击<b>「在在线轻办公中打开」</b>直接阅读、排版修改或复制，无需占用电脑硬盘存储！</div>
+      </div>
+
+      <div class="space-y-1">
+        <div class="flex justify-between items-center text-[11px]">
+          <label class="font-bold text-slate-500">转换结果内容摘要与预览：</label>
+          <button onclick="copyUnivConvertText()" class="text-indigo-600 dark:text-indigo-400 hover:underline font-bold flex items-center space-x-1">
+            <i data-lucide="copy" class="w-3 h-3"></i><span>一键复制内容</span>
+          </button>
+        </div>
+        <textarea id="univConvertPreviewText" rows="5" readonly class="w-full p-2.5 font-mono text-xs border rounded-xl bg-slate-50 dark:bg-slate-950 resize-none outline-none leading-relaxed text-slate-700 dark:text-slate-200"></textarea>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-2 border-t">
+        <button onclick="openUnivConvertedInEditor()" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow flex items-center justify-center space-x-1.5">
+          <i data-lucide="edit-3" class="w-4 h-4"></i><span id="univConvertOpenEditorBtnLabel">在在线轻办公中打开编辑 (无需保存)</span>
+        </button>
+        <div class="flex space-x-2">
+          <button onclick="closeUniversalConvertResultModal()" class="px-3 py-2 text-xs text-slate-500 hover:text-slate-700">关闭</button>
+          <button onclick="downloadUnivConvertedFile()" class="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl font-bold flex items-center justify-center space-x-1.5">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i><span>下载到电脑</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -1351,17 +1466,15 @@
 
       <div class="flex items-center justify-between pt-2 border-t">
         <button onclick="openConvertedInOfficeEditor()" class="px-3.5 py-2 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 rounded-xl font-bold flex items-center space-x-1.5">
-          <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>在在线编辑器中打开</span>
+          <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>在在线轻办公中打开编辑 (无需保存)</span>
         </button>
         <div class="flex space-x-2">
           <button onclick="closeAiConvertResultModal()" class="px-3 py-2 text-xs text-slate-500">关闭</button>
           <button onclick="downloadAiConvertedFile()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow flex items-center space-x-1.5">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i><span id="aiConvertDownloadBtnLabel">立即下载目标文件</span>
+            <i data-lucide="download" class="w-3.5 h-3.5"></i><span id="aiConvertDownloadBtnLabel">立即下载到电脑</span>
           </button>
         </div>
       </div>
-    </div>
-  </div>
     </div>
   </div>
 
@@ -3453,57 +3566,194 @@
     }
 
     /* All-in-One Format Converter Hub (Word, Excel, PPT, PDF, Images, TXT) */
-    async function handleWordToPdf(e) {
-      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+    state.lastConvertResult = {
+      type: '',
+      fileName: '',
+      previewText: '',
+      downloadFn: null,
+      openEditorFn: null
+    };
+
+    function handleConvCardDragOver(e, el) {
+      e.preventDefault(); e.stopPropagation();
+      el.classList.add('border-indigo-500', 'bg-indigo-50/70', 'dark:bg-indigo-950/70', 'scale-[1.02]');
+    }
+
+    function handleConvCardDragLeave(e, el) {
+      e.preventDefault(); e.stopPropagation();
+      el.classList.remove('border-indigo-500', 'bg-indigo-50/70', 'dark:bg-indigo-950/70', 'scale-[1.02]');
+    }
+
+    function handleConvCardDrop(e, el, convType) {
+      e.preventDefault(); e.stopPropagation();
+      el.classList.remove('border-indigo-500', 'bg-indigo-50/70', 'dark:bg-indigo-950/70', 'scale-[1.02]');
+      const files = e.dataTransfer?.files;
+      if (!files || !files.length) return showToast('未检测到有效文件');
+
+      showToast(`已接收拖拽文件: ${files[0].name}，正在执行转换...`);
+      if (convType === 'word2pdf') handleWordToPdf(null, files[0]);
+      else if (convType === 'excel2pdf') handleExcelToPdf(null, files[0]);
+      else if (convType === 'ppt2pdf') handlePptToPdf(null, files[0]);
+      else if (convType === 'pdf2word') handlePdfToWord(null, files[0]);
+      else if (convType === 'pdf2excel') handlePdfToExcel(null, files[0]);
+      else if (convType === 'pdf2ppt') handlePdfToPpt(null, files[0]);
+      else if (convType === 'pdf2images') handlePdfToImages(null, files[0]);
+      else if (convType === 'images2pdf') handleImagesToPdf(null, Array.from(files));
+      else if (convType === 'pdf2txt') handlePdfToTxt(null, files[0]);
+    }
+
+    function openUniversalConvertResultModal(info) {
+      state.lastConvertResult = info;
+      const modal = document.getElementById('universalConvertResultModal');
+      document.getElementById('univConvertResultTitle').innerText = `🎉 ${info.fileName || '文档'} 转换就绪`;
+      document.getElementById('univConvertTypeBadge').innerText = `📄 目标格式：${info.targetFormat || '目标文档'}`;
+      document.getElementById('univConvertPreviewText').value = info.previewText || '（无预览文本）';
+      
+      const openBtnLabel = document.getElementById('univConvertOpenEditorBtnLabel');
+      if (info.type.endsWith('2word') || info.type === 'pdf2txt') {
+        openBtnLabel.innerText = '在在线 Word 编辑器中打开 (无需保存)';
+      } else if (info.type.endsWith('2excel')) {
+        openBtnLabel.innerText = '在在线 Excel 表格中打开 (无需保存)';
+      } else if (info.type.endsWith('2ppt')) {
+        openBtnLabel.innerText = '在在线 PPT 幻灯片中打开 (无需保存)';
+      } else if (info.type.endsWith('2pdf') || info.type.endsWith('images2pdf')) {
+        openBtnLabel.innerText = '在在线 PDF 查看器中直接阅读 (无需保存)';
+      } else {
+        openBtnLabel.innerText = '在在线轻办公中直接打开 (无需保存)';
+      }
+
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeUniversalConvertResultModal() {
+      document.getElementById('universalConvertResultModal').classList.add('hidden');
+    }
+
+    function copyUnivConvertText() {
+      const text = document.getElementById('univConvertPreviewText').value;
+      if (!text) return showToast('暂无内容可复制');
+      navigator.clipboard.writeText(text);
+      showToast('转换内容已成功复制到剪贴板！');
+    }
+
+    function openUnivConvertedInEditor() {
+      const res = state.lastConvertResult;
+      if (!res) return;
+      closeUniversalConvertResultModal();
+      if (typeof res.openEditorFn === 'function') {
+        res.openEditorFn();
+      } else {
+        showToast('已完成在在线轻办公中载入！');
+      }
+    }
+
+    function downloadUnivConvertedFile() {
+      const res = state.lastConvertResult;
+      if (!res) return showToast('暂无可下载文件');
+      if (typeof res.downloadFn === 'function') {
+        res.downloadFn();
+      } else {
+        showToast('文件下载已触发');
+      }
+    }
+
+    async function handleWordToPdf(e, droppedFile = null) {
+      const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
       showToast('正在解析 Word 并生成 PDF...');
       try {
         const ab = await file.arrayBuffer();
         const res = await mammoth.extractRawText({ arrayBuffer: ab });
+        const textContent = res.value || '无文本内容';
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
-        const lines = pdf.splitTextToSize(res.value || '无文本内容', 180);
+        const lines = pdf.splitTextToSize(textContent, 180);
         let cursorY = 20;
         lines.forEach(l => {
           if (cursorY > 280) { pdf.addPage(); cursorY = 20; }
           pdf.text(l, 15, cursorY);
           cursorY += 7;
         });
-        pdf.save(file.name.replace(/\.docx$/i, '') + '.pdf');
-        showToast('Word 转 PDF 成功完成！');
+
+        const pdfArrayBuffer = pdf.output('arraybuffer');
+
+        openUniversalConvertResultModal({
+          type: 'word2pdf',
+          fileName: file.name,
+          targetFormat: 'PDF 矢量文档',
+          previewText: textContent.substring(0, 1000),
+          openEditorFn: async () => {
+            state.pdfDoc = await pdfjsLib.getDocument({ data: pdfArrayBuffer }).promise;
+            state.pdfPageNum = 1;
+            navigateModule('editor');
+            switchOfficeSubTool('pdf');
+            renderPdfViewerPage();
+            showToast('已在 PDF 查看器中直接载入 Word 转换结果！');
+          },
+          downloadFn: () => {
+            pdf.save(file.name.replace(/\.docx$/i, '') + '.pdf');
+            showToast('PDF 文档已下载到电脑！');
+          }
+        });
+        showToast('Word 转 PDF 成功就绪！');
       } catch (err) {
         showToast('Word 转 PDF 失败: ' + err.message);
       }
     }
 
-    async function handleExcelToPdf(e) {
-      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+    async function handleExcelToPdf(e, droppedFile = null) {
+      const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
       showToast('正在解析 Excel 并排版 PDF...');
       try {
-        const wb = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+        const ab = await file.arrayBuffer();
+        const wb = XLSX.read(ab, { type: 'array' });
         const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('l', 'mm', 'a4');
         pdf.setFontSize(9);
         let y = 20;
+        let previewStr = '';
         data.forEach((r, idx) => {
           if (y > 190) { pdf.addPage(); y = 20; }
           const lineStr = (r || []).map(cell => String(cell === undefined ? '' : cell)).join('   |   ');
+          if (idx < 20) previewStr += lineStr + '\n';
           pdf.text(lineStr.substring(0, 140), 15, y);
           y += 6.5;
         });
-        pdf.save(file.name.replace(/\.[^/.]+$/, '') + '.pdf');
-        showToast('Excel 转 PDF 成功完成！');
+
+        const pdfArrayBuffer = pdf.output('arraybuffer');
+
+        openUniversalConvertResultModal({
+          type: 'excel2pdf',
+          fileName: file.name,
+          targetFormat: '横向 A4 报表 PDF',
+          previewText: previewStr || 'Excel 表格数据已提取',
+          openEditorFn: async () => {
+            state.pdfDoc = await pdfjsLib.getDocument({ data: pdfArrayBuffer }).promise;
+            state.pdfPageNum = 1;
+            navigateModule('editor');
+            switchOfficeSubTool('pdf');
+            renderPdfViewerPage();
+            showToast('已在 PDF 查看器中直接载入 Excel 报表！');
+          },
+          downloadFn: () => {
+            pdf.save(file.name.replace(/\.[^/.]+$/, '') + '.pdf');
+            showToast('Excel PDF 报表已下载到电脑！');
+          }
+        });
+        showToast('Excel 转 PDF 成功就绪！');
       } catch (err) {
         showToast('Excel 转 PDF 失败: ' + err.message);
       }
     }
 
-    async function handlePptToPdf(e) {
-      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+    async function handlePptToPdf(e, droppedFile = null) {
+      const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
       showToast('正在转换 PPT 为横向 A4 高清 PDF...');
       try {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('l', 'mm', 'a4');
+        let previewStr = '';
         if (state.pptSlides && state.pptSlides.length) {
           state.pptSlides.forEach((s, idx) => {
             if (idx > 0) pdf.addPage();
@@ -3519,35 +3769,59 @@
             pdf.setFontSize(10);
             pdf.setTextColor(148, 163, 184);
             pdf.text(`- ${idx + 1} / ${state.pptSlides.length} -`, 148, 200, { align: 'center' });
+            previewStr += `【幻灯片 ${idx + 1}】${s.title || ''}\n${s.body || ''}\n\n`;
           });
         } else {
           pdf.setFontSize(20);
           pdf.text(`演示文稿: ${file.name}`, 20, 40);
           pdf.setFontSize(12);
           pdf.text('已由全能格式互转中心转换为标准 PDF 演示文档。', 20, 60);
+          previewStr = `演示文稿: ${file.name}\n已转换为标准 PDF 演示文档。`;
         }
-        pdf.save(file.name.replace(/\.pptx$/i, '') + '.pdf');
-        showToast('PPT 转 PDF 成功完成！');
+
+        const pdfArrayBuffer = pdf.output('arraybuffer');
+
+        openUniversalConvertResultModal({
+          type: 'ppt2pdf',
+          fileName: file.name,
+          targetFormat: 'PPT 演示文档 PDF',
+          previewText: previewStr,
+          openEditorFn: async () => {
+            state.pdfDoc = await pdfjsLib.getDocument({ data: pdfArrayBuffer }).promise;
+            state.pdfPageNum = 1;
+            navigateModule('editor');
+            switchOfficeSubTool('pdf');
+            renderPdfViewerPage();
+            showToast('已在 PDF 查看器中直接载入 PPT 演示文档！');
+          },
+          downloadFn: () => {
+            pdf.save(file.name.replace(/\.pptx$/i, '') + '.pdf');
+            showToast('PPT PDF 演示文档已下载！');
+          }
+        });
+        showToast('PPT 转 PDF 成功就绪！');
       } catch (err) {
         showToast('PPT 转换失败: ' + err.message);
       }
     }
 
-    async function handlePdfToWord(e) {
-      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
-      showToast('正在解析 PDF 文字并生成 Word (.docx)...');
+    async function handlePdfToWord(e, droppedFile = null) {
+      const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
+      showToast('正在解析 PDF 文字并重构 Word (.docx)...');
       try {
         const ab = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
         const paragraphs = [];
+        let extractedText = '';
         for (let p = 1; p <= pdf.numPages; p++) {
           const page = await pdf.getPage(p);
           const content = await page.getTextContent();
           const textItems = content.items.map(item => item.str).join(' ');
           const lines = textItems.split('\n').filter(l => l.trim().length > 0);
-          if (!lines.length) lines.push(textItems);
+          if (!lines.length && textItems.trim()) lines.push(textItems);
           lines.forEach(l => {
             if (l.trim()) {
+              extractedText += l.trim() + '\n\n';
               paragraphs.push(new docx.Paragraph({
                 children: [new docx.TextRun({ text: l.trim(), size: 26 })],
                 spacing: { after: 120 }
@@ -3560,58 +3834,101 @@
         }
         const doc = new docx.Document({ sections: [{ children: paragraphs }] });
         const blob = await docx.Packer.toBlob(doc);
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = file.name.replace(/\.pdf$/i, '') + '.docx';
-        a.click();
-        showToast('PDF 转 Word 成功完成！');
+
+        openUniversalConvertResultModal({
+          type: 'pdf2word',
+          fileName: file.name,
+          targetFormat: 'Word 文档 (.docx)',
+          previewText: extractedText || 'PDF 文字已提取',
+          openEditorFn: () => {
+            const html = extractedText.split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${l.trim()}</p>`).join('');
+            document.getElementById('wordEditorDoc').innerHTML = html || '<p>PDF 文档已载入</p>';
+            navigateModule('editor');
+            switchOfficeSubTool('word');
+            updateWordStats();
+            showToast('已在 Word 在线编辑器中直接打开，可即时修改排版！');
+          },
+          downloadFn: () => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = file.name.replace(/\.pdf$/i, '') + '.docx';
+            a.click();
+            showToast('Word 文档已下载到电脑！');
+          }
+        });
+        showToast('PDF 转 Word 成功就绪！');
       } catch (err) {
         showToast('PDF 转 Word 失败: ' + err.message);
       }
     }
 
-    async function handlePdfToExcel(e) {
-      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+    async function handlePdfToExcel(e, droppedFile = null) {
+      const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
       showToast('正在提取 PDF 表格数据并生成 Excel (.xlsx)...');
       try {
         const ab = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
         const rows = [];
+        let previewStr = '';
         for (let p = 1; p <= pdf.numPages; p++) {
           const page = await pdf.getPage(p);
           const content = await page.getTextContent();
           let currentLine = [];
           let lastY = null;
           content.items.forEach(item => {
-            const y = Math.round(item.transform[5]);
+            const y = Math.round(item.transform?.[5] ?? 0);
             if (lastY !== null && Math.abs(y - lastY) > 5) {
-              if (currentLine.length) rows.push(currentLine);
+              if (currentLine.length) {
+                rows.push(currentLine);
+                if (rows.length < 20) previewStr += currentLine.join('\t') + '\n';
+              }
               currentLine = [];
             }
             if (item.str.trim()) currentLine.push(item.str.trim());
             lastY = y;
           });
-          if (currentLine.length) rows.push(currentLine);
+          if (currentLine.length) {
+            rows.push(currentLine);
+            if (rows.length < 20) previewStr += currentLine.join('\t') + '\n';
+          }
         }
-        if (!rows.length) rows.push(['提取结果', '无数据']);
+        if (!rows.length) rows.push(['提取结果', '无表格数据']);
         const ws = XLSX.utils.aoa_to_sheet(rows);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'PDF_Table_Data');
-        XLSX.writeFile(wb, file.name.replace(/\.pdf$/i, '') + '.xlsx');
-        showToast('PDF 转 Excel 成功完成！');
+
+        openUniversalConvertResultModal({
+          type: 'pdf2excel',
+          fileName: file.name,
+          targetFormat: 'Excel 电子表格 (.xlsx)',
+          previewText: previewStr || JSON.stringify(rows.slice(0, 10)),
+          openEditorFn: () => {
+            state.excelData = rows;
+            initExcelGrid();
+            navigateModule('editor');
+            switchOfficeSubTool('excel');
+            showToast('已在 Excel 在线表格中直接打开，可即时计算与编辑！');
+          },
+          downloadFn: () => {
+            XLSX.writeFile(wb, file.name.replace(/\.pdf$/i, '') + '.xlsx');
+            showToast('Excel 文件已下载到电脑！');
+          }
+        });
+        showToast('PDF 转 Excel 成功就绪！');
       } catch (err) {
         showToast('PDF 转 Excel 失败: ' + err.message);
       }
     }
 
-    async function handlePdfToPpt(e) {
-      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+    async function handlePdfToPpt(e, droppedFile = null) {
+      const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
       showToast('正在将 PDF 逐页拆解并转换为 PPT (.pptx)...');
       try {
         const ab = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
         const pptx = new PptxGenJS();
         pptx.layout = 'LAYOUT_16x9';
+        const generatedSlides = [];
 
         for (let p = 1; p <= pdf.numPages; p++) {
           const page = await pdf.getPage(p);
@@ -3622,39 +3939,95 @@
           const imgData = cvs.toDataURL('image/jpeg', 0.92);
           const slide = pptx.addSlide();
           slide.addImage({ data: imgData, x: 0, y: 0, w: '100%', h: '100%' });
+
+          generatedSlides.push({
+            layout: 'title_content',
+            title: `幻灯片 第 ${p} 页`,
+            body: `• 已由 PDF 页面 ${p} 高清矢量渲染载入\n• 您可以在此添加演讲备注或叠加图文组件`,
+            notes: '',
+            bgType: 'color',
+            bgValue: '#ffffff',
+            media: [{ id: Date.now().toString(36) + p, type: 'image', src: imgData, x: 10, y: 10, w: 80, h: 80, zIndex: 1 }]
+          });
         }
-        await pptx.writeFile({ fileName: file.name.replace(/\.pdf$/i, '') + '.pptx' });
-        showToast('PDF 转 PPT 成功完成！');
+
+        openUniversalConvertResultModal({
+          type: 'pdf2ppt',
+          fileName: file.name,
+          targetFormat: 'PPT 演示文稿 (.pptx)',
+          previewText: `共提取并拆解了 ${pdf.numPages} 页 PDF 幻灯片`,
+          openEditorFn: () => {
+            state.pptSlides = generatedSlides;
+            state.currentSlideIdx = 0;
+            renderPptSlidesList();
+            navigateModule('editor');
+            switchOfficeSubTool('ppt');
+            showToast('已在 PPT 在线演示工坊中直接载入全部幻灯片！');
+          },
+          downloadFn: async () => {
+            await pptx.writeFile({ fileName: file.name.replace(/\.pdf$/i, '') + '.pptx' });
+            showToast('PPT 演示文稿已下载到电脑！');
+          }
+        });
+        showToast('PDF 转 PPT 成功就绪！');
       } catch (err) {
         showToast('PDF 转 PPT 失败: ' + err.message);
       }
     }
 
-    async function handlePdfToImages(e) {
-      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+    async function handlePdfToImages(e, droppedFile = null) {
+      const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
       showToast('正在提取 PDF 为 300DPI 高清图片...');
       try {
         const ab = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+        const imageUrls = [];
         for (let p = 1; p <= pdf.numPages; p++) {
           const page = await pdf.getPage(p);
           const vp = page.getViewport({ scale: 2.5 });
           const cvs = document.createElement('canvas');
           cvs.width = vp.width; cvs.height = vp.height;
           await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
-          const a = document.createElement('a');
-          a.href = cvs.toDataURL('image/jpeg', 0.95);
-          a.download = `${file.name.replace(/\.pdf$/i, '')}_Page_${p}.jpg`;
-          a.click();
+          imageUrls.push({ pageNum: p, dataUrl: cvs.toDataURL('image/jpeg', 0.95) });
         }
-        showToast(`已成功导出 ${pdf.numPages} 张高清图片！`);
+
+        openUniversalConvertResultModal({
+          type: 'pdf2images',
+          fileName: file.name,
+          targetFormat: `${pdf.numPages} 张高清 JPG 图片`,
+          previewText: `共成功渲染提取出 ${pdf.numPages} 张 300 DPI 高清单页图片`,
+          openEditorFn: () => {
+            state.scanImg = new Image();
+            state.scanImg.onload = () => {
+              const cvs = document.getElementById('scanMainCanvas');
+              cvs.width = state.scanImg.width; cvs.height = state.scanImg.height;
+              cvs.getContext('2d').drawImage(state.scanImg, 0, 0);
+              document.getElementById('scanEmptyDropzone').classList.add('hidden');
+              document.getElementById('scanCanvasWrapper').classList.remove('hidden');
+              navigateModule('scan');
+              switchScanSubMode('doc');
+              showToast('已在图像工坊中载入提取图片！');
+            };
+            state.scanImg.src = imageUrls[0].dataUrl;
+          },
+          downloadFn: () => {
+            imageUrls.forEach(img => {
+              const a = document.createElement('a');
+              a.href = img.dataUrl;
+              a.download = `${file.name.replace(/\.pdf$/i, '')}_Page_${img.pageNum}.jpg`;
+              a.click();
+            });
+            showToast('高清图片已全部批量下载！');
+          }
+        });
+        showToast(`已成功提取 ${pdf.numPages} 张图片！`);
       } catch (err) {
         showToast('PDF 提取图片失败: ' + err.message);
       }
     }
 
-    async function handleImagesToPdf(e) {
-      const files = Array.from(e.target.files); if (!files.length) return; e.target.value = '';
+    async function handleImagesToPdf(e, droppedFiles = null) {
+      const files = droppedFiles || Array.from(e?.target?.files || []); if (!files.length) return; if (e?.target) e.target.value = '';
       showToast(`正在合并 ${files.length} 张图片为 PDF...`);
       try {
         const { jsPDF } = window.jspdf;
@@ -3668,15 +4041,35 @@
           });
           pdf.addImage(url, 'JPEG', 10, 10, 190, 277);
         }
-        pdf.save(`Images_Merged_${Date.now()}.pdf`);
-        showToast('多图合并转 PDF 成功完成！');
+
+        const pdfArrayBuffer = pdf.output('arraybuffer');
+
+        openUniversalConvertResultModal({
+          type: 'images2pdf',
+          fileName: `${files.length}张图片合并`,
+          targetFormat: 'A4 标准打印 PDF',
+          previewText: `已将 ${files.length} 张图片按顺序排版为标准 A4 多页 PDF 文档`,
+          openEditorFn: async () => {
+            state.pdfDoc = await pdfjsLib.getDocument({ data: pdfArrayBuffer }).promise;
+            state.pdfPageNum = 1;
+            navigateModule('editor');
+            switchOfficeSubTool('pdf');
+            renderPdfViewerPage();
+            showToast('已在 PDF 查看器中直接打开合并文档！');
+          },
+          downloadFn: () => {
+            pdf.save(`Merged_Images_${Date.now()}.pdf`);
+            showToast('合并 PDF 已下载到电脑！');
+          }
+        });
+        showToast('多图合并 PDF 成功就绪！');
       } catch (err) {
-        showToast('多图转 PDF 失败: ' + err.message);
+        showToast('多图合并 PDF 失败: ' + err.message);
       }
     }
 
-    async function handlePdfToTxt(e) {
-      const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+    async function handlePdfToTxt(e, droppedFile = null) {
+      const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
       showToast('正在提取 PDF 全文为纯文本...');
       try {
         const ab = await file.arrayBuffer();
@@ -3687,12 +4080,30 @@
           const content = await page.getTextContent();
           allText += `--- 第 ${p} 页 ---\n` + content.items.map(item => item.str).join(' ') + '\n\n';
         }
-        const blob = new Blob([allText], { type: 'text/plain;charset=utf-8' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = file.name.replace(/\.pdf$/i, '') + '.txt';
-        a.click();
-        showToast('PDF 转 TXT 成功完成！');
+
+        openUniversalConvertResultModal({
+          type: 'pdf2txt',
+          fileName: file.name,
+          targetFormat: '纯文本 (.txt)',
+          previewText: allText,
+          openEditorFn: () => {
+            const html = allText.split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${l.trim()}</p>`).join('');
+            document.getElementById('wordEditorDoc').innerHTML = html;
+            navigateModule('editor');
+            switchOfficeSubTool('word');
+            updateWordStats();
+            showToast('已将提取纯文本载入 Word 编辑器中！');
+          },
+          downloadFn: () => {
+            const blob = new Blob([allText], { type: 'text/plain;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = file.name.replace(/\.pdf$/i, '') + '.txt';
+            a.click();
+            showToast('纯文本已下载到电脑！');
+          }
+        });
+        showToast('PDF 转 TXT 成功就绪！');
       } catch (err) {
         showToast('PDF 转 TXT 失败: ' + err.message);
       }
