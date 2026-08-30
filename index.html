@@ -210,30 +210,16 @@
     .drag-handle { cursor: grab; color: #94a3b8; margin-right: 4px; }
     .drag-handle:active { cursor: grabbing; }
 
-    /* Print & Capture Styles (A4 Landscape) */
+    /* Universal Isolated Print Engine (Prevents any web interface or home page leaks) */
     @media print {
-      @page {
-        size: A4 landscape;
-        margin: 8mm;
-      }
-      body { 
-        padding: 0 !important; margin: 0 !important; background: white !important; 
-        display: block !important; 
-      }
-      header, #mobileNavDrawer, #mobileGlobalBackdrop, .fixed.bottom-0, .no-print { 
+      body > header, body > main, #mobileNavDrawer, #mobileGlobalBackdrop, .fixed.bottom-0, .no-print { 
         display: none !important; 
       }
-      .app-module { display: block !important; }
-      .bill-container { 
-        box-shadow: none !important; border: none !important; 
-        padding: 0 !important; width: 100% !important; max-width: 100% !important; 
-        margin: 0 !important; background: white !important; color: black !important;
+      body {
+        background: white !important;
+        padding: 0 !important;
+        margin: 0 !important;
       }
-      #billingTable { font-size: 12px !important; }
-      #billingTable th, #billingTable td { height: 32px !important; border-color: #cbd5e1 !important; }
-      .bill-input-cell { font-size: 13px !important; color: black !important; }
-      #billingTable th { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      #billingTable tbody tr:nth-child(even) { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
 
     body.capturing .no-print { display: none !important; }
@@ -583,7 +569,7 @@
           </label>
 
           <button onclick="billingApp.saveCurrentAsDraft()" class="px-2.5 py-1.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-xl font-bold flex items-center space-x-1" title="将当前单据保存至草稿箱"><i data-lucide="save" class="w-3.5 h-3.5"></i><span>存草稿</span></button>
-          <button onclick="window.print()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="printer" class="w-3.5 h-3.5"></i><span>打印 (A4)</span></button>
+          <button onclick="billingApp.printInvoiceDirect()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition active:scale-95"><i data-lucide="printer" class="w-3.5 h-3.5"></i><span>打印 (A4)</span></button>
           <button onclick="billingApp.exportImage()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="camera" class="w-3.5 h-3.5"></i><span>生成长图</span></button>
           <button onclick="billingApp.exportExcel()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i><span>导出 Excel</span></button>
           <button onclick="billingApp.exportPdf()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold flex items-center space-x-1 shadow-sm transition"><i data-lucide="file-down" class="w-3.5 h-3.5"></i><span>导出 PDF</span></button>
@@ -1864,7 +1850,7 @@
             <button onclick="setTplPcPaperZoomWidth(540)" id="btnZoom75" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg font-medium">75%</button>
             <button onclick="setTplPcPaperZoomWidth(720)" id="btnZoom100" class="px-2.5 py-1 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold border border-teal-200 dark:border-teal-800 rounded-lg">100% 标准</button>
             <button onclick="setTplPcPaperZoomWidth(900)" id="btnZoom125" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg font-medium">125%</button>
-            <button onclick="window.print()" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg font-bold flex items-center space-x-1 ml-1">
+            <button onclick="printTemplatePaperAction()" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg font-bold flex items-center space-x-1 ml-1 text-slate-700 dark:text-slate-200 transition active:scale-95">
               <i data-lucide="printer" class="w-3.5 h-3.5"></i><span>打印</span>
             </button>
             <button onclick="exportTemplateToPDF()" class="px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-bold shadow flex items-center space-x-1">
@@ -2447,6 +2433,9 @@
     <span id="toastMsg">操作成功</span>
   </div>
 
+  <!-- Isolated Print Engine Frame (Prevents web UI leaks during print) -->
+  <iframe id="isolatedPrintIframe" class="hidden" style="display:none;position:fixed;right:0;bottom:0;width:0;height:0;border:none;"></iframe>
+
   <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script>
     const state = {
@@ -2851,6 +2840,44 @@
         XLSX.utils.book_append_sheet(wb, ws, "发货清单");
         XLSX.writeFile(wb, fileName);
         showToast('对账单 Excel 导出成功！');
+      },
+
+      printInvoiceDirect() {
+        const container = document.getElementById('billingCaptureTarget');
+        if (!container) return;
+        const cloned = container.cloneNode(true);
+        // Remove no-print buttons from clone
+        cloned.querySelectorAll('.no-print').forEach(el => el.remove());
+        cloned.style.boxShadow = 'none';
+        cloned.style.border = 'none';
+        cloned.style.padding = '0';
+        cloned.style.maxWidth = '100%';
+
+        const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
+          .map(el => el.outerHTML).join('\n');
+
+        const printHtml = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>发货清单账单打印</title>
+            ${styles}
+            <style>
+              @page { size: A4 landscape; margin: 6mm; }
+              body { background: #fff !important; padding: 0 !important; margin: 0 !important; color: #000 !important; }
+              .bill-container { box-shadow: none !important; border: none !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; }
+              #billingTable { font-size: 11px !important; }
+              #billingTable th, #billingTable td { height: 28px !important; border-color: #cbd5e1 !important; }
+              .bill-input-cell { font-size: 12px !important; color: #000 !important; }
+              #billingTable th { background-color: #f8fafc !important; -webkit-print-color-adjust: exact; }
+            </style>
+          </head>
+          <body class="p-2">
+            ${cloned.outerHTML}
+          </body>
+          </html>
+        `;
+        printHtmlInIsolatedIframe(printHtml, 'a4', 'landscape');
       },
 
       exportImage() {
@@ -3363,7 +3390,14 @@
       const text = el.innerText || '';
       document.getElementById('wordDocStatsInfo').innerText = `字数: ${text.length} | 字符: ${text.replace(/\s/g, '').length} | 段落: ${text.split('\n').filter(l=>l.trim()).length}`;
     }
-    function printCurrentWordDoc() { window.print(); }
+    function printCurrentWordDoc() {
+      const docContent = document.getElementById('wordEditorDoc')?.innerHTML || '';
+      printHtmlInIsolatedIframe(`
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', serif; line-height: 1.8; font-size: 15px; color: #000;">
+          ${docContent}
+        </div>
+      `, 'a4', 'portrait');
+    }
 
     /* Excel Formula Helpers & CSV Export */
     function insertExcelFormulaTemplate(fn) {
@@ -5127,6 +5161,106 @@
           ctx.stroke();
         }
       }
+    }
+
+    function printTemplatePaperAction() {
+      const isMobile = detectIsMobileDevice();
+      const cvs = isMobile ? document.getElementById('templatePaperCanvasMob') : document.getElementById('templatePaperCanvasPC');
+      if (!cvs || !cvs.width) return showToast('暂无可打印的作业纸');
+
+      showToast('正在准备专属作业纸高清打印预览...');
+      const paperSize = state.tplConfig.paperSize || 'a4';
+      const imgDataUrl = cvs.toDataURL('image/png');
+
+      const printHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>作业纸与字帖打印 - ${paperSize.toUpperCase()}</title>
+          <style>
+            @page {
+              size: ${paperSize.toUpperCase()} portrait;
+              margin: 0;
+            }
+            html, body {
+              margin: 0;
+              padding: 0;
+              width: 100%;
+              height: 100%;
+              background: #fff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+              display: block;
+              page-break-inside: avoid;
+            }
+          </style>
+        </head>
+        <body>
+          <img src="${imgDataUrl}" />
+        </body>
+        </html>
+      `;
+
+      printHtmlInIsolatedIframe(printHtml, paperSize, 'portrait');
+    }
+
+    function printHtmlInIsolatedIframe(fullHtml, paperSize = 'a4', orientation = 'portrait') {
+      let iframe = document.getElementById('isolatedPrintIframe');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'isolatedPrintIframe';
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '0';
+        iframe.style.height = '0';
+        iframe.style.border = 'none';
+        iframe.style.visibility = 'hidden';
+        document.body.appendChild(iframe);
+      }
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      if (fullHtml.includes('<!DOCTYPE html>')) {
+        doc.write(fullHtml);
+      } else {
+        doc.write(`
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>打印预览</title>
+            <style>
+              @page {
+                size: ${paperSize.toUpperCase()} ${orientation};
+                margin: 8mm;
+              }
+              html, body {
+                margin: 0;
+                padding: 0;
+                background: #fff;
+                color: #000;
+              }
+              * { box-sizing: border-box; }
+            </style>
+          </head>
+          <body>
+            ${fullHtml}
+          </body>
+          </html>
+        `);
+      }
+      doc.close();
+
+      setTimeout(() => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      }, 250);
     }
 
     function exportTemplateToPDF() {
