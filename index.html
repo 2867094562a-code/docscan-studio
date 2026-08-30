@@ -38,6 +38,47 @@
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    
+    html, body {
+      height: 100%;
+      height: 100dvh;
+      min-height: -webkit-fill-available;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    * {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Universal Smooth Mobile Touch Scroll Engine */
+    .touch-scroll-panel {
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior-y: contain !important;
+      touch-action: pan-y !important;
+      min-height: 0 !important;
+      flex: 1 1 0% !important;
+    }
+
+    .canvas-scroll-panel {
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior: contain !important;
+      touch-action: pan-x pan-y pinch-zoom !important;
+      min-height: 0 !important;
+      flex: 1 1 0% !important;
+    }
+
+    /* High-DPI Mobile Canvas Auto-Scaling */
+    @media screen and (max-width: 640px) {
+      .app-module {
+        height: calc(100dvh - 3.5rem - 3.5rem);
+        min-height: 0 !important;
+      }
+    }
+
     * { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif; box-sizing: border-box; }
     
     /* Prevent mobile browser auto-zoom on input focus */
@@ -199,7 +240,7 @@
     body.capturing .bill-container { box-shadow: none !important; border-radius: 0 !important; }
   </style>
 </head>
-<body class="h-full bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden select-none pb-14 xl:pb-0" onclick="closeAllContextMenus()">
+<body class="h-full bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden pb-14 xl:pb-0" onclick="closeAllContextMenus()">
 
   <!-- ==================== TOP NAVIGATION HEADER ==================== -->
   <header class="h-14 sm:h-16 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between z-30 shrink-0 shadow-sm">
@@ -307,7 +348,7 @@
   <!-- =========================================================================
        MODULE 0: HOME PORTAL
        ========================================================================= -->
-  <div id="moduleHome" class="app-module flex-1 flex-col overflow-y-auto p-3 sm:p-6 lg:p-8">
+  <div id="moduleHome" class="app-module flex-1 min-h-0 flex-col overflow-y-auto touch-scroll-panel p-3 sm:p-6 lg:p-8">
     <div class="max-w-6xl w-full mx-auto space-y-4 sm:space-y-6">
       
       <!-- Hero Banner with HyperOS Fluid Ambient Glow & Win10 Acrylic Polish -->
@@ -510,7 +551,7 @@
   <!-- =========================================================================
        MODULE 6: SMART BILLING & INVOICING STUDIO (NEW FEATURE)
        ========================================================================= -->
-  <div id="moduleBilling" class="app-module flex-1 flex-col overflow-y-auto p-3 sm:p-6 lg:p-8 hidden">
+  <div id="moduleBilling" class="app-module flex-1 min-h-0 flex-col overflow-y-auto touch-scroll-panel p-3 sm:p-6 lg:p-8 hidden">
     <div class="max-w-6xl w-full mx-auto space-y-4">
       
       <!-- Top Action Toolbar (Screen Only) -->
@@ -1156,7 +1197,7 @@
   <!-- =========================================================================
        MODULE 2: FORMAT CONVERTER HUB (全能格式互转中心 - 支持文件直接拖放与在线免存查看)
        ========================================================================= -->
-  <div id="moduleConvert" class="app-module flex-1 p-3.5 sm:p-6 overflow-y-auto hidden">
+  <div id="moduleConvert" class="app-module flex-1 min-h-0 p-3.5 sm:p-6 overflow-y-auto touch-scroll-panel hidden">
     <div class="max-w-6xl mx-auto space-y-4">
       <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div class="flex items-center space-x-3">
@@ -1481,7 +1522,7 @@
   <!-- =========================================================================
        MODULE 3: INTEGRATED VISUAL & SCAN & SEAL STUDIO (扫描与抠图完全独立)
        ========================================================================= -->
-  <div id="moduleScan" class="app-module flex-1 flex flex-col sm:flex-row overflow-hidden relative hidden">
+  <div id="moduleScan" class="app-module flex-1 min-h-0 flex flex-col sm:flex-row overflow-hidden relative hidden">
     <!-- Sidebar Controls -->
     <div class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3.5 flex flex-col shrink-0 overflow-y-auto">
       
@@ -1612,7 +1653,7 @@
   <!-- =========================================================================
        MODULE 4: TEMPLATES STUDIO (18+ 作业纸与字帖描红库 - 移动端与PC全端极速改字与预览)
        ========================================================================= -->
-  <div id="moduleTemplates" class="app-module flex-1 flex-col sm:flex-row overflow-hidden hidden">
+  <div id="moduleTemplates" class="app-module flex-1 min-h-0 flex flex-col sm:flex-row overflow-hidden hidden">
     
     <!-- Mobile Top Navigation Tab Bar (Mobile Only: Screen < 640px) -->
     <div class="sm:hidden flex items-center justify-between p-2.5 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shrink-0">
@@ -1630,7 +1671,7 @@
     </div>
 
     <!-- Left Sidebar: Configuration Controls Panel (Smooth Full-Height Scroll on Mobile) -->
-    <div id="tplSidebarPanel" class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3 flex flex-col flex-1 sm:flex-initial overflow-y-auto pb-28 sm:pb-6 sm:!flex">
+    <div id="tplSidebarPanel" class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3 flex flex-col flex-1 min-h-0 sm:flex-initial overflow-y-auto touch-scroll-panel pb-32 sm:pb-6 sm:!flex">
       <div class="flex items-center justify-between">
         <span class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-1.5">
           <i data-lucide="grid" class="w-4 h-4 text-teal-500"></i><span>18+ 作业纸与字帖模板库</span>
@@ -1833,11 +1874,11 @@
     </div>
 
     <!-- Right Viewport: Paper Canvas Studio (Supports Mobile Responsive Full-width Pinch & Pan) -->
-    <div id="tplCanvasContainer" class="hidden sm:!flex flex-1 p-2.5 sm:p-4 overflow-auto bg-slate-200/70 dark:bg-slate-950 flex flex-col items-center justify-start relative">
+    <div id="tplCanvasContainer" class="hidden sm:!flex flex-1 min-h-0 p-2.5 sm:p-4 overflow-y-auto overflow-x-auto canvas-scroll-panel bg-slate-200/70 dark:bg-slate-950 flex flex-col items-center justify-start relative pb-32 sm:pb-6">
       
-      <!-- Mobile Floating Preview Ribbon with Quick Edit Button -->
-      <div class="sm:hidden w-full mb-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur border border-slate-200 dark:border-slate-800 p-2 rounded-xl shadow-md flex items-center justify-between shrink-0">
-        <div class="flex items-center space-x-1.5">
+      <!-- Mobile Floating Preview Ribbon with Quick Edit & High-DPI Zoom -->
+      <div class="sm:hidden w-full mb-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur border border-slate-200 dark:border-slate-800 p-2 rounded-xl shadow-md flex items-center justify-between shrink-0 z-10 sticky top-0">
+        <div class="flex items-center space-x-1">
           <button onclick="switchTplMobileTab('config')" class="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold flex items-center space-x-1">
             <i data-lucide="sliders" class="w-3.5 h-3.5"></i><span>参数</span>
           </button>
@@ -1845,10 +1886,16 @@
             <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>✏️ 快速改字</span>
           </button>
         </div>
-        <span class="text-[11px] font-bold text-teal-700 dark:text-teal-300 truncate max-w-[110px]" id="tplMobileCurrentBadge">300 DPI 实时字帖</span>
-        <button onclick="exportTemplateToPDF()" class="px-2.5 py-1.5 bg-teal-600 text-white rounded-lg text-xs font-bold shadow flex items-center space-x-1">
-          <i data-lucide="download" class="w-3.5 h-3.5"></i><span>下载PDF</span>
-        </button>
+        
+        <div class="flex items-center space-x-1">
+          <button onclick="adjustTplPreviewZoom(0.85)" title="缩小" class="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold flex items-center justify-center">-</button>
+          <button onclick="resetTplPreviewZoom()" title="适合屏幕" class="px-1.5 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-[10px] font-bold flex items-center justify-center" id="tplZoomLabel">适中</button>
+          <button onclick="adjustTplPreviewZoom(1.15)" title="放大" class="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold flex items-center justify-center">+</button>
+          <span class="hidden" id="tplMobileCurrentBadge"></span>
+          <button onclick="exportTemplateToPDF()" class="px-2 py-1.5 bg-teal-600 text-white rounded-lg text-xs font-bold shadow flex items-center space-x-1 ml-1">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i><span>导出</span>
+          </button>
+        </div>
       </div>
 
       <div id="tplPaperWrapper" class="shadow-2xl bg-white max-w-full rounded-sm overflow-hidden flex items-center justify-center">
@@ -1891,7 +1938,7 @@
   <!-- =========================================================================
        MODULE 5: CONTRACT DIFF & SUPER TOOLBOX
        ========================================================================= -->
-  <div id="moduleTools" class="app-module flex-1 flex-col overflow-y-auto p-3 sm:p-6 lg:p-8 hidden">
+  <div id="moduleTools" class="app-module flex-1 min-h-0 flex-col overflow-y-auto touch-scroll-panel p-3 sm:p-6 lg:p-8 hidden">
     <div class="max-w-5xl w-full mx-auto space-y-4 sm:space-y-6">
       
       <!-- Section 1: Diff -->
@@ -4196,6 +4243,30 @@
     }
 
     /* Template & Calligraphy Tracing Canvas Studio */
+    state.tplPreviewZoom = 1.0;
+
+    function adjustTplPreviewZoom(factor) {
+      state.tplPreviewZoom = Math.max(0.5, Math.min(3.0, state.tplPreviewZoom * factor));
+      const wrapper = document.getElementById('tplPaperWrapper');
+      if (wrapper) {
+        wrapper.style.transform = `scale(${state.tplPreviewZoom})`;
+        wrapper.style.transformOrigin = 'top center';
+        wrapper.style.transition = 'transform 0.2s ease-out';
+      }
+      const lbl = document.getElementById('tplZoomLabel');
+      if (lbl) lbl.innerText = `${Math.round(state.tplPreviewZoom * 100)}%`;
+    }
+
+    function resetTplPreviewZoom() {
+      state.tplPreviewZoom = 1.0;
+      const wrapper = document.getElementById('tplPaperWrapper');
+      if (wrapper) {
+        wrapper.style.transform = 'scale(1)';
+      }
+      const lbl = document.getElementById('tplZoomLabel');
+      if (lbl) lbl.innerText = '适中';
+    }
+
     state.tplMobileTab = 'config'; // 'config' | 'preview'
 
     function switchTplMobileTab(tab) {
