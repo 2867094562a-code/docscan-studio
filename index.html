@@ -2645,6 +2645,7 @@
 
       save() { localStorage.setItem(BILLING_CONFIG.stateKey, JSON.stringify(this.state)); },
       saveDict() { localStorage.setItem(BILLING_CONFIG.dictKey, JSON.stringify(this.priceDict)); },
+      calc() { this.updateTotalCalc(); },
 
       createRow() { return { id: Date.now().toString(36) + Math.random().toString(36).substr(2), style: '', price: '', remark: '', data: {} }; },
 
@@ -5334,42 +5335,56 @@
         document.body.appendChild(iframe);
       }
 
-      const doc = iframe.contentWindow.document;
-      doc.open();
-      if (fullHtml.includes('<!DOCTYPE html>')) {
-        doc.write(fullHtml);
-      } else {
-        doc.write(`
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>打印预览</title>
-            <style>
-              @page {
-                size: ${paperSize.toUpperCase()} ${orientation};
-                margin: 8mm;
-              }
-              html, body {
-                margin: 0;
-                padding: 0;
-                background: #fff;
-                color: #000;
-              }
-              * { box-sizing: border-box; }
-            </style>
-          </head>
-          <body>
-            ${fullHtml}
-          </body>
-          </html>
-        `);
-      }
-      doc.close();
+      try {
+        const win = iframe.contentWindow || iframe.contentDocument?.defaultView;
+        if (!win || !win.document) {
+          window.print();
+          return;
+        }
+        const doc = win.document;
+        doc.open();
+        if (fullHtml.includes('<!DOCTYPE html>')) {
+          doc.write(fullHtml);
+        } else {
+          doc.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>打印预览</title>
+              <style>
+                @page {
+                  size: ${paperSize.toUpperCase()} ${orientation};
+                  margin: 8mm;
+                }
+                html, body {
+                  margin: 0;
+                  padding: 0;
+                  background: #fff;
+                  color: #000;
+                }
+                * { box-sizing: border-box; }
+              </style>
+            </head>
+            <body>
+              ${fullHtml}
+            </body>
+            </html>
+          `);
+        }
+        doc.close();
 
-      setTimeout(() => {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-      }, 250);
+        setTimeout(() => {
+          try {
+            win.focus();
+            win.print();
+          } catch (e) {
+            window.print();
+          }
+        }, 250);
+      } catch (err) {
+        console.warn('Iframe print fallback to window.print', err);
+        window.print();
+      }
     }
 
     function exportTemplateToPDF() {
