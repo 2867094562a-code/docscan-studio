@@ -1651,131 +1651,340 @@
   </div>
 
   <!-- =========================================================================
-       MODULE 4: TEMPLATES STUDIO (18+ 作业纸与字帖描红库 - 移动端与PC全端极速改字与预览)
+       MODULE 4: TEMPLATES STUDIO (PC 端与移动端基于 UA 完全独立隔离界面)
        ========================================================================= -->
-  <div id="moduleTemplates" class="app-module flex-1 min-h-0 flex flex-col sm:flex-row overflow-hidden hidden">
+  <div id="moduleTemplates" class="app-module flex-1 min-h-0 overflow-hidden hidden flex-col">
     
-    <!-- Mobile Top Navigation Tab Bar (Mobile Only: Screen < 640px) -->
-    <div class="sm:hidden flex items-center justify-between p-2.5 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shrink-0">
-      <div class="flex p-0.5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 space-x-1 flex-1 mr-2 shadow-sm">
-        <button id="btnTplTabConfig" onclick="switchTplMobileTab('config')" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-teal-600 text-white shadow-sm transition flex items-center justify-center space-x-1">
-          <i data-lucide="sliders" class="w-3.5 h-3.5"></i><span>⚙️ 调节参数</span>
-        </button>
-        <button id="btnTplTabPreview" onclick="switchTplMobileTab('preview')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition flex items-center justify-center space-x-1">
-          <i data-lucide="eye" class="w-3.5 h-3.5 text-teal-500"></i><span>👁️ 查看字帖预览</span>
-        </button>
-      </div>
-      <button onclick="exportTemplateToPDF()" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow flex items-center space-x-1 shrink-0">
-        <i data-lucide="download" class="w-3.5 h-3.5"></i><span>导出PDF</span>
-      </button>
-    </div>
-
-    <!-- Left Sidebar: Configuration Controls Panel (Smooth Full-Height Scroll on Mobile) -->
-    <div id="tplSidebarPanel" class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3 flex flex-col flex-1 min-h-0 sm:flex-initial overflow-y-auto touch-scroll-panel pb-32 sm:pb-6 sm:!flex">
-      <div class="flex items-center justify-between">
-        <span class="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-1.5">
-          <i data-lucide="grid" class="w-4 h-4 text-teal-500"></i><span>18+ 作业纸与字帖模板库</span>
-        </span>
-        <button onclick="switchTplMobileTab('preview')" class="sm:hidden px-2.5 py-1 bg-teal-50 text-teal-600 border border-teal-200 rounded-lg text-[11px] font-bold flex items-center space-x-1">
-          <span>看预览</span><i data-lucide="arrow-right" class="w-3 h-3"></i>
-        </button>
-      </div>
-
-      <!-- 1. Template Type Selector -->
-      <div class="space-y-1">
-        <label class="text-[11px] font-bold text-slate-500">1. 作业纸与书法格类型</label>
-        <select id="tplTypeSelect" onchange="onTplTypeChange(this.value)" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-bold">
-          <option value="tianzi">🀄 拼音田字格 (拼音在上+汉字在下)</option>
-          <option value="rizi">🔢 幼小衔接日字格 (阿拉伯数字0~9书写规范格)</option>
-          <option value="pure_tianzi">🔲 经典田字格 (汉字规范书写)</option>
-          <option value="mizi" selected>✳️ 经典米字格 (书法楷书字帖)</option>
-          <option value="huigong">⭕ 回宫格 / 回字格 (间架结构)</option>
-          <option value="jiugong">📐 九宫格 (书法结构重心练习)</option>
-          <option value="hengshui">✍️ 衡水体/斜体英文练习格 (68°)</option>
-          <option value="english4">🔤 英语四线三格 (字母单词)</option>
-          <option value="cornell">📖 康奈尔笔记纸 (经典三栏)</option>
-          <option value="cuoti">📝 错题整理本 (题目与订正分析)</option>
-          <option value="grid">▦ 方格文稿纸 (20x20 作文纸)</option>
-          <option value="music">🎼 音乐五线谱 (全页铺满)</option>
-          <option value="guitar">🎸 吉他六线谱 TAB (全页铺满)</option>
-        </select>
-      </div>
-
-      <!-- 2. Paper Size Selector (A4, A3, A5) -->
-      <div class="space-y-1">
-        <label class="text-[11px] font-bold text-slate-500">2. 纸张规格尺寸 (A3 / A4 / A5 比例统一缩放)</label>
-        <select id="tplPaperSizeSelect" onchange="onTplPaperSizeChange(this.value)" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-bold">
-          <option value="a4" selected>📄 A4 标准规格 (210 × 297 mm · 矢量排版)</option>
-          <option value="a3">📰 A3 大幅面规格 (297 × 420 mm · 试卷/大字帖)</option>
-          <option value="a5">📑 A5 便携小本规格 (148 × 210 mm · 记事练字)</option>
-        </select>
-      </div>
-
-      <!-- 3. Rows & Columns Customization with Auto-Recommendation -->
-      <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
-        <div class="flex items-center justify-between">
-          <label class="text-[11px] font-bold text-indigo-700 dark:text-indigo-300 flex items-center space-x-1">
-            <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i><span>3. 自定义行列 & 智能互推</span>
-          </label>
-          <label class="flex items-center space-x-1 text-[10px] text-indigo-600 dark:text-indigo-400 cursor-pointer font-bold select-none" title="开启后修改列数会自动推荐并计算适宜的行数，反之亦然">
-            <input type="checkbox" id="tplAutoAspectLock" checked class="rounded text-indigo-600">
-            <span>⚡ 智能联动</span>
-          </label>
+    <!-- ==================== 1. 🖥️ PC 电脑端专属独立工作台 (Desktop Studio) ==================== -->
+    <div id="tplPcView" class="hidden md:flex flex-1 min-h-0 flex-row overflow-hidden w-full h-full">
+      
+      <!-- PC Left Sidebar Panel (380px fixed, smooth scroll) -->
+      <div class="w-[380px] shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-3.5 flex flex-col overflow-y-auto touch-scroll-panel">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+          <span class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
+            <i data-lucide="grid" class="w-4 h-4 text-teal-500"></i><span>18+ 作业纸与字帖模板库 (PC专业版)</span>
+          </span>
+          <span class="text-[10px] px-2 py-0.5 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold rounded-full border border-teal-200 dark:border-teal-800">300 DPI 矢量排版</span>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <span class="text-[10px] text-slate-400 font-bold">每行列数 (Cols)：</span>
-            <input type="number" id="tplColsInput" min="1" max="50" value="8" oninput="onTplColsChange(this.value)" class="w-full p-1.5 border rounded-lg text-xs font-mono font-bold bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+
+        <!-- 1. Template Type Selector -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-500">1. 作业纸与书法格类型</label>
+          <select id="tplTypeSelectPC" onchange="syncTplConfig('type', this.value)" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-bold">
+            <option value="tianzi">🀄 拼音田字格 (拼音在上+汉字在下)</option>
+            <option value="rizi">🔢 幼小衔接日字格 (阿拉伯数字0~9书写规范格)</option>
+            <option value="pure_tianzi">🔲 经典田字格 (汉字规范书写)</option>
+            <option value="mizi" selected>✳️ 经典米字格 (书法楷书字帖)</option>
+            <option value="huigong">⭕ 回宫格 / 回字格 (间架结构)</option>
+            <option value="jiugong">📐 九宫格 (书法结构重心练习)</option>
+            <option value="hengshui">✍️ 衡水体/斜体英文练习格 (68°)</option>
+            <option value="english4">🔤 英语四线三格 (字母单词)</option>
+            <option value="cornell">📖 康奈尔笔记纸 (经典三栏)</option>
+            <option value="cuoti">📝 错题整理本 (题目与订正分析)</option>
+            <option value="grid">▦ 方格文稿纸 (20x20 作文纸)</option>
+            <option value="music">🎼 音乐五线谱 (全页铺满)</option>
+            <option value="guitar">🎸 吉他六线谱 TAB (全页铺满)</option>
+          </select>
+        </div>
+
+        <!-- 2. Paper Size Selector (A4, A3, A5) -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-500">2. 纸张规格尺寸 (比例统一缩放)</label>
+          <select id="tplPaperSizeSelectPC" onchange="syncTplConfig('paperSize', this.value)" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-bold">
+            <option value="a4" selected>📄 A4 标准规格 (210 × 297 mm · 默认标准)</option>
+            <option value="a3">📰 A3 大幅面规格 (297 × 420 mm · 试卷/大字帖)</option>
+            <option value="a5">📑 A5 便携小本规格 (148 × 210 mm · 记事练字)</option>
+          </select>
+        </div>
+
+        <!-- 3. Rows & Columns Customization -->
+        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-indigo-700 dark:text-indigo-300 flex items-center space-x-1">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i><span>3. 自定义行列 & 智能互推</span>
+            </label>
+            <label class="flex items-center space-x-1 text-[10px] text-indigo-600 dark:text-indigo-400 cursor-pointer font-bold select-none">
+              <input type="checkbox" id="tplAutoAspectLockPC" checked class="rounded text-indigo-600">
+              <span>⚡ 智能联动</span>
+            </label>
           </div>
-          <div>
-            <span class="text-[10px] text-slate-400 font-bold">每页行数 (Rows)：</span>
-            <input type="number" id="tplRowsInput" min="1" max="60" value="12" oninput="onTplRowsChange(this.value)" class="w-full p-1.5 border rounded-lg text-xs font-mono font-bold bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100">
-          </div>
-        </div>
-        <div class="flex justify-between items-center text-[10px] text-slate-400 pt-0.5">
-          <span id="tplGridSizeTips">单格尺寸: 自动等比</span>
-          <button onclick="resetTplRecommendedGrid()" class="text-indigo-600 dark:text-indigo-400 hover:underline font-bold">🔄 恢复推荐行列</button>
-        </div>
-      </div>
-
-      <!-- 4. Tracing Watermark Customization (Text Input Placed Prominently at Top!) -->
-      <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
-        <div class="flex items-center justify-between">
-          <label class="text-[11px] font-bold text-teal-700 dark:text-teal-300 flex items-center space-x-1">
-            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>4. 字帖描红临摹水印 (核心文字与样式)</span>
-          </label>
-          <input type="checkbox" id="tplTraceEnabled" checked onchange="renderPaperTemplateCanvas()" class="rounded text-teal-600">
-        </div>
-
-        <!-- Prominent Watermark Text Area & Preset Buttons at TOP of Section 4 -->
-        <div class="p-2 bg-white dark:bg-slate-900 rounded-xl border border-teal-200 dark:border-teal-900/60 space-y-1.5 shadow-sm">
-          <div class="flex justify-between items-center">
-            <span class="text-[11px] font-bold text-teal-800 dark:text-teal-300 flex items-center space-x-1">
-              <i data-lucide="pen-tool" class="w-3.5 h-3.5 text-teal-500"></i><span>临摹字帖文字内容：</span>
-            </span>
-            <div class="flex flex-wrap gap-1 text-[10px]">
-              <button onclick="setTplPresetText('数字')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded font-bold hover:underline">0~9数字</button>
-              <button onclick="setTplPresetText('千字文')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded font-bold hover:underline">千字文</button>
-              <button onclick="setTplPresetText('三字经')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded font-bold hover:underline">三字经</button>
-              <button onclick="setTplPresetText('古诗')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded font-bold hover:underline">静夜思</button>
-              <button onclick="setTplPresetText('英文')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded font-bold hover:underline">English</button>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">每行列数 (Cols)：</span>
+              <input type="number" id="tplColsInputPC" min="1" max="50" value="8" oninput="syncTplConfig('cols', this.value)" class="w-full p-1.5 border rounded-lg text-xs font-mono font-bold bg-white dark:bg-slate-900">
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">每页行数 (Rows)：</span>
+              <input type="number" id="tplRowsInputPC" min="1" max="60" value="12" oninput="syncTplConfig('rows', this.value)" class="w-full p-1.5 border rounded-lg text-xs font-mono font-bold bg-white dark:bg-slate-900">
             </div>
           </div>
-          <textarea id="tplTraceText" rows="3" oninput="syncTplTextInputs(this.value)" class="w-full p-2 border rounded-lg text-xs bg-slate-50 dark:bg-slate-950 resize-none font-mono focus:border-teal-500 focus:bg-white dark:focus:bg-slate-900 outline-none leading-relaxed" placeholder="输入自定义汉字、数字或英文句子...">天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳</textarea>
-          <div class="flex items-center justify-between text-[10px] text-slate-500">
-            <span>字帖循环铺满整页：</span>
-            <input type="checkbox" id="tplRepeatFill" checked onchange="renderPaperTemplateCanvas()" class="rounded text-teal-600">
+          <div class="flex justify-between items-center text-[10px] text-slate-400 pt-0.5">
+            <span id="tplGridSizeTipsPC">单格尺寸: 自动等比</span>
+            <button onclick="resetTplRecommendedGrid()" class="text-indigo-600 dark:text-indigo-400 hover:underline font-bold">🔄 恢复推荐行列</button>
           </div>
         </div>
 
-        <!-- Master & System Fonts Selector -->
-        <div>
-          <div class="flex justify-between items-center mb-1">
-            <span class="text-[10px] text-slate-400 font-bold">临摹字体 (大师真迹 / 本机系统字库)：</span>
-            <button onclick="loadPcLocalFontsForTemplates()" class="text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline">🔍 读取电脑本机字体</button>
+        <!-- 4. Watermark Tracing Customization -->
+        <div class="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-teal-700 dark:text-teal-300 flex items-center space-x-1">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>4. 字帖描红临摹水印 (文字与字体)</span>
+            </label>
+            <input type="checkbox" id="tplTraceEnabledPC" checked onchange="syncTplConfig('traceEnabled', this.checked)" class="rounded text-teal-600">
           </div>
-          <select id="tplFontSelect" onchange="renderPaperTemplateCanvas()" class="w-full p-1.5 border rounded-lg text-xs bg-white dark:bg-slate-900 font-medium">
-            <optgroup label="👑 经典书法名家大师真迹 (手机/PC全端真实渲染)">
+
+          <div class="p-2 bg-white dark:bg-slate-900 rounded-xl border border-teal-200 dark:border-teal-900/60 space-y-1.5 shadow-sm">
+            <div class="flex justify-between items-center">
+              <span class="text-[11px] font-bold text-teal-800 dark:text-teal-300">临摹字帖文字内容：</span>
+              <div class="flex flex-wrap gap-1 text-[10px]">
+                <button onclick="setTplPresetText('数字')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 rounded font-bold hover:underline">0~9数字</button>
+                <button onclick="setTplPresetText('千字文')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 rounded font-bold hover:underline">千字文</button>
+                <button onclick="setTplPresetText('三字经')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 rounded font-bold hover:underline">三字经</button>
+                <button onclick="setTplPresetText('古诗')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 rounded font-bold hover:underline">静夜思</button>
+                <button onclick="setTplPresetText('英文')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 rounded font-bold hover:underline">English</button>
+              </div>
+            </div>
+            <textarea id="tplTraceTextPC" rows="3" oninput="syncTplConfig('text', this.value)" class="w-full p-2 border rounded-lg text-xs bg-slate-50 dark:bg-slate-950 resize-none font-mono focus:border-teal-500 outline-none leading-relaxed" placeholder="输入自定义汉字、数字或英文句子...">天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳</textarea>
+            <div class="flex items-center justify-between text-[10px] text-slate-500">
+              <span>字帖循环铺满整页：</span>
+              <input type="checkbox" id="tplRepeatFillPC" checked onchange="syncTplConfig('repeatFill', this.checked)" class="rounded text-teal-600">
+            </div>
+          </div>
+
+          <!-- Master & System Fonts Selector -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-[10px] text-slate-400 font-bold">临摹字体 (大师真迹 / 本机字库)：</span>
+              <button onclick="loadPcLocalFontsForTemplates()" class="text-[10px] text-indigo-600 dark:text-indigo-400 hover:underline">🔍 读取电脑本机字体</button>
+            </div>
+            <select id="tplFontSelectPC" onchange="syncTplConfig('font', this.value)" class="w-full p-1.5 border rounded-lg text-xs bg-white dark:bg-slate-900 font-medium">
+              <optgroup label="👑 经典书法名家大师真迹 (全端真实渲染)">
+                <option value="'Ma Shan Zheng', 'STKaiti', 'KaiTi', serif" selected>👑 盛唐楷书·颜筋柳骨风 (马善政真迹楷书)</option>
+                <option value="'Zhi Mang Xing', 'WangXizhi', 'Xingkai', 'STXingkai', cursive">👑 王羲之《兰亭序》行楷风 (智芒星行书)</option>
+                <option value="'Long Cang', 'Xingkai', cursive">👑 狂草大写意·行草气韵 (龙苍行草体)</option>
+                <option value="'ZCOOL XiaoWei', 'STKaiti', 'KaiTi', serif">👑 宋徽宗瘦金体风格 (站酷小薇体)</option>
+                <option value="'Dancing Script', 'Caveat', 'Segoe Script', cursive">👑 衡水体高考英语手写斜体 (Dancing Script)</option>
+                <option value="'Caveat', 'Segoe Script', cursive">👑 现代自然手写连笔体 (Caveat Hand)</option>
+                <option value="'ZCOOL KuaiLe', 'Yuanti SC', '幼圆', sans-serif">👑 幼圆可爱卡通书写体 (站酷快乐体)</option>
+                <option value="'Noto Serif SC', 'SimSun', 'Songti SC', serif">👑 文人雕版大宋体 (思源宋体精修)</option>
+                <option value='"KaiTi", "STKaiti", "楷体", serif'>👑 标准教育部规范正楷 (标准楷体)</option>
+              </optgroup>
+              <optgroup label="🖥️ PC 本机电脑系统常用字体 (按名称调用)" id="tplLocalFontsGroupPC">
+                <option value='"Microsoft YaHei", "微软雅黑", sans-serif'>微软雅黑 (Microsoft YaHei)</option>
+                <option value='"SimSun", "宋体", serif'>宋体 (SimSun)</option>
+                <option value='"SimHei", "黑体", sans-serif'>黑体 (SimHei)</option>
+                <option value='"FangSong", "仿宋", serif'>仿宋 (FangSong)</option>
+                <option value='Arial, sans-serif'>Arial (现代规范英文)</option>
+                <option value='"Times New Roman", serif'>Times New Roman (经典衬线)</option>
+                <option value='"Segoe UI", sans-serif'>Segoe UI (极简界面字体)</option>
+                <option value='Georgia, serif'>Georgia (典雅英文报刊体)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- Font Weight & Style -->
+          <div class="grid grid-cols-2 gap-1.5">
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">笔画粗细 / 浓淡：</span>
+              <select id="tplFontWeightPC" onchange="syncTplConfig('weight', this.value)" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+                <option value="100">100 (极细纤巧)</option>
+                <option value="300">300 (清秀细笔)</option>
+                <option value="400" selected>400 (标准适中)</option>
+                <option value="600">600 (端庄加粗)</option>
+                <option value="700">700 (厚重遒劲)</option>
+                <option value="900">900 (苍劲特粗)</option>
+              </select>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">描红样式：</span>
+              <select id="tplTraceStylePC" onchange="syncTplConfig('traceStyle', this.value)" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+                <option value="solid" selected>🔴 饱满实心填墨</option>
+                <option value="outline">⭕ 空心双钩描边</option>
+                <option value="dashed">〰️ 虚线引笔描线</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Color & Opacity -->
+          <div class="grid grid-cols-2 gap-1.5">
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">描红字迹颜色：</span>
+              <select id="tplTraceColorPC" onchange="syncTplConfig('traceColor', this.value)" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+                <option value="#dc2626" selected>🔴 朱砂红 (古法描红)</option>
+                <option value="#64748b">⚪ 铅灰淡印 (临摹仿影)</option>
+                <option value="#0f172a">⚫ 墨黑如漆 (正楷习字)</option>
+                <option value="#2563eb">🔵 靛蓝墨水 (钢笔练习)</option>
+                <option value="#059669">🟢 竹青雅绿 (护眼习字)</option>
+                <option value="#7c3aed">🟣 紫藤雅韵 (古典雅致)</option>
+                <option value="#d97706">🟠 琥珀沉香 (古籍泛黄)</option>
+              </select>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">水印透明度：</span>
+              <select id="tplTraceOpacityPC" onchange="syncTplConfig('traceOpacity', this.value)" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+                <option value="0.18">18% (隐约如烟)</option>
+                <option value="0.30">30% (清浅淡印)</option>
+                <option value="0.45" selected>45% (标准描红)</option>
+                <option value="0.65">65% (清晰浓墨)</option>
+                <option value="0.90">90% (深浓对比)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Paper Grid Lines Color -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-600 dark:text-slate-300">5. 作业纸网格线条颜色 (独立颜色)</label>
+          <select id="tplGridColorPC" onchange="syncTplConfig('gridColor', this.value)" class="w-full p-1.5 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-medium">
+            <option value="#dc2626" selected>🔴 经典朱砂红 (书法红格)</option>
+            <option value="#16a34a">🟢 墨绿护眼色 (标准作业本)</option>
+            <option value="#0284c7">🔵 典雅青蓝色 (高考答题卡)</option>
+            <option value="#475569">⚫ 沉稳铅灰黑 (素描极简)</option>
+            <option value="#9333ea">🟣 紫罗兰印格 (艺术乐谱)</option>
+            <option value="#ca8a04">🟠 暖黄护眼格 (柔光防疲劳)</option>
+          </select>
+        </div>
+
+        <button onclick="exportTemplateToPDF()" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5 transition active:scale-95">
+          <i data-lucide="download" class="w-4 h-4"></i><span>导出 300 DPI 高清作业纸 PDF</span>
+        </button>
+      </div>
+
+      <!-- PC Right Viewport (Centered Realistic Physical Paper Sheet, Standard 720px Width) -->
+      <div class="flex-1 min-h-0 bg-slate-100 dark:bg-slate-950 p-6 overflow-y-auto flex flex-col items-center justify-start">
+        
+        <!-- PC Top Floating Control Ribbon -->
+        <div class="w-full max-w-[740px] mb-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2.5 rounded-2xl shadow-sm flex items-center justify-between shrink-0">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-teal-500 animate-pulse"></span>
+            <span class="text-xs font-bold text-slate-800 dark:text-slate-200" id="tplPcPaperBadge">经典米字格 · A4 标准版 (210×297mm) · 300 DPI</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="setTplPcPaperZoom(0.65)" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-medium hover:bg-slate-200">65%</button>
+            <button onclick="setTplPcPaperZoom(0.85)" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-medium hover:bg-slate-200">85%</button>
+            <button onclick="setTplPcPaperZoom(1.0)" class="px-2.5 py-1 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold border border-teal-200 dark:border-teal-800 rounded-lg text-xs">100% 标准</button>
+            <button onclick="window.print()" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg text-xs font-bold flex items-center space-x-1">
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i><span>打印</span>
+            </button>
+            <button onclick="exportTemplateToPDF()" class="px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold shadow flex items-center space-x-1">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i><span>下载PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Centered Realistic Physical Paper Container on PC -->
+        <div id="tplPaperWrapperPC" class="shadow-2xl bg-white rounded-sm overflow-hidden flex items-center justify-center transition-transform duration-200" style="width: 720px; max-width: 100%; box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.25);">
+          <canvas id="templatePaperCanvasPC" width="2480" height="3508" class="w-full h-auto block"></canvas>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==================== 2. 📱 手机端专属独立工作台 (Mobile Studio) ==================== -->
+    <div id="tplMobileView" class="flex md:hidden flex-1 min-h-0 flex-col overflow-hidden w-full h-full">
+      
+      <!-- Mobile Top Segmented Tab Switcher -->
+      <div class="flex items-center justify-between p-2.5 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shrink-0">
+        <div class="flex p-0.5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 space-x-1 flex-1 mr-2 shadow-sm">
+          <button id="btnTplMobileTabConfig" onclick="switchTplMobileMode('config')" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-teal-600 text-white shadow-sm transition flex items-center justify-center space-x-1">
+            <i data-lucide="sliders" class="w-3.5 h-3.5"></i><span>⚙️ 调节参数</span>
+          </button>
+          <button id="btnTplMobileTabPreview" onclick="switchTplMobileMode('preview')" class="flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition flex items-center justify-center space-x-1">
+            <i data-lucide="eye" class="w-3.5 h-3.5 text-teal-500"></i><span>👁️ 查看字帖预览</span>
+          </button>
+        </div>
+        <button onclick="exportTemplateToPDF()" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow flex items-center space-x-1 shrink-0">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i><span>导出</span>
+        </button>
+      </div>
+
+      <!-- Mobile Screen 1: Full-Height Smooth Scroll Settings Panel -->
+      <div id="tplMobileSettingsPanel" class="flex-1 min-h-0 overflow-y-auto touch-scroll-panel p-3.5 space-y-3 pb-32 bg-white dark:bg-slate-900">
+        
+        <!-- Section 1: Template Type -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-500">1. 作业纸与书法格类型</label>
+          <select id="tplTypeSelectMob" onchange="syncTplConfig('type', this.value)" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-bold">
+            <option value="tianzi">🀄 拼音田字格 (拼音在上+汉字在下)</option>
+            <option value="rizi">🔢 幼小衔接日字格 (阿拉伯数字0~9书写规范格)</option>
+            <option value="pure_tianzi">🔲 经典田字格 (汉字规范书写)</option>
+            <option value="mizi" selected>✳️ 经典米字格 (书法楷书字帖)</option>
+            <option value="huigong">⭕ 回宫格 / 回字格 (间架结构)</option>
+            <option value="jiugong">📐 九宫格 (书法结构重心练习)</option>
+            <option value="hengshui">✍️ 衡水体/斜体英文练习格 (68°)</option>
+            <option value="english4">🔤 英语四线三格 (字母单词)</option>
+            <option value="cornell">📖 康奈尔笔记纸 (经典三栏)</option>
+            <option value="cuoti">📝 错题整理本 (题目与订正分析)</option>
+            <option value="grid">▦ 方格文稿纸 (20x20 作文纸)</option>
+            <option value="music">🎼 音乐五线谱 (全页铺满)</option>
+            <option value="guitar">🎸 吉他六线谱 TAB (全页铺满)</option>
+          </select>
+        </div>
+
+        <!-- Section 2: Paper Size -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-500">2. 纸张规格尺寸</label>
+          <select id="tplPaperSizeSelectMob" onchange="syncTplConfig('paperSize', this.value)" class="w-full p-2 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-bold">
+            <option value="a4" selected>📄 A4 标准规格 (210 × 297 mm · 矢量排版)</option>
+            <option value="a3">📰 A3 大幅面规格 (297 × 420 mm · 试卷/大字帖)</option>
+            <option value="a5">📑 A5 便携小本规格 (148 × 210 mm · 记事练字)</option>
+          </select>
+        </div>
+
+        <!-- Section 3: Custom Rows & Columns -->
+        <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-indigo-700 dark:text-indigo-300 flex items-center space-x-1">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i><span>3. 自定义行列 & 智能互推</span>
+            </label>
+            <label class="flex items-center space-x-1 text-[10px] text-indigo-600 dark:text-indigo-400 font-bold">
+              <input type="checkbox" id="tplAutoAspectLockMob" checked class="rounded text-indigo-600">
+              <span>⚡ 智能联动</span>
+            </label>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">每行列数 (Cols)：</span>
+              <input type="number" id="tplColsInputMob" min="1" max="50" value="8" oninput="syncTplConfig('cols', this.value)" class="w-full p-1.5 border rounded-lg text-xs font-mono font-bold bg-white dark:bg-slate-900">
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">每页行数 (Rows)：</span>
+              <input type="number" id="tplRowsInputMob" min="1" max="60" value="12" oninput="syncTplConfig('rows', this.value)" class="w-full p-1.5 border rounded-lg text-xs font-mono font-bold bg-white dark:bg-slate-900">
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Tracing Watermark (Text at top!) -->
+        <div class="p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-2 border">
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-teal-700 dark:text-teal-300 flex items-center space-x-1">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>4. 字帖描红临摹水印 (核心文字与样式)</span>
+            </label>
+            <input type="checkbox" id="tplTraceEnabledMob" checked onchange="syncTplConfig('traceEnabled', this.checked)" class="rounded text-teal-600">
+          </div>
+
+          <div class="p-2 bg-white dark:bg-slate-900 rounded-xl border border-teal-200 dark:border-teal-900/60 space-y-1.5 shadow-sm">
+            <div class="flex justify-between items-center">
+              <span class="text-[11px] font-bold text-teal-800 dark:text-teal-300">临摹字帖文字内容：</span>
+              <div class="flex flex-wrap gap-1 text-[10px]">
+                <button onclick="setTplPresetText('数字')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 rounded font-bold hover:underline">0~9数字</button>
+                <button onclick="setTplPresetText('千字文')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 rounded font-bold hover:underline">千字文</button>
+                <button onclick="setTplPresetText('三字经')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 rounded font-bold hover:underline">三字经</button>
+                <button onclick="setTplPresetText('古诗')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 rounded font-bold hover:underline">静夜思</button>
+                <button onclick="setTplPresetText('英文')" class="px-1.5 py-0.5 bg-teal-50 text-teal-700 rounded font-bold hover:underline">English</button>
+              </div>
+            </div>
+            <textarea id="tplTraceTextMob" rows="3" oninput="syncTplConfig('text', this.value)" class="w-full p-2 border rounded-lg text-xs bg-slate-50 dark:bg-slate-950 resize-none font-mono focus:border-teal-500 outline-none leading-relaxed" placeholder="输入自定义汉字、数字或英文句子...">天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳</textarea>
+            <div class="flex items-center justify-between text-[10px] text-slate-500">
+              <span>字帖循环铺满整页：</span>
+              <input type="checkbox" id="tplRepeatFillMob" checked onchange="syncTplConfig('repeatFill', this.checked)" class="rounded text-teal-600">
+            </div>
+          </div>
+
+          <!-- Master Fonts Selector -->
+          <div>
+            <span class="text-[10px] text-slate-400 font-bold block mb-1">临摹字体 (大师名家真迹)：</span>
+            <select id="tplFontSelectMob" onchange="syncTplConfig('font', this.value)" class="w-full p-1.5 border rounded-lg text-xs bg-white dark:bg-slate-900 font-medium">
               <option value="'Ma Shan Zheng', 'STKaiti', 'KaiTi', serif" selected>👑 盛唐楷书·颜筋柳骨风 (马善政真迹楷书)</option>
               <option value="'Zhi Mang Xing', 'WangXizhi', 'Xingkai', 'STXingkai', cursive">👑 王羲之《兰亭序》行楷风 (智芒星行书)</option>
               <option value="'Long Cang', 'Xingkai', cursive">👑 狂草大写意·行草气韵 (龙苍行草体)</option>
@@ -1785,121 +1994,104 @@
               <option value="'ZCOOL KuaiLe', 'Yuanti SC', '幼圆', sans-serif">👑 幼圆可爱卡通书写体 (站酷快乐体)</option>
               <option value="'Noto Serif SC', 'SimSun', 'Songti SC', serif">👑 文人雕版大宋体 (思源宋体精修)</option>
               <option value='"KaiTi", "STKaiti", "楷体", serif'>👑 标准教育部规范正楷 (标准楷体)</option>
-            </optgroup>
-            <optgroup label="🖥️ PC 本机电脑系统常用字体 (按名称实时调用)" id="tplLocalFontsGroup">
-              <option value='"Microsoft YaHei", "微软雅黑", sans-serif'>微软雅黑 (Microsoft YaHei)</option>
-              <option value='"SimSun", "宋体", serif'>宋体 (SimSun)</option>
-              <option value='"SimHei", "黑体", sans-serif'>黑体 (SimHei)</option>
-              <option value='"FangSong", "仿宋", serif'>仿宋 (FangSong)</option>
-              <option value='Arial, sans-serif'>Arial (现代规范英文)</option>
-              <option value='"Times New Roman", serif'>Times New Roman (经典衬线)</option>
-              <option value='"Segoe UI", sans-serif'>Segoe UI (极简界面字体)</option>
-              <option value='Georgia, serif'>Georgia (典雅英文报刊体)</option>
-            </optgroup>
+            </select>
+          </div>
+
+          <!-- Font Weight & Style -->
+          <div class="grid grid-cols-2 gap-1.5">
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">笔画粗细 / 浓淡：</span>
+              <select id="tplFontWeightMob" onchange="syncTplConfig('weight', this.value)" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+                <option value="100">100 (极细纤巧)</option>
+                <option value="300">300 (清秀细笔)</option>
+                <option value="400" selected>400 (标准适中)</option>
+                <option value="600">600 (端庄加粗)</option>
+                <option value="700">700 (厚重遒劲)</option>
+                <option value="900">900 (苍劲特粗)</option>
+              </select>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">描红样式：</span>
+              <select id="tplTraceStyleMob" onchange="syncTplConfig('traceStyle', this.value)" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+                <option value="solid" selected>🔴 饱满实心填墨</option>
+                <option value="outline">⭕ 空心双钩描边</option>
+                <option value="dashed">〰️ 虚线引笔描线</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Color & Opacity -->
+          <div class="grid grid-cols-2 gap-1.5">
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">描红字迹颜色：</span>
+              <select id="tplTraceColorMob" onchange="syncTplConfig('traceColor', this.value)" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+                <option value="#dc2626" selected>🔴 朱砂红 (古法描红)</option>
+                <option value="#64748b">⚪ 铅灰淡印 (临摹仿影)</option>
+                <option value="#0f172a">⚫ 墨黑如漆 (正楷习字)</option>
+                <option value="#2563eb">🔵 靛蓝墨水 (钢笔练习)</option>
+                <option value="#059669">🟢 竹青雅绿 (护眼习字)</option>
+                <option value="#7c3aed">🟣 紫藤雅韵 (古典雅致)</option>
+                <option value="#d97706">🟠 琥珀沉香 (古籍泛黄)</option>
+              </select>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 font-bold">水印透明度：</span>
+              <select id="tplTraceOpacityMob" onchange="syncTplConfig('traceOpacity', this.value)" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
+                <option value="0.18">18% (隐约如烟)</option>
+                <option value="0.30">30% (清浅淡印)</option>
+                <option value="0.45" selected>45% (标准描红)</option>
+                <option value="0.65">65% (清晰浓墨)</option>
+                <option value="0.90">90% (深浓对比)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 5: Grid Color -->
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-600 dark:text-slate-300">5. 作业纸网格线条颜色</label>
+          <select id="tplGridColorMob" onchange="syncTplConfig('gridColor', this.value)" class="w-full p-1.5 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-medium">
+            <option value="#dc2626" selected>🔴 经典朱砂红 (书法红格)</option>
+            <option value="#16a34a">🟢 墨绿护眼色 (标准作业本)</option>
+            <option value="#0284c7">🔵 典雅青蓝色 (高考答题卡)</option>
+            <option value="#475569">⚫ 沉稳铅灰黑 (素描极简)</option>
+            <option value="#9333ea">🟣 紫罗兰印格 (艺术乐谱)</option>
+            <option value="#ca8a04">🟠 暖黄护眼格 (柔光防疲劳)</option>
           </select>
         </div>
 
-        <!-- Font Weight / Boldness Control -->
-        <div class="grid grid-cols-2 gap-1.5">
-          <div>
-            <span class="text-[10px] text-slate-400 font-bold">笔画粗细 / 浓淡：</span>
-            <select id="tplFontWeight" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
-              <option value="100">100 (极细纤巧)</option>
-              <option value="300">300 (清秀细笔)</option>
-              <option value="400" selected>400 (标准适中)</option>
-              <option value="600">600 (端庄加粗)</option>
-              <option value="700">700 (厚重遒劲)</option>
-              <option value="900">900 (苍劲特粗)</option>
-            </select>
-          </div>
-          <div>
-            <span class="text-[10px] text-slate-400 font-bold">描红样式：</span>
-            <select id="tplTraceStyle" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
-              <option value="solid" selected>🔴 饱满实心填墨</option>
-              <option value="outline">⭕ 空心双钩描边</option>
-              <option value="dashed">〰️ 虚线引笔描线</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Tracing Watermark Color (Strictly independent!) -->
-        <div class="grid grid-cols-2 gap-1.5">
-          <div>
-            <span class="text-[10px] text-slate-400 font-bold">描红字迹颜色：</span>
-            <select id="tplTraceColor" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
-              <option value="#dc2626" selected>🔴 朱砂红 (古法描红)</option>
-              <option value="#64748b">⚪ 铅灰淡印 (临摹仿影)</option>
-              <option value="#0f172a">⚫ 墨黑如漆 (正楷习字)</option>
-              <option value="#2563eb">🔵 靛蓝墨水 (钢笔练习)</option>
-              <option value="#059669">🟢 竹青雅绿 (护眼习字)</option>
-              <option value="#7c3aed">🟣 紫藤雅韵 (古典雅致)</option>
-              <option value="#d97706">🟠 琥珀沉香 (古籍泛黄)</option>
-            </select>
-          </div>
-          <div>
-            <span class="text-[10px] text-slate-400 font-bold">水印透明度：</span>
-            <select id="tplTraceOpacity" onchange="renderPaperTemplateCanvas()" class="w-full p-1 border rounded text-[11px] bg-white dark:bg-slate-900 font-medium">
-              <option value="0.18">18% (隐约如烟)</option>
-              <option value="0.30">30% (清浅淡印)</option>
-              <option value="0.45" selected>45% (标准描红)</option>
-              <option value="0.65">65% (清晰浓墨)</option>
-              <option value="0.90">90% (深浓对比)</option>
-            </select>
-          </div>
-        </div>
+        <button onclick="switchTplMobileMode('preview')" class="w-full py-2.5 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1.5">
+          <i data-lucide="eye" class="w-4 h-4"></i><span>立即查看作业纸效果 (预览/导出)</span>
+        </button>
       </div>
 
-      <!-- 5. Isolated Paper Grid Lines Color -->
-      <div class="space-y-1">
-        <label class="text-[11px] font-bold text-slate-600 dark:text-slate-300 flex items-center justify-between">
-          <span>5. 作业纸网格线条颜色 (独立不影响描红字迹)</span>
-        </label>
-        <select id="tplGridColor" onchange="renderPaperTemplateCanvas()" class="w-full p-1.5 border rounded-xl text-xs bg-slate-50 dark:bg-slate-800 font-medium">
-          <option value="#dc2626" selected>🔴 经典朱砂红 (书法红格)</option>
-          <option value="#16a34a">🟢 墨绿护眼色 (标准作业本)</option>
-          <option value="#0284c7">🔵 典雅青蓝色 (高考答题卡)</option>
-          <option value="#475569">⚫ 沉稳铅灰黑 (素描极简)</option>
-          <option value="#9333ea">🟣 紫罗兰印格 (艺术乐谱)</option>
-          <option value="#ca8a04">🟠 暖黄护眼格 (柔光防疲劳)</option>
-        </select>
-      </div>
-
-      <button onclick="switchTplMobileTab('preview')" class="sm:hidden w-full py-2.5 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1.5">
-        <i data-lucide="eye" class="w-4 h-4"></i><span>立即查看作业纸效果 (预览/导出)</span>
-      </button>
-
-      <button onclick="exportTemplateToPDF()" class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5">
-        <i data-lucide="download" class="w-4 h-4"></i><span>导出 300 DPI 高清作业纸 PDF</span>
-      </button>
-    </div>
-
-    <!-- Right Viewport: Paper Canvas Studio (Supports Mobile Responsive Full-width Pinch & Pan) -->
-    <div id="tplCanvasContainer" class="hidden sm:!flex flex-1 min-h-0 p-2.5 sm:p-4 overflow-y-auto overflow-x-auto canvas-scroll-panel bg-slate-200/70 dark:bg-slate-950 flex flex-col items-center justify-start relative pb-32 sm:pb-6">
-      
-      <!-- Mobile Floating Preview Ribbon with Quick Edit & High-DPI Zoom -->
-      <div class="sm:hidden w-full mb-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur border border-slate-200 dark:border-slate-800 p-2 rounded-xl shadow-md flex items-center justify-between shrink-0 z-10 sticky top-0">
-        <div class="flex items-center space-x-1">
-          <button onclick="switchTplMobileTab('config')" class="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold flex items-center space-x-1">
-            <i data-lucide="sliders" class="w-3.5 h-3.5"></i><span>参数</span>
-          </button>
-          <button onclick="openTplQuickTextModal()" class="px-2.5 py-1.5 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-sm">
-            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>✏️ 快速改字</span>
-          </button>
-        </div>
+      <!-- Mobile Screen 2: Dedicated Full-Screen Responsive Preview View -->
+      <div id="tplMobilePreviewPanel" class="hidden flex-1 min-h-0 flex-col items-center justify-start p-2.5 overflow-y-auto canvas-scroll-panel bg-slate-200/80 dark:bg-slate-950 pb-32 relative">
         
-        <div class="flex items-center space-x-1">
-          <button onclick="adjustTplPreviewZoom(0.85)" title="缩小" class="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold flex items-center justify-center">-</button>
-          <button onclick="resetTplPreviewZoom()" title="适合屏幕" class="px-1.5 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-[10px] font-bold flex items-center justify-center" id="tplZoomLabel">适中</button>
-          <button onclick="adjustTplPreviewZoom(1.15)" title="放大" class="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold flex items-center justify-center">+</button>
-          <span class="hidden" id="tplMobileCurrentBadge"></span>
-          <button onclick="exportTemplateToPDF()" class="px-2 py-1.5 bg-teal-600 text-white rounded-lg text-xs font-bold shadow flex items-center space-x-1 ml-1">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i><span>导出</span>
-          </button>
+        <!-- Mobile Top Ribbon -->
+        <div class="w-full mb-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur border border-slate-200 dark:border-slate-800 p-2 rounded-xl shadow-md flex items-center justify-between shrink-0 z-10 sticky top-0">
+          <div class="flex items-center space-x-1">
+            <button onclick="switchTplMobileMode('config')" class="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold flex items-center space-x-1">
+              <i data-lucide="sliders" class="w-3.5 h-3.5"></i><span>参数</span>
+            </button>
+            <button onclick="openTplQuickTextModal()" class="px-2.5 py-1.5 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 rounded-lg text-xs font-bold flex items-center space-x-1 shadow-sm">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>✏️ 快速改字</span>
+            </button>
+          </div>
+          
+          <div class="flex items-center space-x-1">
+            <button onclick="adjustTplPreviewZoom(0.85)" title="缩小" class="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold flex items-center justify-center">-</button>
+            <button onclick="resetTplPreviewZoom()" title="适合屏幕" class="px-1.5 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-[10px] font-bold flex items-center justify-center" id="tplZoomLabel">适中</button>
+            <button onclick="adjustTplPreviewZoom(1.15)" title="放大" class="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold flex items-center justify-center">+</button>
+            <button onclick="exportTemplateToPDF()" class="px-2 py-1.5 bg-teal-600 text-white rounded-lg text-xs font-bold shadow flex items-center space-x-1 ml-1">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i><span>导出</span>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div id="tplPaperWrapper" class="shadow-2xl bg-white max-w-full rounded-sm overflow-hidden flex items-center justify-center">
-        <canvas id="templatePaperCanvas" width="2480" height="3508" class="max-w-full h-auto block"></canvas>
+        <div id="tplPaperWrapperMob" class="shadow-2xl bg-white w-full max-w-full rounded-sm overflow-hidden flex items-center justify-center">
+          <canvas id="templatePaperCanvasMob" width="2480" height="3508" class="w-full max-w-full h-auto block"></canvas>
+        </div>
       </div>
     </div>
   </div>
@@ -1923,7 +2115,7 @@
           <button onclick="setTplPresetText('古诗')" class="px-2 py-1 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-100">静夜思</button>
           <button onclick="setTplPresetText('英文')" class="px-2 py-1 bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300 rounded-lg font-bold hover:bg-teal-100">English</button>
         </div>
-        <textarea id="tplQuickTextarea" rows="5" oninput="syncTplTextInputs(this.value)" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 dark:bg-slate-950 resize-none font-mono focus:border-teal-500 outline-none leading-relaxed" placeholder="输入要临摹书写的自定义文字..."></textarea>
+        <textarea id="tplQuickTextarea" rows="5" oninput="syncTplConfig('text', this.value)" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 dark:bg-slate-950 resize-none font-mono focus:border-teal-500 outline-none leading-relaxed" placeholder="输入要临摹书写的自定义文字..."></textarea>
       </div>
 
       <div class="flex items-center justify-between pt-2 border-t">
@@ -1933,6 +2125,7 @@
         </button>
       </div>
     </div>
+  </div>
   </div>
 
   <!-- =========================================================================
@@ -2364,10 +2557,7 @@
 
       if (subTool && mod === 'editor') switchOfficeSubTool(subTool);
       if (mod === 'templates') {
-        if (window.innerWidth < 640) {
-          switchTplMobileTab(state.tplMobileTab || 'config');
-        }
-        renderPaperTemplateCanvas();
+        initTemplateDeviceLayout();
       }
       if (mod === 'scan') switchScanSubMode(state.currentScanSubMode || 'doc');
       if (mod === 'tools') {
@@ -4323,48 +4513,106 @@
       }
     }
 
-    /* Template & Calligraphy Tracing Canvas Studio */
+    /* =========================================================================
+       TEMPLATE & CALLIGRAPHY STUDIO: UA-BASED DEDICATED PC & MOBILE ENGINES
+       ========================================================================= */
+    async function loadPcLocalFontsForTemplates() {
+      if ('queryLocalFonts' in window) {
+        try {
+          const availableFonts = await window.queryLocalFonts();
+          const fontGroup = document.getElementById('tplLocalFontsGroupPC');
+          if (fontGroup && availableFonts.length) {
+            const uniqueFamilies = [...new Set(availableFonts.map(f => f.family))].sort();
+            fontGroup.innerHTML = uniqueFamilies.map(fam => `<option value="'${fam}', sans-serif">${fam}</option>`).join('');
+            showToast(`已成功读取电脑本机 ${uniqueFamilies.length} 种已安装字体！`);
+          }
+        } catch (err) {
+          showToast('无法读取本机字体: ' + err.message);
+        }
+      } else {
+        showToast('已为您载入 Windows/macOS 常用系统预设字体库！');
+      }
+    }
+
+    state.tplConfig = {
+      type: 'mizi',
+      paperSize: 'a4',
+      cols: 8,
+      rows: 12,
+      traceEnabled: true,
+      text: '天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳',
+      repeatFill: true,
+      font: "'Ma Shan Zheng', 'STKaiti', 'KaiTi', serif",
+      weight: '400',
+      traceStyle: 'solid',
+      traceColor: '#dc2626',
+      traceOpacity: '0.45',
+      gridColor: '#dc2626'
+    };
+
     state.tplPreviewZoom = 1.0;
-
-    function adjustTplPreviewZoom(factor) {
-      state.tplPreviewZoom = Math.max(0.5, Math.min(3.0, state.tplPreviewZoom * factor));
-      const wrapper = document.getElementById('tplPaperWrapper');
-      if (wrapper) {
-        wrapper.style.transform = `scale(${state.tplPreviewZoom})`;
-        wrapper.style.transformOrigin = 'top center';
-        wrapper.style.transition = 'transform 0.2s ease-out';
-      }
-      const lbl = document.getElementById('tplZoomLabel');
-      if (lbl) lbl.innerText = `${Math.round(state.tplPreviewZoom * 100)}%`;
-    }
-
-    function resetTplPreviewZoom() {
-      state.tplPreviewZoom = 1.0;
-      const wrapper = document.getElementById('tplPaperWrapper');
-      if (wrapper) {
-        wrapper.style.transform = 'scale(1)';
-      }
-      const lbl = document.getElementById('tplZoomLabel');
-      if (lbl) lbl.innerText = '适中';
-    }
-
+    state.tplPcZoom = 1.0;
     state.tplMobileTab = 'config'; // 'config' | 'preview'
 
-    function switchTplMobileTab(tab) {
+    function detectIsMobileDevice() {
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
+      const isSmallScreen = window.innerWidth < 768;
+      return isMobileUA || isSmallScreen;
+    }
+
+    function initTemplateDeviceLayout() {
+      const isMobile = detectIsMobileDevice();
+      const pcView = document.getElementById('tplPcView');
+      const mobView = document.getElementById('tplMobileView');
+
+      if (isMobile) {
+        if (pcView) pcView.classList.add('hidden');
+        if (mobView) {
+          mobView.classList.remove('hidden');
+          mobView.classList.add('flex');
+        }
+      } else {
+        if (mobView) {
+          mobView.classList.add('hidden');
+          mobView.classList.remove('flex');
+        }
+        if (pcView) {
+          pcView.classList.remove('hidden');
+          pcView.classList.add('flex');
+        }
+      }
+      renderPaperTemplateCanvas();
+      lucide.createIcons();
+    }
+
+    window.addEventListener('resize', () => {
+      if (state.currentModule === 'templates') {
+        initTemplateDeviceLayout();
+      }
+    });
+
+    function setTplPcPaperZoom(scale) {
+      state.tplPcZoom = scale;
+      const wrap = document.getElementById('tplPaperWrapperPC');
+      if (wrap) {
+        wrap.style.transform = `scale(${scale})`;
+        wrap.style.transformOrigin = 'top center';
+      }
+    }
+
+    function switchTplMobileMode(tab) {
       state.tplMobileTab = tab;
-      const sidebar = document.getElementById('tplSidebarPanel');
-      const canvasContainer = document.getElementById('tplCanvasContainer');
-      const btnConfig = document.getElementById('btnTplTabConfig');
-      const btnPreview = document.getElementById('btnTplTabPreview');
+      const settingsPanel = document.getElementById('tplMobileSettingsPanel');
+      const previewPanel = document.getElementById('tplMobilePreviewPanel');
+      const btnConfig = document.getElementById('btnTplMobileTabConfig');
+      const btnPreview = document.getElementById('btnTplMobileTabPreview');
 
       if (tab === 'config') {
-        if (sidebar) {
-          sidebar.classList.remove('hidden');
-          sidebar.classList.add('flex');
-        }
-        if (canvasContainer) {
-          canvasContainer.classList.add('hidden');
-          canvasContainer.classList.remove('flex');
+        if (settingsPanel) settingsPanel.classList.remove('hidden');
+        if (previewPanel) {
+          previewPanel.classList.add('hidden');
+          previewPanel.classList.remove('flex');
         }
         if (btnConfig) {
           btnConfig.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-teal-600 text-white shadow-sm transition flex items-center justify-center space-x-1';
@@ -4373,14 +4621,11 @@
           btnPreview.className = 'flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition flex items-center justify-center space-x-1';
         }
       } else {
-        // 'preview' mode
-        if (sidebar) {
-          sidebar.classList.add('hidden');
-          sidebar.classList.remove('flex');
-        }
-        if (canvasContainer) {
-          canvasContainer.classList.remove('hidden');
-          canvasContainer.classList.add('flex');
+        // 'preview'
+        if (settingsPanel) settingsPanel.classList.add('hidden');
+        if (previewPanel) {
+          previewPanel.classList.remove('hidden');
+          previewPanel.classList.add('flex');
         }
         if (btnConfig) {
           btnConfig.className = 'flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 transition flex items-center justify-center space-x-1';
@@ -4393,27 +4638,120 @@
       lucide.createIcons();
     }
 
-    function syncTplTextInputs(val) {
-      const el1 = document.getElementById('tplTraceText');
-      const el2 = document.getElementById('tplQuickTextarea');
-      if (el1 && el1.value !== val) el1.value = val;
-      if (el2 && el2.value !== val) el2.value = val;
+    function syncTplConfig(key, value) {
+      state.tplConfig[key] = value;
+
+      // Bidirectional DOM sync between PC and Mobile inputs
+      if (key === 'type') {
+        const p = document.getElementById('tplTypeSelectPC'); if (p && p.value !== value) p.value = value;
+        const m = document.getElementById('tplTypeSelectMob'); if (m && m.value !== value) m.value = value;
+        applyTemplateTypeDefaults(value);
+      } else if (key === 'paperSize') {
+        const p = document.getElementById('tplPaperSizeSelectPC'); if (p && p.value !== value) p.value = value;
+        const m = document.getElementById('tplPaperSizeSelectMob'); if (m && m.value !== value) m.value = value;
+      } else if (key === 'cols') {
+        const num = parseInt(value) || 8;
+        state.tplConfig.cols = num;
+        const p = document.getElementById('tplColsInputPC'); if (p && p.value != num) p.value = num;
+        const m = document.getElementById('tplColsInputMob'); if (m && m.value != num) m.value = num;
+        handleSmartAspectLock('cols', num);
+      } else if (key === 'rows') {
+        const num = parseInt(value) || 12;
+        state.tplConfig.rows = num;
+        const p = document.getElementById('tplRowsInputPC'); if (p && p.value != num) p.value = num;
+        const m = document.getElementById('tplRowsInputMob'); if (m && m.value != num) m.value = num;
+        handleSmartAspectLock('rows', num);
+      } else if (key === 'text') {
+        const p = document.getElementById('tplTraceTextPC'); if (p && p.value !== value) p.value = value;
+        const m = document.getElementById('tplTraceTextMob'); if (m && m.value !== value) m.value = value;
+        const q = document.getElementById('tplQuickTextarea'); if (q && q.value !== value) q.value = value;
+      } else if (key === 'traceEnabled') {
+        const p = document.getElementById('tplTraceEnabledPC'); if (p && p.checked !== value) p.checked = value;
+        const m = document.getElementById('tplTraceEnabledMob'); if (m && m.checked !== value) m.checked = value;
+      } else if (key === 'repeatFill') {
+        const p = document.getElementById('tplRepeatFillPC'); if (p && p.checked !== value) p.checked = value;
+        const m = document.getElementById('tplRepeatFillMob'); if (m && m.checked !== value) m.checked = value;
+      } else if (key === 'font') {
+        const p = document.getElementById('tplFontSelectPC'); if (p && p.value !== value) p.value = value;
+        const m = document.getElementById('tplFontSelectMob'); if (m && m.value !== value) m.value = value;
+      } else if (key === 'weight') {
+        const p = document.getElementById('tplFontWeightPC'); if (p && p.value !== value) p.value = value;
+        const m = document.getElementById('tplFontWeightMob'); if (m && m.value !== value) m.value = value;
+      } else if (key === 'traceStyle') {
+        const p = document.getElementById('tplTraceStylePC'); if (p && p.value !== value) p.value = value;
+        const m = document.getElementById('tplTraceStyleMob'); if (m && m.value !== value) m.value = value;
+      } else if (key === 'traceColor') {
+        const p = document.getElementById('tplTraceColorPC'); if (p && p.value !== value) p.value = value;
+        const m = document.getElementById('tplTraceColorMob'); if (m && m.value !== value) m.value = value;
+      } else if (key === 'traceOpacity') {
+        const p = document.getElementById('tplTraceOpacityPC'); if (p && p.value !== value) p.value = value;
+        const m = document.getElementById('tplTraceOpacityMob'); if (m && m.value !== value) m.value = value;
+      } else if (key === 'gridColor') {
+        const p = document.getElementById('tplGridColorPC'); if (p && p.value !== value) p.value = value;
+        const m = document.getElementById('tplGridColorMob'); if (m && m.value !== value) m.value = value;
+      }
+
       renderPaperTemplateCanvas();
     }
 
-    function openTplQuickTextModal() {
-      const curText = document.getElementById('tplTraceText')?.value || '';
-      const quickArea = document.getElementById('tplQuickTextarea');
-      if (quickArea) quickArea.value = curText;
-      const modal = document.getElementById('tplQuickTextModal');
-      if (modal) modal.classList.remove('hidden');
-      lucide.createIcons();
+    function applyTemplateTypeDefaults(type) {
+      if (type === 'hengshui' || type === 'english4') {
+        state.tplConfig.rows = 15; state.tplConfig.cols = 1;
+        state.tplConfig.text = 'Continuous effort not strength or intelligence is the key to unlocking our potential Knowledge is power Practice makes perfect';
+      } else if (type === 'rizi') {
+        state.tplConfig.rows = 10; state.tplConfig.cols = 8;
+        state.tplConfig.text = '0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9';
+      } else if (type === 'tianzi') {
+        state.tplConfig.rows = 10; state.tplConfig.cols = 8;
+        state.tplConfig.text = '天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳';
+      } else if (type === 'music' || type === 'guitar') {
+        state.tplConfig.rows = 12; state.tplConfig.cols = 1;
+        state.tplConfig.traceEnabled = false;
+      } else {
+        state.tplConfig.rows = 12; state.tplConfig.cols = 8;
+      }
+      
+      // Update form values
+      ['PC', 'Mob'].forEach(suffix => {
+        const r = document.getElementById(`tplRowsInput${suffix}`); if (r) r.value = state.tplConfig.rows;
+        const c = document.getElementById(`tplColsInput${suffix}`); if (c) c.value = state.tplConfig.cols;
+        const t = document.getElementById(`tplTraceText${suffix}`); if (t) t.value = state.tplConfig.text;
+        const e = document.getElementById(`tplTraceEnabled${suffix}`); if (e) e.checked = state.tplConfig.traceEnabled;
+      });
     }
 
-    function closeTplQuickTextModal() {
-      const modal = document.getElementById('tplQuickTextModal');
-      if (modal) modal.classList.add('hidden');
+    function handleSmartAspectLock(source, val) {
+      const lockPC = document.getElementById('tplAutoAspectLockPC')?.checked;
+      const lockMob = document.getElementById('tplAutoAspectLockMob')?.checked;
+      if (!lockPC && !lockMob) return;
+
+      const type = state.tplConfig.type;
+      if (['hengshui', 'english4', 'cornell', 'cuoti', 'music', 'guitar'].includes(type)) return;
+
+      const paperSize = state.tplConfig.paperSize;
+      const aspect = (paperSize === 'a3') ? 1.414 : 1.414;
+
+      if (source === 'cols') {
+        const autoRows = Math.round(val * aspect * 1.05);
+        state.tplConfig.rows = Math.max(1, Math.min(60, autoRows));
+        ['PC', 'Mob'].forEach(s => {
+          const el = document.getElementById(`tplRowsInput${s}`);
+          if (el) el.value = state.tplConfig.rows;
+        });
+      } else {
+        const autoCols = Math.round(val / (aspect * 1.05));
+        state.tplConfig.cols = Math.max(1, Math.min(50, autoCols));
+        ['PC', 'Mob'].forEach(s => {
+          const el = document.getElementById(`tplColsInput${s}`);
+          if (el) el.value = state.tplConfig.cols;
+        });
+      }
+    }
+
+    function resetTplRecommendedGrid() {
+      applyTemplateTypeDefaults(state.tplConfig.type);
       renderPaperTemplateCanvas();
+      showToast('已恢复当前模板与纸张的最佳推荐行列！');
     }
 
     function setTplPresetText(preset) {
@@ -4429,656 +4767,346 @@
       } else if (preset === '英文') {
         val = 'Continuous effort not strength or intelligence is the key to unlocking our potential Knowledge is power Practice makes perfect';
       }
-      syncTplTextInputs(val);
+      syncTplConfig('text', val);
       showToast(`已载入《${preset}》预设描红文本！`);
     }
 
-    function hexToRgba(hex, alpha = 1) {
-      if (!hex) return `rgba(220, 38, 38, ${alpha})`;
-      if (hex.startsWith('rgba') || hex.startsWith('rgb')) return hex;
-      let s = hex.replace('#', '');
-      if (s.length === 3) s = s.split('').map(x => x + x).join('');
-      const num = parseInt(s, 16);
-      const r = (num >> 16) & 255;
-      const g = (num >> 8) & 255;
-      const b = num & 255;
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    function openTplQuickTextModal() {
+      const quickArea = document.getElementById('tplQuickTextarea');
+      if (quickArea) quickArea.value = state.tplConfig.text;
+      const modal = document.getElementById('tplQuickTextModal');
+      if (modal) modal.classList.remove('hidden');
+      lucide.createIcons();
     }
 
-    // Default Recommended Grid Dimensions for Each Template
-    function getTplDefaultGrid(tplType, paperSize = 'a4') {
-      if (tplType === 'rizi') return { cols: 12, rows: 14 };
-      if (tplType === 'tianzi') return { cols: 8, rows: 10 };
-      if (tplType === 'mizi' || tplType === 'pure_tianzi' || tplType === 'huigong' || tplType === 'jiugong') return { cols: 8, rows: 12 };
-      if (tplType === 'grid') return { cols: 20, rows: 24 };
-      if (tplType === 'hengshui' || tplType === 'english4') return { cols: 16, rows: 11 };
-      if (tplType === 'music' || tplType === 'guitar') return { cols: 1, rows: 8 };
-      if (tplType === 'cuoti') return { cols: 1, rows: 3 };
-      if (tplType === 'cornell') return { cols: 1, rows: 20 };
-      return { cols: 8, rows: 12 };
-    }
-
-    function onTplTypeChange(val) {
-      const paperSize = document.getElementById('tplPaperSizeSelect')?.value || 'a4';
-      const def = getTplDefaultGrid(val, paperSize);
-      const colsInp = document.getElementById('tplColsInput');
-      const rowsInp = document.getElementById('tplRowsInput');
-      if (colsInp) colsInp.value = def.cols;
-      if (rowsInp) rowsInp.value = def.rows;
-
-      if (val === 'rizi') {
-        const textInp = document.getElementById('tplTraceText');
-        if (textInp && (!textInp.value || textInp.value.startsWith('天地玄黄'))) {
-          textInp.value = '0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9';
-        }
-      }
+    function closeTplQuickTextModal() {
+      const modal = document.getElementById('tplQuickTextModal');
+      if (modal) modal.classList.add('hidden');
       renderPaperTemplateCanvas();
     }
 
-    function onTplPaperSizeChange(val) {
-      if (document.getElementById('tplAutoAspectLock')?.checked) {
-        const curCols = parseInt(document.getElementById('tplColsInput')?.value || '8', 10);
-        onTplColsChange(curCols);
-      } else {
-        renderPaperTemplateCanvas();
+    function adjustTplPreviewZoom(factor) {
+      state.tplPreviewZoom = Math.max(0.5, Math.min(3.0, state.tplPreviewZoom * factor));
+      const wrapper = document.getElementById('tplPaperWrapperMob');
+      if (wrapper) {
+        wrapper.style.transform = `scale(${state.tplPreviewZoom})`;
+        wrapper.style.transformOrigin = 'top center';
+        wrapper.style.transition = 'transform 0.2s ease-out';
       }
+      const lbl = document.getElementById('tplZoomLabel');
+      if (lbl) lbl.innerText = `${Math.round(state.tplPreviewZoom * 100)}%`;
     }
 
-    function onTplColsChange(val) {
-      const cols = Math.max(1, Math.min(50, parseInt(val, 10) || 8));
-      const autoLock = document.getElementById('tplAutoAspectLock')?.checked ?? true;
-      const tplType = document.getElementById('tplTypeSelect')?.value || 'mizi';
-      const paperSize = document.getElementById('tplPaperSizeSelect')?.value || 'a4';
-
-      let w = 2480, h = 3508;
-      if (paperSize === 'a3') { w = 3508; h = 4960; }
-      else if (paperSize === 'a5') { w = 1748; h = 2480; }
-      const scale = w / 2480;
-
-      if (autoLock) {
-        const marginX = Math.round(w * 0.06);
-        const startY = Math.round(h * 0.065);
-        if (tplType === 'rizi') {
-          const colGap = Math.round(w * 0.008);
-          const cellW = (w - marginX * 2 - (cols - 1) * colGap) / cols;
-          const cellH = cellW * 1.35;
-          const rowGap = Math.round(w * 0.01);
-          const recRows = Math.max(1, Math.floor((h - startY - 120 * scale) / (cellH + rowGap)));
-          const rowsInp = document.getElementById('tplRowsInput');
-          if (rowsInp) rowsInp.value = recRows;
-        } else if (tplType === 'tianzi') {
-          const cell = (w - marginX * 2) / cols;
-          const pinyinH = cell * 0.35;
-          const totalRowH = pinyinH + cell + Math.round(w * 0.012);
-          const recRows = Math.max(1, Math.floor((h - startY - 120 * scale) / totalRowH));
-          const rowsInp = document.getElementById('tplRowsInput');
-          if (rowsInp) rowsInp.value = recRows;
-        } else if (tplType === 'mizi' || tplType === 'pure_tianzi' || tplType === 'huigong' || tplType === 'jiugong') {
-          const cell = (w - marginX * 2) / cols;
-          const rowGap = Math.round(w * 0.01);
-          const recRows = Math.max(1, Math.floor((h - startY - 120 * scale) / (cell + rowGap)));
-          const rowsInp = document.getElementById('tplRowsInput');
-          if (rowsInp) rowsInp.value = recRows;
-        } else if (tplType === 'grid') {
-          const cell = (w - marginX * 2) / cols;
-          const rowGap = Math.round(cell * 0.15);
-          const recRows = Math.max(1, Math.floor((h - startY - 100 * scale) / (cell + rowGap)));
-          const rowsInp = document.getElementById('tplRowsInput');
-          if (rowsInp) rowsInp.value = recRows;
-        }
-      }
-      renderPaperTemplateCanvas();
+    function resetTplPreviewZoom() {
+      state.tplPreviewZoom = 1.0;
+      const wrapper = document.getElementById('tplPaperWrapperMob');
+      if (wrapper) wrapper.style.transform = 'scale(1)';
+      const lbl = document.getElementById('tplZoomLabel');
+      if (lbl) lbl.innerText = '适中';
     }
 
-    function onTplRowsChange(val) {
-      const rows = Math.max(1, Math.min(60, parseInt(val, 10) || 12));
-      const autoLock = document.getElementById('tplAutoAspectLock')?.checked ?? true;
-      const tplType = document.getElementById('tplTypeSelect')?.value || 'mizi';
-      const paperSize = document.getElementById('tplPaperSizeSelect')?.value || 'a4';
-
-      let w = 2480, h = 3508;
-      if (paperSize === 'a3') { w = 3508; h = 4960; }
-      else if (paperSize === 'a5') { w = 1748; h = 2480; }
-      const scale = w / 2480;
-
-      if (autoLock) {
-        const marginX = Math.round(w * 0.06);
-        const startY = Math.round(h * 0.065);
-        if (tplType === 'rizi') {
-          const rowGap = Math.round(w * 0.01);
-          const cellH = ((h - startY - 120 * scale) / rows) - rowGap;
-          const cellW = cellH / 1.35;
-          const colGap = Math.round(w * 0.008);
-          const recCols = Math.max(1, Math.floor((w - marginX * 2 + colGap) / (cellW + colGap)));
-          const colsInp = document.getElementById('tplColsInput');
-          if (colsInp) colsInp.value = recCols;
-        } else if (tplType === 'tianzi') {
-          const totalRowH = (h - startY - 120 * scale) / rows;
-          const cell = (totalRowH - Math.round(w * 0.012)) / 1.35;
-          const recCols = Math.max(1, Math.floor((w - marginX * 2) / cell));
-          const colsInp = document.getElementById('tplColsInput');
-          if (colsInp) colsInp.value = recCols;
-        } else if (tplType === 'mizi' || tplType === 'pure_tianzi' || tplType === 'huigong' || tplType === 'jiugong') {
-          const rowGap = Math.round(w * 0.01);
-          const cell = ((h - startY - 120 * scale) / rows) - rowGap;
-          if (cell > 10) {
-            const recCols = Math.max(1, Math.floor((w - marginX * 2) / cell));
-            const colsInp = document.getElementById('tplColsInput');
-            if (colsInp) colsInp.value = recCols;
-          }
-        }
-      }
-      renderPaperTemplateCanvas();
-    }
-
-    function resetTplRecommendedGrid() {
-      const tplType = document.getElementById('tplTypeSelect')?.value || 'mizi';
-      const paperSize = document.getElementById('tplPaperSizeSelect')?.value || 'a4';
-      const def = getTplDefaultGrid(tplType, paperSize);
-      document.getElementById('tplColsInput').value = def.cols;
-      document.getElementById('tplRowsInput').value = def.rows;
-      renderPaperTemplateCanvas();
-      showToast('已恢复为最佳标准推荐行列！');
-    }
-
-    // High Performance Rendering with requestAnimationFrame
-    let tplRenderTimer = null;
     function renderPaperTemplateCanvas() {
-      if (tplRenderTimer) cancelAnimationFrame(tplRenderTimer);
-      tplRenderTimer = requestAnimationFrame(renderPaperTemplateCanvasDirect);
-    }
-
-    function renderPaperTemplateCanvasDirect() {
-      const cvs = document.getElementById('templatePaperCanvas'); if (!cvs) return;
-      const c = cvs.getContext('2d');
+      const isMobile = detectIsMobileDevice();
+      const cvsPC = document.getElementById('templatePaperCanvasPC');
+      const cvsMob = document.getElementById('templatePaperCanvasMob');
       
-      // 1. Dynamic Paper Resolution: A3 (3508x4960), A4 (2480x3508), A5 (1748x2480)
-      const paperSize = document.getElementById('tplPaperSizeSelect')?.value || 'a4';
-      let w = 2480, h = 3508;
-      if (paperSize === 'a3') {
-        w = 3508; h = 4960;
-      } else if (paperSize === 'a5') {
-        w = 1748; h = 2480;
+      if (cvsPC) renderPaperTemplateCanvasDirect(cvsPC);
+      if (cvsMob) renderPaperTemplateCanvasDirect(cvsMob);
+
+      // Update PC Badge
+      const pcBadge = document.getElementById('tplPcPaperBadge');
+      if (pcBadge) {
+        const typeNames = {
+          mizi: '经典米字格', rizi: '幼小衔接日字格', tianzi: '拼音田字格', pure_tianzi: '经典田字格',
+          huigong: '回宫格', jiugong: '九宫格', hengshui: '衡水体斜体格', english4: '英语四线三格',
+          cornell: '康奈尔笔记纸', cuoti: '错题整理本', grid: '方格作文纸', music: '音乐五线谱', guitar: '吉他六线谱'
+        };
+        const curName = typeNames[state.tplConfig.type] || '书法字帖';
+        pcBadge.innerText = `${curName} · ${state.tplConfig.paperSize.toUpperCase()} 标准版 · 300 DPI 矢量排版`;
       }
-      cvs.width = w; cvs.height = h;
-      const scale = w / 2480; // Unified scaling factor for all strokes, lines, text, and dashes!
+    }
 
-      // 2. Clear Canvas Background (Pure White)
-      c.fillStyle = '#ffffff';
-      c.fillRect(0, 0, w, h);
+    function renderPaperTemplateCanvasDirect(cvs) {
+      if (!cvs) return;
+      const ctx = cvs.getContext('2d');
+      const cfg = state.tplConfig;
+      const paperSize = cfg.paperSize;
 
-      // 3. Read All Independent Settings (Strictly decoupled!)
-      const tplType = document.getElementById('tplTypeSelect')?.value || 'mizi';
-      const gridColor = document.getElementById('tplGridColor')?.value || '#dc2626'; // ONLY for paper grid lines
-      const traceEnabled = document.getElementById('tplTraceEnabled')?.checked ?? true;
-      const traceRawText = (document.getElementById('tplTraceText')?.value || '').replace(/\s+/g, '');
-      const traceStyle = document.getElementById('tplTraceStyle')?.value || 'solid'; // 'solid' | 'outline' | 'dashed'
-      const traceColor = document.getElementById('tplTraceColor')?.value || '#dc2626'; // Strictly independent watermark color!
-      const traceOpacity = parseFloat(document.getElementById('tplTraceOpacity')?.value || '0.45');
-      const fontWeight = parseInt(document.getElementById('tplFontWeight')?.value || '400', 10);
-      const repeatFill = document.getElementById('tplRepeatFill')?.checked ?? true;
-      const selectedFont = document.getElementById('tplFontSelect')?.value || "'Ma Shan Zheng', 'STKaiti', 'KaiTi', serif";
+      let baseW = 2480, baseH = 3508;
+      if (paperSize === 'a3') { baseW = 3508; baseH = 4960; }
+      else if (paperSize === 'a5') { baseW = 1748; baseH = 2480; }
+      
+      cvs.width = baseW;
+      cvs.height = baseH;
 
-      // Read Custom Rows & Columns
-      const customCols = Math.max(1, parseInt(document.getElementById('tplColsInput')?.value || '8', 10));
-      const customRows = Math.max(1, parseInt(document.getElementById('tplRowsInput')?.value || '12', 10));
+      const scale = baseW / 2480;
+      const margin = Math.round(140 * scale);
+      const width = baseW;
+      const height = baseH;
 
-      const tplBadge = document.getElementById('tplMobileCurrentBadge');
-      if (tplBadge) {
-        const tplName = document.getElementById('tplTypeSelect')?.selectedOptions?.[0]?.innerText?.split(' ')?.[1] || '作业纸';
-        tplBadge.innerText = `${tplName} · ${paperSize.toUpperCase()}`;
-      }
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
 
-      // 4. Draw Header Information Line (strictly proportional with scale)
-      c.fillStyle = gridColor;
-      c.font = `bold ${Math.round(36 * scale)}px "KaiTi", "STKaiti", serif`;
-      c.textAlign = 'left';
-      c.fillText('姓名：__________    班级：__________    日期：__________    成绩：__________', Math.round(w * 0.06), Math.round(h * 0.04));
+      const type = cfg.type;
+      const gridColor = cfg.gridColor || '#dc2626';
+      const traceColor = cfg.traceColor || '#dc2626';
+      const traceAlpha = parseFloat(cfg.traceOpacity || '0.45');
+      const traceRgba = hexToRgba(traceColor, traceAlpha);
+      const traceEnabled = cfg.traceEnabled;
+      const rawText = cfg.text.replace(/\s+/g, '');
+      let textIdx = 0;
 
-      c.lineWidth = Math.max(1.5, Math.round(1.8 * scale));
-      c.strokeStyle = gridColor;
-      c.beginPath();
-      c.moveTo(Math.round(w * 0.06), Math.round(h * 0.048));
-      c.lineTo(w - Math.round(w * 0.06), Math.round(h * 0.048));
-      c.stroke();
+      const fontFamily = cfg.font;
+      const fontWeight = cfg.weight;
+      const traceStyle = cfg.traceStyle;
 
-      // Tracing Text Char Cursor
-      let charIdx = 0;
-      function getNextChar() {
-        if (!traceRawText.length) return '';
-        if (charIdx < traceRawText.length) {
-          return traceRawText[charIdx++];
-        } else if (repeatFill) {
-          charIdx = 0;
-          return traceRawText[charIdx++];
-        }
-        return '';
-      }
+      ctx.strokeStyle = gridColor;
+      ctx.fillStyle = gridColor;
 
-      // Draw Watermark: Strictly uses traceColor, traceStyle, fontWeight, never touches gridColor!
-      function drawCharWatermark(char, cx, cy, size, fontOverride) {
-        if (!traceEnabled || !char) return;
-        c.save();
-        c.textAlign = 'center';
-        c.textBaseline = 'middle';
-        
-        const fontName = fontOverride || selectedFont;
-        // In Canvas, web fonts match reliably with normal weight
-        c.font = `normal ${size}px ${fontName}`;
-        const strokeColor = hexToRgba(traceColor, traceOpacity);
-
-        if (traceStyle === 'outline') {
-          // ⭕ 空心双钩描边
-          const outlineW = Math.max(1.8, Math.round(size * (fontWeight / 400) * 0.024 * scale));
-          c.lineWidth = outlineW;
-          c.strokeStyle = strokeColor;
-          c.strokeText(char, cx, cy);
-        } else if (traceStyle === 'dashed') {
-          // 〰️ 虚线引笔描线: visible dashed outline + subtle interior guide
-          const dashW = Math.max(2.0, Math.round(size * (fontWeight / 400) * 0.022 * scale));
-          c.lineWidth = dashW;
-          c.strokeStyle = strokeColor;
-          c.setLineDash([Math.round(size * 0.07 * scale), Math.round(size * 0.045 * scale)]);
-          c.strokeText(char, cx, cy);
-          c.setLineDash([]);
-          c.fillStyle = hexToRgba(traceColor, Math.max(0.06, traceOpacity * 0.18));
-          c.fillText(char, cx, cy);
-        } else {
-          // 🔴 饱满实心填墨 (solid)
-          c.fillStyle = strokeColor;
-          c.fillText(char, cx, cy);
-
-          // Physical stroke weight adjustment (100 ~ 900)
-          if (fontWeight >= 600) {
-            const extraW = Math.max(1.5, Math.round(size * ((fontWeight - 400) / 400) * 0.038 * scale));
-            c.lineWidth = extraW;
-            c.strokeStyle = strokeColor;
-            c.strokeText(char, cx, cy);
-          } else if (fontWeight <= 300) {
-            c.fillStyle = hexToRgba(traceColor, Math.max(0.12, traceOpacity * (fontWeight / 400)));
-            c.fillText(char, cx, cy);
-          }
-        }
-        c.restore();
-      }
-
-      // 5. Render 13+ Template Types with Scaled Borders, Dashes, and Custom Rows/Cols
-      const tipsEl = document.getElementById('tplGridSizeTips');
-
-      if (tplType === 'rizi') {
-        // 🔢 幼小衔接日字格 (数字规范书写格 0~9，中间水平虚线分割)
-        const cols = customCols;
-        const rows = customRows;
-        const marginX = Math.round(w * 0.06);
-        const startY = Math.round(h * 0.065);
-        const colGap = Math.round(w * 0.008);
-        const rowGap = Math.round(w * 0.01);
-        const cellW = Math.round((w - marginX * 2 - (cols - 1) * colGap) / cols);
-        const cellH = Math.round(cellW * 1.35);
-        if (tipsEl) tipsEl.innerText = `日字格: ${cellW}x${cellH}px · ${cols}列 x ${rows}行 (共 ${cols * rows} 格)`;
+      if (type === 'rizi') {
+        const rows = Math.max(1, cfg.rows);
+        const cols = Math.max(1, cfg.cols);
+        const gridW = (width - margin * 2) / cols;
+        const gridH = (height - margin * 2) / rows;
+        const boxSize = Math.min(gridW, gridH) * 0.94;
+        const offX = margin + (gridW * cols - boxSize * cols) / 2;
+        const offY = margin + (gridH * rows - boxSize * rows) / 2;
 
         for (let r = 0; r < rows; r++) {
-          const y = startY + r * (cellH + rowGap);
-          if (y + cellH > h - Math.round(40 * scale)) break;
+          for (let c = 0; c < cols; c++) {
+            const x = offX + c * boxSize;
+            const y = offY + r * boxSize;
 
-          for (let col = 0; col < cols; col++) {
-            const x = marginX + col * (cellW + colGap);
+            ctx.strokeStyle = gridColor;
+            ctx.lineWidth = Math.max(1.5, 3 * scale);
+            ctx.strokeRect(x, y, boxSize, boxSize);
 
-            // Outer rectangular border (proportional stroke)
-            c.strokeStyle = gridColor;
-            c.lineWidth = Math.max(1.8, Math.round(2.5 * scale));
-            c.strokeRect(x, y, cellW, cellH);
+            ctx.beginPath();
+            ctx.setLineDash([Math.round(8 * scale), Math.round(6 * scale)]);
+            ctx.lineWidth = Math.max(1, 2 * scale);
+            ctx.moveTo(x, y + boxSize / 2);
+            ctx.lineTo(x + boxSize, y + boxSize / 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
 
-            // Middle horizontal dashed line (divides into upper and lower half)
-            c.lineWidth = Math.max(1.0, Math.round(1.2 * scale));
-            c.setLineDash([Math.round(6 * scale), Math.round(6 * scale)]);
-            c.beginPath();
-            c.moveTo(x, y + cellH / 2);
-            c.lineTo(x + cellW, y + cellH / 2);
-            c.stroke();
-            c.setLineDash([]);
-
-            const char = getNextChar();
-            drawCharWatermark(char, x + cellW / 2, y + cellH / 2 + 2 * scale, Math.round(cellH * 0.72));
-          }
-        }
-      } else if (tplType === 'tianzi') {
-        // 🀄 拼音田字格 (拼音在上 + 汉字在下)
-        const cols = customCols;
-        const rows = customRows;
-        const marginX = Math.round(w * 0.06);
-        const startY = Math.round(h * 0.065);
-        const cell = Math.round((w - marginX * 2) / cols);
-        const pinyinH = Math.round(cell * 0.35);
-        const totalRowH = pinyinH + cell + Math.round(w * 0.012);
-        if (tipsEl) tipsEl.innerText = `单格: ${cell}px · ${cols}列 x ${rows}行`;
-
-        for (let r = 0; r < rows; r++) {
-          const yPinyin = startY + r * totalRowH;
-          const yCell = yPinyin + pinyinH;
-          if (yCell + cell > h - Math.round(40 * scale)) break;
-
-          for (let col = 0; col < cols; col++) {
-            const x = marginX + col * cell;
-
-            // 1. Pinyin 4-line grid (proportional stroke & dash)
-            c.strokeStyle = gridColor;
-            c.lineWidth = Math.max(1.5, Math.round(2 * scale));
-            c.strokeRect(x, yPinyin, cell, pinyinH);
-            c.lineWidth = Math.max(1.0, Math.round(1 * scale));
-            c.setLineDash([Math.round(6 * scale), Math.round(6 * scale)]);
-            c.beginPath();
-            c.moveTo(x, yPinyin + pinyinH / 3); c.lineTo(x + cell, yPinyin + pinyinH / 3);
-            c.moveTo(x, yPinyin + (pinyinH * 2) / 3); c.lineTo(x + cell, yPinyin + (pinyinH * 2) / 3);
-            c.stroke();
-            c.setLineDash([]);
-
-            // 2. Tianzi Cell (proportional stroke & dash)
-            c.lineWidth = Math.max(1.8, Math.round(2.5 * scale));
-            c.strokeRect(x, yCell, cell, cell);
-            c.lineWidth = Math.max(1.0, Math.round(1.2 * scale));
-            c.setLineDash([Math.round(8 * scale), Math.round(8 * scale)]);
-            c.beginPath();
-            c.moveTo(x + cell / 2, yCell); c.lineTo(x + cell / 2, yCell + cell);
-            c.moveTo(x, yCell + cell / 2); c.lineTo(x + cell, yCell + cell / 2);
-            c.stroke();
-            c.setLineDash([]);
-
-            const char = getNextChar();
-            drawCharWatermark(char, x + cell / 2, yCell + cell / 2 + 5 * scale, Math.round(cell * 0.72));
-          }
-        }
-      } else if (tplType === 'mizi' || tplType === 'pure_tianzi' || tplType === 'huigong' || tplType === 'jiugong') {
-        // ✳️ 米字格 / 田字格 / 回宫格 / 九宫格
-        const cols = customCols;
-        const rows = customRows;
-        const marginX = Math.round(w * 0.06);
-        const startY = Math.round(h * 0.065);
-        const cell = Math.round((w - marginX * 2) / cols);
-        const rowGap = Math.round(w * 0.01);
-        if (tipsEl) tipsEl.innerText = `单格: ${cell}px · ${cols}列 x ${rows}行`;
-
-        for (let r = 0; r < rows; r++) {
-          const y = startY + r * (cell + rowGap);
-          if (y + cell > h - Math.round(40 * scale)) break;
-
-          for (let col = 0; col < cols; col++) {
-            const x = marginX + col * cell;
-
-            // Outer square (proportional stroke)
-            c.strokeStyle = gridColor;
-            c.lineWidth = Math.max(1.8, Math.round(2.8 * scale));
-            c.strokeRect(x, y, cell, cell);
-
-            if (tplType === 'mizi') {
-              c.lineWidth = Math.max(1.0, Math.round(1.2 * scale));
-              c.setLineDash([Math.round(7 * scale), Math.round(7 * scale)]);
-              c.beginPath();
-              c.moveTo(x + cell / 2, y); c.lineTo(x + cell / 2, y + cell);
-              c.moveTo(x, y + cell / 2); c.lineTo(x + cell, y + cell / 2);
-              c.moveTo(x, y); c.lineTo(x + cell, y + cell);
-              c.moveTo(x + cell, y); c.lineTo(x, y + cell);
-              c.stroke();
-              c.setLineDash([]);
-            } else if (tplType === 'pure_tianzi') {
-              c.lineWidth = Math.max(1.0, Math.round(1.2 * scale));
-              c.setLineDash([Math.round(8 * scale), Math.round(8 * scale)]);
-              c.beginPath();
-              c.moveTo(x + cell / 2, y); c.lineTo(x + cell / 2, y + cell);
-              c.moveTo(x, y + cell / 2); c.lineTo(x + cell, y + cell / 2);
-              c.stroke();
-              c.setLineDash([]);
-            } else if (tplType === 'huigong') {
-              const innerW = cell * 0.55;
-              const offset = (cell - innerW) / 2;
-              c.lineWidth = Math.max(1.2, Math.round(1.8 * scale));
-              c.setLineDash([Math.round(6 * scale), Math.round(6 * scale)]);
-              c.strokeRect(x + offset, y + offset, innerW, innerW);
-              c.setLineDash([]);
-            } else if (tplType === 'jiugong') {
-              c.lineWidth = Math.max(1.0, Math.round(1.2 * scale));
-              c.setLineDash([Math.round(6 * scale), Math.round(6 * scale)]);
-              const third = cell / 3;
-              c.beginPath();
-              c.moveTo(x + third, y); c.lineTo(x + third, y + cell);
-              c.moveTo(x + third * 2, y); c.lineTo(x + third * 2, y + cell);
-              c.moveTo(x, y + third); c.lineTo(x + cell, y + third);
-              c.moveTo(x, y + third * 2); c.lineTo(x + cell, y + third * 2);
-              c.stroke();
-              c.setLineDash([]);
-            }
-
-            const char = getNextChar();
-            drawCharWatermark(char, x + cell / 2, y + cell / 2 + 5 * scale, Math.round(cell * 0.72));
-          }
-        }
-      } else if (tplType === 'hengshui' || tplType === 'english4') {
-        // ✍️ 衡水体 (68° slanted lines) / 英语四线三格
-        const rows = customRows;
-        const marginX = Math.round(w * 0.06);
-        const startY = Math.round(h * 0.065);
-        const availableHeight = h - startY - Math.round(100 * scale);
-        const totalBlockH = availableHeight / rows;
-        const rowH = Math.round(totalBlockH * 0.72);
-        const spaceH = rowH / 3;
-        const rowGap = totalBlockH - rowH;
-        if (tipsEl) tipsEl.innerText = `行高: ${rowH}px · 共 ${rows} 组四线三格`;
-
-        for (let r = 0; r < rows; r++) {
-          const y = startY + r * totalBlockH;
-          if (y + rowH > h - Math.round(40 * scale)) break;
-          c.strokeStyle = gridColor;
-
-          for (let l = 0; l < 4; l++) {
-            c.lineWidth = (l === 2) ? Math.max(1.8, Math.round(2.5 * scale)) : Math.max(1.0, Math.round(1.5 * scale));
-            c.setLineDash(l === 1 || l === 2 ? [] : [Math.round(8 * scale), Math.round(8 * scale)]);
-            c.beginPath();
-            c.moveTo(marginX, y + l * spaceH);
-            c.lineTo(w - marginX, y + l * spaceH);
-            c.stroke();
-          }
-          c.setLineDash([]);
-
-          if (tplType === 'hengshui') {
-            c.strokeStyle = `rgba(148, 163, 184, 0.45)`;
-            c.lineWidth = Math.max(1.0, Math.round(1 * scale));
-            const slantOffset = Math.tan((90 - 68) * Math.PI / 180) * rowH;
-            const slantGap = Math.max(40, Math.round(110 * scale));
-            for (let x = marginX; x < w - marginX; x += slantGap) {
-              c.beginPath();
-              c.moveTo(x + slantOffset, y);
-              c.lineTo(x, y + rowH);
-              c.stroke();
-            }
-          }
-
-          if (traceEnabled) {
-            let rowText = '';
-            for (let k = 0; k < (customCols || 16); k++) {
-              const ch = getNextChar();
-              if (ch) rowText += ch + ' ';
-            }
-            if (rowText.trim()) {
-              c.save();
-              const engFont = tplType === 'hengshui' ? `'Dancing Script', 'Caveat', 'Segoe Script', cursive` : selectedFont;
-              c.font = `normal ${Math.round(rowH * 0.44)}px ${engFont}`;
-              const strokeColor = hexToRgba(traceColor, traceOpacity);
-              c.fillStyle = strokeColor;
-              c.textAlign = 'left';
-              c.fillText(rowText, marginX + 30 * scale, y + spaceH * 2 + 10 * scale);
-              if (fontWeight >= 600) {
-                c.lineWidth = Math.max(1.2, Math.round(rowH * 0.015 * ((fontWeight - 400) / 400) * scale));
-                c.strokeStyle = strokeColor;
-                c.strokeText(rowText, marginX + 30 * scale, y + spaceH * 2 + 10 * scale);
-              }
-              c.restore();
+            if (traceEnabled && rawText.length > 0) {
+              const char = rawText[textIdx % rawText.length];
+              drawCalligraphyChar(ctx, char, x + boxSize/2, y + boxSize * 0.82, boxSize * 0.72, fontFamily, fontWeight, traceStyle, traceRgba, scale);
+              textIdx++;
             }
           }
         }
-      } else if (tplType === 'cornell') {
-        // 📖 康奈尔经典笔记纸 (三栏布局)
-        const startY = Math.round(h * 0.065);
-        const bottomH = Math.round(h * 0.14);
-        const cueW = Math.round(w * 0.24);
-        c.strokeStyle = gridColor;
-        c.lineWidth = Math.max(2.0, Math.round(3 * scale));
-        c.strokeRect(140 * scale, startY, w - 280 * scale, h - startY - 140 * scale);
-
-        c.beginPath();
-        c.moveTo(140 * scale + cueW, startY);
-        c.lineTo(140 * scale + cueW, h - 140 * scale - bottomH);
-        c.stroke();
-
-        c.beginPath();
-        c.moveTo(140 * scale, h - 140 * scale - bottomH);
-        c.lineTo(w - 140 * scale, h - 140 * scale - bottomH);
-        c.stroke();
-
-        c.fillStyle = gridColor;
-        c.font = `bold ${Math.round(28 * scale)}px ${selectedFont}`;
-        c.fillText('【线索栏 / 重点关键词】', 160 * scale, startY + 50 * scale);
-        c.fillText('【主笔记栏 / 课堂核心记录】', 140 * scale + cueW + 40 * scale, startY + 50 * scale);
-        c.fillText('【总结概括栏 / SUMMARY】', 160 * scale, h - 140 * scale - bottomH + 50 * scale);
-
-        c.strokeStyle = `rgba(148, 163, 184, 0.35)`;
-        c.lineWidth = Math.max(1.0, Math.round(1.5 * scale));
-        const lineCount = customRows || 20;
-        const lineGap = (h - startY - 140 * scale - bottomH - 80 * scale) / lineCount;
-        for (let i = 0; i < lineCount; i++) {
-          const y = startY + 80 * scale + i * lineGap;
-          c.beginPath();
-          c.moveTo(140 * scale + cueW, y);
-          c.lineTo(w - 140 * scale, y);
-          c.stroke();
-        }
-        if (tipsEl) tipsEl.innerText = `笔记行数: ${lineCount} 行`;
-      } else if (tplType === 'cuoti') {
-        // 📝 错题整理本 (自定义卡片数量)
-        const cardCount = Math.max(1, Math.min(8, customRows <= 8 ? customRows : 3));
-        const startY = Math.round(h * 0.065);
-        const gap = Math.round(35 * scale);
-        const cardH = Math.round((h - startY - 140 * scale - (cardCount - 1) * gap) / cardCount);
-        if (tipsEl) tipsEl.innerText = `错题卡片数: ${cardCount} 大题/页`;
-
-        for (let i = 0; i < cardCount; i++) {
-          const y = startY + i * (cardH + gap);
-          c.strokeStyle = gridColor;
-          c.lineWidth = Math.max(1.8, Math.round(2.5 * scale));
-          c.strokeRect(140 * scale, y, w - 280 * scale, cardH);
-
-          c.fillStyle = hexToRgba(gridColor, 0.08);
-          const headH = Math.max(35, Math.round(60 * scale));
-          c.fillRect(140 * scale, y, w - 280 * scale, headH);
-          c.fillStyle = gridColor;
-          c.font = `bold ${Math.round(26 * scale)}px ${selectedFont}`;
-          c.fillText(`错题序号 #${i + 1}    科目：________    错因分类：□ 审题不清  □ 概念混淆  □ 运算失误  □ 难度过高`, 160 * scale, y + headH * 0.65);
-
-          c.beginPath();
-          c.moveTo(140 * scale + (w - 280 * scale) * 0.48, y + headH);
-          c.lineTo(140 * scale + (w - 280 * scale) * 0.48, y + cardH);
-          c.stroke();
-
-          c.font = `bold ${Math.round(24 * scale)}px ${selectedFont}`;
-          c.fillText('【原题呈现 & 错误解法】', 160 * scale, y + headH + 45 * scale);
-          c.fillText('【标准正解 & 考点剖析 & 举一反三】', 140 * scale + (w - 280 * scale) * 0.48 + 30 * scale, y + headH + 45 * scale);
-        }
-      } else if (tplType === 'grid') {
-        // ▦ 方格作文稿纸
-        const cols = customCols;
-        const rows = customRows;
-        const marginX = Math.round(w * 0.06);
-        const startY = Math.round(h * 0.065);
-        const cell = Math.round((w - marginX * 2) / cols);
-        const rowGap = Math.round(cell * 0.15);
-        if (tipsEl) tipsEl.innerText = `单字格: ${cell}px · ${cols}列 x ${rows}行 (共 ${cols * rows} 字)`;
+      } else if (type === 'mizi' || type === 'pure_tianzi' || type === 'huigong' || type === 'jiugong') {
+        const rows = Math.max(1, cfg.rows);
+        const cols = Math.max(1, cfg.cols);
+        const gridW = (width - margin * 2) / cols;
+        const gridH = (height - margin * 2) / rows;
+        const boxSize = Math.min(gridW, gridH) * 0.94;
+        const offX = margin + (gridW * cols - boxSize * cols) / 2;
+        const offY = margin + (gridH * rows - boxSize * rows) / 2;
 
         for (let r = 0; r < rows; r++) {
-          const y = startY + r * (cell + rowGap);
-          if (y + cell > h - Math.round(40 * scale)) break;
+          for (let c = 0; c < cols; c++) {
+            const x = offX + c * boxSize;
+            const y = offY + r * boxSize;
 
-          for (let col = 0; col < cols; col++) {
-            const x = marginX + col * cell;
-            c.strokeStyle = gridColor;
-            c.lineWidth = Math.max(1.2, Math.round(1.8 * scale));
-            c.strokeRect(x, y, cell, cell);
+            ctx.strokeStyle = gridColor;
+            ctx.lineWidth = Math.max(1.5, 3 * scale);
+            ctx.strokeRect(x, y, boxSize, boxSize);
 
-            const char = getNextChar();
-            drawCharWatermark(char, x + cell / 2, y + cell / 2 + 3 * scale, Math.round(cell * 0.72));
+            ctx.beginPath();
+            ctx.setLineDash([Math.round(8 * scale), Math.round(6 * scale)]);
+            ctx.lineWidth = Math.max(1, 2 * scale);
+            ctx.moveTo(x + boxSize / 2, y);
+            ctx.lineTo(x + boxSize / 2, y + boxSize);
+            ctx.moveTo(x, y + boxSize / 2);
+            ctx.lineTo(x + boxSize, y + boxSize / 2);
+
+            if (type === 'mizi') {
+              ctx.moveTo(x, y);
+              ctx.lineTo(x + boxSize, y + boxSize);
+              ctx.moveTo(x + boxSize, y);
+              ctx.lineTo(x, y + boxSize);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            if (traceEnabled && rawText.length > 0) {
+              const char = rawText[textIdx % rawText.length];
+              drawCalligraphyChar(ctx, char, x + boxSize/2, y + boxSize * 0.82, boxSize * 0.74, fontFamily, fontWeight, traceStyle, traceRgba, scale);
+              textIdx++;
+            }
           }
         }
-      } else if (tplType === 'music' || tplType === 'guitar') {
-        // 🎼 音乐五线谱 / 吉他六线谱 (全页铺满动态计算)
-        const stavesCount = Math.max(3, Math.min(20, customRows <= 20 ? customRows : 8));
-        const startY = Math.round(h * 0.07);
-        const linesCount = (tplType === 'music' ? 5 : 6);
-        const staveGap = Math.round(18 * scale);
-        const staveHeight = (linesCount - 1) * staveGap;
-        const bottomMargin = Math.round(h * 0.05);
-        const availableH = h - startY - bottomMargin;
-        const actualBlockGap = (availableH - staveHeight) / Math.max(1, stavesCount - 1);
-        if (tipsEl) tipsEl.innerText = `${tplType === 'music' ? '五线谱' : '六线谱'}: 共 ${stavesCount} 组谱表`;
+      } else if (type === 'tianzi') {
+        const rows = Math.max(1, cfg.rows);
+        const cols = Math.max(1, cfg.cols);
+        const gridW = (width - margin * 2) / cols;
+        const gridH = (height - margin * 2) / rows;
+        const boxSize = Math.min(gridW, gridH * 0.72);
+        const pinyinH = boxSize * 0.42;
+        const totalUnitH = boxSize + pinyinH;
+        const offX = margin + (gridW * cols - boxSize * cols) / 2;
+        const offY = margin;
 
-        for (let s = 0; s < stavesCount; s++) {
-          const y = startY + s * actualBlockGap;
-          c.strokeStyle = gridColor;
-          c.lineWidth = Math.max(1.5, Math.round(2 * scale));
+        for (let r = 0; r < rows; r++) {
+          const y = offY + r * totalUnitH;
+          if (y + totalUnitH > height - margin) break;
+          for (let c = 0; c < cols; c++) {
+            const x = offX + c * boxSize;
 
-          for (let l = 0; l < linesCount; l++) {
-            c.beginPath();
-            c.moveTo(140 * scale, y + l * staveGap);
-            c.lineTo(w - 140 * scale, y + l * staveGap);
-            c.stroke();
+            ctx.strokeStyle = gridColor;
+            ctx.lineWidth = Math.max(1, 2 * scale);
+            ctx.strokeRect(x, y, boxSize, pinyinH);
+            ctx.beginPath();
+            ctx.setLineDash([Math.round(6 * scale), Math.round(5 * scale)]);
+            ctx.moveTo(x, y + pinyinH * 0.33); ctx.lineTo(x + boxSize, y + pinyinH * 0.33);
+            ctx.moveTo(x, y + pinyinH * 0.66); ctx.lineTo(x + boxSize, y + pinyinH * 0.66);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            const charY = y + pinyinH;
+            ctx.strokeRect(x, charY, boxSize, boxSize);
+            ctx.beginPath();
+            ctx.setLineDash([Math.round(8 * scale), Math.round(6 * scale)]);
+            ctx.moveTo(x + boxSize/2, charY); ctx.lineTo(x + boxSize/2, charY + boxSize);
+            ctx.moveTo(x, charY + boxSize/2); ctx.lineTo(x + boxSize, charY + boxSize/2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            if (traceEnabled && rawText.length > 0) {
+              const char = rawText[textIdx % rawText.length];
+              drawCalligraphyChar(ctx, char, x + boxSize/2, charY + boxSize * 0.82, boxSize * 0.74, fontFamily, fontWeight, traceStyle, traceRgba, scale);
+              textIdx++;
+            }
+          }
+        }
+      } else if (type === 'hengshui' || type === 'english4') {
+        const rows = Math.max(1, cfg.rows);
+        const rowH = (height - margin * 2) / rows;
+        for (let r = 0; r < rows; r++) {
+          const y = margin + r * rowH;
+          const h4 = rowH * 0.82;
+          const lineGap = h4 / 3;
+
+          ctx.strokeStyle = gridColor;
+          ctx.lineWidth = Math.max(1.5, 2.5 * scale);
+          ctx.beginPath();
+          ctx.moveTo(margin, y); ctx.lineTo(width - margin, y);
+          ctx.moveTo(margin, y + h4); ctx.lineTo(width - margin, y + h4);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.setLineDash([Math.round(6 * scale), Math.round(5 * scale)]);
+          ctx.lineWidth = Math.max(1, 1.8 * scale);
+          ctx.moveTo(margin, y + lineGap); ctx.lineTo(width - margin, y + lineGap);
+          ctx.moveTo(margin, y + lineGap * 2); ctx.lineTo(width - margin, y + lineGap * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          if (type === 'hengshui') {
+            ctx.beginPath();
+            ctx.setLineDash([Math.round(4 * scale), Math.round(6 * scale)]);
+            ctx.lineWidth = Math.max(0.8, 1.2 * scale);
+            const slantOffset = Math.tan(22 * Math.PI / 180) * h4;
+            for (let sx = margin; sx < width - margin; sx += Math.round(90 * scale)) {
+              ctx.moveTo(sx + slantOffset, y);
+              ctx.lineTo(sx, y + h4);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
           }
 
-          c.beginPath();
-          c.moveTo(140 * scale, y); c.lineTo(140 * scale, y + staveHeight);
-          c.moveTo(w - 140 * scale, y); c.lineTo(w - 140 * scale, y + staveHeight);
-          c.stroke();
+          if (traceEnabled && cfg.text.trim()) {
+            ctx.font = `${fontWeight} ${Math.round(lineGap * 1.55)}px ${fontFamily}`;
+            ctx.fillStyle = traceRgba;
+            ctx.textAlign = 'left';
+            ctx.fillText(cfg.text, margin + 20 * scale, y + lineGap * 2.85, width - margin * 2 - 40 * scale);
+          }
+        }
+      } else if (type === 'music' || type === 'guitar') {
+        const numLines = (type === 'music') ? 5 : 6;
+        const rows = Math.max(1, cfg.rows);
+        const rowH = (height - margin * 2) / rows;
+        for (let r = 0; r < rows; r++) {
+          const y = margin + r * rowH;
+          const staveH = rowH * 0.65;
+          const gap = staveH / (numLines - 1);
 
-          c.fillStyle = gridColor;
-          c.font = `bold ${Math.round(36 * scale)}px serif`;
-          c.fillText(tplType === 'music' ? '𝄞' : 'TAB', 160 * scale, y + staveHeight / 2 + 12 * scale);
+          ctx.strokeStyle = gridColor;
+          ctx.lineWidth = Math.max(1.2, 2.2 * scale);
+          for (let l = 0; l < numLines; l++) {
+            ctx.beginPath();
+            ctx.moveTo(margin, y + l * gap);
+            ctx.lineTo(width - margin, y + l * gap);
+            ctx.stroke();
+          }
+          ctx.beginPath();
+          ctx.moveTo(margin, y); ctx.lineTo(margin, y + staveH);
+          ctx.moveTo(width - margin, y); ctx.lineTo(width - margin, y + staveH);
+          ctx.stroke();
+        }
+      } else {
+        // Grid / Cornell / Cuoti
+        const rows = Math.max(1, cfg.rows);
+        const cols = Math.max(1, cfg.cols);
+        const cellW = (width - margin * 2) / cols;
+        const cellH = (height - margin * 2) / rows;
+
+        ctx.strokeStyle = gridColor;
+        ctx.lineWidth = Math.max(1.2, 2.2 * scale);
+        for (let r = 0; r <= rows; r++) {
+          ctx.beginPath();
+          ctx.moveTo(margin, margin + r * cellH);
+          ctx.lineTo(width - margin, margin + r * cellH);
+          ctx.stroke();
+        }
+        for (let c = 0; c <= cols; c++) {
+          ctx.beginPath();
+          ctx.moveTo(margin + c * cellW, margin);
+          ctx.lineTo(margin + c * cellW, height - margin);
+          ctx.stroke();
         }
       }
     }
 
-    async function loadPcLocalFontsForTemplates() {
-      if (!('queryLocalFonts' in window)) {
-        showToast('当前浏览器暂未支持直接枚举字体，已预设常用 Windows/macOS 系统字体');
-        return;
+    function drawCalligraphyChar(ctx, char, cx, cy, fontSize, font, weight, style, color, scale) {
+      ctx.save();
+      ctx.font = `${weight} ${Math.round(fontSize)}px ${font}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+
+      if (style === 'solid') {
+        ctx.fillStyle = color;
+        ctx.fillText(char, cx, cy);
+      } else if (style === 'outline') {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = Math.max(1.5, 3 * scale);
+        ctx.strokeText(char, cx, cy);
+      } else if (style === 'dashed') {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = Math.max(1.5, 2.5 * scale);
+        ctx.setLineDash([Math.round(5 * scale), Math.round(4 * scale)]);
+        ctx.strokeText(char, cx, cy);
+        ctx.setLineDash([]);
       }
-      try {
-        showToast('正在读取本机电脑安装的字体库...');
-        const availableFonts = await window.queryLocalFonts();
-        const group = document.getElementById('tplLocalFontsGroup');
-        if (group && availableFonts.length) {
-          const unique = new Set();
-          const fontOptions = [];
-          availableFonts.forEach(f => {
-            if (!unique.has(f.family)) {
-              unique.add(f.family);
-              fontOptions.push(`<option value='"${f.family}", sans-serif'>${f.fullName || f.family}</option>`);
-            }
-          });
-          group.innerHTML = fontOptions.slice(0, 150).join('');
-          showToast(`已成功读取本机 ${unique.size} 款系统字体！`);
-        }
-      } catch (e) {
-        showToast('读取本机字体已取消或受限');
-      }
+      ctx.restore();
     }
 
     function exportTemplateToPDF() {
-      const cvs = document.getElementById('templatePaperCanvas');
-      if (!cvs) return;
-      showToast('正在导出 300 DPI 矢量级作业纸 PDF...');
-      const paperSize = document.getElementById('tplPaperSizeSelect')?.value || 'a4';
+      const isMobile = detectIsMobileDevice();
+      const cvs = isMobile ? document.getElementById('templatePaperCanvasMob') : document.getElementById('templatePaperCanvasPC');
+      if (!cvs || !cvs.width) return showToast('暂无可导出的作业纸');
       const { jsPDF } = window.jspdf;
+      const paperSize = state.tplConfig.paperSize;
+      
+      let pdfW = 210, pdfH = 297;
+      if (paperSize === 'a3') { pdfW = 297; pdfH = 420; }
+      else if (paperSize === 'a5') { pdfW = 148; pdfH = 210; }
+
       const pdf = new jsPDF('p', 'mm', paperSize);
-      const pdfW = paperSize === 'a3' ? 297 : (paperSize === 'a5' ? 148 : 210);
-      const pdfH = paperSize === 'a3' ? 420 : (paperSize === 'a5' ? 210 : 297);
       pdf.addImage(cvs.toDataURL('image/jpeg', 0.96), 'JPEG', 0, 0, pdfW, pdfH);
-      const tplName = document.getElementById('tplTypeSelect')?.value || 'Template';
+      const tplName = state.tplConfig.type || 'Template';
       pdf.save(`Paper_Template_${tplName}_${paperSize.toUpperCase()}.pdf`);
       showToast(`${paperSize.toUpperCase()} 规格作业纸 PDF 导出成功！`);
     }
