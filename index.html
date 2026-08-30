@@ -1854,19 +1854,20 @@
       <div class="flex-1 min-h-0 bg-slate-100 dark:bg-slate-950 p-6 overflow-y-auto flex flex-col items-center justify-start">
         
         <!-- PC Top Floating Control Ribbon -->
-        <div class="w-full max-w-[740px] mb-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2.5 rounded-2xl shadow-sm flex items-center justify-between shrink-0">
+        <div class="w-full max-w-[800px] mb-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2.5 rounded-2xl shadow-sm flex items-center justify-between shrink-0">
           <div class="flex items-center space-x-2">
             <span class="w-2.5 h-2.5 rounded-full bg-teal-500 animate-pulse"></span>
             <span class="text-xs font-bold text-slate-800 dark:text-slate-200" id="tplPcPaperBadge">经典米字格 · A4 标准版 (210×297mm) · 300 DPI</span>
           </div>
-          <div class="flex items-center space-x-2">
-            <button onclick="setTplPcPaperZoom(0.65)" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-medium hover:bg-slate-200">65%</button>
-            <button onclick="setTplPcPaperZoom(0.85)" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-medium hover:bg-slate-200">85%</button>
-            <button onclick="setTplPcPaperZoom(1.0)" class="px-2.5 py-1 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold border border-teal-200 dark:border-teal-800 rounded-lg text-xs">100% 标准</button>
-            <button onclick="window.print()" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg text-xs font-bold flex items-center space-x-1">
+          <div class="flex items-center space-x-1.5 text-xs">
+            <button onclick="setTplPcPaperZoomWidth('fit')" id="btnZoomFit" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg font-bold text-slate-700 dark:text-slate-200 transition">🔍 适应窗口</button>
+            <button onclick="setTplPcPaperZoomWidth(540)" id="btnZoom75" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg font-medium">75%</button>
+            <button onclick="setTplPcPaperZoomWidth(720)" id="btnZoom100" class="px-2.5 py-1 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold border border-teal-200 dark:border-teal-800 rounded-lg">100% 标准</button>
+            <button onclick="setTplPcPaperZoomWidth(900)" id="btnZoom125" class="px-2 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg font-medium">125%</button>
+            <button onclick="window.print()" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg font-bold flex items-center space-x-1 ml-1">
               <i data-lucide="printer" class="w-3.5 h-3.5"></i><span>打印</span>
             </button>
-            <button onclick="exportTemplateToPDF()" class="px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold shadow flex items-center space-x-1">
+            <button onclick="exportTemplateToPDF()" class="px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-bold shadow flex items-center space-x-1">
               <i data-lucide="download" class="w-3.5 h-3.5"></i><span>下载PDF</span>
             </button>
           </div>
@@ -4516,6 +4517,19 @@
     /* =========================================================================
        TEMPLATE & CALLIGRAPHY STUDIO: UA-BASED DEDICATED PC & MOBILE ENGINES
        ========================================================================= */
+    function hexToRgba(hex, alpha = 1) {
+      if (!hex) return `rgba(220, 38, 38, ${alpha})`;
+      if (hex.startsWith('rgba') || hex.startsWith('rgb')) return hex;
+      let s = hex.replace('#', '');
+      if (s.length === 3) s = s.split('').map(x => x + x).join('');
+      const num = parseInt(s, 16);
+      if (isNaN(num)) return `rgba(220, 38, 38, ${alpha})`;
+      const r = (num >> 16) & 255;
+      const g = (num >> 8) & 255;
+      const b = num & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
     async function loadPcLocalFontsForTemplates() {
       if ('queryLocalFonts' in window) {
         try {
@@ -4551,7 +4565,7 @@
     };
 
     state.tplPreviewZoom = 1.0;
-    state.tplPcZoom = 1.0;
+    state.tplPcPaperWidth = 'fit';
     state.tplMobileTab = 'config'; // 'config' | 'preview'
 
     function detectIsMobileDevice() {
@@ -4581,6 +4595,7 @@
           pcView.classList.remove('hidden');
           pcView.classList.add('flex');
         }
+        setTplPcPaperZoomWidth(state.tplPcPaperWidth || 'fit');
       }
       renderPaperTemplateCanvas();
       lucide.createIcons();
@@ -4592,12 +4607,29 @@
       }
     });
 
-    function setTplPcPaperZoom(scale) {
-      state.tplPcZoom = scale;
+    function setTplPcPaperZoomWidth(widthVal) {
+      state.tplPcPaperWidth = widthVal;
       const wrap = document.getElementById('tplPaperWrapperPC');
-      if (wrap) {
-        wrap.style.transform = `scale(${scale})`;
-        wrap.style.transformOrigin = 'top center';
+      if (!wrap) return;
+
+      // Update button highlights
+      ['btnZoomFit', 'btnZoom75', 'btnZoom100', 'btnZoom125'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.className = 'px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-lg text-xs font-medium';
+      });
+
+      if (widthVal === 'fit') {
+        const availableHeight = window.innerHeight - 170;
+        const paperRatio = (state.tplConfig.paperSize === 'a3') ? (297 / 420) : (state.tplConfig.paperSize === 'a5' ? (148 / 210) : (210 / 297));
+        const fitWidth = Math.max(480, Math.min(800, Math.round(availableHeight * paperRatio)));
+        wrap.style.width = `${fitWidth}px`;
+        const btn = document.getElementById('btnZoomFit');
+        if (btn) btn.className = 'px-2.5 py-1 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold border border-teal-200 dark:border-teal-800 rounded-lg text-xs';
+      } else {
+        wrap.style.width = `${widthVal}px`;
+        const targetId = widthVal === 540 ? 'btnZoom75' : (widthVal === 720 ? 'btnZoom100' : 'btnZoom125');
+        const btn = document.getElementById(targetId);
+        if (btn) btn.className = 'px-2.5 py-1 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold border border-teal-200 dark:border-teal-800 rounded-lg text-xs';
       }
     }
 
@@ -4649,6 +4681,7 @@
       } else if (key === 'paperSize') {
         const p = document.getElementById('tplPaperSizeSelectPC'); if (p && p.value !== value) p.value = value;
         const m = document.getElementById('tplPaperSizeSelectMob'); if (m && m.value !== value) m.value = value;
+        if (state.tplPcPaperWidth === 'fit') setTplPcPaperZoomWidth('fit');
       } else if (key === 'cols') {
         const num = parseInt(value) || 8;
         state.tplConfig.cols = num;
@@ -4729,7 +4762,7 @@
       if (['hengshui', 'english4', 'cornell', 'cuoti', 'music', 'guitar'].includes(type)) return;
 
       const paperSize = state.tplConfig.paperSize;
-      const aspect = (paperSize === 'a3') ? 1.414 : 1.414;
+      const aspect = 1.414;
 
       if (source === 'cols') {
         const autoRows = Math.round(val * aspect * 1.05);
@@ -4805,24 +4838,50 @@
       if (lbl) lbl.innerText = '适中';
     }
 
-    function renderPaperTemplateCanvas() {
-      const isMobile = detectIsMobileDevice();
-      const cvsPC = document.getElementById('templatePaperCanvasPC');
-      const cvsMob = document.getElementById('templatePaperCanvasMob');
-      
-      if (cvsPC) renderPaperTemplateCanvasDirect(cvsPC);
-      if (cvsMob) renderPaperTemplateCanvasDirect(cvsMob);
+    function drawCalligraphyChar(ctx, char, cx, cy, fontSize, font, weight, style, color, scale) {
+      ctx.save();
+      ctx.font = `${weight} ${Math.round(fontSize)}px ${font}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
 
-      // Update PC Badge
-      const pcBadge = document.getElementById('tplPcPaperBadge');
-      if (pcBadge) {
-        const typeNames = {
-          mizi: '经典米字格', rizi: '幼小衔接日字格', tianzi: '拼音田字格', pure_tianzi: '经典田字格',
-          huigong: '回宫格', jiugong: '九宫格', hengshui: '衡水体斜体格', english4: '英语四线三格',
-          cornell: '康奈尔笔记纸', cuoti: '错题整理本', grid: '方格作文纸', music: '音乐五线谱', guitar: '吉他六线谱'
-        };
-        const curName = typeNames[state.tplConfig.type] || '书法字帖';
-        pcBadge.innerText = `${curName} · ${state.tplConfig.paperSize.toUpperCase()} 标准版 · 300 DPI 矢量排版`;
+      if (style === 'solid') {
+        ctx.fillStyle = color;
+        ctx.fillText(char, cx, cy);
+      } else if (style === 'outline') {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = Math.max(1.5, 3 * scale);
+        ctx.strokeText(char, cx, cy);
+      } else if (style === 'dashed') {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = Math.max(1.5, 2.5 * scale);
+        ctx.setLineDash([Math.round(5 * scale), Math.round(4 * scale)]);
+        ctx.strokeText(char, cx, cy);
+        ctx.setLineDash([]);
+      }
+      ctx.restore();
+    }
+
+    function renderPaperTemplateCanvas() {
+      try {
+        const cvsPC = document.getElementById('templatePaperCanvasPC');
+        const cvsMob = document.getElementById('templatePaperCanvasMob');
+        
+        if (cvsPC) renderPaperTemplateCanvasDirect(cvsPC);
+        if (cvsMob) renderPaperTemplateCanvasDirect(cvsMob);
+
+        // Update PC Badge
+        const pcBadge = document.getElementById('tplPcPaperBadge');
+        if (pcBadge) {
+          const typeNames = {
+            mizi: '经典米字格', rizi: '幼小衔接日字格', tianzi: '拼音田字格', pure_tianzi: '经典田字格',
+            huigong: '回宫格', jiugong: '九宫格', hengshui: '衡水体斜体格', english4: '英语四线三格',
+            cornell: '康奈尔笔记纸', cuoti: '错题整理本', grid: '方格作文纸', music: '音乐五线谱', guitar: '吉他六线谱'
+          };
+          const curName = typeNames[state.tplConfig.type] || '书法字帖';
+          pcBadge.innerText = `${curName} · ${state.tplConfig.paperSize.toUpperCase()} 标准版 · 300 DPI 矢量排版`;
+        }
+      } catch (err) {
+        console.error('Render canvas error', err);
       }
     }
 
@@ -5068,29 +5127,6 @@
           ctx.stroke();
         }
       }
-    }
-
-    function drawCalligraphyChar(ctx, char, cx, cy, fontSize, font, weight, style, color, scale) {
-      ctx.save();
-      ctx.font = `${weight} ${Math.round(fontSize)}px ${font}`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'alphabetic';
-
-      if (style === 'solid') {
-        ctx.fillStyle = color;
-        ctx.fillText(char, cx, cy);
-      } else if (style === 'outline') {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = Math.max(1.5, 3 * scale);
-        ctx.strokeText(char, cx, cy);
-      } else if (style === 'dashed') {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = Math.max(1.5, 2.5 * scale);
-        ctx.setLineDash([Math.round(5 * scale), Math.round(4 * scale)]);
-        ctx.strokeText(char, cx, cy);
-        ctx.setLineDash([]);
-      }
-      ctx.restore();
     }
 
     function exportTemplateToPDF() {
