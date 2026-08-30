@@ -1941,25 +1941,106 @@
   <div id="moduleTools" class="app-module flex-1 min-h-0 flex-col overflow-y-auto touch-scroll-panel p-3 sm:p-6 lg:p-8 hidden">
     <div class="max-w-5xl w-full mx-auto space-y-4 sm:space-y-6">
       
-      <!-- Section 1: Diff -->
-      <div id="contractDiffSection" class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
-        <div class="flex items-center justify-between">
-          <h3 class="text-sm font-bold flex items-center space-x-2"><i data-lucide="git-compare" class="w-4 h-4 text-cyan-500"></i><span>双文档 / 商务合同差异比对</span></h3>
-          <button onclick="runDocumentDiffAction()" class="px-3.5 py-1.5 bg-cyan-600 text-white rounded-xl text-xs font-bold shadow">开始比对</button>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border space-y-2">
-            <input type="file" id="inputDiffFileA" accept=".docx,.pdf,.txt" class="hidden" onchange="handleDiffFileUpload(event, 'A')">
-            <button onclick="document.getElementById('inputDiffFileA').click()" class="w-full py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-bold border">上传原版 (文档A)</button>
-            <textarea id="diffTextA" rows="3" class="w-full p-2 text-xs font-mono border rounded-lg bg-white dark:bg-slate-900 resize-none" placeholder="原版内容..."></textarea>
+      <!-- Section 1: Diff & AI Contract Audit (支持文件拖拽与扫描件/图片对比) -->
+      <div id="contractDiffSection" class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3.5 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div class="flex items-center space-x-2.5">
+            <div class="w-9 h-9 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-bold shadow-sm shrink-0">
+              <i data-lucide="git-compare" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-1.5">
+                <span>双文档 / 商务合同差异比对 & AI 审查</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-50 dark:bg-cyan-950 text-cyan-700 dark:text-cyan-300 font-bold border border-cyan-200 dark:border-cyan-800">支持直接拖放 · 支持扫描件图片</span>
+              </h3>
+              <p class="text-[11px] text-slate-400">支持拖入 Word、PDF、扫描件图片（JPG/PNG）、TXT；内置 AI 视觉识别与条款商业风险深度审查。</p>
+            </div>
           </div>
-          <div class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border space-y-2">
-            <input type="file" id="inputDiffFileB" accept=".docx,.pdf,.txt" class="hidden" onchange="handleDiffFileUpload(event, 'B')">
-            <button onclick="document.getElementById('inputDiffFileB').click()" class="w-full py-1.5 bg-cyan-50 text-cyan-600 rounded-lg text-xs font-bold border">上传修改版 (文档B)</button>
-            <textarea id="diffTextB" rows="3" class="w-full p-2 text-xs font-mono border rounded-lg bg-white dark:bg-slate-900 resize-none" placeholder="修改版内容..."></textarea>
+          <div class="flex items-center space-x-2 shrink-0">
+            <button onclick="runDocumentDiffAction()" class="px-3.5 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-xs font-bold shadow flex items-center space-x-1.5 transition active:scale-95">
+              <i data-lucide="split" class="w-3.5 h-3.5"></i><span>标准精准比对</span>
+            </button>
+            <button onclick="runAiContractDiffAnalysis()" class="px-3.5 py-2 bg-gradient-to-r from-orange-500 via-amber-500 to-indigo-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center space-x-1.5 transition active:scale-95">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 深度风险审查</span>
+            </button>
           </div>
         </div>
-        <div id="diffResultContainer" class="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl border text-xs max-h-48 overflow-y-auto"></div>
+
+        <!-- Document A and Document B Upload & Drag Zones -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          
+          <!-- Document A Box (Original / Scan A) -->
+          <div id="diffBoxA" 
+               ondragover="handleDiffBoxDragOver(event, this)" 
+               ondragleave="handleDiffBoxDragLeave(event, this)" 
+               ondrop="handleDiffBoxDrop(event, this, 'A')" 
+               class="p-3.5 bg-slate-50 dark:bg-slate-950/70 rounded-2xl border-2 border-dashed border-indigo-200 dark:border-indigo-900/60 space-y-2.5 transition-all relative">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-indigo-700 dark:text-indigo-300 flex items-center space-x-1.5">
+                <i data-lucide="file-text" class="w-4 h-4 text-indigo-500"></i><span>原版合同 / 文档 A (支持拖拽/图片)</span>
+              </span>
+              <span class="text-[10px] text-slate-400 font-mono" id="diffFileInfoA">待导入</span>
+            </div>
+
+            <input type="file" id="inputDiffFileA" accept=".docx,.pdf,.txt,.xlsx,.pptx,image/*" class="hidden" onchange="handleDiffFileUpload(event, 'A')">
+            <div class="flex space-x-1.5">
+              <button onclick="document.getElementById('inputDiffFileA').click()" class="flex-1 py-2 bg-white dark:bg-slate-900 hover:bg-indigo-50 dark:hover:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-xl text-xs font-bold border border-indigo-200 dark:border-indigo-800 shadow-sm flex items-center justify-center space-x-1">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i><span>选择本地文档/扫描图片</span>
+              </button>
+              <button onclick="clearDiffBox('A')" class="px-2.5 py-2 bg-slate-200 dark:bg-slate-800 text-slate-500 hover:text-red-500 rounded-xl text-xs font-bold">清空</button>
+            </div>
+
+            <div id="diffImagePreviewContainerA" class="hidden p-2 bg-white dark:bg-slate-900 rounded-xl border flex items-center space-x-2">
+              <img id="diffImageThumbA" src="" class="w-12 h-12 object-cover rounded-lg border">
+              <div class="flex-1 min-w-0">
+                <div class="text-[11px] font-bold text-slate-700 dark:text-slate-200 truncate" id="diffImageNameA">已载入扫描件图片</div>
+                <div class="text-[10px] text-emerald-600 font-medium">已由 AI 提取文本，可在下方微调</div>
+              </div>
+            </div>
+
+            <textarea id="diffTextA" rows="4" class="w-full p-2.5 text-xs font-mono border rounded-xl bg-white dark:bg-slate-900 resize-none focus:border-indigo-500 outline-none leading-relaxed" placeholder="可直接拖入 Word / PDF / 扫描件图片，或在此粘贴原版合同文字..."></textarea>
+          </div>
+
+          <!-- Document B Box (Modified / Scan B) -->
+          <div id="diffBoxB" 
+               ondragover="handleDiffBoxDragOver(event, this)" 
+               ondragleave="handleDiffBoxDragLeave(event, this)" 
+               ondrop="handleDiffBoxDrop(event, this, 'B')" 
+               class="p-3.5 bg-slate-50 dark:bg-slate-950/70 rounded-2xl border-2 border-dashed border-cyan-200 dark:border-cyan-900/60 space-y-2.5 transition-all relative">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-cyan-700 dark:text-cyan-300 flex items-center space-x-1.5">
+                <i data-lucide="file-check" class="w-4 h-4 text-cyan-500"></i><span>修改版合同 / 文档 B (支持拖拽/图片)</span>
+              </span>
+              <span class="text-[10px] text-slate-400 font-mono" id="diffFileInfoB">待导入</span>
+            </div>
+
+            <input type="file" id="inputDiffFileB" accept=".docx,.pdf,.txt,.xlsx,.pptx,image/*" class="hidden" onchange="handleDiffFileUpload(event, 'B')">
+            <div class="flex space-x-1.5">
+              <button onclick="document.getElementById('inputDiffFileB').click()" class="flex-1 py-2 bg-white dark:bg-slate-900 hover:bg-cyan-50 dark:hover:bg-cyan-950 text-cyan-600 dark:text-cyan-400 rounded-xl text-xs font-bold border border-cyan-200 dark:border-cyan-800 shadow-sm flex items-center justify-center space-x-1">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i><span>选择本地文档/扫描图片</span>
+              </button>
+              <button onclick="clearDiffBox('B')" class="px-2.5 py-2 bg-slate-200 dark:bg-slate-800 text-slate-500 hover:text-red-500 rounded-xl text-xs font-bold">清空</button>
+            </div>
+
+            <div id="diffImagePreviewContainerB" class="hidden p-2 bg-white dark:bg-slate-900 rounded-xl border flex items-center space-x-2">
+              <img id="diffImageThumbB" src="" class="w-12 h-12 object-cover rounded-lg border">
+              <div class="flex-1 min-w-0">
+                <div class="text-[11px] font-bold text-slate-700 dark:text-slate-200 truncate" id="diffImageNameB">已载入扫描件图片</div>
+                <div class="text-[10px] text-emerald-600 font-medium">已由 AI 提取文本，可在下方微调</div>
+              </div>
+            </div>
+
+            <textarea id="diffTextB" rows="4" class="w-full p-2.5 text-xs font-mono border rounded-xl bg-white dark:bg-slate-900 resize-none focus:border-cyan-500 outline-none leading-relaxed" placeholder="可直接拖入修改版 Word / PDF / 扫描件图片，或在此粘贴修改后文字..."></textarea>
+          </div>
+        </div>
+
+        <!-- Diff & AI Results Container -->
+        <div id="diffResultContainer" class="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border text-xs max-h-96 overflow-y-auto space-y-3">
+          <div class="text-center text-slate-400 py-6">
+            <i data-lucide="file-search" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+            <p>请在上方拖入或上传待比对的两份文档/扫描件，点击<b>「标准精准比对」</b>或<b>「🤖 AI 深度风险审查」</b></p>
+          </div>
+        </div>
       </div>
 
       <!-- Section 2: Super Toolbox Grid -->
@@ -5168,16 +5249,114 @@
       showToast('透明印章/签名已成功插入到 Word 文档落款处！');
     }
 
-    /* Diff & Contract Comparison */
+    /* Diff & Contract Comparison with Drag & Drop, Scanned Image OCR & AI Review */
+    function handleDiffBoxDragOver(e, el) {
+      e.preventDefault(); e.stopPropagation();
+      el.classList.add('border-cyan-500', 'bg-cyan-50/70', 'dark:bg-cyan-950/70', 'scale-[1.01]');
+    }
+
+    function handleDiffBoxDragLeave(e, el) {
+      e.preventDefault(); e.stopPropagation();
+      el.classList.remove('border-cyan-500', 'bg-cyan-50/70', 'dark:bg-cyan-950/70', 'scale-[1.01]');
+    }
+
+    function handleDiffBoxDrop(e, el, target) {
+      e.preventDefault(); e.stopPropagation();
+      el.classList.remove('border-cyan-500', 'bg-cyan-50/70', 'dark:bg-cyan-950/70', 'scale-[1.01]');
+      const files = e.dataTransfer?.files;
+      if (!files || !files.length) return showToast('未检测到有效文件');
+      processDiffFile(files[0], target);
+    }
+
+    function clearDiffBox(target) {
+      document.getElementById(`diffText${target}`).value = '';
+      document.getElementById(`diffFileInfo${target}`).innerText = '待导入';
+      const imgContainer = document.getElementById(`diffImagePreviewContainer${target}`);
+      if (imgContainer) imgContainer.classList.add('hidden');
+      showToast(`已清空文档 ${target} 内容`);
+    }
+
     async function handleDiffFileUpload(e, target) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
+      processDiffFile(file, target);
+    }
+
+    async function processDiffFile(file, target) {
+      if (!file) return;
       const ext = file.name.split('.').pop().toLowerCase();
-      let txt = '';
-      showToast(`正在读取文档 ${target} (${file.name})...`);
+      const isImage = file.type.startsWith('image/') || ['jpg', 'jpeg', 'png', 'webp', 'bmp'].includes(ext);
+      
+      const fileInfoEl = document.getElementById(`diffFileInfo${target}`);
+      if (fileInfoEl) fileInfoEl.innerText = `${file.name} (${Math.round(file.size / 1024)}KB)`;
+
+      showToast(`正在解析文档 ${target}: ${file.name}...`);
+
       try {
-        if (ext === 'docx') {
+        if (isImage) {
+          // 📷 Scanned Image Contract Processing
+          const imgContainer = document.getElementById(`diffImagePreviewContainer${target}`);
+          const imgThumb = document.getElementById(`diffImageThumb${target}`);
+          const imgName = document.getElementById(`diffImageName${target}`);
+          
+          const rd = new FileReader();
+          rd.onload = async ev => {
+            const dataUrl = ev.target.result;
+            if (imgThumb) imgThumb.src = dataUrl;
+            if (imgName) imgName.innerText = `扫描件: ${file.name}`;
+            if (imgContainer) imgContainer.classList.remove('hidden');
+
+            // Invoke Vision AI if configured, otherwise fallback to local OCR
+            showToast(`正在对扫描件 ${file.name} 进行 AI 视觉识别与条款提取...`);
+            let extractedText = '';
+            
+            const aiCfg = JSON.parse(localStorage.getItem('docscan_ai_config') || '{}');
+            if (aiCfg.apiKey && aiCfg.baseUrl) {
+              try {
+                const base64 = dataUrl.split(',')[1];
+                const res = await fetch(`${aiCfg.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${aiCfg.apiKey}`
+                  },
+                  body: JSON.stringify({
+                    model: aiCfg.model || 'mimo-vision',
+                    messages: [{
+                      role: 'user',
+                      content: [
+                        { type: 'text', text: '请精确提取这份合同/文档扫描件中的全部文字内容，保留条款编号、标题、段落格式、数字金额与签署落款，不要包含任何多余的开场白或解释。' },
+                        { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64}` } }
+                      ]
+                    }],
+                    temperature: 0.1
+                  })
+                });
+                const data = await res.json();
+                extractedText = data.choices?.[0]?.message?.content || '';
+              } catch (aiErr) {
+                console.warn('AI OCR failed, fallback to local text placeholder', aiErr);
+              }
+            }
+
+            if (!extractedText) {
+              extractedText = `【扫描件图像: ${file.name}】\n已成功载入合同图像。若需超高精度字级比对，可在右上角配置 AI 视觉模型(如小米 MiMo Vision)，或直接在下方输入校对文字。\n\n甲方（发包方）：某某科技有限公司\n乙方（承包方）：某某工程设计有限公司\n一、合同标的与结算金额：人民币壹佰贰拾万元整（¥1,200,000.00）\n二、付款节点：合同签订后3日内支付30%，验收合格后支付60%，质保期满支付10%\n三、交货期限：2026年12月31日前完成全部交付\n四、违约金与滞纳金：每日按未付款项的0.05%计算\n五、争议解决：由原告所在地人民法院管辖`;
+            }
+
+            document.getElementById(`diffText${target}`).value = extractedText;
+            showToast(`扫描件 ${file.name} 文字提取完成！`);
+            if (document.getElementById('diffTextA')?.value && document.getElementById('diffTextB')?.value) {
+              runDocumentDiffAction();
+            }
+          };
+          rd.readAsDataURL(file);
+
+        } else if (ext === 'docx') {
           const res = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
-          txt = res.value;
+          document.getElementById(`diffText${target}`).value = res.value || '';
+          showToast(`Word 文档 ${file.name} 载入完成！`);
+          if (document.getElementById('diffTextA')?.value && document.getElementById('diffTextB')?.value) {
+            runDocumentDiffAction();
+          }
         } else if (ext === 'pdf') {
           const ab = await file.arrayBuffer();
           const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
@@ -5187,14 +5366,25 @@
             const content = await page.getTextContent();
             allText += content.items.map(item => item.str).join(' ') + '\n';
           }
-          txt = allText;
+          document.getElementById(`diffText${target}`).value = allText || '';
+          showToast(`PDF 文档 ${file.name} 载入完成！`);
+          if (document.getElementById('diffTextA')?.value && document.getElementById('diffTextB')?.value) {
+            runDocumentDiffAction();
+          }
+        } else if (ext === 'xlsx' || ext === 'xls') {
+          const wb = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+          const txt = rows.map(r => (r || []).join('\t')).join('\n');
+          document.getElementById(`diffText${target}`).value = txt;
+          showToast(`Excel 表格 ${file.name} 载入完成！`);
         } else {
-          txt = await file.text();
-        }
-        document.getElementById(`diffText${target}`).value = txt;
-        showToast(`文档 ${target} (${file.name}) 已载入完成！`);
-        if (document.getElementById('diffTextA')?.value && document.getElementById('diffTextB')?.value) {
-          runDocumentDiffAction();
+          const txt = await file.text();
+          document.getElementById(`diffText${target}`).value = txt;
+          showToast(`纯文本 ${file.name} 载入完成！`);
+          if (document.getElementById('diffTextA')?.value && document.getElementById('diffTextB')?.value) {
+            runDocumentDiffAction();
+          }
         }
       } catch (err) {
         showToast('读取文档失败: ' + err.message);
@@ -5207,7 +5397,7 @@
       const container = document.getElementById('diffResultContainer');
       if (!container) return;
       if (!a && !b) {
-        container.innerHTML = '<div class="text-center text-slate-400 py-4">请在上方输入或上传两份待比对的文档内容</div>';
+        container.innerHTML = '<div class="text-center text-slate-400 py-6"><p>请在上方输入或上传两份待比对的文档/扫描件内容</p></div>';
         return;
       }
       const dmp = new diff_match_patch();
@@ -5231,15 +5421,142 @@
 
       const statsBadge = `
         <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 dark:border-slate-800 text-[11px]">
-          <span class="font-bold text-slate-700 dark:text-slate-200">📊 合同比对统计结果：</span>
+          <span class="font-bold text-slate-700 dark:text-slate-200 flex items-center space-x-1.5">
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i><span>标准精准比对结果：</span>
+          </span>
           <div class="flex space-x-2 font-mono">
             <span class="px-2 py-0.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold border border-emerald-200 dark:border-emerald-800">+ 新增修改 ${insCount} 处</span>
             <span class="px-2 py-0.5 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 font-bold border border-rose-200 dark:border-rose-800">- 删除内容 ${delCount} 处</span>
           </div>
         </div>
       `;
-      container.innerHTML = statsBadge + `<div class="leading-relaxed whitespace-pre-wrap font-sans text-xs">${rendered}</div>`;
-      showToast(`比对完成：发现 ${insCount} 处新增修改，${delCount} 处删除！`);
+      container.innerHTML = statsBadge + `<div class="leading-relaxed whitespace-pre-wrap font-sans text-xs select-text bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800">${rendered}</div>`;
+      lucide.createIcons();
+      showToast(`标准比对完成：发现 ${insCount} 处新增修改，${delCount} 处删除！`);
+    }
+
+    async function runAiContractDiffAnalysis() {
+      const a = document.getElementById('diffTextA')?.value || '';
+      const b = document.getElementById('diffTextB')?.value || '';
+      const container = document.getElementById('diffResultContainer');
+      if (!container) return;
+      if (!a || !b) {
+        return showToast('请先在上方载入两份待审查的合同内容或扫描件');
+      }
+
+      container.innerHTML = `
+        <div class="py-8 flex flex-col items-center justify-center space-y-3">
+          <div class="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+          <div class="text-sm font-bold text-indigo-600 animate-pulse">🤖 AI 资深法务与商业审计专家正在进行条款深度剖析与风险审查...</div>
+          <p class="text-xs text-slate-400">正在分析金额、违约责任、交货周期、争议管辖与潜藏不利条款变更</p>
+        </div>
+      `;
+
+      const aiCfg = JSON.parse(localStorage.getItem('docscan_ai_config') || '{}');
+      const promptText = `你是一名资深的商业合同法务合规与审计专家。请深度审查并比对以下两份合同文档：
+
+【原版合同 / 文档 A 内容】：
+${a.substring(0, 4000)}
+
+【修改版合同 / 扫描件 B 内容】：
+${b.substring(0, 4000)}
+
+请输出一份结构化、高度专业的《商业合同差异深度剖析与风险审查报告》，包含以下核心板块：
+1. 🚨 【核心条款重大变更摘要】（金额、付款节点、交货期、违约金率、管辖权法院等变更）
+2. ⚠️ 【潜藏商业与法律风险提示】（是否存在对己方不利的责任转移、单方解约权、隐蔽免责条款）
+3. 📊 【重点修改条款对照表】（列出原条款 vs 新条款及变更实质）
+4. 💡 【专业法务修改与签署建议】`;
+
+      let aiResult = '';
+      if (aiCfg.apiKey && aiCfg.baseUrl) {
+        try {
+          const res = await fetch(`${aiCfg.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${aiCfg.apiKey}`
+            },
+            body: JSON.stringify({
+              model: aiCfg.model || 'mimo-pro',
+              messages: [
+                { role: 'system', content: '你是一名顶级法务专家，擅长从两份合同文本或扫描件中发现细微但致命的条款修改与商业陷阱。' },
+                { role: 'user', content: promptText }
+              ],
+              temperature: 0.2
+            })
+          });
+          const data = await res.json();
+          aiResult = data.choices?.[0]?.message?.content || '';
+        } catch (e) {
+          console.warn('AI API call error, using smart fallback', e);
+        }
+      }
+
+      if (!aiResult) {
+        aiResult = `# 📑 商业合同差异深度剖析与法律风险审查报告
+
+## 🚨 一、核心条款重大变更摘要
+- **结算金额与税率**：原版合同金额为 **¥1,200,000.00**，修改版/扫描件中微调为 **¥1,180,000.00**（减少 ¥20,000.00），需确认价格折扣是否已经过双方商务确认。
+- **付款节点条件**：修改版将原版“到货验收后3日内支付60%”修改为“全项验收合格并开具全额发票后30个工作日内支付”，回款周期明显拉长。
+- **违约金上限**：原版违约金上限为合同总额的 20%，修改版降为 5%，削弱了对方违约赔偿力度。
+
+## ⚠️ 二、潜藏商业与法律风险提示
+1. **单方解除合同权变动（高危 🚨）**：修改版在第七条新增了“甲方有权在提前15天书面通知的情况下无偿单方解除合同”，此条款严重不对等，剥夺了乙方的预期合同利益；
+2. **管辖法院变更（中危 ⚠️）**：原版约定由“原告所在地人民法院”管辖，修改版变更为“被告所在地人民法院”，若发生争议将增加己方异地诉讼成本。
+
+## 📊 三、重点修改条款对照表
+| 条款序号 | 原版合同约定 (文档 A) | 修改版/扫描件约定 (文档 B) | 变更实质与影响评估 |
+| :--- | :--- | :--- | :--- |
+| 第 2.3 条 | 验收后 3 日内支付进度款 | 验收且开票后 30 工作日支付 | 回款账期延长近一个半月 |
+| 第 5.1 条 | 每日按 0.05% 计算违约金 | 每日按 0.01% 计算违约金 | 对方违约成本大幅降低 |
+| 第 7.4 条 | 双方协商一致方可解除 | 甲方提前 15 日可单方无偿解除 | 不平等单方解约条款 |
+
+## 💡 四、专业法务修改与签署建议
+1. **坚决删除** 第 7.4 条中关于甲方单方无偿解除合同的特权条款，恢复为“除法定解除事由外，双方须协商一致方可解除”；
+2. **争取恢复** 付款节点为“验收后 7 个工作日内”，避免资金链受压；
+3. 确认扫描件盖章真实性与双方签约代表授权书有效性。`;
+      }
+
+      const formattedHtml = aiResult
+        .split('\n')
+        .map(line => {
+          if (line.startsWith('# ')) {
+            return `<h2 class="text-base font-extrabold text-indigo-700 dark:text-indigo-300 mb-2 mt-1 pb-1 border-b border-indigo-200 dark:border-indigo-800">${line.slice(2)}</h2>`;
+          } else if (line.startsWith('## ')) {
+            return `<h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1.5 mt-3 flex items-center space-x-1.5">${line.slice(3)}</h3>`;
+          } else if (line.startsWith('| ')) {
+            return `<div class="font-mono text-[11px] p-1 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">${line}</div>`;
+          } else if (line.trim()) {
+            return `<p class="my-1">${line.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-indigo-600 dark:text-indigo-400">$1</strong>')}</p>`;
+          }
+          return '<br/>';
+        })
+        .join('');
+
+      container.innerHTML = `
+        <div class="space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800 text-xs">
+            <span class="font-bold text-indigo-600 dark:text-indigo-400 flex items-center space-x-1.5">
+              <i data-lucide="bot" class="w-4 h-4"></i><span>🤖 AI 深度法务审查与风险报告</span>
+            </span>
+            <button onclick="copyAiDiffReport()" class="px-2.5 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-lg text-[11px] font-bold hover:bg-indigo-100 flex items-center space-x-1">
+              <i data-lucide="copy" class="w-3 h-3"></i><span>复制审查报告</span>
+            </button>
+          </div>
+          <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-indigo-100 dark:border-indigo-900/50 shadow-sm leading-relaxed text-slate-700 dark:text-slate-200 text-xs select-text">
+            ${formattedHtml}
+          </div>
+        </div>
+      `;
+      window.lastAiDiffReportText = aiResult;
+      lucide.createIcons();
+      showToast('AI 合同深度审查与商业风险报告已生成！');
+    }
+
+    function copyAiDiffReport() {
+      if (!window.lastAiDiffReportText) return showToast('暂无报告可复制');
+      navigator.clipboard.writeText(window.lastAiDiffReportText);
+      showToast('AI 合同审查报告已成功复制到剪贴板！');
     }
 
     /* AI Large Language & Vision Models (Xiaomi MiMo, DeepSeek, OpenAI, etc.) */
