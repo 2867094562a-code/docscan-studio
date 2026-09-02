@@ -1552,18 +1552,27 @@
           </div>
         </div>
 
-        <!-- Current Page Rotation Controls (90° Increment) -->
-        <div class="space-y-1 pt-1 border-t">
+        <!-- Image Rotation Section (当前页旋转 + 一键全部页旋转) -->
+        <div class="space-y-1.5 pt-1 border-t">
           <div class="flex items-center justify-between text-[11px] font-bold text-slate-500">
-            <span>当前页方向旋转 (90°递增)</span>
+            <span>图像方向旋转 (90°递增)</span>
             <span class="font-mono text-indigo-600 font-bold" id="scanRotationAngleBadge">当前: 0°</span>
           </div>
           <div class="grid grid-cols-2 gap-1.5">
-            <button type="button" onclick="rotateScanImage(-90)" class="p-2 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 text-slate-700 dark:text-slate-200 transition active:scale-95 shadow-sm">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-indigo-600"></i><span>逆时针 90°</span>
+            <button type="button" onclick="rotateScanImage(-90)" class="p-2 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 rounded-xl text-xs font-bold flex items-center justify-center space-x-1 text-slate-700 dark:text-slate-200 transition active:scale-95 shadow-sm" title="仅旋转当前选中页">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-indigo-600"></i><span>当前页 ↺90°</span>
             </button>
-            <button type="button" onclick="rotateScanImage(90)" class="p-2 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 rounded-xl text-xs font-bold flex items-center justify-center space-x-1.5 text-slate-700 dark:text-slate-200 transition active:scale-95 shadow-sm">
-              <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-indigo-600"></i><span>顺时针 90°</span>
+            <button type="button" onclick="rotateScanImage(90)" class="p-2 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 rounded-xl text-xs font-bold flex items-center justify-center space-x-1 text-slate-700 dark:text-slate-200 transition active:scale-95 shadow-sm" title="仅旋转当前选中页">
+              <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-indigo-600"></i><span>当前页 ↻90°</span>
+            </button>
+          </div>
+          <!-- One-Click Batch Rotate All Pages -->
+          <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+            <button type="button" onclick="rotateAllScanPages(-90)" class="py-1.5 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-300 font-bold border border-indigo-200 dark:border-indigo-800 rounded-xl text-[11px] flex items-center justify-center space-x-1 transition active:scale-95 shadow-xs" title="一键将所有页面统一逆时针旋转 90°">
+              <i data-lucide="refresh-ccw" class="w-3 h-3"></i><span>↺ 一键全部逆转90°</span>
+            </button>
+            <button type="button" onclick="rotateAllScanPages(90)" class="py-1.5 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-300 font-bold border border-indigo-200 dark:border-indigo-800 rounded-xl text-[11px] flex items-center justify-center space-x-1 transition active:scale-95 shadow-xs" title="一键将所有页面统一顺时针旋转 90°">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i><span>↻ 一键全部顺转90°</span>
             </button>
           </div>
         </div>
@@ -1586,17 +1595,32 @@
           </button>
         </div>
         
-        <!-- Filters Section (彩色增白·纯白去底色·红章保真) -->
-        <div class="space-y-1 pt-1 border-t">
+        <!-- Filters Section (彩色增白·纯白去底色·一键应用到全部) -->
+        <div class="space-y-1.5 pt-1 border-t">
           <div class="flex items-center justify-between">
             <label class="text-[11px] font-bold text-slate-500">扫描增强滤镜</label>
-            <button type="button" onclick="applyCurrentFilterToAllPages()" class="text-[10px] text-indigo-600 font-semibold hover:underline">一键应用到全部页</button>
+            <span class="text-[10px] text-slate-400">点击单页或一键全部</span>
           </div>
           <div class="grid grid-cols-2 gap-1.5">
             <button onclick="applyScanFilter('color')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1 bg-indigo-50/40 border-indigo-200"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-600"></i><span class="font-bold text-indigo-700">魔术彩色增白</span></button>
             <button onclick="applyScanFilter('bw')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="file" class="w-3.5 h-3.5 text-slate-700"></i><span>黑白二值化</span></button>
             <button onclick="applyScanFilter('seal')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="stamp" class="w-3.5 h-3.5 text-red-500"></i><span>印章强化</span></button>
             <button onclick="applyScanFilter('orig')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="image" class="w-3.5 h-3.5 text-emerald-500"></i><span>高清原图</span></button>
+          </div>
+          
+          <!-- One-Click Batch Filter Actions -->
+          <div class="space-y-1 pt-1">
+            <button type="button" onclick="applyCurrentFilterToAllPages('color')" class="w-full py-2 bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 transition active:scale-95 shadow-md">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-300"></i><span>🎨 一键将【魔术增白】应用到全部页</span>
+            </button>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" onclick="applyCurrentFilterToAllPages('bw')" class="py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl text-[11px] flex items-center justify-center space-x-1 transition active:scale-95 border">
+                <i data-lucide="file-text" class="w-3 h-3"></i><span>📄 全部黑白化</span>
+              </button>
+              <button type="button" onclick="applyCurrentFilterToAllPages('orig')" class="py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold rounded-xl text-[11px] flex items-center justify-center space-x-1 transition active:scale-95 border">
+                <i data-lucide="image" class="w-3 h-3"></i><span>🖼️ 全部恢复原图</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1678,16 +1702,19 @@
             <span class="text-[11px] text-slate-400 border-l pl-2 font-mono" id="scanImageInfoBadge">1200 × 1600 px</span>
           </div>
           <div class="flex items-center space-x-1.5">
-            <button onclick="rotateScanImage(-90)" title="逆时针旋转 90°" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 flex items-center space-x-1 font-bold text-[11px] transition active:scale-95">
-              <i data-lucide="rotate-ccw" class="w-3 h-3 text-indigo-600"></i><span>↺ 90°</span>
-            </button>
-            <button onclick="rotateScanImage(90)" title="顺时针旋转 90°" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 flex items-center space-x-1 font-bold text-[11px] transition active:scale-95">
+            <button onclick="rotateScanImage(90)" title="顺时针旋转当前页 90°" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 flex items-center space-x-1 font-bold text-[11px] transition active:scale-95">
               <i data-lucide="rotate-cw" class="w-3 h-3 text-indigo-600"></i><span>↻ 90°</span>
             </button>
-            <button onclick="triggerAutoDetectCornersAction()" class="px-2 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 font-bold border border-indigo-200 dark:border-indigo-800 rounded-lg flex items-center space-x-1 text-[11px] transition active:scale-95" title="智能自动找边">
+            <button onclick="rotateAllScanPages(90)" title="一键将全部页面顺时针旋转 90°" class="px-2 py-1 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-300 font-bold border border-indigo-200 dark:border-indigo-800 rounded-lg flex items-center space-x-1 text-[11px] transition active:scale-95">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i><span>一键全部旋转</span>
+            </button>
+            <button onclick="applyCurrentFilterToAllPages('color')" title="一键将魔术彩色增白应用到所有页面" class="px-2 py-1 bg-violet-50 dark:bg-violet-950/60 hover:bg-violet-100 text-violet-600 dark:text-violet-300 font-bold border border-violet-200 dark:border-violet-800 rounded-lg flex items-center space-x-1 text-[11px] transition active:scale-95">
+              <i data-lucide="sparkles" class="w-3 h-3"></i><span>一键全部增白</span>
+            </button>
+            <button onclick="triggerAutoDetectCornersAction()" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-lg flex items-center space-x-1 text-[11px] transition active:scale-95" title="智能自动找边">
               <i data-lucide="sparkles" class="w-3 h-3"></i><span>自动找边</span>
             </button>
-            <button onclick="togglePerspectiveCropOverlay()" id="btnToggleCropOverlay" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-lg flex items-center space-x-1 text-[11px] transition">
+            <button onclick="togglePerspectiveCropOverlay()" id="btnToggleCropOverlay" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-lg flex items-center space-x-1 text-[11px] transition" title="开启或隐藏透视拖拽选框">
               <i data-lucide="crop" class="w-3 h-3"></i><span id="labelToggleCropOverlay">选框: 开</span>
             </button>
             <button onclick="executePerspectiveWarp()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg flex items-center space-x-1 text-[11px] shadow transition active:scale-95">
@@ -6018,9 +6045,50 @@
         const infoBadge = document.getElementById('scanImageInfoBadge');
         if (infoBadge) infoBadge.innerText = `${targetW} × ${targetH} px`;
 
-        showToast(`当前页已旋转至 ${newDeg}°！选框已同步精准适配`);
+        showToast(`当前第 ${state.currentScanPageIdx + 1} 页已旋转至 ${newDeg}°！`);
       };
       rotatedImg.src = curCvs.toDataURL();
+    }
+
+    /* 一键旋转全部扫描页 (1-Click Batch Rotate All Pages) */
+    function rotateAllScanPages(deltaDeg) {
+      if (!state.scanPages || !state.scanPages.length) return showToast('暂无可旋转的扫描页，请先添加图片');
+
+      showToast(`正在一键将全部 ${state.scanPages.length} 页统一旋转 ${deltaDeg > 0 ? '顺时针90°' : '逆时针90°'}...`);
+
+      state.scanPages.forEach((page, idx) => {
+        const newDeg = ((page.rotation + deltaDeg) % 360 + 360) % 360;
+        page.rotation = newDeg;
+
+        const origW = page.currentImg.width;
+        const origH = page.currentImg.height;
+        const is90or270 = Math.abs(deltaDeg % 180) === 90;
+        const targetW = is90or270 ? origH : origW;
+        const targetH = is90or270 ? origW : origH;
+
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = targetW;
+        offCanvas.height = targetH;
+        const offCtx = offCanvas.getContext('2d');
+
+        const rad = (deltaDeg * Math.PI) / 180;
+        offCtx.translate(targetW / 2, targetH / 2);
+        offCtx.rotate(rad);
+        offCtx.drawImage(page.currentImg, -origW / 2, -origH / 2);
+
+        page.corners = rotateCornersGeometry(page.corners, origW, origH, deltaDeg);
+        page.thumbDataUrl = offCanvas.toDataURL('image/jpeg', 0.6);
+
+        const rotatedImg = new Image();
+        rotatedImg.src = offCanvas.toDataURL();
+        page.currentImg = rotatedImg;
+      });
+
+      state.scanRotation = state.scanPages[state.currentScanPageIdx]?.rotation || 0;
+      loadScanPageToCanvas(state.currentScanPageIdx);
+      renderScanPagesListUI();
+
+      showToast(`🎉 已成功一键将全部 ${state.scanPages.length} 页统一旋转 ${deltaDeg > 0 ? '顺时针90°' : '逆时针90°'}！`);
     }
 
     function resetScanToOriginal() {
