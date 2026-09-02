@@ -1568,28 +1568,32 @@
           </div>
         </div>
 
-        <!-- Perspective Deskew & Crop Section -->
+        <!-- Perspective Deskew & Crop Section (先自动找边，后手动微调) -->
         <div class="space-y-1.5 pt-1 border-t">
           <div class="flex items-center justify-between">
-            <label class="text-[11px] font-bold text-slate-500">当前页透视拉直矫正 (四角拖拽)</label>
+            <label class="text-[11px] font-bold text-slate-500 flex items-center space-x-1">
+              <span>透视拉直矫正 (自动+手动)</span>
+            </label>
             <div class="flex space-x-1">
+              <button type="button" onclick="triggerAutoDetectCornersAction()" class="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950 hover:bg-indigo-100 text-indigo-600 dark:text-indigo-400 rounded text-[10px] font-bold transition flex items-center space-x-0.5">
+                <i data-lucide="sparkles" class="w-2.5 h-2.5"></i><span>⚡ 自动找边</span>
+              </button>
               <button type="button" onclick="resetPerspectiveCorners()" class="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 rounded text-[10px] font-medium transition">全选</button>
-              <button type="button" onclick="autoDetectPerspectiveCorners()" class="px-1.5 py-0.5 bg-indigo-50 dark:bg-indigo-950 text-indigo-600 rounded text-[10px] font-medium transition">内缩90%</button>
             </div>
           </div>
-          <button onclick="executePerspectiveWarp()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1.5 transition active:scale-95">
-            <i data-lucide="sparkles" class="w-4 h-4"></i><span>⚡ 执行当前页透视拉直</span>
+          <button onclick="executePerspectiveWarp()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1.5 transition active:scale-95">
+            <i data-lucide="check" class="w-4 h-4"></i><span>⚡ 执行当前页透视拉直</span>
           </button>
         </div>
         
-        <!-- Filters Section -->
+        <!-- Filters Section (彩色增白·纯白去底色·红章保真) -->
         <div class="space-y-1 pt-1 border-t">
           <div class="flex items-center justify-between">
             <label class="text-[11px] font-bold text-slate-500">扫描增强滤镜</label>
             <button type="button" onclick="applyCurrentFilterToAllPages()" class="text-[10px] text-indigo-600 font-semibold hover:underline">一键应用到全部页</button>
           </div>
           <div class="grid grid-cols-2 gap-1.5">
-            <button onclick="applyScanFilter('color')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-500"></i><span>彩色增白</span></button>
+            <button onclick="applyScanFilter('color')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1 bg-indigo-50/40 border-indigo-200"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-600"></i><span class="font-bold text-indigo-700">魔术彩色增白</span></button>
             <button onclick="applyScanFilter('bw')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="file" class="w-3.5 h-3.5 text-slate-700"></i><span>黑白二值化</span></button>
             <button onclick="applyScanFilter('seal')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="stamp" class="w-3.5 h-3.5 text-red-500"></i><span>印章强化</span></button>
             <button onclick="applyScanFilter('orig')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="image" class="w-3.5 h-3.5 text-emerald-500"></i><span>高清原图</span></button>
@@ -1671,7 +1675,7 @@
             <button onclick="switchScanPageStep(-1)" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 font-bold" title="上一页">◀</button>
             <span class="font-bold text-slate-800 dark:text-slate-200" id="scanPageIndicatorBadge">第 1 / 1 页</span>
             <button onclick="switchScanPageStep(1)" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 font-bold" title="下一页">▶</button>
-            <span class="text-[11px] text-slate-400 border-l pl-2" id="scanImageInfoBadge">1200 × 1600 px</span>
+            <span class="text-[11px] text-slate-400 border-l pl-2 font-mono" id="scanImageInfoBadge">1200 × 1600 px</span>
           </div>
           <div class="flex items-center space-x-1.5">
             <button onclick="rotateScanImage(-90)" title="逆时针旋转 90°" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 flex items-center space-x-1 font-bold text-[11px] transition active:scale-95">
@@ -1680,11 +1684,14 @@
             <button onclick="rotateScanImage(90)" title="顺时针旋转 90°" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-200 flex items-center space-x-1 font-bold text-[11px] transition active:scale-95">
               <i data-lucide="rotate-cw" class="w-3 h-3 text-indigo-600"></i><span>↻ 90°</span>
             </button>
-            <button onclick="togglePerspectiveCropOverlay()" id="btnToggleCropOverlay" class="px-2 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 font-bold border border-indigo-200 dark:border-indigo-800 rounded-lg flex items-center space-x-1 text-[11px] transition">
-              <i data-lucide="crop" class="w-3 h-3"></i><span id="labelToggleCropOverlay">透视选框: 开</span>
+            <button onclick="triggerAutoDetectCornersAction()" class="px-2 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 font-bold border border-indigo-200 dark:border-indigo-800 rounded-lg flex items-center space-x-1 text-[11px] transition active:scale-95" title="智能自动找边">
+              <i data-lucide="sparkles" class="w-3 h-3"></i><span>自动找边</span>
+            </button>
+            <button onclick="togglePerspectiveCropOverlay()" id="btnToggleCropOverlay" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold rounded-lg flex items-center space-x-1 text-[11px] transition">
+              <i data-lucide="crop" class="w-3 h-3"></i><span id="labelToggleCropOverlay">选框: 开</span>
             </button>
             <button onclick="executePerspectiveWarp()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg flex items-center space-x-1 text-[11px] shadow transition active:scale-95">
-              <i data-lucide="sparkles" class="w-3 h-3"></i><span>拉直当前页</span>
+              <i data-lucide="check" class="w-3 h-3"></i><span>拉直当前页</span>
             </button>
             <button onclick="exportMultiPageScanToPDF()" class="px-2.5 py-1 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-lg flex items-center space-x-1 text-[11px] shadow transition active:scale-95" title="合并全部页导出 PDF">
               <i data-lucide="file-text" class="w-3 h-3"></i><span>合成PDF</span>
@@ -1692,28 +1699,30 @@
           </div>
         </div>
 
-        <!-- Main Canvas Area with 4-Point Perspective Pins Overlay -->
-        <div class="relative max-w-full flex items-center justify-center">
-          <canvas id="scanMainCanvas" class="max-h-[60vh] max-w-full rounded-lg shadow-lg block select-none bg-white"></canvas>
+        <!-- Main Canvas Centered Area with Tight Inline-Block Wrapper for 1:1 Overlay Precision -->
+        <div class="w-full flex items-center justify-center overflow-visible p-1 min-h-[50vh]">
+          <div id="scanCanvasInlineWrapper" class="relative inline-block max-w-full">
+            <canvas id="scanMainCanvas" class="max-h-[62vh] max-w-full rounded-lg shadow-xl block select-none bg-white"></canvas>
 
-          <!-- Interactive 4-Point Perspective Deskew Overlay (SVG & Draggable Pins) -->
-          <div id="scanCropOverlay" class="absolute inset-0 z-20 pointer-events-none select-none overflow-visible">
-            <svg id="scanCropSvg" class="w-full h-full absolute inset-0 pointer-events-none overflow-visible">
-              <polygon id="scanCropPolygon" points="0,0 0,0 0,0 0,0" fill="rgba(99, 102, 241, 0.2)" stroke="#4f46e5" stroke-width="2.5" stroke-dasharray="6,4" />
-              <line id="scanCropDiag1" x1="0" y1="0" x2="0" y2="0" stroke="rgba(99, 102, 241, 0.35)" stroke-width="1.5" stroke-dasharray="4,4" />
-              <line id="scanCropDiag2" x1="0" y1="0" x2="0" y2="0" stroke="rgba(99, 102, 241, 0.35)" stroke-width="1.5" stroke-dasharray="4,4" />
-            </svg>
-            
-            <!-- 4 Corner Draggable Handles (↖ ↗ ↘ ↙) -->
-            <div id="pinTL" class="scan-crop-pin pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 cursor-move w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-125 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[11px] font-bold select-none touch-none transition-transform duration-75" data-corner="0" title="左上角顶点">↖</div>
-            <div id="pinTR" class="scan-crop-pin pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 cursor-move w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-125 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[11px] font-bold select-none touch-none transition-transform duration-75" data-corner="1" title="右上角顶点">↗</div>
-            <div id="pinBR" class="scan-crop-pin pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 cursor-move w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-125 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[11px] font-bold select-none touch-none transition-transform duration-75" data-corner="2" title="右下角顶点">↘</div>
-            <div id="pinBL" class="scan-crop-pin pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 cursor-move w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-125 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[11px] font-bold select-none touch-none transition-transform duration-75" data-corner="3" title="左下角顶点">↙</div>
+            <!-- Interactive 4-Point Perspective Deskew Overlay (SVG & Draggable Pins) -->
+            <div id="scanCropOverlay" class="absolute inset-0 z-20 pointer-events-none select-none overflow-visible">
+              <svg id="scanCropSvg" class="w-full h-full absolute inset-0 pointer-events-none overflow-visible">
+                <polygon id="scanCropPolygon" points="0,0 0,0 0,0 0,0" fill="rgba(99, 102, 241, 0.22)" stroke="#4f46e5" stroke-width="2.5" stroke-dasharray="6,4" />
+                <line id="scanCropDiag1" x1="0" y1="0" x2="0" y2="0" stroke="rgba(99, 102, 241, 0.4)" stroke-width="1.5" stroke-dasharray="4,4" />
+                <line id="scanCropDiag2" x1="0" y1="0" x2="0" y2="0" stroke="rgba(99, 102, 241, 0.4)" stroke-width="1.5" stroke-dasharray="4,4" />
+              </svg>
+              
+              <!-- 4 Corner Draggable Handles (↖ ↗ ↘ ↙) -->
+              <div id="pinTL" class="scan-crop-pin pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 cursor-move w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-125 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[11px] font-bold select-none touch-none transition-transform duration-75" data-corner="0" title="左上角顶点">↖</div>
+              <div id="pinTR" class="scan-crop-pin pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 cursor-move w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-125 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[11px] font-bold select-none touch-none transition-transform duration-75" data-corner="1" title="右上角顶点">↗</div>
+              <div id="pinBR" class="scan-crop-pin pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 cursor-move w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-125 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[11px] font-bold select-none touch-none transition-transform duration-75" data-corner="2" title="右下角顶点">↘</div>
+              <div id="pinBL" class="scan-crop-pin pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 cursor-move w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-125 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[11px] font-bold select-none touch-none transition-transform duration-75" data-corner="3" title="左下角顶点">↙</div>
+            </div>
           </div>
         </div>
 
         <!-- Bottom Horizontal Multi-Page Filmstrip (横向胶卷缩略图栏) -->
-        <div class="w-full mt-3.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur border border-slate-200 dark:border-slate-800 p-2 rounded-2xl shadow-sm flex items-center space-x-2 overflow-x-auto shrink-0" id="scanBottomFilmstrip">
+        <div class="w-full mt-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur border border-slate-200 dark:border-slate-800 p-2 rounded-2xl shadow-sm flex items-center space-x-2 overflow-x-auto shrink-0" id="scanBottomFilmstrip">
           <div class="text-[11px] font-bold text-slate-400 px-2 shrink-0 flex items-center space-x-1">
             <i data-lucide="film" class="w-3.5 h-3.5"></i><span>多页胶卷</span>
           </div>
@@ -5585,7 +5594,7 @@
     }
 
     /* 1. Multi-Page Document Scanner Studio & 4-Point Perspective Warp & PDF Merger */
-    state.scanPages = []; // Array of { id, name, originalImg, currentCanvasData, rotation, filter, corners: [{x,y},...] }
+    state.scanPages = []; // Array of { id, name, originalImg, currentImg, rotation, filter, corners: [{x,y},...] }
     state.currentScanPageIdx = 0;
     state.scanCropOverlayVisible = true;
     let isDraggingScanPin = false;
@@ -5622,12 +5631,15 @@
               } else {
                 const pageId = 'scan_page_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
                 
-                // Create an offscreen canvas to generate thumbnail & initial processed state
+                // Create an offscreen canvas to analyze & generate thumbnail
                 const offCvs = document.createElement('canvas');
                 offCvs.width = img.width;
                 offCvs.height = img.height;
                 const offCtx = offCvs.getContext('2d');
                 offCtx.drawImage(img, 0, 0);
+
+                // Auto detect document paper corners first!
+                const initialCorners = autoDetectDocumentCornersFromCanvas(offCvs);
 
                 const pageObj = {
                   id: pageId,
@@ -5636,12 +5648,7 @@
                   currentImg: img,
                   rotation: 0,
                   filter: 'color',
-                  corners: [
-                    { x: Math.round(img.width * 0.04), y: Math.round(img.height * 0.04) },
-                    { x: Math.round(img.width * 0.96), y: Math.round(img.height * 0.04) },
-                    { x: Math.round(img.width * 0.96), y: Math.round(img.height * 0.96) },
-                    { x: Math.round(img.width * 0.04), y: Math.round(img.height * 0.96) }
-                  ],
+                  corners: initialCorners,
                   thumbDataUrl: offCvs.toDataURL('image/jpeg', 0.6)
                 };
 
@@ -5665,8 +5672,102 @@
 
         renderScanPagesListUI();
         loadScanPageToCanvas(state.currentScanPageIdx);
-        showToast(`已成功载入 ${imageFiles.length} 页文档！可自由切换、旋转与透视拉直`);
+        showToast(`已成功载入 ${imageFiles.length} 页文档！已自动执行边框识别，可手动微调四角锚点`);
       }
+    }
+
+    /* Auto Document Edge & Corner Detection (先自动找边，后手动微调) */
+    function autoDetectDocumentCornersFromCanvas(cvs) {
+      const w = cvs.width;
+      const h = cvs.height;
+      
+      const defaultCorners = [
+        { x: Math.round(w * 0.04), y: Math.round(h * 0.04) },
+        { x: Math.round(w * 0.96), y: Math.round(h * 0.04) },
+        { x: Math.round(w * 0.96), y: Math.round(h * 0.96) },
+        { x: Math.round(w * 0.04), y: Math.round(h * 0.96) }
+      ];
+
+      try {
+        const ctx = cvs.getContext('2d');
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const d = imgData.data;
+
+        function getLum(x, y) {
+          const px = Math.max(0, Math.min(w - 1, Math.round(x)));
+          const py = Math.max(0, Math.min(h - 1, Math.round(y)));
+          const idx = (py * w + px) * 4;
+          return 0.299 * d[idx] + 0.587 * d[idx + 1] + 0.114 * d[idx + 2];
+        }
+
+        const corners = [...defaultCorners];
+        const stepCount = 50;
+
+        // 1. TL: from (0,0) towards (0.35W, 0.35H)
+        for (let s = 1; s < stepCount; s++) {
+          const t = s / stepCount;
+          const x = t * w * 0.35; const y = t * h * 0.35;
+          const lum = getLum(x, y);
+          const lumPrev = getLum(x * 0.6, y * 0.6);
+          if (lum > 125 && lum - lumPrev > 20) {
+            corners[0] = { x: Math.round(x), y: Math.round(y) };
+            break;
+          }
+        }
+
+        // 2. TR: from (W,0) towards (0.65W, 0.35H)
+        for (let s = 1; s < stepCount; s++) {
+          const t = s / stepCount;
+          const x = w - t * w * 0.35; const y = t * h * 0.35;
+          const lum = getLum(x, y);
+          const lumPrev = getLum(w - (w - x) * 0.6, y * 0.6);
+          if (lum > 125 && lum - lumPrev > 20) {
+            corners[1] = { x: Math.round(x), y: Math.round(y) };
+            break;
+          }
+        }
+
+        // 3. BR: from (W,H) towards (0.65W, 0.65H)
+        for (let s = 1; s < stepCount; s++) {
+          const t = s / stepCount;
+          const x = w - t * w * 0.35; const y = h - t * h * 0.35;
+          const lum = getLum(x, y);
+          const lumPrev = getLum(w - (w - x) * 0.6, h - (h - y) * 0.6);
+          if (lum > 125 && lum - lumPrev > 20) {
+            corners[2] = { x: Math.round(x), y: Math.round(y) };
+            break;
+          }
+        }
+
+        // 4. BL: from (0,H) towards (0.35W, 0.65H)
+        for (let s = 1; s < stepCount; s++) {
+          const t = s / stepCount;
+          const x = t * w * 0.35; const y = h - t * h * 0.35;
+          const lum = getLum(x, y);
+          const lumPrev = getLum(x * 0.6, h - (h - y) * 0.6);
+          if (lum > 125 && lum - lumPrev > 20) {
+            corners[3] = { x: Math.round(x), y: Math.round(y) };
+            break;
+          }
+        }
+
+        return corners;
+      } catch (e) {
+        return defaultCorners;
+      }
+    }
+
+    function triggerAutoDetectCornersAction() {
+      const page = state.scanPages[state.currentScanPageIdx];
+      if (!page) return showToast('请先导入文档图片');
+      const cvs = document.getElementById('scanMainCanvas');
+      if (!cvs) return;
+
+      const detected = autoDetectDocumentCornersFromCanvas(cvs);
+      state.scanCorners = detected;
+      page.corners = detected;
+      updatePerspectiveCropOverlayUI();
+      showToast('⚡ 已自动识别并吸附至文档纸张边缘！如需微调可手动拖拽角点');
     }
 
     function renderScanPagesListUI() {
@@ -5751,12 +5852,8 @@
       state.scanImg = page.currentImg;
       state.scanOriginalImg = page.originalImg;
       state.scanRotation = page.rotation || 0;
-      state.scanCorners = page.corners || [
-        { x: Math.round(cvs.width * 0.04), y: Math.round(cvs.height * 0.04) },
-        { x: Math.round(cvs.width * 0.96), y: Math.round(cvs.height * 0.04) },
-        { x: Math.round(cvs.width * 0.96), y: Math.round(cvs.height * 0.96) },
-        { x: Math.round(cvs.width * 0.04), y: Math.round(cvs.height * 0.96) }
-      ];
+      state.scanCorners = page.corners || autoDetectDocumentCornersFromCanvas(cvs);
+      page.corners = state.scanCorners;
 
       // Update Badges
       const pageIndicator = document.getElementById('scanPageIndicatorBadge');
@@ -5810,7 +5907,39 @@
       showToast('已清空全部扫描页');
     }
 
-    /* 90° Incremental Image Rotation */
+    /* 90° Incremental Image Rotation with Precise Corner Geometry Transform (彻底杜绝选框变形) */
+    function rotateCornersGeometry(corners, origW, origH, deltaDeg) {
+      const deg = ((deltaDeg % 360) + 360) % 360;
+      if (deg === 0 || !corners || corners.length !== 4) return corners;
+
+      const [tl, tr, br, bl] = corners;
+      if (deg === 90) {
+        // Clockwise 90: (x, y) -> (origH - 1 - y, x)
+        return [
+          { x: Math.round(origH - 1 - bl.y), y: Math.round(bl.x) }, // New TL
+          { x: Math.round(origH - 1 - tl.y), y: Math.round(tl.x) }, // New TR
+          { x: Math.round(origH - 1 - tr.y), y: Math.round(tr.x) }, // New BR
+          { x: Math.round(origH - 1 - br.y), y: Math.round(br.x) }  // New BL
+        ];
+      } else if (deg === 270) {
+        // Counter-clockwise 90: (x, y) -> (y, origW - 1 - x)
+        return [
+          { x: Math.round(tr.y), y: Math.round(origW - 1 - tr.x) }, // New TL
+          { x: Math.round(br.y), y: Math.round(origW - 1 - br.x) }, // New TR
+          { x: Math.round(bl.y), y: Math.round(origW - 1 - bl.x) }, // New BR
+          { x: Math.round(tl.y), y: Math.round(origW - 1 - tl.x) }  // New BL
+        ];
+      } else if (deg === 180) {
+        return [
+          { x: Math.round(origW - 1 - br.x), y: Math.round(origH - 1 - br.y) },
+          { x: Math.round(origW - 1 - bl.x), y: Math.round(origH - 1 - bl.y) },
+          { x: Math.round(origW - 1 - tl.x), y: Math.round(origH - 1 - tl.y) },
+          { x: Math.round(origW - 1 - tr.x), y: Math.round(origH - 1 - tr.y) }
+        ];
+      }
+      return corners;
+    }
+
     function rotateScanImage(deltaDeg) {
       const page = state.scanPages[state.currentScanPageIdx];
       if (!page) return showToast('请先导入文档图片');
@@ -5842,6 +5971,11 @@
       const ctx = curCvs.getContext('2d');
       ctx.drawImage(offCanvas, 0, 0);
 
+      // Rotate corner handles geometrically to preserve exact rectangle orientation
+      const rotatedCorners = rotateCornersGeometry(state.scanCorners || page.corners, origW, origH, deltaDeg);
+      state.scanCorners = rotatedCorners;
+      page.corners = rotatedCorners;
+
       const rotatedImg = new Image();
       rotatedImg.onload = () => {
         page.currentImg = rotatedImg;
@@ -5852,7 +5986,10 @@
         
         const angleBadge = document.getElementById('scanRotationAngleBadge');
         if (angleBadge) angleBadge.innerText = `当前: ${newDeg}°`;
-        showToast(`当前页已旋转至 ${newDeg}°！`);
+        const infoBadge = document.getElementById('scanImageInfoBadge');
+        if (infoBadge) infoBadge.innerText = `${targetW} × ${targetH} px`;
+
+        showToast(`当前页已旋转至 ${newDeg}°！选框已同步精准适配`);
       };
       rotatedImg.src = curCvs.toDataURL();
     }
@@ -5870,6 +6007,9 @@
       cvs.width = page.originalImg.width;
       cvs.height = page.originalImg.height;
       cvs.getContext('2d').drawImage(page.originalImg, 0, 0);
+
+      page.corners = autoDetectDocumentCornersFromCanvas(cvs);
+      state.scanCorners = page.corners;
 
       page.thumbDataUrl = cvs.toDataURL('image/jpeg', 0.6);
       initPerspectiveCropOverlay(page.originalImg.width, page.originalImg.height);
@@ -5892,7 +6032,7 @@
       const overlay = document.getElementById('scanCropOverlay');
       if (overlay) overlay.classList.remove('hidden');
       const label = document.getElementById('labelToggleCropOverlay');
-      if (label) label.innerText = '透视选框: 开';
+      if (label) label.innerText = '选框: 开';
 
       setTimeout(updatePerspectiveCropOverlayUI, 50);
       bindPerspectivePinDragging();
@@ -5914,22 +6054,6 @@
       showToast('已重置透视选框为全幅面！');
     }
 
-    function autoDetectPerspectiveCorners() {
-      const page = state.scanPages[state.currentScanPageIdx];
-      if (!page) return showToast('请先导入文档图片');
-      const w = page.currentImg.width;
-      const h = page.currentImg.height;
-      state.scanCorners = [
-        { x: Math.round(w * 0.06), y: Math.round(h * 0.06) },
-        { x: Math.round(w * 0.94), y: Math.round(h * 0.06) },
-        { x: Math.round(w * 0.94), y: Math.round(h * 0.94) },
-        { x: Math.round(w * 0.06), y: Math.round(h * 0.94) }
-      ];
-      page.corners = state.scanCorners;
-      updatePerspectiveCropOverlayUI();
-      showToast('已自动收拢选区至文档核心区域！');
-    }
-
     function togglePerspectiveCropOverlay() {
       state.scanCropOverlayVisible = !state.scanCropOverlayVisible;
       const overlay = document.getElementById('scanCropOverlay');
@@ -5937,11 +6061,11 @@
       if (overlay) {
         if (state.scanCropOverlayVisible) {
           overlay.classList.remove('hidden');
-          if (label) label.innerText = '透视选框: 开';
+          if (label) label.innerText = '选框: 开';
           updatePerspectiveCropOverlayUI();
         } else {
           overlay.classList.add('hidden');
-          if (label) label.innerText = '透视选框: 关';
+          if (label) label.innerText = '选框: 关';
         }
       }
     }
@@ -6158,6 +6282,16 @@
         new Uint32Array(newImgData.data.buffer).set(dstPixels);
         ctx.putImageData(newImgData, 0, 0);
 
+        // Reset corners to the new rectangular boundaries (彻底杜绝选框扭曲)
+        const newRectangleCorners = [
+          { x: Math.round(dstW * 0.03), y: Math.round(dstH * 0.03) },
+          { x: Math.round(dstW * 0.97), y: Math.round(dstH * 0.03) },
+          { x: Math.round(dstW * 0.97), y: Math.round(dstH * 0.97) },
+          { x: Math.round(dstW * 0.03), y: Math.round(dstH * 0.97) }
+        ];
+        state.scanCorners = newRectangleCorners;
+        page.corners = newRectangleCorners;
+
         const warpedImg = new Image();
         warpedImg.onload = () => {
           page.currentImg = warpedImg;
@@ -6165,7 +6299,11 @@
           state.scanImg = warpedImg;
           initPerspectiveCropOverlay(dstW, dstH);
           renderScanPagesListUI();
-          showToast('✅ 当前页透视拉直矫正成功！已修正为平整矩形');
+          
+          const infoBadge = document.getElementById('scanImageInfoBadge');
+          if (infoBadge) infoBadge.innerText = `${dstW} × ${dstH} px`;
+
+          showToast('✅ 当前页透视拉直矫正成功！已修正为平整矩形，选框已自动重置');
         };
         warpedImg.src = cvs.toDataURL();
       } catch (err) {
@@ -6181,6 +6319,46 @@
       if (files?.length) loadMultipleScanImageFiles(Array.from(files));
     }
 
+    /* Magical Paper Whitening & Filter Engine (纯白底色·去除蓝灰杂色·文字锐化黑度·红章蓝字保真) */
+    function processMagicWhiteningFilter(imgData) {
+      const d = imgData.data;
+      for (let i = 0; i < d.length; i += 4) {
+        const r = d[i], g = d[i+1], b = d[i+2];
+        const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+        // 1. Red official seal preservation
+        if (r > 110 && r - g > 25 && r - b > 25) {
+          d[i] = Math.min(255, Math.round(r * 1.25));
+          d[i+1] = Math.round(g * 0.65);
+          d[i+2] = Math.round(b * 0.65);
+          continue;
+        }
+
+        // 2. Blue handwriting ink preservation
+        if (lum < 140 && b > 80 && b - r > 25 && b - g > 15) {
+          d[i] = Math.round(r * 0.6);
+          d[i+1] = Math.round(g * 0.7);
+          d[i+2] = Math.min(255, Math.round(b * 1.35));
+          continue;
+        }
+
+        // 3. Paper background whitening & shadow removal (Eliminates bluish/gray cast)
+        if (lum > 140) {
+          // Pure crisp white paper
+          d[i] = 255; d[i+1] = 255; d[i+2] = 255;
+        } else if (lum > 95) {
+          // Smooth ramp to white
+          const t = (lum - 95) / 45;
+          const val = Math.round(180 + t * 75);
+          d[i] = val; d[i+1] = val; d[i+2] = val;
+        } else {
+          // Deep black text
+          const darkVal = Math.max(0, Math.round(lum * 0.6));
+          d[i] = darkVal; d[i+1] = darkVal; d[i+2] = darkVal;
+        }
+      }
+    }
+
     function applyScanFilter(mode) {
       const page = state.scanPages[state.currentScanPageIdx];
       if (!page) return showToast('请先导入文档图片');
@@ -6190,19 +6368,24 @@
       const ctx = cvs.getContext('2d');
       ctx.drawImage(page.currentImg, 0, 0);
 
-      if (mode !== 'orig') {
+      if (mode === 'color') {
+        const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
+        processMagicWhiteningFilter(imgData);
+        ctx.putImageData(imgData, 0, 0);
+      } else if (mode === 'bw') {
         const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
         const d = imgData.data;
         for (let i = 0; i < d.length; i += 4) {
-          if (mode === 'bw') {
-            const val = (0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2]) > 140 ? 255 : 0;
-            d[i] = val; d[i+1] = val; d[i+2] = val;
-          } else if (mode === 'color') {
-            d[i] = Math.min(255, d[i] * 1.25); d[i+1] = Math.min(255, d[i+1] * 1.25); d[i+2] = Math.min(255, d[i+2] * 1.25);
-          } else if (mode === 'seal') {
-            if (d[i] > 110 && d[i] - d[i+1] > 20 && d[i] - d[i+2] > 20) {
-              d[i] = 230; d[i+1] = 30; d[i+2] = 30;
-            }
+          const val = (0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2]) > 140 ? 255 : 0;
+          d[i] = val; d[i+1] = val; d[i+2] = val;
+        }
+        ctx.putImageData(imgData, 0, 0);
+      } else if (mode === 'seal') {
+        const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
+        const d = imgData.data;
+        for (let i = 0; i < d.length; i += 4) {
+          if (d[i] > 110 && d[i] - d[i+1] > 20 && d[i] - d[i+2] > 20) {
+            d[i] = 230; d[i+1] = 30; d[i+2] = 30;
           }
         }
         ctx.putImageData(imgData, 0, 0);
@@ -6210,7 +6393,7 @@
 
       page.thumbDataUrl = cvs.toDataURL('image/jpeg', 0.6);
       renderScanPagesListUI();
-      showToast(`滤镜已应用到当前第 ${state.currentScanPageIdx + 1} 页！`);
+      showToast(`【${mode === 'color' ? '魔术彩色增白' : mode === 'bw' ? '黑白二值化' : mode === 'seal' ? '印章强化' : '高清原图'}】已应用！`);
     }
 
     function applyCurrentFilterToAllPages() {
@@ -6228,19 +6411,24 @@
         const offCtx = off.getContext('2d');
         offCtx.drawImage(p.currentImg, 0, 0);
 
-        if (filter !== 'orig') {
+        if (filter === 'color') {
+          const imgData = offCtx.getImageData(0, 0, off.width, off.height);
+          processMagicWhiteningFilter(imgData);
+          offCtx.putImageData(imgData, 0, 0);
+        } else if (filter === 'bw') {
           const imgData = offCtx.getImageData(0, 0, off.width, off.height);
           const d = imgData.data;
           for (let i = 0; i < d.length; i += 4) {
-            if (filter === 'bw') {
-              const val = (0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2]) > 140 ? 255 : 0;
-              d[i] = val; d[i+1] = val; d[i+2] = val;
-            } else if (filter === 'color') {
-              d[i] = Math.min(255, d[i] * 1.25); d[i+1] = Math.min(255, d[i+1] * 1.25); d[i+2] = Math.min(255, d[i+2] * 1.25);
-            } else if (filter === 'seal') {
-              if (d[i] > 110 && d[i] - d[i+1] > 20 && d[i] - d[i+2] > 20) {
-                d[i] = 230; d[i+1] = 30; d[i+2] = 30;
-              }
+            const val = (0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2]) > 140 ? 255 : 0;
+            d[i] = val; d[i+1] = val; d[i+2] = val;
+          }
+          offCtx.putImageData(imgData, 0, 0);
+        } else if (filter === 'seal') {
+          const imgData = offCtx.getImageData(0, 0, off.width, off.height);
+          const d = imgData.data;
+          for (let i = 0; i < d.length; i += 4) {
+            if (d[i] > 110 && d[i] - d[i+1] > 20 && d[i] - d[i+2] > 20) {
+              d[i] = 230; d[i+1] = 30; d[i+2] = 30;
             }
           }
           offCtx.putImageData(imgData, 0, 0);
@@ -6264,23 +6452,22 @@
       state.scanPages.forEach((page, idx) => {
         if (idx > 0) pdf.addPage('a4', 'p');
         
-        // Render processed page to offscreen canvas
         const off = document.createElement('canvas');
         off.width = page.currentImg.width;
         off.height = page.currentImg.height;
         const offCtx = off.getContext('2d');
         offCtx.drawImage(page.currentImg, 0, 0);
 
-        if (page.filter && page.filter !== 'orig') {
+        if (page.filter === 'color') {
+          const imgData = offCtx.getImageData(0, 0, off.width, off.height);
+          processMagicWhiteningFilter(imgData);
+          offCtx.putImageData(imgData, 0, 0);
+        } else if (page.filter === 'bw') {
           const imgData = offCtx.getImageData(0, 0, off.width, off.height);
           const d = imgData.data;
           for (let i = 0; i < d.length; i += 4) {
-            if (page.filter === 'bw') {
-              const val = (0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2]) > 140 ? 255 : 0;
-              d[i] = val; d[i+1] = val; d[i+2] = val;
-            } else if (page.filter === 'color') {
-              d[i] = Math.min(255, d[i] * 1.25); d[i+1] = Math.min(255, d[i+1] * 1.25); d[i+2] = Math.min(255, d[i+2] * 1.25);
-            }
+            const val = (0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2]) > 140 ? 255 : 0;
+            d[i] = val; d[i+1] = val; d[i+2] = val;
           }
           offCtx.putImageData(imgData, 0, 0);
         }
