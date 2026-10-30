@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>DocScan Studio · 文档工作台</title>
 
+  <script src="vendor/web-ppt-core-0.5.0.min.js"></script>
+  <script src="presentation.js"></script>
+  <script src="spreadsheet-formulas.js"></script>
+  <script src="office-export.js"></script>
   <!-- CDN Dependencies -->
   <!-- Google Calligraphy & Master Fonts CDN -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,7 +28,7 @@
   <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="vendor/qrcode-generator-1.4.4.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 
   <script>
@@ -335,6 +339,16 @@
   </header>
 
 <div class="island-row"><div class="status-island"><button class="island-toggle" id="islandToggle" type="button" aria-expanded="false" aria-controls="islandDetails" onclick="toggleStatusIsland()"><span class="island-dot" aria-hidden="true"></span><span id="islandStatus">工作台就绪</span><span aria-hidden="true">⌄</span></button><button id="cancelActiveAiRequests" class="island-cancel" type="button" hidden onclick="cancelAiRequests()">取消 AI</button><div class="island-details" id="islandDetails" hidden><strong>最近状态</strong><ol id="islandHistory"><li>工作台就绪</li></ol></div></div><span class="sr-only" id="islandLive" aria-live="polite" aria-atomic="true"></span></div>
+
+  <div id="pptPreviewModal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3" role="dialog" aria-modal="true" aria-labelledby="pptPreviewTitle">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-4xl p-4 flex flex-col gap-3" style="max-height:90dvh">
+      <div class="flex items-center justify-between gap-3"><h2 id="pptPreviewTitle" class="font-bold truncate">演示文稿预览</h2><button type="button" onclick="DocPresentation.close()" class="px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-800">关闭 / 取消</button></div>
+      <p id="pptPreviewWarnings" class="text-xs text-slate-500">页面按原比例导出为图像 PDF，文字不可搜索。复杂动画、图表、字体和多媒体可能不同或缺失，请逐页检查预览。</p>
+      <div class="overflow-auto flex justify-center bg-slate-100 dark:bg-slate-950 rounded-xl p-2" style="min-height:120px"><canvas id="pptPreviewCanvas" style="max-width:100%;height:auto;object-fit:contain"></canvas></div>
+      <div class="flex flex-wrap items-center justify-between gap-2"><div class="flex gap-2"><button onclick="DocPresentation.preview(-1 + DocPresentation.index)" class="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800">上一页</button><button onclick="DocPresentation.preview(1 + DocPresentation.index)" class="px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800">下一页</button></div><span id="pptPreviewStatus" class="text-xs" aria-live="polite"></span><button id="pptPreviewExport" onclick="DocPresentation.exportPdf()" class="px-4 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50" disabled>导出 PDF</button></div>
+    </div>
+  </div>
+
   <!-- ==================== MOBILE DRAWER NAVIGATION ==================== -->
   <div id="mobileNavDrawer" class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-900 shadow-2xl border-r border-slate-200 dark:border-slate-800 transform -translate-x-full transition-transform duration-300 flex flex-col xl:hidden">
     <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
@@ -490,11 +504,9 @@
           <span class="text-[11px] font-bold text-emerald-600 flex items-center space-x-1"><span>立即转换</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
-        <!-- PPT import/conversion is not yet available. -->
-        <div class="home-card group" aria-disabled="true" data-cat="convert" data-keywords="ppt 转 pdf pptx 转 pdf 幻灯片转pdf">
-          <div><div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div>
-          <h4 class="text-sm font-bold mt-2">PPT 转 PDF</h4><p class="text-xs text-slate-500 mt-1">暂不支持读取 PPT 文件。</p></div>
-          <span class="text-xs text-slate-500">暂不支持</span>
+        <!-- Presentation preview and PDF export -->
+        <div class="home-card group" data-cat="convert" data-keywords="ppt 转 pdf pptx 转 pdf 幻灯片转pdf" onclick="navigateModule('convert')" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}">
+          <div><div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-slate-800 text-blue-600 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div><h4 class="text-sm font-bold mt-2">PPT 转 PDF</h4><p class="text-xs text-slate-500 mt-1">预览演示文稿并导出 PDF。</p></div><span class="text-xs text-blue-600">打开转换 →</span>
         </div>
 
         <!-- PDF -> Word -->
@@ -537,11 +549,11 @@
           <span class="text-[11px] font-bold text-indigo-600 flex items-center space-x-1"><span>立即进入</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
-        <!-- Templates (18+) -->
+        <!-- Templates (13) -->
         <div onclick="navigateModule('templates')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="templates" data-keywords="作业纸 字帖 描红 田字格 米字格 衡水体 错题本 康奈尔 五线谱 计划表">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="grid" class="w-5 h-5"></i></div>
-            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">作业纸与字帖模板库 (18+款)</h4>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">作业纸与字帖模板库 (13 款)</h4>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">拼音田字格、米字格、衡水体、错题本、康奈尔、字帖描红与高清 PDF 导出。</p>
           </div>
           <span class="text-[11px] font-bold text-teal-600 flex items-center space-x-1"><span>浏览模版</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
@@ -1290,9 +1302,12 @@
           </div>
         </div>
 
-        <!-- PPT conversion remains unavailable until PPT files can actually be read. -->
-        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 opacity-70" aria-disabled="true">
-          <h3 class="text-sm font-bold">PPT 转 PDF</h3><p class="text-xs text-slate-500">暂不支持读取 PPT 文件。</p>
+        <!-- Local PPT/PPTX preview and export -->
+        <div ondragover="handleConvCardDragOver(event, this)" ondragleave="handleConvCardDragLeave(event, this)" ondrop="handleConvCardDrop(event, this, 'ppt2pdf')" class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
+          <div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div><div><h3 class="text-sm font-bold">PPT / PPTX 转 PDF</h3><p class="text-xs text-slate-500">本地预览与导出；复杂内容可能有差异</p></div></div>
+          <input type="file" id="inputPptToPdf" accept=".ppt,.pptx" class="hidden" onchange="handlePptToPdf(event)">
+          <button onclick="document.getElementById('inputPptToPdf').click()" class="w-full py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold">选择演示文稿</button>
+          <p class="text-xs text-slate-500">支持拖入文件；导出的页面为图像，文字不可搜索。</p>
         </div>
 
         <!-- 4. PDF -> Word -->
@@ -1819,7 +1834,7 @@
       <div class="w-[380px] shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-3.5 flex flex-col overflow-y-auto touch-scroll-panel">
         <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
           <span class="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
-            <i data-lucide="grid" class="w-4 h-4 text-teal-500"></i><span>18+ 作业纸与字帖模板库 (PC专业版)</span>
+            <i data-lucide="grid" class="w-4 h-4 text-teal-500"></i><span>13 款作业纸与字帖模板库 (PC专业版)</span>
           </span>
           <span class="text-[10px] px-2 py-0.5 bg-teal-50 dark:bg-teal-950 text-teal-700 dark:text-teal-300 font-bold rounded-full border border-teal-200 dark:border-teal-800">300 DPI 矢量排版</span>
         </div>
@@ -1838,7 +1853,7 @@
             <option value="english4">🔤 英语四线三格 (字母单词)</option>
             <option value="cornell">📖 康奈尔笔记纸 (经典三栏)</option>
             <option value="cuoti">📝 错题整理本 (题目与订正分析)</option>
-            <option value="grid">▦ 方格文稿纸 (20x20 作文纸)</option>
+            <option value="grid">▦ 方格文稿纸 (满幅作文纸)</option>
             <option value="music">🎼 音乐五线谱 (全页铺满)</option>
             <option value="guitar">🎸 吉他六线谱 TAB (全页铺满)</option>
           </select>
@@ -2073,7 +2088,7 @@
             <option value="english4">🔤 英语四线三格 (字母单词)</option>
             <option value="cornell">📖 康奈尔笔记纸 (经典三栏)</option>
             <option value="cuoti">📝 错题整理本 (题目与订正分析)</option>
-            <option value="grid">▦ 方格文稿纸 (20x20 作文纸)</option>
+            <option value="grid">▦ 方格文稿纸 (满幅作文纸)</option>
             <option value="music">🎼 音乐五线谱 (全页铺满)</option>
             <option value="guitar">🎸 吉他六线谱 TAB (全页铺满)</option>
           </select>
@@ -2416,21 +2431,21 @@
             <span class="text-xs font-bold">二维码 & 条形码生成工坊</span>
           </div>
           <input type="text" id="qrTextInput" value="https://github.com" oninput="generateQRAndBarcode()" placeholder="输入网址或文本..." class="w-full p-2.5 text-xs border rounded-xl bg-slate-50 dark:bg-slate-950">
-          <div class="flex items-center space-x-4">
+          <div class="flex flex-wrap items-center gap-4">
             <div id="qrCodeContainer" class="p-2 bg-white rounded-lg border inline-block"></div>
-            <div class="space-y-1"><svg id="barcodeCanvas"></svg></div>
+            <div class="overflow-x-auto max-w-full"><svg id="barcodeCanvas"></svg></div>
           </div>
+          <p id="qrBarcodeStatus" class="text-xs text-slate-500" aria-live="polite">条形码支持 1–128 个可打印 ASCII 字符；二维码支持中文。</p>
+          <div class="flex gap-2"><button id="qrSvgBtn" onclick="downloadQrSvg()" disabled class="px-3 py-2 rounded-xl bg-blue-600 text-white text-xs disabled:opacity-50">下载二维码 SVG</button><button id="barcodeSvgBtn" onclick="downloadBarcodeSvg()" disabled class="px-3 py-2 rounded-xl bg-blue-600 text-white text-xs disabled:opacity-50">下载条形码 SVG</button></div>
         </div>
 
-        <!-- 3. Smart Watermark -->
+        <!-- Local image and PDF watermark -->
         <div class="p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border space-y-3 shadow-sm">
-          <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><i data-lucide="stamp" class="w-4 h-4"></i></div>
-            <span class="text-xs font-bold">水印导出（暂不支持）</span>
-          </div>
-          <input type="text" id="watermarkText" value="仅供办理业务使用 他用无效" class="w-full p-2 text-xs border rounded-xl bg-slate-50 dark:bg-slate-950">
+          <div class="flex items-center space-x-2"><i data-lucide="stamp" class="w-4 h-4 text-blue-600"></i><span class="text-xs font-bold">文件水印</span></div>
+          <label class="block text-xs">水印文字<input type="text" id="watermarkText" value="仅供办理业务使用" maxlength="80" class="w-full p-2 border rounded-xl bg-slate-50 dark:bg-slate-950"></label>
+          <div class="grid grid-cols-3 gap-2"><label class="text-xs">透明度<input type="number" id="watermarkOpacity" min="5" max="80" value="20" class="w-full p-2 border rounded-xl bg-slate-50 dark:bg-slate-950"></label><label class="text-xs">角度<input type="number" id="watermarkAngle" min="-90" max="90" value="-30" class="w-full p-2 border rounded-xl bg-slate-50 dark:bg-slate-950"></label><label class="text-xs">颜色<input type="color" id="watermarkColor" value="#9b1c1c" class="w-full h-9 border rounded-xl"></label></div>
           <input type="file" id="inputWatermarkFile" accept="image/*,.pdf" class="hidden" onchange="handleWatermarkUpload(event)">
-          <p class="text-xs text-slate-500">该功能尚未实现，暂不能生成水印文件。</p>
+          <button onclick="document.getElementById('inputWatermarkFile').click()" class="w-full py-2 bg-blue-600 text-white rounded-xl text-xs font-bold">选择 PDF / 图片并下载</button><button onclick="downloadWatermarkSvg()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-bold">下载水印图案 SVG</button><p class="text-xs text-slate-500">水印图案 SVG 为透明文字图案；本地文件处理不超过 25 MB。</p>
         </div>
 
         <!-- 4. ID Card Merger -->
@@ -2816,6 +2831,9 @@
         const rawDict = localStorage.getItem(BILLING_CONFIG.dictKey);
         if (rawDict) { try { this.priceDict = JSON.parse(rawDict); } catch { this.priceDict = {}; } }
 
+        this.syncFormFromState();
+      },
+      syncFormFromState() {
         document.getElementById('billingClientName').value = this.state.client || '';
         document.getElementById('billingDocTitle').value = this.state.docTitle || '发货清单 / 销售对账单';
         document.getElementById('billingAdjustment').value = this.state.adjustment || '';
@@ -3236,6 +3254,7 @@
         const target = drafts.find(d => d.id === id);
         if (target && target.state) {
           this.state = target.state;
+          this.syncFormFromState();
           this.save();
           this.renderHeader();
           this.renderBody();
@@ -3278,27 +3297,26 @@
 铜人代黑: M-4XL: 164件 58元
 49白: M-2XL: 72件 45元`;
         document.getElementById('billingBatchPasteTextarea').value = sample;
-        showToast('已载入手写发货清单真实示例数据！');
+        showToast('已载入示例数据，请勿当作识别结果');
       },
 
       async handleImageOcrPaste(e) {
         const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
-        showToast('正在通过 AI 视觉引擎提取手写记账单文字...');
+        const job = startAiJob('billing-ocr'), cfg = getAiConfig();
+        if (!cfg.apiKey || !cfg.baseUrl) return showToast('请先配置视觉模型的 API 地址和密钥');
+        const textarea = document.getElementById('billingBatchPasteTextarea'), previous = textarea.value;
         try {
-          const base64 = await fileToBase64(file);
-          let extractedText = '';
-          if (state.aiConfig?.apiKey) {
-            extractedText = await callAiVisionOCR(base64, '请识别这张手写发货/记账单中的所有款号、尺码、件数与价格，每行一条，格式如：商品名: 尺码: 数量件 价格元');
-          }
-          if (!extractedText) {
-            // Local fallback extraction sample from memo
-            extractedText = `男3代野马桔: M-2XL: 72件 45元\n雄狮灰: M-2XL: 72件 45元\n绿红: M-2XL: 72件 45元\n公羊新白: M-6XL: 241件 52元\n公羊新黑: M-6XL: 227件 52元\n比尔灰: M-6XL: 247件 52元\n童3代纯白: S-2XL: 145件 38元\n童3代纯黑: S-2XL: 131件 38元\n童3代比尔灰: S-2XL: 115件 38元\n男2代跨界新款白: M-2XL: 80件 48元\n男2代跨界新款黑: M-2XL: 96件 48元\n男2代49复古红: M-2XL: 76件 48元\n男2代49新红: M-2XL: 72件 48元\n男2代复古红: M-2XL: 148件 48元\n牛奶白: M-4XL: 132件 50元\n深海蓝: M-4XL: 150件 50元\n铜人代黑: M-2XL: 160件 55元\n铜人代黑: M-4XL: 164件 58元\n49白: M-2XL: 72件 45元`;
-          }
-          document.getElementById('billingBatchPasteTextarea').value = extractedText;
-          showToast('手写记账单识别完成，请核对并点击【解析并导入】！');
-        } catch (err) {
-          showToast('识别失败: ' + err.message);
-        }
+          const dataUrl = await new Promise((resolve,reject) => { const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('图片读取失败'));reader.readAsDataURL(file); });
+          if (!isCurrentAiJob('billing-ocr',job)) return;
+          const response=await aiFetch(`${cfg.baseUrl.replace(/\/+$/, '')}/chat/completions`,{
+            method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${cfg.apiKey}`},
+            body:JSON.stringify({model:cfg.model||'mimo-vision',messages:[{role:'user',content:[{type:'text',text:'请识别手写发货单的款号、尺码、数量和价格，逐行输出，不要虚构。'},{type:'image_url',image_url:{url:dataUrl}}]}],max_tokens:2000})
+          });
+          const extracted=aiResponseText(await response.json());
+          if (!isCurrentAiJob('billing-ocr',job)) return;
+          if (textarea.value !== previous) return showToast('识别期间文本已修改，未覆盖当前内容');
+          textarea.value=extracted;showToast('识别完成，请核对后再导入');
+        } catch(err) { if(isCurrentAiJob('billing-ocr',job))showToast('识别失败：'+err.message); }
       },
 
       executeBatchPaste() {
@@ -3801,14 +3819,15 @@
       for (let c = 0; c < colCount; c++) html += `<col style="width: ${state.excelColWidths[c]}px;">`;
       html += '</colgroup><thead><tr class="bg-slate-100 dark:bg-slate-800" style="height: 32px;"><th class="w-10 p-1 border border-slate-300 text-center font-bold text-slate-500">#</th>';
       for (let c = 0; c < colCount; c++) {
-        html += `<th oncontextmenu="handleExcelColHeaderContextMenu(event, ${c})" class="relative p-1 border border-slate-300 text-center font-bold select-none cursor-pointer" style="width: ${state.excelColWidths[c]}px;"><span>${String.fromCharCode(65 + c)}</span></th>`;
+        html += `<th oncontextmenu="handleExcelColHeaderContextMenu(event, ${c})" class="relative p-1 border border-slate-300 text-center font-bold select-none cursor-pointer" style="width: ${state.excelColWidths[c]}px;"><span>${SpreadsheetFormula.columnLabel(c)}</span></th>`;
       }
       html += '</tr></thead><tbody>';
       for (let r = 0; r < rowCount; r++) {
         html += `<tr style="height: ${state.excelRowHeights[r]||32}px;"><td oncontextmenu="handleExcelRowHeaderContextMenu(event, ${r})" class="p-1 bg-slate-50 border border-slate-300 text-center font-bold cursor-pointer"><span>${r + 1}</span></td>`;
         for (let c = 0; c < colCount; c++) {
           const val = state.excelData[r]?.[c] ?? '';
-          html += `<td contenteditable="true" onfocus="selectExcelCell(${r}, ${c}, '${String.fromCharCode(65 + c)}${r + 1}', this)" oninput="updateExcelCell(${r}, ${c}, this.innerText)" class="editor-sheet-cell p-1.5 border border-slate-200 overflow-hidden leading-tight">${escapeHtml(val)}</td>`;
+          const result = typeof val === 'string' && val.startsWith('=') ? SpreadsheetFormula.evaluate(state.excelData,r,c) : {value:val};
+          html += `<td contenteditable="true" data-excel-r="${r}" data-excel-c="${c}" onfocus="selectExcelCell(${r}, ${c}, '${SpreadsheetFormula.columnLabel(c)}${r + 1}', this)" oninput="updateExcelCell(${r}, ${c}, this.innerText)" onblur="refreshExcelCalculatedCells()" class="editor-sheet-cell p-1.5 border border-slate-200 overflow-hidden leading-tight">${escapeHtml(result.error || (result.value ?? ''))}</td>`;
         }
         html += '</tr>';
       }
@@ -3817,7 +3836,9 @@
     function selectExcelCell(r, c, label, el) {
       state.activeExcelCell = { r, c }; state.activeExcelEl = el;
       document.getElementById('excelActiveCellLabel').innerText = label;
-      document.getElementById('excelFormulaInput').value = el.innerText;
+      const raw = state.excelData[r]?.[c] ?? '';
+      document.getElementById('excelFormulaInput').value = raw;
+      el.innerText = raw;
     }
     function handleExcelColHeaderContextMenu(e, c) {
       e.preventDefault(); e.stopPropagation(); closeAllContextMenus();
@@ -3858,7 +3879,20 @@
     function setSpecificColWidth(val) { state.excelColWidths[state.activeExcelCell.c] = parseInt(val)||110; initExcelGrid(); }
     function setSpecificRowHeight(val) { state.excelRowHeights[state.activeExcelCell.r] = parseInt(val)||32; initExcelGrid(); }
     function handleExcelFormulaInput(val) { if (state.activeExcelEl) state.activeExcelEl.innerText = val; updateExcelCell(state.activeExcelCell.r, state.activeExcelCell.c, val); }
-    function updateExcelCell(r, c, val) { if (!state.excelData[r]) state.excelData[r] = []; state.excelData[r][c] = val; }
+    function refreshExcelCalculatedCells() {
+      document.querySelectorAll('[data-excel-r][data-excel-c]').forEach(el => {
+        if (el === document.activeElement) return;
+        const r=Number(el.dataset.excelR),c=Number(el.dataset.excelC),raw=state.excelData[r]?.[c] ?? '';
+        const result=typeof raw==='string' && raw.startsWith('=') ? SpreadsheetFormula.evaluate(state.excelData,r,c) : {value:raw};
+        el.textContent=result.error || String(result.value ?? '');
+      });
+    }
+    function updateExcelCell(r, c, val) {
+      if (!state.excelData[r]) state.excelData[r] = [];
+      state.excelData[r][c] = val;
+      if (state.activeExcelCell.r === r && state.activeExcelCell.c === c) document.getElementById('excelFormulaInput').value = val;
+      refreshExcelCalculatedCells();
+    }
     function insertExcelRow() { insertRowAt(state.excelData.length); }
     function insertExcelCol() { insertColAt(state.excelColWidths.length); }
     function changeExcelActiveCellFont(f) { if (state.activeExcelEl) state.activeExcelEl.style.fontFamily = f; }
@@ -4335,7 +4369,9 @@
         } else if (['xlsx', 'xls', 'csv'].includes(ext)) {
           const ab = await file.arrayBuffer();
           const wb = XLSX.read(ab, { type: 'array' });
-          state.excelData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          state.excelData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+          for (const [address, cell] of Object.entries(sheet)) if (!address.startsWith('!') && cell.f) { const at=XLSX.utils.decode_cell(address); if(!state.excelData[at.r])state.excelData[at.r]=[]; state.excelData[at.r][at.c]='='+cell.f; }
           initExcelGrid(); switchOfficeSubTool('excel'); showToast('Excel 表格已打开！');
         } else if (ext === 'pdf') {
           const ab = await file.arrayBuffer();
@@ -4344,7 +4380,7 @@
           switchOfficeSubTool('pdf');
           showToast(`PDF 文档已打开 (共 ${state.pdfDoc.numPages} 页)！`);
         } else if (['pptx', 'ppt'].includes(ext)) {
-          showToast('暂不支持读取 PPT 文件；请使用其他软件打开');
+          await DocPresentation.open(file);
         } else {
           showToast('暂不支持此格式，请选择 docx/xlsx/pptx/pdf/txt 格式文件');
         }
@@ -4355,26 +4391,49 @@
 
     async function exportCurrentOfficeDocument() {
       if (state.currentOfficeTool === 'word') {
-        const text = document.getElementById('wordEditorDoc').innerText;
-        const paragraphs = text.split('\n').filter(l => l.trim()).map(l => new docx.Paragraph({ children: [new docx.TextRun({ text: l.trim(), size: 28 })] }));
-        const doc = new docx.Document({ sections: [{ children: paragraphs }] });
+        const {document:doc,warnings} = wordDomToDocx(document.getElementById('wordEditorDoc'));
         const blob = await docx.Packer.toBlob(doc);
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Document_${Date.now()}.docx`; a.click();
-        showToast('Word 导出完成！');
+        downloadBytes(await blob.arrayBuffer(),'application/vnd.openxmlformats-officedocument.wordprocessingml.document',`Document_${Date.now()}.docx`);
+        showToast(warnings.length ? `Word 已导出；部分内容未保留：${warnings.join('、')}` : 'Word 已导出；复杂排版可能不同');
       } else if (state.currentOfficeTool === 'excel') {
         const ws = XLSX.utils.aoa_to_sheet(state.excelData);
+        state.excelData.forEach((row,r) => row.forEach((raw,c) => {
+          if (typeof raw !== 'string' || !raw.startsWith('=')) return;
+          const address=XLSX.utils.encode_cell({r,c}), result=SpreadsheetFormula.evaluate(state.excelData,r,c);
+          ws[address]=result.error ? {t:'e',v:15,f:raw.slice(1)} : {t:'n',v:Number(result.value),f:raw.slice(1)};
+        }));
         const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
         XLSX.writeFile(wb, `Workbook_${Date.now()}.xlsx`);
         showToast('Excel 导出完成！');
       } else if (state.currentOfficeTool === 'ppt') {
         const pptx = new PptxGenJS(); pptx.layout = 'LAYOUT_16x9';
-        state.pptSlides.forEach(s => {
+        let skippedMedia = false;
+        const canvas = document.getElementById('pptSlideCanvas'), sourceWidth = canvas.clientWidth || 880, sourceHeight = canvas.clientHeight || 495;
+        for (const s of state.pptSlides) {
           const slide = pptx.addSlide();
-          slide.addText(s.title, { x: 0.8, y: 0.8, fontSize: 24, bold: true });
-          slide.addText(s.body, { x: 0.8, y: 2.0, fontSize: 16 });
-        });
+          if (s.bgType === 'color' && /^#[0-9a-f]{6}$/i.test(s.bgValue || '')) slide.background = {color:s.bgValue.slice(1)};
+          else if (s.bgType === 'image' && /^data:image\/(png|jpe?g);base64,/i.test(s.bgValue || '')) slide.background = {data:s.bgValue};
+          else if (s.bgType === 'gradient') {
+            const colors = (s.bgValue || '').match(/#[0-9a-f]{6}/ig);
+            if (colors?.length >= 2) {
+              const bg=document.createElement('canvas');bg.width=880;bg.height=495;const context=bg.getContext('2d');
+              const grad=context.createLinearGradient(0,0,bg.width,bg.height);colors.forEach((color,i)=>grad.addColorStop(i/(colors.length-1),color));context.fillStyle=grad;context.fillRect(0,0,bg.width,bg.height);
+              slide.background={data:bg.toDataURL('image/png')};
+            } else skippedMedia=true;
+          } else if (s.bgType === 'image') skippedMedia=true;
+          if (s.title) slide.addText(s.title, {x:0.8,y:0.8,fontSize:24,bold:true});
+          if (s.body) slide.addText(s.body, {x:0.8,y:2.0,fontSize:16});
+          for (const item of (s.media || [])) {
+            if (item.type !== 'image' || !/^data:image\/(png|jpe?g|gif);base64,/i.test(item.src || '')) { skippedMedia=true; continue; }
+            try {
+              const img=new Image();img.src=item.src;await img.decode();
+              const w=Number(item.width)||280, h=Number(item.height)||w*img.naturalHeight/img.naturalWidth;
+              slide.addImage({data:item.src,x:(Number(item.x)||0)/sourceWidth*13.333,y:(Number(item.y)||0)/sourceHeight*7.5,w:w/sourceWidth*13.333,h:h/sourceHeight*7.5});
+            } catch (_) {skippedMedia=true;}
+          }
+        }
         await pptx.writeFile({ fileName: `Presentation_${Date.now()}.pptx` });
-        showToast('PPT 导出完成！');
+        showToast(skippedMedia ? 'PPT 已导出；部分媒体或背景未保留' : 'PPT 已导出；渐变和复杂效果可能不同');
       } else if (state.currentOfficeTool === 'pdf') {
         const cvs = document.getElementById('pdfViewerCanvas');
         if (cvs && cvs.width) {
@@ -4482,6 +4541,31 @@
       }
     }
 
+    // Render Unicode with browser fonts; exported PDF pages are images, not searchable text.
+    function createUnicodeTextPdf(text, landscape = false) {
+      text = String(text ?? '');
+      if (text.length > 500000) throw new Error('文本超过 50 万字符，请拆分文件');
+      const {jsPDF} = window.jspdf, pdf = new jsPDF(landscape ? 'l' : 'p', 'mm', 'a4');
+      const canvas = document.createElement('canvas'); canvas.width = landscape ? 1754 : 1240; canvas.height = landscape ? 1240 : 1754;
+      const ctx = canvas.getContext('2d'), margin = 80, lineHeight = 42, maxWidth = canvas.width - 2*margin;
+      let y = margin, pageCount = 0;
+      function reset() { ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#202124';ctx.font='28px -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif';ctx.textBaseline='top';y=margin; }
+      function flush() { if (++pageCount > 100) throw new Error('转换超过 100 页，请拆分文件'); if(pageCount>1)pdf.addPage(); pdf.addImage(canvas.toDataURL('image/jpeg',.92),'JPEG',0,0,landscape?297:210,landscape?210:297); }
+      function line(value) { if(y+lineHeight>canvas.height-margin){flush();reset();}ctx.fillText(value,margin,y);y+=lineHeight; }
+      reset();
+      for (const paragraph of text.replace(/\r\n?/g,'\n').split('\n')) {
+        let current='';
+        for (const char of paragraph) { const next=current+char; if(current && ctx.measureText(next).width > maxWidth){line(current);current=char;}else current=next; }
+        line(current);
+      }
+      flush(); return pdf;
+    }
+    function drawUnicodePdfLabel(pdf,text,x,y,width,height) {
+      const canvas=document.createElement('canvas');canvas.width=1600;canvas.height=100;
+      const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#555';ctx.font='40px -apple-system, "Microsoft YaHei", sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,800,50,1560);
+      pdf.addImage(canvas.toDataURL('image/png'),'PNG',x,y,width,height);
+    }
+
     async function handleWordToPdf(e, droppedFile = null) {
       const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
       showToast('正在解析 Word 并生成 PDF...');
@@ -4489,22 +4573,14 @@
         const ab = await file.arrayBuffer();
         const res = await mammoth.extractRawText({ arrayBuffer: ab });
         const textContent = res.value || '无文本内容';
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const lines = pdf.splitTextToSize(textContent, 180);
-        let cursorY = 20;
-        lines.forEach(l => {
-          if (cursorY > 280) { pdf.addPage(); cursorY = 20; }
-          pdf.text(l, 15, cursorY);
-          cursorY += 7;
-        });
+        const pdf = createUnicodeTextPdf(textContent);
 
         const pdfArrayBuffer = pdf.output('arraybuffer');
 
         openUniversalConvertResultModal({
           type: 'word2pdf',
           fileName: file.name,
-          targetFormat: 'PDF 矢量文档',
+          targetFormat: '图像 PDF（文字不可搜索）',
           previewText: textContent.substring(0, 1000),
           openEditorFn: async () => {
             if (!await loadPdfDocument(pdfArrayBuffer)) return;
@@ -4531,25 +4607,16 @@
         const ab = await file.arrayBuffer();
         const wb = XLSX.read(ab, { type: 'array' });
         const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1 });
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('l', 'mm', 'a4');
-        pdf.setFontSize(9);
-        let y = 20;
-        let previewStr = '';
-        data.forEach((r, idx) => {
-          if (y > 190) { pdf.addPage(); y = 20; }
-          const lineStr = (r || []).map(cell => String(cell === undefined ? '' : cell)).join('   |   ');
-          if (idx < 20) previewStr += lineStr + '\n';
-          pdf.text(lineStr.substring(0, 140), 15, y);
-          y += 6.5;
-        });
+        const lines = data.map(row => (row || []).map(cell => String(cell ?? '')).join('   |   '));
+        const previewStr = lines.slice(0,20).join('\n');
+        const pdf = createUnicodeTextPdf(lines.join('\n'), true);
 
         const pdfArrayBuffer = pdf.output('arraybuffer');
 
         openUniversalConvertResultModal({
           type: 'excel2pdf',
           fileName: file.name,
-          targetFormat: '横向 A4 报表 PDF',
+          targetFormat: '横向图像 PDF（文字不可搜索）',
           previewText: previewStr || 'Excel 表格数据已提取',
           openEditorFn: async () => {
             if (!await loadPdfDocument(pdfArrayBuffer)) return;
@@ -4570,8 +4637,9 @@
     }
 
     async function handlePptToPdf(e, droppedFile = null) {
-      const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
-      showToast('暂不支持将上传的 PPT 文件转换为 PDF');
+      const file = droppedFile || e?.target?.files?.[0]; if (!file) return;
+      if (e?.target) e.target.value = '';
+      await DocPresentation.open(file);
     }
 
     async function handlePdfToWord(e, droppedFile = null) {
@@ -4711,12 +4779,12 @@
 
           generatedSlides.push({
             layout: 'title_content',
-            title: `幻灯片 第 ${p} 页`,
-            body: `• 已由 PDF 页面 ${p} 高清矢量渲染载入\n• 您可以在此添加演讲备注或叠加图文组件`,
+            title: '',
+            body: '',
             notes: '',
             bgType: 'color',
             bgValue: '#ffffff',
-            media: [{ id: Date.now().toString(36) + p, type: 'image', src: imgData, x: 10, y: 10, w: 80, h: 80, zIndex: 1 }]
+            media: [{ id: Date.now().toString(36) + p, type: 'image', src: imgData, x: 0, y: 0, width: 800, height: 800 * vp.height / vp.width, zIndex: 1 }]
           });
         }
 
@@ -4728,9 +4796,11 @@
           openEditorFn: () => {
             state.pptSlides = generatedSlides;
             state.currentSlideIdx = 0;
-            renderPptSlidesList();
             navigateModule('editor');
             switchOfficeSubTool('ppt');
+            const displayWidth = document.getElementById('pptSlideCanvas').clientWidth || 800;
+            generatedSlides.forEach(slide => { const media=slide.media[0], ratio=media.height/media.width; media.width=displayWidth; media.height=displayWidth*ratio; });
+            renderPptSlidesList();
             showToast('已在 PPT 在线演示工坊中直接载入全部幻灯片！');
           },
           downloadFn: async () => {
@@ -4765,19 +4835,14 @@
           fileName: file.name,
           targetFormat: `${pdf.numPages} 张高清 JPG 图片`,
           previewText: `共成功渲染提取出 ${pdf.numPages} 张 300 DPI 高清单页图片`,
-          openEditorFn: () => {
-            state.scanImg = new Image();
-            state.scanImg.onload = () => {
-              const cvs = document.getElementById('scanMainCanvas');
-              cvs.width = state.scanImg.width; cvs.height = state.scanImg.height;
-              cvs.getContext('2d').drawImage(state.scanImg, 0, 0);
-              document.getElementById('scanEmptyDropzone').classList.add('hidden');
-              document.getElementById('scanCanvasWrapper').classList.remove('hidden');
-              navigateModule('scan');
-              switchScanSubMode('doc');
-              showToast('已在图像工坊中载入提取图片！');
-            };
-            state.scanImg.src = imageUrls[0].dataUrl;
+          openEditorFn: async () => {
+            const images = imageUrls.map(img => {
+              const bytes=atob(img.dataUrl.split(',')[1]), data=new Uint8Array(bytes.length);
+              for(let i=0;i<bytes.length;i++)data[i]=bytes.charCodeAt(i);
+              return new File([data], `${file.name.replace(/\.pdf$/i,'')}_Page_${img.pageNum}.jpg`, {type:'image/jpeg'});
+            });
+            navigateModule('scan'); switchScanSubMode('doc');
+            await loadMultipleScanImageFiles(images);
           },
           downloadFn: () => {
             imageUrls.forEach(img => {
@@ -5058,6 +5123,10 @@
         const m = document.getElementById('tplRowsInputMob'); if (m && m.value != num) m.value = num;
         handleSmartAspectLock('rows', num);
       } else if (key === 'text') {
+        if (['tianzi','pure_tianzi','mizi','huigong','jiugong','rizi','hengshui','english4'].includes(state.tplConfig.type) && value) {
+          state.tplConfig.traceEnabled = true;
+          ['PC','Mob'].forEach(suffix => { const checkbox = document.getElementById(`tplTraceEnabled${suffix}`); if (checkbox) checkbox.checked = true; });
+        }
         const p = document.getElementById('tplTraceTextPC'); if (p && p.value !== value) p.value = value;
         const m = document.getElementById('tplTraceTextMob'); if (m && m.value !== value) m.value = value;
         const q = document.getElementById('tplQuickTextarea'); if (q && q.value !== value) q.value = value;
@@ -5091,23 +5160,12 @@
     }
 
     function applyTemplateTypeDefaults(type) {
-      if (type === 'hengshui' || type === 'english4') {
-        state.tplConfig.rows = 15; state.tplConfig.cols = 1;
-        state.tplConfig.text = 'Continuous effort not strength or intelligence is the key to unlocking our potential Knowledge is power Practice makes perfect';
-      } else if (type === 'rizi') {
-        state.tplConfig.rows = 10; state.tplConfig.cols = 8;
-        state.tplConfig.text = '0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9';
-      } else if (type === 'tianzi') {
-        state.tplConfig.rows = 10; state.tplConfig.cols = 8;
-        state.tplConfig.text = '天地玄黄 宇宙洪荒 日月盈昃 辰宿列张 寒来暑往 秋收冬藏 闰余成岁 律吕调阳';
-      } else if (type === 'music' || type === 'guitar') {
-        state.tplConfig.rows = 12; state.tplConfig.cols = 1;
-        state.tplConfig.traceEnabled = false;
-      } else {
-        state.tplConfig.rows = 12; state.tplConfig.cols = 8;
-      }
-
-      // Update form values
+      const traceTypes = ['tianzi','pure_tianzi','mizi','huigong','jiugong','rizi','hengshui','english4'];
+      state.tplConfig.traceEnabled = traceTypes.includes(type);
+      if (type === 'hengshui' || type === 'english4') { state.tplConfig.rows = 15; state.tplConfig.cols = 1; }
+      else if (type === 'rizi' || type === 'tianzi') { state.tplConfig.rows = 10; state.tplConfig.cols = 8; }
+      else if (type === 'music' || type === 'guitar') { state.tplConfig.rows = 12; state.tplConfig.cols = 1; }
+      else { state.tplConfig.rows = 12; state.tplConfig.cols = 8; }
       ['PC', 'Mob'].forEach(suffix => {
         const r = document.getElementById(`tplRowsInput${suffix}`); if (r) r.value = state.tplConfig.rows;
         const c = document.getElementById(`tplColsInput${suffix}`); if (c) c.value = state.tplConfig.cols;
@@ -5339,10 +5397,19 @@
             ctx.beginPath();
             ctx.setLineDash([Math.round(8 * scale), Math.round(6 * scale)]);
             ctx.lineWidth = Math.max(1, 2 * scale);
-            ctx.moveTo(x + boxSize / 2, y);
-            ctx.lineTo(x + boxSize / 2, y + boxSize);
-            ctx.moveTo(x, y + boxSize / 2);
-            ctx.lineTo(x + boxSize, y + boxSize / 2);
+            if (type === 'jiugong') {
+              for (let part = 1; part < 3; part++) {
+                ctx.moveTo(x + boxSize * part / 3, y); ctx.lineTo(x + boxSize * part / 3, y + boxSize);
+                ctx.moveTo(x, y + boxSize * part / 3); ctx.lineTo(x + boxSize, y + boxSize * part / 3);
+              }
+            } else if (type === 'huigong') {
+              const inset = boxSize / 4;
+              ctx.moveTo(x + inset, y + inset); ctx.lineTo(x + boxSize - inset, y + inset);
+              ctx.lineTo(x + boxSize - inset, y + boxSize - inset); ctx.lineTo(x + inset, y + boxSize - inset); ctx.lineTo(x + inset, y + inset);
+            } else {
+              ctx.moveTo(x + boxSize / 2, y); ctx.lineTo(x + boxSize / 2, y + boxSize);
+              ctx.moveTo(x, y + boxSize / 2); ctx.lineTo(x + boxSize, y + boxSize / 2);
+            }
 
             if (type === 'mizi') {
               ctx.moveTo(x, y);
@@ -5468,27 +5535,32 @@
           ctx.moveTo(width - margin, y); ctx.lineTo(width - margin, y + staveH);
           ctx.stroke();
         }
+      } else if (type === 'cornell' || type === 'cuoti' || type === 'grid') {
+        const left = margin, right = width - margin, top = margin + 150 * scale, bottom = height - margin;
+        ctx.strokeStyle = gridColor; ctx.fillStyle = gridColor; ctx.lineWidth = Math.max(1.5, 3 * scale);
+        ctx.font = `${Math.round(34 * scale)}px -apple-system, "Microsoft YaHei", sans-serif`;
+        ctx.textAlign = 'left';
+        const line = (x1,y1,x2,y2) => { ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); };
+        if (type === 'cornell') {
+          const summary = top + (bottom-top)*0.76, split = left + (right-left)*0.29;
+          ctx.fillText('主题：', left, margin + 65*scale);
+          ctx.strokeRect(left,top,right-left,bottom-top); line(split,top,split,summary); line(left,summary,right,summary);
+          ctx.fillText('线索 / 提问', left+18*scale,top+48*scale); ctx.fillText('笔记', split+18*scale,top+48*scale);
+          ctx.fillText('总结', left+18*scale,summary+48*scale);
+          for (let y=top+105*scale; y<summary-20*scale; y+=80*scale) line(split+15*scale,y,right-15*scale,y);
+        } else if (type === 'cuoti') {
+          const split1 = top+(bottom-top)*0.43, split2 = top+(bottom-top)*0.65;
+          ctx.fillText('科目：                         日期：', left, margin+65*scale);
+          ctx.strokeRect(left,top,right-left,bottom-top); line(left,split1,right,split1); line(left,split2,right,split2);
+          ctx.fillText('题目',left+18*scale,top+48*scale);ctx.fillText('错因分析',left+18*scale,split1+48*scale);ctx.fillText('正确解答 / 总结',left+18*scale,split2+48*scale);
+        } else {
+          ctx.fillText('题目：', left, margin+65*scale);
+          const columns = 20, box = (right-left)/columns, rows = Math.floor((bottom-top)/box), x0=left, y0=top;
+          for(let i=0;i<=columns;i++) line(x0+i*box,y0,x0+i*box,y0+rows*box);
+          for(let i=0;i<=rows;i++) line(x0,y0+i*box,x0+columns*box,y0+i*box);
+        }
       } else {
-        // Grid / Cornell / Cuoti
-        const rows = Math.max(1, cfg.rows);
-        const cols = Math.max(1, cfg.cols);
-        const cellW = (width - margin * 2) / cols;
-        const cellH = (height - margin * 2) / rows;
-
-        ctx.strokeStyle = gridColor;
-        ctx.lineWidth = Math.max(1.2, 2.2 * scale);
-        for (let r = 0; r <= rows; r++) {
-          ctx.beginPath();
-          ctx.moveTo(margin, margin + r * cellH);
-          ctx.lineTo(width - margin, margin + r * cellH);
-          ctx.stroke();
-        }
-        for (let c = 0; c <= cols; c++) {
-          ctx.beginPath();
-          ctx.moveTo(margin + c * cellW, margin);
-          ctx.lineTo(margin + c * cellW, height - margin);
-          ctx.stroke();
-        }
+        throw new Error('未知的纸张模板：' + type);
       }
     }
 
@@ -7354,15 +7426,7 @@ ${b.substring(0, 4000)}
       const baseName = res.fileName ? res.fileName.replace(/\.[^/.]+$/, '') : 'AI_Converted_Doc';
 
       if (res.type.endsWith('2pdf')) {
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('p', 'mm', 'a4');
-        const lines = pdf.splitTextToSize(res.text, 180);
-        let y = 20;
-        lines.forEach(l => {
-          if (y > 280) { pdf.addPage(); y = 20; }
-          pdf.text(l, 15, y);
-          y += 7;
-        });
+        const pdf = createUnicodeTextPdf(res.text);
         pdf.save(`${baseName}_AI_Enhanced.pdf`);
         showToast('AI 强化 PDF 已成功下载！');
       } else if (res.type.endsWith('2word')) {
@@ -7463,6 +7527,7 @@ ${b.substring(0, 4000)}
 
       if (money === '' || isNaN(money)) return '人民币零元整';
       money = parseFloat(money);
+      if (money < 0) return '暂不支持负数金额';
       if (money >= maxNum) return '超出最大处理金额';
       if (money === 0) return '人民币零元整';
 
@@ -7520,20 +7585,115 @@ ${b.substring(0, 4000)}
       navigator.clipboard.writeText(document.getElementById('rmbOutput').value);
       showToast('大写金额已复制到剪贴板！');
     }
+    let qrGenerated = null, qrInputValue = null, barcodeInputValue = null;
     function generateQRAndBarcode() {
-      const t = document.getElementById('qrTextInput').value || 'https://github.com';
-      const box = document.getElementById('qrCodeContainer');
-      if (box) {
-        box.innerHTML = '';
-        new QRCode(box, { text: t, width: 75, height: 75 });
-      }
+      const text = document.getElementById('qrTextInput').value;
+      const box = document.getElementById('qrCodeContainer'), barcode = document.getElementById('barcodeCanvas');
+      const qrBtn = document.getElementById('qrSvgBtn'), barcodeBtn = document.getElementById('barcodeSvgBtn');
+      const status = document.getElementById('qrBarcodeStatus');
+      box.replaceChildren(); barcode.replaceChildren(); qrGenerated = null; qrInputValue = barcodeInputValue = null;
+      qrBtn.disabled = true; barcodeBtn.disabled = true;
+      if (!text) { status.textContent = '请输入内容。'; return; }
+      const warnings = [];
       try {
-        JsBarcode('#barcodeCanvas', t.substring(0, 15), { format: 'CODE128', width: 1.2, height: 35, displayValue: true, fontSize: 10 });
-      } catch (e) {}
+        if (typeof qrcode !== 'function') throw new Error('二维码组件未加载');
+        if (text.length > 1024) throw new Error('二维码输入超过 1024 字符');
+        qrcode.stringToBytes = value => Array.from(new TextEncoder().encode(value));
+        const code = qrcode(0, 'M'); code.addData(text, 'Byte'); code.make();
+        qrGenerated = code; qrInputValue = text; qrBtn.disabled = false;
+        box.innerHTML = qrMatrixSvg(code);
+        const preview = box.querySelector('svg'); preview.style.width = '75px'; preview.style.height = '75px';
+      } catch (err) { box.replaceChildren(); warnings.push('二维码：' + err.message); }
+      try {
+        if (!window.JsBarcode) throw new Error('条形码组件未加载');
+        if (!/^[\x20-\x7e]{1,128}$/.test(text)) throw new Error('Code 128 仅支持 1–128 个可打印 ASCII 字符');
+        JsBarcode(barcode, text, {format:'CODE128', width:1.2, height:35, displayValue:true, fontSize:10, margin:10});
+        const w = parseFloat(barcode.getAttribute('width')), h = parseFloat(barcode.getAttribute('height'));
+        if (!(w > 0 && h > 0)) throw new Error('条形码生成失败');
+        barcode.setAttribute('viewBox', `0 0 ${w} ${h}`); barcodeInputValue = text; barcodeBtn.disabled = false;
+      } catch (err) { barcode.replaceChildren(); warnings.push('条形码：' + err.message); }
+      status.textContent = warnings.length ? warnings.join('；') : '已生成；SVG 保留完整输入内容。';
     }
-    function handleWatermarkUpload(e) {
+    function qrMatrixSvg(matrix) {
+      const n=matrix.getModuleCount(), quiet=4, size=n+quiet*2, parts=[];
+      for(let row=0;row<n;row++) for(let col=0;col<n;col++) if(matrix.isDark(row,col)) parts.push(`M${col+quiet} ${row+quiet}h1v1h-1z`);
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="${size*8}" height="${size*8}" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges"><rect width="${size}" height="${size}" fill="#fff"/><path d="${parts.join('')}" fill="#000"/></svg>`;
+    }
+    function downloadQrSvg() {
+      if (!qrGenerated || qrInputValue !== document.getElementById('qrTextInput').value) return showToast('请先生成有效二维码');
+      downloadBytes(qrMatrixSvg(qrGenerated),'image/svg+xml;charset=utf-8','qrcode.svg');
+    }
+    function downloadBarcodeSvg() {
+      if (!barcodeInputValue || barcodeInputValue !== document.getElementById('qrTextInput').value) return showToast('请先生成有效条形码');
+      const svg = document.getElementById('barcodeCanvas').cloneNode(true);
+      svg.setAttribute('xmlns','http://www.w3.org/2000/svg');
+      downloadBytes(new XMLSerializer().serializeToString(svg),'image/svg+xml;charset=utf-8','barcode.svg');
+    }
+    function downloadWatermarkSvg() {
+      const text=document.getElementById('watermarkText').value.trim();
+      const opacity=Number(document.getElementById('watermarkOpacity').value), angle=Number(document.getElementById('watermarkAngle').value), color=document.getElementById('watermarkColor').value;
+      const invalidXml = Array.from(text).some(ch => { const cp = ch.codePointAt(0); return !(cp === 9 || cp === 10 || cp === 13 || (cp >= 0x20 && cp <= 0xd7ff) || (cp >= 0xe000 && cp <= 0xfffd) || (cp >= 0x10000 && cp <= 0x10ffff)); });
+      if (!text || text.length>80 || invalidXml) return showToast('请输入有效水印文字');
+      if (!Number.isFinite(opacity)||opacity<5||opacity>80||!Number.isFinite(angle)||angle < -90||angle > 90||!/^#[0-9a-f]{6}$/i.test(color)) return showToast('请检查水印透明度、角度和颜色');
+      const patternWidth = Math.max(360, text.length * 28 + 40);
+      const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200"><defs><pattern id="watermark" width="${patternWidth}" height="160" patternUnits="userSpaceOnUse" patternTransform="rotate(${angle})"><text x="10" y="85" font-family="sans-serif" font-size="28" font-weight="600" fill="${color}" fill-opacity="${opacity/100}">${escapeHtml(text)}</text></pattern></defs><rect width="900" height="1200" fill="url(#watermark)"/></svg>`;
+      downloadBytes(svg,'image/svg+xml;charset=utf-8','watermark-pattern.svg');
+    }
+    function watermarkCanvas(width, height, text, color, angle) {
+      const scale = Math.min(1, 1600 / Math.max(width, height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(width * scale)); canvas.height = Math.max(1, Math.round(height * scale));
+      const ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height;
+      const fontSize = Math.max(12, Math.min(w, h) / 17);
+      ctx.font = `600 ${fontSize}px -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif`;
+      ctx.fillStyle = color; ctx.textBaseline = 'middle';
+      ctx.translate(w / 2, h / 2); ctx.rotate(angle * Math.PI / 180);
+      const distance = Math.hypot(w, h), gapX = Math.max(fontSize * 7, ctx.measureText(text).width + fontSize * 3), gapY = fontSize * 5;
+      for (let y = -distance; y <= distance; y += gapY) for (let x = -distance; x <= distance; x += gapX) ctx.fillText(text, x, y);
+      return canvas;
+    }
+    async function handleWatermarkUpload(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
-      showToast('水印导出尚未实现，当前没有生成文件');
+      const text = document.getElementById('watermarkText').value.trim();
+      const opacity = Number(document.getElementById('watermarkOpacity').value), angle = Number(document.getElementById('watermarkAngle').value);
+      const color = document.getElementById('watermarkColor').value;
+      if (!text) return showToast('请输入水印文字');
+      if (!Number.isFinite(opacity) || opacity < 5 || opacity > 80 || !Number.isFinite(angle) || angle < -90 || angle > 90) return showToast('透明度须为 5–80，角度须为 -90 至 90');
+      if (file.size > 25 * 1024 * 1024) return showToast('文件超过 25 MB 限制');
+      const task = beginWorkspaceTask('正在生成水印');
+      try {
+        await new Promise(resolve => setTimeout(resolve, 0));
+        const baseName = file.name.replace(/\.[^.]+$/, '');
+        if (file.type === 'application/pdf' || /\.pdf$/i.test(file.name)) {
+          if (!window.PDFLib?.PDFDocument) throw new Error('PDF 组件未加载');
+          const doc = await PDFLib.PDFDocument.load(await file.arrayBuffer());
+          if (doc.getPageCount() > 100) throw new Error('PDF 超过 100 页，请先拆分');
+          let count = 0;
+          for (const page of doc.getPages()) {
+            const {width,height} = page.getSize();
+            const overlay = watermarkCanvas(width,height,text,color,angle);
+            const blob = await new Promise(resolve => overlay.toBlob(resolve, 'image/png'));
+            if (!blob) throw new Error('水印图像生成失败');
+            const png = await doc.embedPng(await blob.arrayBuffer());
+            page.drawImage(png,{x:0,y:0,width,height,opacity:opacity/100});
+            count++; if (count % 5 === 0) await new Promise(resolve=>setTimeout(resolve,0));
+          }
+          downloadBytes(await doc.save(),'application/pdf',`${baseName}_watermarked.pdf`);
+        } else if (file.type.startsWith('image/')) {
+          const image = await createImageBitmap(file);
+          try {
+            if (image.width * image.height > 16000000) throw new Error('图片超过 1600 万像素，请先缩小');
+            const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
+            const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);
+            const overlay=watermarkCanvas(canvas.width,canvas.height,text,color,angle);
+            ctx.globalAlpha=opacity/100;ctx.drawImage(overlay,0,0,canvas.width,canvas.height);
+            const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw new Error('图片生成失败');
+            downloadBytes(await blob.arrayBuffer(),'image/png',`${baseName}_watermarked.png`);
+          } finally { image.close(); }
+        } else throw new Error('请选择 PDF 或图片文件');
+        showToast('水印文件已生成');
+      } catch (err) { showToast('水印处理失败：'+err.message); }
+      finally {endWorkspaceTask(task);}
     }
     function handleIdCardUpload(e, side) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
@@ -7549,10 +7709,10 @@ ${b.substring(0, 4000)}
       rd.readAsDataURL(file);
     }
     function exportIdCardA4Pdf() {
+      if (!state.idFrontImg || !state.idBackImg) return showToast('请先上传身份证正反两面');
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF('p', 'mm', 'a4');
-      pdf.setFontSize(10); pdf.setTextColor(100);
-      pdf.text('居民身份证 1:1 A4 规格复印归档专用件（他用无效）', 105, 30, { align: 'center' });
+      drawUnicodePdfLabel(pdf, '居民身份证 1:1 A4 规格复印归档专用件（他用无效）', 20, 23, 170, 10);
       if (state.idFrontImg) pdf.addImage(state.idFrontImg, 'JPEG', 62, 50, 85.6, 54);
       if (state.idBackImg) pdf.addImage(state.idBackImg, 'JPEG', 62, 130, 85.6, 54);
       pdf.save('ID_Card_A4_1to1.pdf');

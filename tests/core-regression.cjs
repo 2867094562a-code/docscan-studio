@@ -8,6 +8,7 @@ const context={console, setTimeout, clearTimeout, Uint8ClampedArray, Uint32Array
  state:{excelData:[['A','B','C'],['D']],excelColWidths:[51,52,53],excelRowHeights:[41,42],contextMenuColIndex:1,contextMenuRowIndex:1},
  escapeHtml:x=>String(x), showToast:x=>{throw Error(x)} };
 vm.createContext(context);
+vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'..','spreadsheet-formulas.js'),'utf8'), context);
 vm.runInContext(between('    function initExcelGrid()', '    function selectExcelCell(') + between('    function insertColAt(', '    function setSpecificColWidth(') + between('    function rotateCornersGeometry(', '    function rotateScanImage(') + between('    function getPerspectiveTransform(', '    function executePerspectiveWarp('),context);
 context.initExcelGrid(); context.insertColLeft();
 assert.equal(context.state.excelData[0][2],'B'); assert.equal(context.state.excelColWidths[2],52);
