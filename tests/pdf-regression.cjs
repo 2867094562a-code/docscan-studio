@@ -1,0 +1,9 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync(require('node:path').join(__dirname,'..','index.html'),'utf8');
+const src=[...html.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)].map(x=>x[1]).find(x=>x.includes('function renderPdfViewerPage'));
+const from=src.indexOf('    let pdfLoadSerial'),to=src.indexOf('    function changePdfScale(',from);assert(from>=0&&to>from);
+let active=0,maxActive=0,cancelled=0,destroyed=0;
+const makeDoc=n=>({numPages:2,async destroy(){destroyed++},async getPage(num){return {getViewport(){return {width:100,height:100}},render(){active++;maxActive=Math.max(maxActive,active);let timer,rejectTask;const promise=new Promise((resolve,reject)=>{rejectTask=reject;timer=setTimeout(()=>{active--;resolve()},20)});return {promise,cancel(){if(!timer)return;clearTimeout(timer);timer=null;active--;cancelled++;const e=new Error('cancelled');e.name='RenderingCancelledException';rejectTask(e)}}}}}});
+const info={},canvas={getContext:()=>({})},state={pdfDoc:makeDoc(1),pdfPageNum:1},ctx={state,console,pdfjsLib:{getDocument:()=>({promise:Promise.resolve(makeDoc(2))})},document:{getElementById:id=>id==='pdfViewerCanvas'?canvas:info},showToast:m=>{throw Error(m)}};
+vm.createContext(ctx);vm.runInContext(src.slice(from,to),ctx);
+(async()=>{const first=ctx.renderPdfViewerPage();await new Promise(r=>setTimeout(r,2));state.pdfPageNum=2;const second=ctx.renderPdfViewerPage();await Promise.all([first,second]);assert.equal(maxActive,1);assert.equal(cancelled,1);assert.match(info.innerText,/2 \/ 2/);assert.equal(await ctx.loadPdfDocument(new ArrayBuffer(1)),true);assert.equal(destroyed,1);assert.equal(state.pdfPageNum,1);console.log('PASS: PDF render cancellation, single canvas rendering, latest page and old document release')})().catch(e=>{console.error(e);process.exitCode=1});

@@ -2,9 +2,9 @@
 <html lang="zh-CN" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Office Master Studio - 线上办公增强超级工作台</title>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>DocScan Studio · 文档工作台</title>
+
   <!-- CDN Dependencies -->
   <!-- Google Calligraphy & Master Fonts CDN -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,13 +14,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://unpkg.com/pdf-lib@1.17.9/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-  <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js"></script>
@@ -31,14 +31,14 @@
     if (window.pdfjsLib) {
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     }
-    tailwind.config = {
+    if (window.tailwind) tailwind.config = {
       darkMode: 'class',
       theme: { extend: { colors: { brand: { 50: '#eef2ff', 500: '#4f46e5', 600: '#4338ca' } } } }
     }
   </script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-    
+
+
     html, body {
       height: 100%;
       height: 100dvh;
@@ -49,7 +49,7 @@
     }
 
     * {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
@@ -79,8 +79,8 @@
       }
     }
 
-    * { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif; box-sizing: border-box; }
-    
+    * { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif; box-sizing: border-box; }
+
     /* Prevent mobile browser auto-zoom on input focus */
     @media screen and (max-width: 768px) {
       input, select, textarea { font-size: 16px !important; }
@@ -88,17 +88,17 @@
 
     ::-webkit-scrollbar { width: 5px; height: 5px; }
     ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.35); border-radius: 9999px; }
-    
+
     .bg-checker {
       background-size: 16px 16px;
       background-image: linear-gradient(45deg, #f1f5f9 25%, transparent 25%), linear-gradient(-45deg, #f1f5f9 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f1f5f9 75%), linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
     }
     .dark .bg-checker { background-image: linear-gradient(45deg, #1e293b 25%, transparent 25%), linear-gradient(-45deg, #1e293b 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #1e293b 75%), linear-gradient(-45deg, transparent 75%, #1e293b 75%); }
-    
+
     ins.diff-ins { background-color: #dcfce7; color: #15803d; text-decoration: none; padding: 2px 4px; border-radius: 3px; font-weight: 600; }
     del.diff-del { background-color: #fee2e2; color: #b91c1c; text-decoration: line-through; padding: 2px 4px; border-radius: 3px; }
     .editor-sheet-cell:focus { outline: 2px solid #4f46e5; z-index: 10; }
-    
+
     /* Document Editor Typography */
     .gov-doc-mode {
       font-family: "FangSong", "仿宋", "STFangsong", "仿宋_GB2312", serif;
@@ -199,7 +199,7 @@
 
     .bill-input-cell {
       width: 100%; height: 100%; border: none; outline: none; text-align: center;
-      background: transparent; font-size: 14px; color: #334155; font-weight: 500; 
+      background: transparent; font-size: 14px; color: #334155; font-weight: 500;
       transition: background-color 0.2s;
     }
     .dark .bill-input-cell { color: #e2e8f0; }
@@ -212,8 +212,8 @@
 
     /* Universal Isolated Print Engine (Prevents any web interface or home page leaks) */
     @media print {
-      body > header, body > main, #mobileNavDrawer, #mobileGlobalBackdrop, .fixed.bottom-0, .no-print { 
-        display: none !important; 
+      body > header, body > main, #mobileNavDrawer, #mobileGlobalBackdrop, .fixed.bottom-0, .no-print {
+        display: none !important;
       }
       body {
         background: white !important;
@@ -224,6 +224,56 @@
 
     body.capturing .no-print { display: none !important; }
     body.capturing .bill-container { box-shadow: none !important; border-radius: 0 !important; }
+
+    /* Shared workspace components */
+    :root { color-scheme: light; --surface:#fff; --canvas:#f2f3f7; --ink:#1c1c1e; --muted:#6e6e73; --line:#e5e5ea; --accent:#007aff; }
+    .dark { color-scheme:dark; --surface:#1c1c1e; --canvas:#101012; --ink:#f5f5f7; --muted:#a1a1a6; --line:#38383a; --accent:#409cff; }
+    body { background:var(--canvas); color:var(--ink); }
+    header { background:color-mix(in srgb, var(--surface) 88%, transparent); }
+    :focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+    .home-intro { display:grid; grid-template-columns:1fr 1fr; gap:32px; padding:36px; background:var(--surface); border:1px solid var(--line); border-radius:24px; }
+    .home-intro-copy { align-self:center; }
+    .home-eyebrow { color:var(--accent); font-size:11px; font-weight:700; letter-spacing:.12em; }
+    .home-intro h2 { font-size:clamp(28px,3vw,40px); font-weight:700; letter-spacing:-.04em; margin:8px 0; }
+    .home-intro-copy > p:not(.home-eyebrow), .home-section-heading p { color:var(--muted); font-size:14px; }
+    .home-search { margin-top:24px; max-width:380px; display:flex; gap:10px; align-items:center; padding:10px 13px; border-radius:12px; background:var(--canvas); color:var(--muted); }
+    .home-search input { width:100%; background:transparent; outline:none; font-size:14px; color:var(--ink); }
+    .quick-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .quick-actions button { display:flex; text-align:left; gap:12px; align-items:center; padding:16px; border-radius:16px; background:var(--canvas); transition:background .2s,transform .2s; }
+    .quick-actions button:hover { background:color-mix(in srgb,var(--accent) 12%,var(--canvas)); transform:translateY(-2px); }
+    .quick-actions svg { color:var(--accent); flex:none; width:22px; height:22px; }
+    .quick-actions span { font-size:14px; font-weight:650; } .quick-actions small { display:block; color:var(--muted); font-size:11px; font-weight:400; margin-top:3px; }
+    .home-section-heading { padding:12px 2px 0; } .home-section-heading h3 { font-size:21px; font-weight:700; letter-spacing:-.02em; }
+    .home-card { padding:20px; background:var(--surface); border:1px solid var(--line); border-radius:18px; display:flex; flex-direction:column; justify-content:space-between; gap:12px; cursor:pointer; box-shadow:0 2px 8px #00000008; }
+    .home-card.hidden { display:none; }
+    .home-card:hover { border-color:var(--accent); box-shadow:0 8px 22px #00000012; }
+    .home-card h4 { font-size:15px; } .home-card p { line-height:1.55; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .home-cat-btn { border-radius:10px; }
+    @media(max-width:700px) { .home-intro { grid-template-columns:1fr; gap:22px; padding:22px; } .quick-actions button { padding:12px; } .quick-actions small { display:none; } }
+    @media(prefers-reduced-motion:reduce) { *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } }
+
+    /* Solid backgrounds are the fallback when blur is unavailable. */
+    header, .island-row { background:var(--surface); }
+    .island-row { flex:none; height:42px; display:flex; justify-content:center; align-items:center; z-index:35; border-bottom:1px solid var(--line); }
+    .status-island { position:relative; display:flex; align-items:center; gap:4px; padding:3px; background:#1c1c1e; color:#fff; border-radius:22px; box-shadow:0 4px 12px #0002; }
+    .island-toggle { max-width:260px; display:flex; align-items:center; gap:8px; min-height:27px; padding:0 11px; font-size:12px; font-weight:600; }
+    #islandStatus { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:175px; }
+    .island-dot { width:7px; height:7px; border-radius:50%; background:#34c759; }
+    .island-cancel { border-radius:16px; background:#454548; padding:4px 9px; font-size:11px; color:white; }
+    .island-cancel[hidden], .island-details[hidden] { display:none; }
+    .island-details { position:absolute; left:50%; transform:translateX(-50%); top:40px; width:min(320px,90vw); background:var(--surface); color:var(--ink); border:1px solid var(--line); border-radius:18px; padding:16px; box-shadow:0 12px 35px #0003; font-size:12px; }
+    .island-details ol { margin-top:8px; color:var(--muted); } .island-details li { padding:5px 0; overflow-wrap:anywhere; }
+    @supports (backdrop-filter:blur(18px)) { header, .island-row { background:color-mix(in srgb,var(--surface) 82%,transparent); backdrop-filter:blur(18px) saturate(140%); } .island-details { background:color-mix(in srgb,var(--surface) 88%,transparent); backdrop-filter:blur(18px); } }
+    @media(max-width:640px) { .app-module { height:calc(100dvh - 3.5rem - 3.5rem - 42px); } }
+
+    #moduleHome { background:radial-gradient(ellipse at 16% 0%, #dcecff 0%, transparent 42%), radial-gradient(ellipse at 94% 15%, #e9e4ff 0%, transparent 38%), var(--canvas); }
+    .dark #moduleHome { background:radial-gradient(ellipse at 16% 0%, #17283c 0%, transparent 42%), radial-gradient(ellipse at 94% 15%, #29223c 0%, transparent 38%), var(--canvas); }
+    @supports (backdrop-filter:blur(18px)) {
+      .home-intro, .home-card { background:color-mix(in srgb,var(--surface) 84%,transparent); backdrop-filter:blur(18px) saturate(130%); border-color:color-mix(in srgb,var(--surface) 65%,var(--line)); }
+      .quick-actions button { background:color-mix(in srgb,var(--surface) 54%,var(--canvas)); backdrop-filter:blur(12px); }
+    }
+    .home-card[aria-disabled="true"] { opacity:.7; cursor:default; }
+    .home-card[aria-disabled="true"]:hover { border-color:var(--line); transform:none; box-shadow:none; }
   </style>
 </head>
 <body class="h-full bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col overflow-hidden pb-14 xl:pb-0" onclick="closeAllContextMenus()">
@@ -236,15 +286,14 @@
       </button>
 
       <button onclick="navigateModule('home')" class="flex items-center space-x-2.5 text-left">
-        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md">
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white">
           <i data-lucide="briefcase" class="w-5 h-5 sm:w-6 sm:h-6"></i>
         </div>
         <div>
           <div class="flex items-center space-x-1.5">
-            <h1 class="text-base sm:text-lg font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 via-purple-600 to-violet-600 dark:from-indigo-400 dark:via-purple-400 dark:to-violet-400 bg-clip-text text-transparent">Office Master Studio</h1>
-            <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 font-semibold border border-indigo-200 dark:border-indigo-800">Pro Suite</span>
+            <h1 class="text-base sm:text-lg font-bold tracking-tight">DocScan Studio</h1>
           </div>
-          <p class="text-[10px] text-slate-400 hidden 2xl:block">一站式全能办公与在线轻编辑套件 / 100% 本地离线安全</p>
+          <p class="text-[10px] text-slate-400 hidden 2xl:block">一站式办公与在线轻编辑套件 / AI 功能需要联网</p>
         </div>
       </button>
     </div>
@@ -255,22 +304,22 @@
         <i data-lucide="home" class="w-4 h-4"></i><span>首页</span>
       </button>
       <button onclick="navigateModule('billing')" id="tabNavBilling" class="nav-module-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5">
-        <i data-lucide="receipt" class="w-4 h-4 text-orange-500"></i><span>🧾 智能账单与发货清单</span>
+        <i data-lucide="receipt" class="w-4 h-4 text-orange-500"></i><span>账单</span>
       </button>
       <button onclick="navigateModule('editor')" id="tabNavEditor" class="nav-module-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5">
-        <i data-lucide="edit" class="w-4 h-4 text-emerald-500"></i><span>1. 在线轻办公(Word/Excel/PPT/PDF)</span>
+        <i data-lucide="edit" class="w-4 h-4 text-emerald-500"></i><span>文档</span>
       </button>
       <button onclick="navigateModule('convert')" id="tabNavConvert" class="nav-module-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5">
-        <i data-lucide="repeat" class="w-4 h-4 text-blue-500"></i><span>2. 全能格式互转中心</span>
+        <i data-lucide="repeat" class="w-4 h-4 text-blue-500"></i><span>转换</span>
       </button>
       <button onclick="navigateModule('scan')" id="tabNavScan" class="nav-module-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5">
-        <i data-lucide="scan-line" class="w-4 h-4 text-indigo-500"></i><span>3. 图像扫描/印章签名提取/AI</span>
+        <i data-lucide="scan-line" class="w-4 h-4 text-indigo-500"></i><span>扫描</span>
       </button>
       <button onclick="navigateModule('templates')" id="tabNavTemplates" class="nav-module-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5">
-        <i data-lucide="grid" class="w-4 h-4 text-teal-500"></i><span>4. 作业纸与字帖模板 (18+款)</span>
+        <i data-lucide="grid" class="w-4 h-4 text-teal-500"></i><span>模板</span>
       </button>
       <button onclick="navigateModule('tools')" id="tabNavTools" class="nav-module-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 flex items-center space-x-1.5">
-        <i data-lucide="wrench" class="w-4 h-4 text-amber-500"></i><span>5. 合同比对与超级工具箱</span>
+        <i data-lucide="wrench" class="w-4 h-4 text-amber-500"></i><span>工具</span>
       </button>
     </nav>
 
@@ -285,6 +334,7 @@
     </div>
   </header>
 
+<div class="island-row"><div class="status-island"><button class="island-toggle" id="islandToggle" type="button" aria-expanded="false" aria-controls="islandDetails" onclick="toggleStatusIsland()"><span class="island-dot" aria-hidden="true"></span><span id="islandStatus">工作台就绪</span><span aria-hidden="true">⌄</span></button><button id="cancelActiveAiRequests" class="island-cancel" type="button" hidden onclick="cancelAiRequests()">取消 AI</button><div class="island-details" id="islandDetails" hidden><strong>最近状态</strong><ol id="islandHistory"><li>工作台就绪</li></ol></div></div><span class="sr-only" id="islandLive" aria-live="polite" aria-atomic="true"></span></div>
   <!-- ==================== MOBILE DRAWER NAVIGATION ==================== -->
   <div id="mobileNavDrawer" class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-900 shadow-2xl border-r border-slate-200 dark:border-slate-800 transform -translate-x-full transition-transform duration-300 flex flex-col xl:hidden">
     <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
@@ -295,13 +345,13 @@
       <button onclick="closeMobileNav()" class="p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
     </div>
     <div class="p-3 space-y-1.5 flex-1 overflow-y-auto">
-      <button onclick="navigateModule('home')" id="mobNavHome" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-300 font-bold"><i data-lucide="home" class="w-5 h-5"></i><span>首页 / 功能大厅</span></button>
-      <button onclick="navigateModule('billing')" id="mobNavBilling" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="receipt" class="w-5 h-5 text-orange-500"></i><span>🧾 智能账单与发货清单系统</span></button>
-      <button onclick="navigateModule('editor')" id="mobNavEditor" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="edit" class="w-5 h-5 text-emerald-500"></i><span>1. 在线轻办公 (Word/Excel/PPT/PDF)</span></button>
-      <button onclick="navigateModule('convert')" id="mobNavConvert" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="repeat" class="w-5 h-5 text-blue-500"></i><span>2. 全能格式互转中心</span></button>
-      <button onclick="navigateModule('scan')" id="mobNavScan" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="scan-line" class="w-5 h-5 text-indigo-500"></i><span>3. 图像扫描 / 印章签名提取 / AI</span></button>
-      <button onclick="navigateModule('templates')" id="mobNavTemplates" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="grid" class="w-5 h-5 text-teal-500"></i><span>4. 作业纸与字帖模板 (18+款)</span></button>
-      <button onclick="navigateModule('tools')" id="mobNavTools" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="wrench" class="w-5 h-5 text-amber-500"></i><span>5. 合同比对与超级工具箱</span></button>
+      <button onclick="navigateModule('home')" id="mobNavHome" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-300 font-bold"><i data-lucide="home" class="w-5 h-5"></i><span>首页</span></button>
+      <button onclick="navigateModule('billing')" id="mobNavBilling" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="receipt" class="w-5 h-5 text-orange-500"></i><span>账单系统</span></button>
+      <button onclick="navigateModule('editor')" id="mobNavEditor" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="edit" class="w-5 h-5 text-emerald-500"></i><span>文档</span></button>
+      <button onclick="navigateModule('convert')" id="mobNavConvert" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="repeat" class="w-5 h-5 text-blue-500"></i><span>转换</span></button>
+      <button onclick="navigateModule('scan')" id="mobNavScan" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="scan-line" class="w-5 h-5 text-indigo-500"></i><span>扫描</span></button>
+      <button onclick="navigateModule('templates')" id="mobNavTemplates" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="grid" class="w-5 h-5 text-teal-500"></i><span>模板</span></button>
+      <button onclick="navigateModule('tools')" id="mobNavTools" class="w-full text-left p-3 rounded-xl flex items-center space-x-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium"><i data-lucide="wrench" class="w-5 h-5 text-amber-500"></i><span>工具</span></button>
     </div>
   </div>
   <div id="mobileGlobalBackdrop" onclick="closeMobileNav()" class="fixed inset-0 bg-black/50 z-40 hidden xl:hidden backdrop-blur-sm"></div>
@@ -336,54 +386,43 @@
        ========================================================================= -->
   <div id="moduleHome" class="app-module flex-1 min-h-0 flex-col overflow-y-auto touch-scroll-panel p-3 sm:p-6 lg:p-8">
     <div class="max-w-6xl w-full mx-auto space-y-4 sm:space-y-6">
-      
-      <!-- Hero Banner with HyperOS Fluid Ambient Glow & Win10 Acrylic Polish -->
-      <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 text-white p-5 sm:p-8 shadow-2xl border border-indigo-500/30">
-        <!-- HyperOS Ambient Glow Background Orbs -->
-        <div class="absolute -top-24 -left-24 w-80 h-80 bg-indigo-500/25 rounded-full blur-3xl pointer-events-none ambient-glow-orb"></div>
-        <div class="absolute -bottom-24 -right-24 w-80 h-80 bg-purple-500/25 rounded-full blur-3xl pointer-events-none ambient-glow-orb" style="animation-delay: -7s;"></div>
-        <div class="absolute top-1/2 right-1/4 w-52 h-52 bg-pink-500/15 rounded-full blur-2xl pointer-events-none ambient-glow-orb" style="animation-delay: -3s;"></div>
 
-        <div class="relative z-10 space-y-2.5 sm:space-y-3">
-          <div class="inline-flex items-center space-x-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[11px] font-medium text-indigo-200 border border-white/15 shadow-sm">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>100% 浏览器本地离线计算 · 个人与商业隐私绝对安全 · 澎湃流畅动效</span>
-          </div>
-          <h2 class="text-xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">
-            高颜值 · 极速 · 全能的<br><span class="bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">线上办公增强超级工作台</span>
-          </h2>
-          <p class="text-xs sm:text-sm text-indigo-100/85 max-w-2xl leading-relaxed">
-            全面对齐 Office & Google Docs 专业体验！内置智能账单系统、全向格式互转、独立印章抠图、18+ 作业纸字帖库与 AI 智能识别强化。
-          </p>
-          <div class="pt-1 max-w-md">
-            <div class="relative flex items-center">
-              <i data-lucide="search" class="w-4 h-4 text-indigo-300 absolute left-3"></i>
-              <input type="text" id="homeSearchInput" oninput="filterHomeCards(this.value)" placeholder="搜索功能 (如: 发货单, 账单, Word, 格式刷, 列宽, 字帖, 五线谱...)" class="w-full bg-white/15 focus:bg-white text-white focus:text-slate-900 placeholder-indigo-200 focus:placeholder-slate-400 rounded-xl pl-9 pr-3 py-2 text-xs font-medium border border-white/20 focus:border-white focus:outline-none transition shadow-inner">
-            </div>
-          </div>
+      <section class="home-intro" aria-labelledby="homeTitle">
+        <div class="home-intro-copy">
+          <p class="home-eyebrow">YOUR DOCUMENT WORKSPACE</p>
+          <h2 id="homeTitle">文档工作台</h2>
+          <p>扫描、整理与转换文件，让日常工作更简单。</p>
+          <div class="home-search"><i data-lucide="search" class="w-4 h-4"></i><input type="search" id="homeSearchInput" oninput="filterHomeCards(this.value)" placeholder="搜索工具" aria-label="搜索工具"></div>
         </div>
-      </div>
+        <div class="quick-actions" aria-label="常用功能">
+          <button onclick="navigateModule('scan')"><i data-lucide="scan-line"></i><span>扫描文档<small>导入图片并调整</small></span></button>
+          <button onclick="navigateModule('convert')"><i data-lucide="repeat"></i><span>格式转换<small>处理文档与图片</small></span></button>
+          <button onclick="navigateModule('editor')"><i data-lucide="file-text"></i><span>编辑文档<small>文字、表格和演示</small></span></button>
+          <button onclick="navigateModule('templates')"><i data-lucide="grid"></i><span>纸张模板<small>选择并打印</small></span></button>
+        </div>
+      </section>
+      <div class="home-section-heading"><div><h3>所有工具</h3><p>按类别浏览，或使用搜索快速查找</p></div></div>
 
       <!-- Category Filter Pills -->
       <div class="flex items-center space-x-1.5 sm:space-x-2 overflow-x-auto pb-1 text-xs">
-        <button onclick="setHomeCategory('all')" class="home-cat-btn px-3 py-1.5 rounded-full font-bold bg-indigo-600 text-white shadow-sm shrink-0" data-cat="all">🔥 全部功能 (20+)</button>
-        <button onclick="setHomeCategory('billing')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="billing">🧾 智能账单发货</button>
-        <button onclick="setHomeCategory('office')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="office">💼 在线轻办公</button>
-        <button onclick="setHomeCategory('convert')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="convert">🔄 格式互转</button>
-        <button onclick="setHomeCategory('visual')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="visual">🔍 扫描/印章/AI</button>
-        <button onclick="setHomeCategory('templates')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="templates">📝 练字与作业纸</button>
-        <button onclick="setHomeCategory('tools')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="tools">🛠️ 工具箱与合同</button>
+        <button onclick="setHomeCategory('all')" class="home-cat-btn px-3 py-1.5 rounded-full font-bold bg-indigo-600 text-white shadow-sm shrink-0" data-cat="all">全部</button>
+        <button onclick="setHomeCategory('billing')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="billing">账单</button>
+        <button onclick="setHomeCategory('office')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="office">文档</button>
+        <button onclick="setHomeCategory('convert')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="convert">转换</button>
+        <button onclick="setHomeCategory('visual')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="visual">扫描</button>
+        <button onclick="setHomeCategory('templates')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="templates">模板</button>
+        <button onclick="setHomeCategory('tools')" class="home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0" data-cat="tools">工具</button>
       </div>
 
       <!-- Feature Cards Grid -->
       <div id="homeCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-        
+
         <!-- NEW BILLING SYSTEM FEATURE CARD -->
-        <div onclick="navigateModule('billing')" class="home-card group p-4 sm:p-5 bg-gradient-to-br from-orange-50/50 to-amber-50/30 dark:from-slate-900 dark:to-orange-950/20 rounded-2xl border-2 border-orange-200 dark:border-orange-900/50 hover:border-orange-500 shadow-sm hover:shadow-xl transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="billing" data-keywords="账单 发货单 对账单 清单 价格记忆 尺码 拖拽排序 自动计算 打印 excel 导出图片 收据 货单">
+        <div onclick="navigateModule('billing')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="billing" data-keywords="账单 发货单 对账单 清单 价格记忆 尺码 拖拽排序 自动计算 打印 excel 导出图片 收据 货单">
           <div>
             <div class="flex items-center justify-between mb-2.5">
               <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition"><i data-lucide="receipt" class="w-5 h-5"></i></div>
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 dark:bg-orange-950 text-orange-700 dark:text-orange-300 border border-orange-300">旗舰新功能</span>
+
             </div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">智能账单与发货清单系统</h4>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">自动学习商品价格记忆库、动态尺码拖拽排序、实时大写金额转换、一键高清长图/Excel/横向A4打印。</p>
@@ -392,7 +431,7 @@
         </div>
 
         <!-- Word / Gov Doc Editor -->
-        <div onclick="navigateModule('editor', 'word')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="word 在线文档 编辑 富文本 docx 公文 仿宋 字体 本机字体 行距 缩进 格式刷 查找替换 目录 上标 下标">
+        <div onclick="navigateModule('editor', 'word')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="office" data-keywords="word 在线文档 编辑 富文本 docx 公文 仿宋 字体 本机字体 行距 缩进 格式刷 查找替换 目录 上标 下标">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="file-text" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">Word 在线文档 & 公文排版</h4>
@@ -402,7 +441,7 @@
         </div>
 
         <!-- Excel Editor -->
-        <div onclick="navigateModule('editor', 'excel')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="excel 表格 工作簿 公式 计算 列宽 行高 拖拽 xlsx csv 右键A 右键1 精确数值修改">
+        <div onclick="navigateModule('editor', 'excel')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="office" data-keywords="excel 表格 工作簿 公式 计算 列宽 行高 拖拽 xlsx csv 右键A 右键1 精确数值修改">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="sheet" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">Excel 在线表格与公式</h4>
@@ -412,7 +451,7 @@
         </div>
 
         <!-- PPT Studio -->
-        <div onclick="navigateModule('editor', 'ppt')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="ppt 幻灯片 演示 演讲 pptx 放映 字体 背景 插入图片 插入gif 插入视频 插入音频 google slides">
+        <div onclick="navigateModule('editor', 'ppt')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="office" data-keywords="ppt 幻灯片 演示 演讲 pptx 放映 字体 背景 插入图片 插入gif 插入视频 插入音频 google slides">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="presentation" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PPT 在线演示文稿设计</h4>
@@ -422,17 +461,17 @@
         </div>
 
         <!-- PDF Viewer -->
-        <div onclick="navigateModule('editor', 'pdf')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-red-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="office" data-keywords="pdf 查看 阅读 批注 浏览 缩放 旋转">
+        <div onclick="navigateModule('editor', 'pdf')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="office" data-keywords="pdf 查看 阅读 批注 浏览 缩放 旋转">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-red-50 dark:bg-red-950/60 text-red-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="file-check" class="w-5 h-5"></i></div>
-            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 在线查看与批注</h4>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 查看器</h4>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">同步字体与字号设置、页面缩放、顺时针旋转 90°、逐页高清浏览与打印。</p>
           </div>
           <span class="text-[11px] font-bold text-red-600 flex items-center space-x-1"><span>立即打开</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
         <!-- Word -> PDF -->
-        <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="word 转 pdf docx 转 pdf 格式转换">
+        <div onclick="navigateModule('convert')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="convert" data-keywords="word 转 pdf docx 转 pdf 格式转换">
           <div>
             <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center"><i data-lucide="file-type-2" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">Word (.docx) 转 PDF</h4>
@@ -442,7 +481,7 @@
         </div>
 
         <!-- Excel -> PDF -->
-        <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="excel 转 pdf xlsx 转 pdf 报表">
+        <div onclick="navigateModule('convert')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="convert" data-keywords="excel 转 pdf xlsx 转 pdf 报表">
           <div>
             <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center"><i data-lucide="sheet" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">Excel (.xlsx) 转 PDF</h4>
@@ -451,18 +490,15 @@
           <span class="text-[11px] font-bold text-emerald-600 flex items-center space-x-1"><span>立即转换</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
 
-        <!-- PPT -> PDF -->
-        <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="ppt 转 pdf pptx 转 pdf 幻灯片转pdf">
-          <div>
-            <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div>
-            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PPT (.pptx) 转 PDF</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">演示文稿幻灯片逐页排版导出高清横向 A4 矢量 PDF。</p>
-          </div>
-          <span class="text-[11px] font-bold text-amber-600 flex items-center space-x-1"><span>立即转换</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
+        <!-- PPT import/conversion is not yet available. -->
+        <div class="home-card group" aria-disabled="true" data-cat="convert" data-keywords="ppt 转 pdf pptx 转 pdf 幻灯片转pdf">
+          <div><div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div>
+          <h4 class="text-sm font-bold mt-2">PPT 转 PDF</h4><p class="text-xs text-slate-500 mt-1">暂不支持读取 PPT 文件。</p></div>
+          <span class="text-xs text-slate-500">暂不支持</span>
         </div>
 
         <!-- PDF -> Word -->
-        <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="pdf 转 word pdf 转 docx pdf提取文字">
+        <div onclick="navigateModule('convert')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="convert" data-keywords="pdf 转 word pdf 转 docx pdf提取文字">
           <div>
             <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center"><i data-lucide="file-text" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 转 Word (.docx)</h4>
@@ -472,7 +508,7 @@
         </div>
 
         <!-- PDF -> Excel -->
-        <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-teal-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="pdf 转 excel pdf 转 xlsx pdf提取表格">
+        <div onclick="navigateModule('convert')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="convert" data-keywords="pdf 转 excel pdf 转 xlsx pdf提取表格">
           <div>
             <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 flex items-center justify-center"><i data-lucide="table" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 转 Excel (.xlsx)</h4>
@@ -482,7 +518,7 @@
         </div>
 
         <!-- PDF -> PPT -->
-        <div onclick="navigateModule('convert')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-purple-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="convert" data-keywords="pdf 转 ppt pdf 转 pptx pdf转幻灯片">
+        <div onclick="navigateModule('convert')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="convert" data-keywords="pdf 转 ppt pdf 转 pptx pdf转幻灯片">
           <div>
             <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 flex items-center justify-center"><i data-lucide="presentation" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">PDF 转 PPT (.pptx)</h4>
@@ -492,7 +528,7 @@
         </div>
 
         <!-- Visual Studio -->
-        <div onclick="navigateModule('scan')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-indigo-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="visual" data-keywords="扫描 透视矫正 滤镜 图像转文档 印章 抠图 签名 ai 识别 拖拽 拖入图片">
+        <div onclick="navigateModule('scan')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="visual" data-keywords="扫描 透视矫正 滤镜 图像转文档 印章 抠图 签名 ai 识别 拖拽 拖入图片">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="scan-line" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">图像扫描 / 印章抠图 / 拖入图片</h4>
@@ -502,7 +538,7 @@
         </div>
 
         <!-- Templates (18+) -->
-        <div onclick="navigateModule('templates')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-teal-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="templates" data-keywords="作业纸 字帖 描红 田字格 米字格 衡水体 错题本 康奈尔 五线谱 计划表">
+        <div onclick="navigateModule('templates')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="templates" data-keywords="作业纸 字帖 描红 田字格 米字格 衡水体 错题本 康奈尔 五线谱 计划表">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="grid" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">作业纸与字帖模板库 (18+款)</h4>
@@ -512,7 +548,7 @@
         </div>
 
         <!-- Contract Diff -->
-        <div onclick="navigateModule('tools', 'diff')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-cyan-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="tools" data-keywords="合同 差异 比对 diff 商务合同 双文档 文本差异 对比 标红 标绿 原版 修改版 docx pdf txt">
+        <div onclick="navigateModule('tools', 'diff')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="tools" data-keywords="合同 差异 比对 diff 商务合同 双文档 文本差异 对比 标红 标绿 原版 修改版 docx pdf txt">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="git-compare" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">双文档 / 商务合同差异比对</h4>
@@ -522,11 +558,11 @@
         </div>
 
         <!-- Super Toolbox -->
-        <div onclick="navigateModule('tools', 'tools')" class="home-card group p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between space-y-2.5" data-cat="tools" data-keywords="工具箱 财务 大写金额 人民币大写 金额转换 二维码 条形码 防伪水印 身份证 拼版 打印 pdf合并 多文件合并 tts 语音朗读">
+        <div onclick="navigateModule('tools', 'tools')" class="home-card group" role="button" tabindex="0" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();this.click()}" data-cat="tools" data-keywords="工具箱 财务 大写金额 人民币大写 金额转换 二维码 条形码 防伪水印 身份证 拼版 打印 pdf合并 多文件合并 tts 语音朗读">
           <div>
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mb-2.5 group-hover:scale-105 transition"><i data-lucide="wrench" class="w-5 h-5"></i></div>
             <h4 class="text-sm font-bold text-slate-800 dark:text-slate-100">超级商务与办公工具箱</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">人民币财务大写转换、二维码/条形码、批量防伪水印、身份证1:1 A4拼版、PDF合并与TTS语音朗读。</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">人民币财务大写转换、二维码/条形码、身份证1:1 A4拼版、PDF合并与TTS语音朗读。</p>
           </div>
           <span class="text-[11px] font-bold text-amber-600 flex items-center space-x-1"><span>打开工具箱</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
         </div>
@@ -539,7 +575,7 @@
        ========================================================================= -->
   <div id="moduleBilling" class="app-module flex-1 min-h-0 flex-col overflow-y-auto touch-scroll-panel p-3 sm:p-6 lg:p-8 hidden">
     <div class="max-w-6xl w-full mx-auto space-y-4">
-      
+
       <!-- Top Action Toolbar (Screen Only) -->
       <div class="no-print bg-white dark:bg-slate-900 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap items-center justify-between gap-2.5 text-xs">
         <div class="flex items-center space-x-2 flex-wrap gap-y-2">
@@ -580,7 +616,7 @@
       <!-- Main Bill Printable Container -->
       <div class="flex justify-center">
         <div class="bill-container relative" id="billingCaptureTarget">
-          
+
           <!-- Optional Electronic Official Seal Overlay -->
           <div id="billingStampOverlay" class="hidden absolute right-12 bottom-20 pointer-events-none select-none z-10 opacity-85 rotate-[-12deg]">
             <div class="w-32 h-32 rounded-full border-4 border-dashed border-red-600 flex flex-col items-center justify-center text-red-600 shadow-inner bg-red-50/20 backdrop-blur-[1px]">
@@ -589,7 +625,7 @@
               <span class="text-[9px] font-mono font-bold">OFFICE STUDIO</span>
             </div>
           </div>
-          
+
           <!-- Title Header -->
           <div class="flex flex-col sm:flex-row justify-between sm:items-center pb-4 mb-6 border-b-2 border-slate-200 dark:border-slate-800 gap-2">
             <div class="flex items-center space-x-3">
@@ -640,7 +676,7 @@
                 <div class="text-[11px] font-bold text-slate-400">总件数 (件)</div>
                 <div class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 font-mono" id="billingGrandQty">0</div>
               </div>
-              
+
               <div class="text-right flex flex-col items-end">
                 <div class="text-[11px] font-bold text-slate-400">整单调整 (折扣/运费)</div>
                 <div class="flex items-center">
@@ -670,9 +706,9 @@
         <button onclick="billingApp.closePriceDictModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
       <p class="text-[11px] text-slate-400">开单录入款号与单价时系统会自动学习并记住，下次输入相同款号将自动补全单价！</p>
-      
+
       <div class="max-h-60 overflow-y-auto border rounded-xl divide-y dark:divide-slate-800" id="billingPriceDictList"></div>
-      
+
       <div class="flex justify-between items-center pt-2">
         <button onclick="billingApp.clearPriceDict()" class="px-3 py-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50 rounded-lg font-medium">清空记忆库</button>
         <button onclick="billingApp.closePriceDictModal()" class="px-4 py-1.5 bg-purple-600 text-white rounded-lg font-bold shadow">关闭</button>
@@ -688,9 +724,9 @@
         <button onclick="billingApp.closeDraftsModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
       <p class="text-[11px] text-slate-400">可将常用客户单据或未完成账单保存为草稿，随时调取、修改或重新打印！</p>
-      
+
       <div class="max-h-64 overflow-y-auto border rounded-xl divide-y dark:divide-slate-800" id="billingDraftsList"></div>
-      
+
       <div class="flex justify-between items-center pt-2">
         <button onclick="billingApp.saveCurrentAsDraft()" class="px-3 py-1.5 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-lg font-bold flex items-center space-x-1"><i data-lucide="plus" class="w-3 h-3"></i><span>将当前单据存为新草稿</span></button>
         <button onclick="billingApp.closeDraftsModal()" class="px-4 py-1.5 bg-amber-600 text-white rounded-lg font-bold shadow">关闭</button>
@@ -706,11 +742,11 @@
         <button onclick="billingApp.closeBatchPasteModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
       <p class="text-[11px] text-slate-400">在 Excel 中复制多行多列数据（包括款号、各尺码数量、单价），直接粘贴到下方框中即可一键批量导入：</p>
-      
+
       <textarea id="billingBatchPasteTextarea" rows="6" placeholder="例如粘贴格式 (Tab分隔)：
 款号A	10	20	15	5	98.0
 款号B	5	12	8	0	128.0" class="w-full p-3 font-mono text-xs border rounded-xl bg-slate-50 dark:bg-slate-950 resize-none outline-none focus:border-blue-500"></textarea>
-      
+
       <div class="flex justify-end space-x-2 pt-2">
         <button onclick="billingApp.closeBatchPasteModal()" class="px-3 py-1.5 text-slate-500">取消</button>
         <button onclick="billingApp.executeBatchPaste()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold shadow">立即解析导入</button>
@@ -759,7 +795,7 @@
       <div class="p-1.5 sm:p-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between overflow-x-auto text-xs gap-1">
         <div class="flex items-center space-x-1 shrink-0">
           <button onclick="toggleGovDocMode()" id="btnGovDocMode" class="px-2 py-1 rounded bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 font-bold border border-purple-300 shrink-0">仿宋公文</button>
-          
+
           <button onclick="toggleFormatPainter()" id="btnFormatPainter" class="p-1.5 rounded hover:bg-indigo-50 border border-transparent text-slate-700 dark:text-slate-200 flex items-center space-x-1" title="格式刷 (点击复制样式，再刷选目标文本应用)">
             <i data-lucide="paintbrush" class="w-3.5 h-3.5 text-indigo-600"></i><span class="text-[11px] hidden sm:inline">格式刷</span>
           </button>
@@ -805,7 +841,7 @@
           <button onclick="execDocCmd('underline')" class="p-1.5 rounded hover:bg-slate-100 underline" title="下划线 (Ctrl+U)">U</button>
           <button onclick="execDocCmd('superscript')" class="p-1 rounded hover:bg-slate-100 text-xs font-serif" title="上标 (X²)">X²</button>
           <button onclick="execDocCmd('subscript')" class="p-1 rounded hover:bg-slate-100 text-xs font-serif" title="下标 (X₂)">X₂</button>
-          
+
           <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-0.5"></div>
 
           <button onclick="execDocCmd('justifyLeft')" class="p-1.5 rounded hover:bg-slate-100"><i data-lucide="align-left" class="w-3.5 h-3.5"></i></button>
@@ -1014,7 +1050,7 @@
         <div class="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 overflow-auto">
           <!-- PPT Canvas with Relative Layer for Media Elements -->
           <div id="pptSlideCanvas" class="w-full max-w-[880px] aspect-video bg-white dark:bg-slate-900 shadow-2xl rounded-xl p-6 sm:p-12 border border-slate-200 dark:border-slate-800 flex flex-col justify-between relative transition-all duration-200 overflow-hidden select-none">
-            
+
             <!-- Background Dark Overlay for text legibility if needed -->
             <div id="pptSlideBgOverlay" class="absolute inset-0 pointer-events-none transition-all z-0 bg-transparent"></div>
 
@@ -1075,7 +1111,7 @@
             <div class="flex items-center space-x-3">
               <input type="color" id="pptCustomColorPicker" value="#ffffff" oninput="applyPptCustomSolidColor(this.value)" class="w-10 h-8 rounded cursor-pointer border">
               <input type="text" id="pptCustomColorHex" value="#ffffff" onchange="applyPptCustomSolidColor(this.value)" class="w-24 p-1.5 border rounded-lg font-mono text-xs text-center bg-white dark:bg-slate-900">
-              
+
               <!-- Quick Color Palette -->
               <div class="flex items-center space-x-1.5 flex-1 justify-end">
                 <button onclick="applyPptCustomSolidColor('#ffffff')" class="w-5 h-5 rounded-full bg-white border shadow-sm" title="纯白"></button>
@@ -1104,7 +1140,7 @@
                 <option value="45deg">45° 仰角</option>
               </select>
             </div>
-            
+
             <!-- Curated Gradients -->
             <div class="grid grid-cols-4 gap-1.5 pt-1">
               <button onclick="setPptSlideBg('gradient', 'linear-gradient(135deg, #0f172a, #1e1b4b, #312e81)')" class="p-1.5 rounded-lg text-white font-bold text-[10px] truncate" style="background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81);">科技深蓝</button>
@@ -1207,11 +1243,11 @@
 
       <!-- 9 High-Performance Conversion Cards with Direct Drag & Drop -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
-        
+
         <!-- 1. Word -> PDF -->
-        <div ondragover="handleConvCardDragOver(event, this)" 
-             ondragleave="handleConvCardDragLeave(event, this)" 
-             ondrop="handleConvCardDrop(event, this, 'word2pdf')" 
+        <div ondragover="handleConvCardDragOver(event, this)"
+             ondragleave="handleConvCardDragLeave(event, this)"
+             ondrop="handleConvCardDrop(event, this, 'word2pdf')"
              class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 flex items-center justify-center shrink-0"><i data-lucide="file-type-2" class="w-5 h-5"></i></div>
@@ -1232,9 +1268,9 @@
         </div>
 
         <!-- 2. Excel -> PDF -->
-        <div ondragover="handleConvCardDragOver(event, this)" 
-             ondragleave="handleConvCardDragLeave(event, this)" 
-             ondrop="handleConvCardDrop(event, this, 'excel2pdf')" 
+        <div ondragover="handleConvCardDragOver(event, this)"
+             ondragleave="handleConvCardDragLeave(event, this)"
+             ondrop="handleConvCardDrop(event, this, 'excel2pdf')"
              class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center shrink-0"><i data-lucide="sheet" class="w-5 h-5"></i></div>
@@ -1254,33 +1290,15 @@
           </div>
         </div>
 
-        <!-- 3. PPT -> PDF -->
-        <div ondragover="handleConvCardDragOver(event, this)" 
-             ondragleave="handleConvCardDragLeave(event, this)" 
-             ondrop="handleConvCardDrop(event, this, 'ppt2pdf')" 
-             class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 flex items-center justify-center shrink-0"><i data-lucide="presentation" class="w-5 h-5"></i></div>
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">PPT (.pptx) 转 PDF</h3>
-              <span class="text-[10px] text-slate-400">幻灯片按页排版导出矢量 PDF</span>
-            </div>
-          </div>
-          <div class="text-[10px] text-slate-400 font-medium flex items-center justify-center space-x-1 py-1 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-dashed border-slate-200 dark:border-slate-700 pointer-events-none">
-            <i data-lucide="move" class="w-3 h-3 text-amber-500"></i><span>直接拖拽 .pptx 文件至此</span>
-          </div>
-          <input type="file" id="inputPptToPdf" accept=".pptx" class="hidden" onchange="handlePptToPdf(event)">
-          <input type="file" id="inputAiPptToPdf" accept=".pptx" class="hidden" onchange="handleAiEnhancedConvert(event, 'ppt2pdf')">
-          <div class="space-y-1.5">
-            <button onclick="document.getElementById('inputPptToPdf').click()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i><span>标准极速转 PDF</span></button>
-            <button onclick="document.getElementById('inputAiPptToPdf').click()" class="w-full py-2 bg-gradient-to-r from-amber-500 to-orange-600 hover:opacity-95 text-white rounded-xl text-xs font-bold shadow flex items-center justify-center space-x-1.5"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>🤖 AI 幻灯片版面重构转 PDF</span></button>
-          </div>
+        <!-- PPT conversion remains unavailable until PPT files can actually be read. -->
+        <div class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3 opacity-70" aria-disabled="true">
+          <h3 class="text-sm font-bold">PPT 转 PDF</h3><p class="text-xs text-slate-500">暂不支持读取 PPT 文件。</p>
         </div>
 
         <!-- 4. PDF -> Word -->
-        <div ondragover="handleConvCardDragOver(event, this)" 
-             ondragleave="handleConvCardDragLeave(event, this)" 
-             ondrop="handleConvCardDrop(event, this, 'pdf2word')" 
+        <div ondragover="handleConvCardDragOver(event, this)"
+             ondragleave="handleConvCardDragLeave(event, this)"
+             ondrop="handleConvCardDrop(event, this, 'pdf2word')"
              class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-5 h-5"></i></div>
@@ -1301,9 +1319,9 @@
         </div>
 
         <!-- 5. PDF -> Excel -->
-        <div ondragover="handleConvCardDragOver(event, this)" 
-             ondragleave="handleConvCardDragLeave(event, this)" 
-             ondrop="handleConvCardDrop(event, this, 'pdf2excel')" 
+        <div ondragover="handleConvCardDragOver(event, this)"
+             ondragleave="handleConvCardDragLeave(event, this)"
+             ondrop="handleConvCardDrop(event, this, 'pdf2excel')"
              class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/50 text-teal-600 flex items-center justify-center shrink-0"><i data-lucide="table" class="w-5 h-5"></i></div>
@@ -1324,9 +1342,9 @@
         </div>
 
         <!-- 6. PDF -> PPT -->
-        <div ondragover="handleConvCardDragOver(event, this)" 
-             ondragleave="handleConvCardDragLeave(event, this)" 
-             ondrop="handleConvCardDrop(event, this, 'pdf2ppt')" 
+        <div ondragover="handleConvCardDragOver(event, this)"
+             ondragleave="handleConvCardDragLeave(event, this)"
+             ondrop="handleConvCardDrop(event, this, 'pdf2ppt')"
              class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 flex items-center justify-center shrink-0"><i data-lucide="presentation" class="w-5 h-5"></i></div>
@@ -1347,9 +1365,9 @@
         </div>
 
         <!-- 7. PDF -> Images -->
-        <div ondragover="handleConvCardDragOver(event, this)" 
-             ondragleave="handleConvCardDragLeave(event, this)" 
-             ondrop="handleConvCardDrop(event, this, 'pdf2images')" 
+        <div ondragover="handleConvCardDragOver(event, this)"
+             ondragleave="handleConvCardDragLeave(event, this)"
+             ondrop="handleConvCardDrop(event, this, 'pdf2images')"
              class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-950/50 text-orange-600 flex items-center justify-center shrink-0"><i data-lucide="images" class="w-5 h-5"></i></div>
@@ -1370,9 +1388,9 @@
         </div>
 
         <!-- 8. Multi-Images -> PDF -->
-        <div ondragover="handleConvCardDragOver(event, this)" 
-             ondragleave="handleConvCardDragLeave(event, this)" 
-             ondrop="handleConvCardDrop(event, this, 'images2pdf')" 
+        <div ondragover="handleConvCardDragOver(event, this)"
+             ondragleave="handleConvCardDragLeave(event, this)"
+             ondrop="handleConvCardDrop(event, this, 'images2pdf')"
              class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-pink-50 dark:bg-pink-950/50 text-pink-600 flex items-center justify-center shrink-0"><i data-lucide="image-plus" class="w-5 h-5"></i></div>
@@ -1393,9 +1411,9 @@
         </div>
 
         <!-- 9. PDF -> TXT -->
-        <div ondragover="handleConvCardDragOver(event, this)" 
-             ondragleave="handleConvCardDragLeave(event, this)" 
-             ondrop="handleConvCardDrop(event, this, 'pdf2txt')" 
+        <div ondragover="handleConvCardDragOver(event, this)"
+             ondragleave="handleConvCardDragLeave(event, this)"
+             ondrop="handleConvCardDrop(event, this, 'pdf2txt')"
              class="conv-drag-card bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-3 transition-all relative group cursor-pointer">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center shrink-0"><i data-lucide="file-text" class="w-5 h-5"></i></div>
@@ -1511,7 +1529,7 @@
   <div id="moduleScan" class="app-module flex-1 min-h-0 flex flex-col sm:flex-row overflow-hidden relative hidden">
     <!-- Sidebar Controls -->
     <div class="w-full sm:w-80 border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3.5 flex flex-col shrink-0 overflow-y-auto">
-      
+
       <!-- Sub-Feature Mode Tabs -->
       <div class="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl space-x-1">
         <button id="btnScanModeDoc" onclick="switchScanSubMode('doc')" class="flex-1 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm transition flex items-center justify-center space-x-1">
@@ -1524,7 +1542,7 @@
 
       <!-- PANEL 1: Document Scanner & Multi-Page Studio -->
       <div id="panelScanDoc" class="space-y-3">
-        
+
         <!-- Multi-Image Upload Button (Supports Multiple Files) -->
         <input type="file" id="fileInputScan" accept="image/*" multiple class="hidden" onchange="handleScanImageUpload(event)">
         <div class="grid grid-cols-2 gap-1.5">
@@ -1594,7 +1612,7 @@
             <i data-lucide="check" class="w-4 h-4"></i><span>⚡ 执行当前页透视拉直</span>
           </button>
         </div>
-        
+
         <!-- Filters Section (彩色增白·纯白去底色·一键应用到全部) -->
         <div class="space-y-1.5 pt-1 border-t">
           <div class="flex items-center justify-between">
@@ -1607,7 +1625,7 @@
             <button onclick="applyScanFilter('seal')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="stamp" class="w-3.5 h-3.5 text-red-500"></i><span>印章强化</span></button>
             <button onclick="applyScanFilter('orig')" class="p-2 border rounded-lg text-xs font-medium text-left hover:bg-indigo-50 flex items-center space-x-1"><i data-lucide="image" class="w-3.5 h-3.5 text-emerald-500"></i><span>高清原图</span></button>
           </div>
-          
+
           <!-- One-Click Batch Filter Actions -->
           <div class="space-y-1 pt-1">
             <button type="button" onclick="applyCurrentFilterToAllPages('color')" class="w-full py-2 bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-bold rounded-xl text-xs flex items-center justify-center space-x-1.5 transition active:scale-95 shadow-md">
@@ -1684,15 +1702,15 @@
     </div>
 
     <!-- Right Viewport: Dual Independent Canvases -->
-    <div id="scanViewportContainer" 
-         ondragover="handleScanDragOver(event)" 
-         ondragleave="handleScanDragLeave(event)" 
-         ondrop="handleScanDrop(event)" 
+    <div id="scanViewportContainer"
+         ondragover="handleScanDragOver(event)"
+         ondragleave="handleScanDragLeave(event)"
+         ondrop="handleScanDrop(event)"
          class="flex-1 relative flex items-center justify-center p-3 sm:p-6 bg-checker overflow-auto transition-all">
-      
+
       <!-- 1. Document Scanner Canvas Wrapper -->
       <div id="scanCanvasWrapper" class="relative shadow-2xl max-w-full hidden flex flex-col items-center w-full max-w-4xl">
-        
+
         <!-- Top Floating Quick Action Ribbon -->
         <div class="w-full mb-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl shadow-md flex items-center justify-between text-xs z-30 shrink-0">
           <div class="flex items-center space-x-2">
@@ -1738,7 +1756,7 @@
                 <line id="scanCropDiag1" x1="0" y1="0" x2="0" y2="0" stroke="rgba(99, 102, 241, 0.4)" stroke-width="1.5" stroke-dasharray="4,4" />
                 <line id="scanCropDiag2" x1="0" y1="0" x2="0" y2="0" stroke="rgba(99, 102, 241, 0.4)" stroke-width="1.5" stroke-dasharray="4,4" />
               </svg>
-              
+
               <!-- 4 Corner Draggable Handles (↖ ↗ ↘ ↙) -->
               <div id="pinTL" class="scan-crop-pin pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 cursor-move w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-125 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[11px] font-bold select-none touch-none transition-transform duration-75" data-corner="0" title="左上角顶点">↖</div>
               <div id="pinTR" class="scan-crop-pin pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2 cursor-move w-7 h-7 rounded-full bg-indigo-600 hover:bg-indigo-700 active:scale-125 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[11px] font-bold select-none touch-none transition-transform duration-75" data-corner="1" title="右上角顶点">↗</div>
@@ -1793,10 +1811,10 @@
        MODULE 4: TEMPLATES STUDIO (PC 端与移动端基于 UA 完全独立隔离界面)
        ========================================================================= -->
   <div id="moduleTemplates" class="app-module flex-1 min-h-0 overflow-hidden hidden flex-col">
-    
+
     <!-- ==================== 1. 🖥️ PC 电脑端专属独立工作台 (Desktop Studio) ==================== -->
     <div id="tplPcView" class="hidden md:flex flex-1 min-h-0 flex-row overflow-hidden w-full h-full">
-      
+
       <!-- PC Left Sidebar Panel (380px fixed, smooth scroll) -->
       <div class="w-[380px] shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-3.5 flex flex-col overflow-y-auto touch-scroll-panel">
         <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
@@ -1991,7 +2009,7 @@
 
       <!-- PC Right Viewport (Centered Realistic Physical Paper Sheet, Standard 720px Width) -->
       <div class="flex-1 min-h-0 bg-slate-100 dark:bg-slate-950 p-6 overflow-y-auto flex flex-col items-center justify-start">
-        
+
         <!-- PC Top Floating Control Ribbon -->
         <div class="w-full max-w-[800px] mb-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2.5 rounded-2xl shadow-sm flex items-center justify-between shrink-0">
           <div class="flex items-center space-x-2">
@@ -2022,7 +2040,7 @@
 
     <!-- ==================== 2. 📱 手机端专属独立工作台 (Mobile Studio) ==================== -->
     <div id="tplMobileView" class="flex md:hidden flex-1 min-h-0 flex-col overflow-hidden w-full h-full">
-      
+
       <!-- Mobile Top Segmented Tab Switcher -->
       <div class="flex items-center justify-between p-2.5 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shrink-0">
         <div class="flex p-0.5 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 space-x-1 flex-1 mr-2 shadow-sm">
@@ -2040,7 +2058,7 @@
 
       <!-- Mobile Screen 1: Full-Height Smooth Scroll Settings Panel -->
       <div id="tplMobileSettingsPanel" class="flex-1 min-h-0 overflow-y-auto touch-scroll-panel p-3.5 space-y-3 pb-32 bg-white dark:bg-slate-900">
-        
+
         <!-- Section 1: Template Type -->
         <div class="space-y-1">
           <label class="text-[11px] font-bold text-slate-500">1. 作业纸与书法格类型</label>
@@ -2207,7 +2225,7 @@
 
       <!-- Mobile Screen 2: Dedicated Full-Screen Responsive Preview View -->
       <div id="tplMobilePreviewPanel" class="hidden flex-1 min-h-0 flex-col items-center justify-start p-2.5 overflow-y-auto canvas-scroll-panel bg-slate-200/80 dark:bg-slate-950 pb-32 relative">
-        
+
         <!-- Mobile Top Ribbon -->
         <div class="w-full mb-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur border border-slate-200 dark:border-slate-800 p-2 rounded-xl shadow-md flex items-center justify-between shrink-0 z-10 sticky top-0">
           <div class="flex items-center space-x-1">
@@ -2218,7 +2236,7 @@
               <i data-lucide="edit-3" class="w-3.5 h-3.5"></i><span>✏️ 快速改字</span>
             </button>
           </div>
-          
+
           <div class="flex items-center space-x-1">
             <button onclick="adjustTplPreviewZoom(0.85)" title="缩小" class="w-7 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-xs font-bold flex items-center justify-center">-</button>
             <button onclick="resetTplPreviewZoom()" title="适合屏幕" class="px-1.5 h-7 bg-slate-100 dark:bg-slate-800 rounded-lg text-[10px] font-bold flex items-center justify-center" id="tplZoomLabel">适中</button>
@@ -2273,7 +2291,7 @@
        ========================================================================= -->
   <div id="moduleTools" class="app-module flex-1 min-h-0 flex-col overflow-y-auto touch-scroll-panel p-3 sm:p-6 lg:p-8 hidden">
     <div class="max-w-5xl w-full mx-auto space-y-4 sm:space-y-6">
-      
+
       <!-- Section 1: Diff & AI Contract Audit (支持文件拖拽与扫描件/图片对比) -->
       <div id="contractDiffSection" class="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3.5 shadow-sm">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
@@ -2301,12 +2319,12 @@
 
         <!-- Document A and Document B Upload & Drag Zones -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          
+
           <!-- Document A Box (Original / Scan A) -->
-          <div id="diffBoxA" 
-               ondragover="handleDiffBoxDragOver(event, this)" 
-               ondragleave="handleDiffBoxDragLeave(event, this)" 
-               ondrop="handleDiffBoxDrop(event, this, 'A')" 
+          <div id="diffBoxA"
+               ondragover="handleDiffBoxDragOver(event, this)"
+               ondragleave="handleDiffBoxDragLeave(event, this)"
+               ondrop="handleDiffBoxDrop(event, this, 'A')"
                class="p-3.5 bg-slate-50 dark:bg-slate-950/70 rounded-2xl border-2 border-dashed border-indigo-200 dark:border-indigo-900/60 space-y-2.5 transition-all relative">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-indigo-700 dark:text-indigo-300 flex items-center space-x-1.5">
@@ -2335,10 +2353,10 @@
           </div>
 
           <!-- Document B Box (Modified / Scan B) -->
-          <div id="diffBoxB" 
-               ondragover="handleDiffBoxDragOver(event, this)" 
-               ondragleave="handleDiffBoxDragLeave(event, this)" 
-               ondrop="handleDiffBoxDrop(event, this, 'B')" 
+          <div id="diffBoxB"
+               ondragover="handleDiffBoxDragOver(event, this)"
+               ondragleave="handleDiffBoxDragLeave(event, this)"
+               ondrop="handleDiffBoxDrop(event, this, 'B')"
                class="p-3.5 bg-slate-50 dark:bg-slate-950/70 rounded-2xl border-2 border-dashed border-cyan-200 dark:border-cyan-900/60 space-y-2.5 transition-all relative">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-cyan-700 dark:text-cyan-300 flex items-center space-x-1.5">
@@ -2408,11 +2426,11 @@
         <div class="p-4 sm:p-5 bg-white dark:bg-slate-900 rounded-2xl border space-y-3 shadow-sm">
           <div class="flex items-center space-x-2">
             <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center"><i data-lucide="stamp" class="w-4 h-4"></i></div>
-            <span class="text-xs font-bold">智能批量防伪水印加注器</span>
+            <span class="text-xs font-bold">水印导出（暂不支持）</span>
           </div>
           <input type="text" id="watermarkText" value="仅供办理业务使用 他用无效" class="w-full p-2 text-xs border rounded-xl bg-slate-50 dark:bg-slate-950">
           <input type="file" id="inputWatermarkFile" accept="image/*,.pdf" class="hidden" onchange="handleWatermarkUpload(event)">
-          <button onclick="document.getElementById('inputWatermarkFile').click()" class="w-full py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold shadow">选择 PDF / 图片加注防伪水印</button>
+          <p class="text-xs text-slate-500">该功能尚未实现，暂不能生成水印文件。</p>
         </div>
 
         <!-- 4. ID Card Merger -->
@@ -2570,7 +2588,7 @@
         <button onclick="closeAiOcrResultModal()" class="p-1 text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-4 h-4"></i></button>
       </div>
       <textarea id="aiOcrResultText" rows="8" class="w-full p-3 font-mono text-xs border rounded-xl bg-slate-50 dark:bg-slate-950 resize-none outline-none focus:border-indigo-500 leading-relaxed"></textarea>
-      
+
       <div class="flex items-center justify-between pt-2">
         <span class="text-[11px] text-slate-400" id="aiOcrResultSubtext">已由 AI 视觉大模型精确提取文档结构与文字内容</span>
         <div class="flex space-x-2">
@@ -2630,21 +2648,20 @@
     };
 
     window.addEventListener('DOMContentLoaded', () => {
+      if (!window.lucide) window.lucide = {createIcons() {}};
       lucide.createIcons();
-      initExcelGrid();
-      renderPptSlidesList();
-      renderPaperTemplateCanvas();
-      updateWordStats();
-      billingApp.init();
+      for (const init of [initExcelGrid, renderPptSlidesList, renderPaperTemplateCanvas, updateWordStats, () => billingApp.init()]) {
+        try { init(); } catch (err) { console.warn('初始化功能失败:', err); }
+      }
 
       document.addEventListener('keydown', e => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
-          if (state.currentOfficeTool === 'word') {
+          if (state.currentModule === 'editor' && state.currentOfficeTool === 'word') {
             e.preventDefault();
             toggleFindReplaceBar();
           }
         }
-        if (e.key === 'F5' && state.currentOfficeTool === 'ppt') {
+        if (e.key === 'F5' && state.currentModule === 'editor' && state.currentOfficeTool === 'ppt') {
           e.preventDefault();
           runPptSlideShow();
         }
@@ -2684,7 +2701,7 @@
         const tabBtn = document.getElementById(`tabNav${capitalize(m)}`);
         const mobBtn = document.getElementById(`mobNav${capitalize(m)}`);
         const mobBtmBtn = document.getElementById(`mobBottom${capitalize(m)}`);
-        
+
         if (m === mod) {
           if (el) { el.classList.remove('hidden'); el.classList.add('flex'); }
           if (tabBtn) tabBtn.className = 'nav-module-btn px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-300 flex items-center space-x-1.5';
@@ -2716,31 +2733,47 @@
     }
     function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
 
+    const islandHistory = [], islandTasks = new Map();
+    let islandTransient = '', islandTransientTimer;
+    function renderStatusIsland() {
+      const status = document.getElementById('islandStatus'), history = document.getElementById('islandHistory');
+      if (!status || !history) return;
+      const aiCount = activeAiRequests.size;
+      status.textContent = aiCount ? `AI 处理中 · ${aiCount}` : islandTasks.size ? [...islandTasks.values()].at(-1) : islandTransient || '工作台就绪';
+      history.replaceChildren(...(islandHistory.length ? islandHistory : ['工作台就绪']).map(message => { const li = document.createElement('li'); li.textContent = message; return li; }));
+    }
+    function toggleStatusIsland() { const details = document.getElementById('islandDetails'), toggle = document.getElementById('islandToggle'); details.hidden = !details.hidden; toggle.setAttribute('aria-expanded', String(!details.hidden)); }
+    function beginWorkspaceTask(label) { const id = Symbol(label); islandTasks.set(id, label); renderStatusIsland(); return id; }
+    function endWorkspaceTask(id) { islandTasks.delete(id); renderStatusIsland(); }
     function showToast(msg) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMsg').innerText = msg;
-      toast.classList.remove('translate-y-20', 'opacity-0');
-      setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 2200);
+      const message = String(msg); islandHistory.unshift(message); islandHistory.splice(5);
+      islandTransient = message; clearTimeout(islandTransientTimer);
+      islandTransientTimer = setTimeout(() => { islandTransient = ''; renderStatusIsland(); }, 3000);
+      renderStatusIsland();
+      const live = document.getElementById('islandLive'); if (live) live.textContent = message;
+      const toast = document.getElementById('toast'); document.getElementById('toastMsg').innerText = message;
+      toast.classList.remove('translate-y-20', 'opacity-0'); clearTimeout(window.toastTimeout);
+      window.toastTimeout = setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 2200);
     }
 
+    let homeSearchQuery = '', homeCategory = 'all';
     function filterHomeCards(query) {
-      const q = query.trim().toLowerCase();
+      homeSearchQuery = String(query || '').trim().toLowerCase();
       document.querySelectorAll('.home-card').forEach(card => {
-        const kw = card.getAttribute('data-keywords') || '';
-        const title = card.querySelector('h4')?.innerText.toLowerCase() || '';
-        if (!q || kw.toLowerCase().includes(q) || title.includes(q)) card.classList.remove('hidden');
-        else card.classList.add('hidden');
+        const keywords = (card.getAttribute('data-keywords') || '').toLowerCase();
+        const title = (card.querySelector('h4')?.innerText || '').toLowerCase();
+        const matchesQuery = !homeSearchQuery || keywords.includes(homeSearchQuery) || title.includes(homeSearchQuery);
+        const matchesCategory = homeCategory === 'all' || card.getAttribute('data-cat') === homeCategory;
+        card.classList.toggle('hidden', !(matchesQuery && matchesCategory));
       });
     }
     function setHomeCategory(cat) {
+      homeCategory = cat;
       document.querySelectorAll('.home-cat-btn').forEach(btn => {
         if (btn.getAttribute('data-cat') === cat) btn.className = 'home-cat-btn px-3 py-1.5 rounded-full font-bold bg-indigo-600 text-white shadow-sm shrink-0';
         else btn.className = 'home-cat-btn px-3 py-1.5 rounded-full font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0';
       });
-      document.querySelectorAll('.home-card').forEach(card => {
-        if (cat === 'all' || card.getAttribute('data-cat') === cat) card.classList.remove('hidden');
-        else card.classList.add('hidden');
-      });
+      filterHomeCards(homeSearchQuery);
     }
 
     function closeAllContextMenus() {
@@ -2779,10 +2812,10 @@
         if (rawState) { try { this.state = JSON.parse(rawState); } catch { this.resetState(); } } else { this.resetState(); }
         if (!this.state.sizes?.length) this.state.sizes = [...BILLING_CONFIG.defaultSizes];
         if (!this.state.rows?.length) this.state.rows = [this.createRow()];
-        
+
         const rawDict = localStorage.getItem(BILLING_CONFIG.dictKey);
         if (rawDict) { try { this.priceDict = JSON.parse(rawDict); } catch { this.priceDict = {}; } }
-        
+
         document.getElementById('billingClientName').value = this.state.client || '';
         document.getElementById('billingDocTitle').value = this.state.docTitle || '发货清单 / 销售对账单';
         document.getElementById('billingAdjustment').value = this.state.adjustment || '';
@@ -2805,13 +2838,13 @@
       onInput(e, id, type, sKey) {
         const r = this.state.rows.find(x => x.id === id); if (!r) return;
         const val = e.target.value;
-        
+
         if (type === 'style') {
           r.style = val;
           const memPrice = this.priceDict[val.trim()];
           if (memPrice && !r.price) {
             r.price = memPrice;
-            const priceInput = document.querySelector(`input[data-price-id="${r.id}"]`);
+            const priceInput = Array.from(document.querySelectorAll('input[data-price-id]')).find(el => el.dataset.priceId === String(r.id));
             if (priceInput) priceInput.value = memPrice;
             showToast(`已自动匹配【${val.trim()}】单价: ¥${memPrice}`);
           }
@@ -2826,7 +2859,7 @@
         } else {
           r.data[sKey] = val;
         }
-        
+
         this.save();
         if (type !== 'remark') {
           this.updateRowCalc(r);
@@ -2887,14 +2920,14 @@
       },
 
       updateTotalCalc() {
-        let gQ = 0, gA = 0; 
+        let gQ = 0, gA = 0;
         this.state.rows.forEach(r => {
           let rQ = 0;
           this.state.sizes.forEach(s => { rQ += Number(r.data[s]) || 0; });
-          gQ += rQ; 
+          gQ += rQ;
           gA += rQ * (Number(r.price) || 0);
         });
-        
+
         const finalAmt = gA + (Number(this.state.adjustment) || 0);
         document.getElementById('billingGrandQty').innerText = gQ;
         const finalStr = Math.max(0, finalAmt).toFixed(2);
@@ -2915,11 +2948,11 @@
           <th class="p-0 text-center min-w-[50px] group relative hover:bg-slate-100 dark:hover:bg-slate-700/50 transition border border-slate-200 dark:border-slate-700 h-10">
             <div class="flex items-center justify-center w-full h-full">
               <span class="drag-handle no-print" title="拖拽排序">⋮</span>
-              <span class="text-orange-600 dark:text-orange-400 font-bold">${s}</span>
-              <span onclick="billingApp.removeSize('${s}')" class="absolute right-1 top-1 text-slate-300 hover:text-red-500 cursor-pointer text-xs hidden group-hover:block no-print transition" title="删除列">✖</span>
+              <span class="text-orange-600 dark:text-orange-400 font-bold">${escapeHtml(s)}</span>
+              <span data-size="${escapeHtml(s)}" onclick="billingApp.removeSize(this.dataset.size)" class="absolute right-1 top-1 text-slate-300 hover:text-red-500 cursor-pointer text-xs hidden group-hover:block no-print transition" title="删除列">✖</span>
             </div>
           </th>`).join('');
-        
+
         document.getElementById('billingTableHeader').innerHTML = `
           <th class="w-10 text-center no-print text-slate-400 border border-slate-200 dark:border-slate-700 h-10">删</th>
           <th class="w-40 pl-3 text-left border border-slate-200 dark:border-slate-700 font-bold text-slate-700 dark:text-slate-200 h-10">商品名称 / 款号</th>
@@ -2944,21 +2977,21 @@
       },
 
       getRowHTML(r) {
-        const ins = this.state.sizes.map(s => `<td class="border border-slate-200 dark:border-slate-700 h-10"><input type="number" class="bill-input-cell" value="${r.data[s]||''}" oninput="billingApp.onInput(event,'${r.id}','size','${s}')"></td>`).join('');
+        const ins = this.state.sizes.map(s => `<td class="border border-slate-200 dark:border-slate-700 h-10"><input type="number" class="bill-input-cell" value="${escapeHtml(r.data[s]||'')}" data-row-id="${escapeHtml(r.id)}" data-size="${escapeHtml(s)}" oninput="billingApp.onInput(event,this.dataset.rowId,'size',this.dataset.size)"></td>`).join('');
         let q = 0; this.state.sizes.forEach(s => q += Number(r.data[s]) || 0);
         const a = q * (Number(r.price) || 0);
 
         return `
           <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition">
             <td class="text-center no-print border border-slate-200 dark:border-slate-700 h-10">
-              <button onclick="billingApp.removeRow('${r.id}')" class="text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50 w-6 h-6 rounded transition font-bold" title="删除此行">×</button>
+              <button data-row-id="${escapeHtml(r.id)}" onclick="billingApp.removeRow(this.dataset.rowId)" class="text-slate-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50 w-6 h-6 rounded transition font-bold" title="删除此行">×</button>
             </td>
-            <td class="border border-slate-200 dark:border-slate-700 h-10"><input type="text" class="bill-input-cell text-left px-3 font-bold text-slate-800 dark:text-slate-100" value="${r.style||''}" placeholder="输入款号/名称..." oninput="billingApp.onInput(event,'${r.id}','style')"></td>
+            <td class="border border-slate-200 dark:border-slate-700 h-10"><input type="text" class="bill-input-cell text-left px-3 font-bold text-slate-800 dark:text-slate-100" value="${escapeHtml(r.style||'')}" placeholder="输入款号/名称..." data-row-id="${escapeHtml(r.id)}" oninput="billingApp.onInput(event,this.dataset.rowId,'style')"></td>
             ${ins}
-            <td class="text-center font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50/20 dark:bg-indigo-950/20 border border-slate-200 dark:border-slate-700 font-mono h-10" id="q-${r.id}">${q || '-'}</td>
-            <td class="border border-slate-200 dark:border-slate-700 h-10"><input type="number" data-price-id="${r.id}" class="bill-input-cell font-mono text-slate-800 dark:text-slate-100" value="${r.price||''}" placeholder="0" oninput="billingApp.onInput(event,'${r.id}','price')"></td>
-            <td class="text-right pr-3 font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50/20 dark:bg-emerald-950/20 border border-slate-200 dark:border-slate-700 font-mono tracking-tight h-10" id="a-${r.id}">${a > 0 ? a.toFixed(2) : '-'}</td>
-            <td class="border border-slate-200 dark:border-slate-700 h-10"><input type="text" class="bill-input-cell text-left px-2 text-xs text-slate-500" value="${r.remark||''}" placeholder="选填备注..." oninput="billingApp.onInput(event,'${r.id}','remark')"></td>
+            <td class="text-center font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50/20 dark:bg-indigo-950/20 border border-slate-200 dark:border-slate-700 font-mono h-10" id="q-${escapeHtml(r.id)}">${q || '-'}</td>
+            <td class="border border-slate-200 dark:border-slate-700 h-10"><input type="number" data-price-id="${escapeHtml(r.id)}" class="bill-input-cell font-mono text-slate-800 dark:text-slate-100" value="${escapeHtml(r.price||'')}" placeholder="0" data-row-id="${escapeHtml(r.id)}" oninput="billingApp.onInput(event,this.dataset.rowId,'price')"></td>
+            <td class="text-right pr-3 font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50/20 dark:bg-emerald-950/20 border border-slate-200 dark:border-slate-700 font-mono tracking-tight h-10" id="a-${escapeHtml(r.id)}">${a > 0 ? a.toFixed(2) : '-'}</td>
+            <td class="border border-slate-200 dark:border-slate-700 h-10"><input type="text" class="bill-input-cell text-left px-2 text-xs text-slate-500" value="${escapeHtml(r.remark||'')}" placeholder="选填备注..." data-row-id="${escapeHtml(r.id)}" oninput="billingApp.onInput(event,this.dataset.rowId,'remark')"></td>
           </tr>
         `;
       },
@@ -2970,10 +3003,10 @@
         const date = this.state.date;
         const fileName = `${client}_${date}.xlsx`;
         const wb = XLSX.utils.book_new();
-        
+
         const header = ["商品名称/款号", ...this.state.sizes, "件数小计", "单价", "总金额", "备注"];
         const data = [header];
-        
+
         this.state.rows.forEach(r => {
           let q = 0;
           const vals = this.state.sizes.map(s => { const v = Number(r.data[s])||0; q+=v; return v||''; });
@@ -2983,8 +3016,8 @@
         let qTotal = document.getElementById('billingGrandQty').innerText;
         let aTotal = document.getElementById('billingGrandAmt').innerText;
         let adj = this.state.adjustment;
-        
-        data.push([]); 
+
+        data.push([]);
         if (adj !== 0) { data.push(["", ...this.state.sizes.map(()=>""), "", "整单调整:", adj]); }
         data.push(["合计", ...this.state.sizes.map(()=>""), qTotal, "应付总额:", aTotal, ""]);
 
@@ -3037,9 +3070,9 @@
       exportImage() {
         const target = document.getElementById('billingCaptureTarget');
         document.body.classList.add('capturing');
-        
+
         html2canvas(target, {
-          scale: 2, 
+          scale: 2,
           backgroundColor: '#ffffff',
           useCORS: true,
           logging: false
@@ -3082,10 +3115,10 @@
         } else {
           list.innerHTML = keys.map(k => `
             <div class="p-2.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800">
-              <span class="font-bold text-slate-800 dark:text-slate-200">${k}</span>
+              <span class="font-bold text-slate-800 dark:text-slate-200">${escapeHtml(k)}</span>
               <div class="flex items-center space-x-2">
-                <span class="font-mono text-emerald-600 font-bold">¥${this.priceDict[k]}</span>
-                <button onclick="billingApp.deletePriceDictItem('${k}')" class="p-1 text-slate-300 hover:text-red-500 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                <span class="font-mono text-emerald-600 font-bold">¥${escapeHtml(this.priceDict[k])}</span>
+                <button data-key="${escapeHtml(k)}" onclick="billingApp.deletePriceDictItem(this.dataset.key)" class="p-1 text-slate-300 hover:text-red-500 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
               </div>
             </div>`).join('');
         }
@@ -3181,14 +3214,14 @@
             <div class="p-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800">
               <div>
                 <div class="font-bold text-slate-800 dark:text-slate-100 flex items-center space-x-2">
-                  <span>${d.client || '无客户名'}</span>
-                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 font-normal">${d.date}</span>
+                  <span>${escapeHtml(d.client || '无客户名')}</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 font-normal">${escapeHtml(d.date)}</span>
                 </div>
-                <div class="text-[10px] text-slate-400 mt-0.5">${d.savedAt} · 共 ${d.itemCount} 项 · 总金额: ¥${d.grandAmt}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">${escapeHtml(d.savedAt)} · 共 ${escapeHtml(d.itemCount)} 项 · 总金额: ¥${escapeHtml(d.grandAmt)}</div>
               </div>
               <div class="flex items-center space-x-2">
-                <button onclick="billingApp.loadDraft('${d.id}')" class="px-2.5 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded font-bold hover:bg-indigo-100">调取此单</button>
-                <button onclick="billingApp.deleteDraft('${d.id}')" class="p-1 text-slate-300 hover:text-red-500 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                <button data-id="${escapeHtml(d.id)}" onclick="billingApp.loadDraft(this.dataset.id)" class="px-2.5 py-1 bg-indigo-50 text-indigo-600 border border-indigo-200 rounded font-bold hover:bg-indigo-100">调取此单</button>
+                <button data-id="${escapeHtml(d.id)}" onclick="billingApp.deleteDraft(this.dataset.id)" class="p-1 text-slate-300 hover:text-red-500 rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
               </div>
             </div>`).join('');
         }
@@ -3306,7 +3339,7 @@
             // Natural Language / Handwritten Shipping Memo Line
             // e.g. "男3代野马桔: M-2XL: 72件 45元" or "公羊新白 241件 52"
             let cleanLine = line.replace(/：/g, ':').replace(/，/g, ',').replace(/件/g, '').replace(/元/g, '');
-            
+
             // Extract price
             let price = 0;
             const priceMatch = cleanLine.match(/(?:单价|价格|单|价|@|\s+)\s*[:：]?\s*(\d+(?:\.\d+)?)(?:\s*$)/i);
@@ -3490,12 +3523,79 @@
       if (window.find) window.find(q, false, false, true, false, true, false);
       showToast('已检索: ' + q);
     }
+    // Treat imported and model-generated content as untrusted text.
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function textParagraphs(value) {
+      return String(value).split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${escapeHtml(l.trim())}</p>`).join('');
+    }
+    function sanitizeImportedHtml(html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const allowed = new Set(['P','BR','STRONG','B','EM','I','U','S','H1','H2','H3','H4','H5','H6','UL','OL','LI','TABLE','THEAD','TBODY','TR','TH','TD','BLOCKQUOTE','SUP','SUB','A']);
+      const dropped = new Set(['SCRIPT','STYLE','IFRAME','OBJECT','EMBED','SVG','MATH','FORM','INPUT','BUTTON','VIDEO','AUDIO','IMG','LINK','META']);
+      function clean(parent) {
+        for (const node of Array.from(parent.childNodes)) {
+          if (node.nodeType === 8) { node.remove(); continue; }
+          if (node.nodeType !== 1) continue;
+          if (dropped.has(node.tagName)) { node.remove(); continue; }
+          clean(node);
+          if (!allowed.has(node.tagName)) { node.replaceWith(...node.childNodes); continue; }
+          const href = node.tagName === 'A' ? node.getAttribute('href') : null;
+          for (const attr of Array.from(node.attributes)) node.removeAttribute(attr.name);
+          if (href && /^(https?:|mailto:)/i.test(href.trim())) node.setAttribute('href', href.trim());
+        }
+      }
+      clean(doc.body); return doc.body.innerHTML;
+    }
+    function getAiConfig() {
+      try {
+        const cfg = JSON.parse(localStorage.getItem('docscan_ai_config') || '{}');
+        if (!cfg || typeof cfg !== 'object') return {};
+        return Object.fromEntries(Object.entries(cfg).filter(([, value]) => typeof value === 'string'));
+      }
+      catch (_) { return {}; }
+    }
+    const aiJobVersions = Object.create(null);
+    function startAiJob(key) { return aiJobVersions[key] = (aiJobVersions[key] || 0) + 1; }
+    function isCurrentAiJob(key, version) { return aiJobVersions[key] === version; }
+    const activeAiRequests = new Set();
+    function cancelAiRequests() {
+      for (const request of activeAiRequests) { request.cancelled = true; request.controller.abort(); }
+    }
+    function updateAiCancelButton() {
+      const button = document.getElementById('cancelActiveAiRequests');
+      if (button) button.hidden = activeAiRequests.size === 0;
+      if (typeof renderStatusIsland === 'function') renderStatusIsland();
+    }
+    async function aiFetch(url, options) {
+      const controller = new AbortController();
+      const request = {controller, cancelled: false};
+      activeAiRequests.add(request); updateAiCancelButton();
+      const timer = setTimeout(() => controller.abort(), 60000);
+      try {
+        const response = await fetch(url, {...options, signal: controller.signal});
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const body = await response.text();
+        return new Response(body, {status: response.status, statusText: response.statusText, headers: response.headers});
+      } catch (err) {
+        if (err.name === 'AbortError') throw new Error(request.cancelled ? '请求已由用户取消' : '请求超时（60 秒），已取消');
+        throw err;
+      } finally { clearTimeout(timer); activeAiRequests.delete(request); updateAiCancelButton(); }
+    }
+    function aiResponseText(data) {
+      const text = data?.choices?.[0]?.message?.content;
+      if (typeof text !== 'string' || !text.trim()) throw new Error('AI 返回内容为空');
+      return text;
+    }
+
     function executeReplaceAll() {
       const q = document.getElementById('findTextInput').value, rep = document.getElementById('replaceTextInput').value;
       if (!q) return showToast('请输入查找关键词');
       const editor = document.getElementById('wordEditorDoc');
       const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-      editor.innerHTML = editor.innerHTML.replace(regex, rep);
+      const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) walker.currentNode.nodeValue = walker.currentNode.nodeValue.replace(regex, () => rep);
       showToast('已全部替换完成');
       updateWordStats();
     }
@@ -3505,7 +3605,7 @@
       const headers = editor.querySelectorAll('h1, h2, h3');
       if (!headers.length) return showToast('文档中暂无标题 (H1/H2/H3)');
       let tocHtml = '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin:16px 0;"><div style="font-weight:bold;color:#4f46e5;margin-bottom:8px;">📑 文档目录大纲</div><ul style="list-style:none;padding:0;margin:0;font-size:13px;line-height:1.8;">';
-      headers.forEach((h, idx) => { tocHtml += `<li><strong>${idx + 1}.</strong> ${h.innerText}</li>`; });
+      headers.forEach((h, idx) => { tocHtml += `<li><strong>${idx + 1}.</strong> ${escapeHtml(h.innerText)}</li>`; });
       tocHtml += '</ul></div><p><br/></p>';
       editor.focus(); document.execCommand('insertHTML', false, tocHtml);
       showToast('目录大纲已生成！');
@@ -3690,8 +3790,10 @@
     /* Excel Spreadsheet */
     function initExcelGrid() {
       const table = document.getElementById('excelTableElement'); if (!table) return;
-      const colCount = Math.max(8, (state.excelData[0]?.length || 0) + 2);
-      const rowCount = Math.max(12, state.excelData.length + 3);
+      const colCount = Math.max(1, 8, ...state.excelData.map(row => Array.isArray(row) ? row.length : 0), state.excelColWidths.length);
+      const rowCount = Math.max(1, 12, state.excelData.length, state.excelRowHeights.length);
+      while (state.excelData.length < rowCount) state.excelData.push([]);
+      state.excelData = state.excelData.map(row => { row = Array.isArray(row) ? row : []; while (row.length < colCount) row.push(''); return row; });
       while (state.excelColWidths.length < colCount) state.excelColWidths.push(110);
       while (state.excelRowHeights.length < rowCount) state.excelRowHeights.push(32);
 
@@ -3706,7 +3808,7 @@
         html += `<tr style="height: ${state.excelRowHeights[r]||32}px;"><td oncontextmenu="handleExcelRowHeaderContextMenu(event, ${r})" class="p-1 bg-slate-50 border border-slate-300 text-center font-bold cursor-pointer"><span>${r + 1}</span></td>`;
         for (let c = 0; c < colCount; c++) {
           const val = state.excelData[r]?.[c] ?? '';
-          html += `<td contenteditable="true" onfocus="selectExcelCell(${r}, ${c}, '${String.fromCharCode(65 + c)}${r + 1}', this)" oninput="updateExcelCell(${r}, ${c}, this.innerText)" class="editor-sheet-cell p-1.5 border border-slate-200 overflow-hidden leading-tight">${val}</td>`;
+          html += `<td contenteditable="true" onfocus="selectExcelCell(${r}, ${c}, '${String.fromCharCode(65 + c)}${r + 1}', this)" oninput="updateExcelCell(${r}, ${c}, this.innerText)" class="editor-sheet-cell p-1.5 border border-slate-200 overflow-hidden leading-tight">${escapeHtml(val)}</td>`;
         }
         html += '</tr>';
       }
@@ -3745,18 +3847,20 @@
       state.excelRowHeights[r] = parseInt(document.getElementById('excelRowMenuInput').value) || 32;
       initExcelGrid(); closeAllContextMenus();
     }
-    function insertColLeft() { state.excelData.forEach(r => r.splice(state.contextMenuColIndex, 0, '')); state.excelColWidths.splice(state.contextMenuColIndex, 0, 110); initExcelGrid(); }
-    function insertColRight() { state.excelData.forEach(r => r.splice(state.contextMenuColIndex + 1, 0, '')); state.excelColWidths.splice(state.contextMenuColIndex + 1, 0, 110); initExcelGrid(); }
-    function deleteColByIndex(c) { state.excelData.forEach(r => { if (r.length > 1) r.splice(c, 1); }); initExcelGrid(); }
-    function insertRowAbove() { state.excelData.splice(state.contextMenuRowIndex, 0, new Array(8).fill('')); initExcelGrid(); }
-    function insertRowBelow() { state.excelData.splice(state.contextMenuRowIndex + 1, 0, new Array(8).fill('')); initExcelGrid(); }
-    function deleteRowByIndex(r) { if (state.excelData.length > 1) state.excelData.splice(r, 1); initExcelGrid(); }
+    function insertColAt(c) { state.excelData.forEach(r => r.splice(c, 0, '')); state.excelColWidths.splice(c, 0, 110); initExcelGrid(); }
+    function insertColLeft() { insertColAt(state.contextMenuColIndex); }
+    function insertColRight() { insertColAt(state.contextMenuColIndex + 1); }
+    function deleteColByIndex(c) { if (state.excelColWidths.length <= 1 || c < 0 || c >= state.excelColWidths.length) return; state.excelData.forEach(r => r.splice(c, 1)); state.excelColWidths.splice(c, 1); initExcelGrid(); }
+    function insertRowAt(r) { state.excelData.splice(r, 0, new Array(state.excelColWidths.length).fill('')); state.excelRowHeights.splice(r, 0, 32); initExcelGrid(); }
+    function insertRowAbove() { insertRowAt(state.contextMenuRowIndex); }
+    function insertRowBelow() { insertRowAt(state.contextMenuRowIndex + 1); }
+    function deleteRowByIndex(r) { if (state.excelData.length <= 1 || r < 0 || r >= state.excelData.length) return; state.excelData.splice(r, 1); state.excelRowHeights.splice(r, 1); initExcelGrid(); }
     function setSpecificColWidth(val) { state.excelColWidths[state.activeExcelCell.c] = parseInt(val)||110; initExcelGrid(); }
     function setSpecificRowHeight(val) { state.excelRowHeights[state.activeExcelCell.r] = parseInt(val)||32; initExcelGrid(); }
     function handleExcelFormulaInput(val) { if (state.activeExcelEl) state.activeExcelEl.innerText = val; updateExcelCell(state.activeExcelCell.r, state.activeExcelCell.c, val); }
     function updateExcelCell(r, c, val) { if (!state.excelData[r]) state.excelData[r] = []; state.excelData[r][c] = val; }
-    function insertExcelRow() { state.excelData.push(new Array(8).fill('')); initExcelGrid(); }
-    function insertExcelCol() { state.excelData.forEach(r => r.push('')); initExcelGrid(); }
+    function insertExcelRow() { insertRowAt(state.excelData.length); }
+    function insertExcelCol() { insertColAt(state.excelColWidths.length); }
     function changeExcelActiveCellFont(f) { if (state.activeExcelEl) state.activeExcelEl.style.fontFamily = f; }
     function toggleExcelActiveCellBold() { if (state.activeExcelEl) state.activeExcelEl.style.fontWeight = state.activeExcelEl.style.fontWeight==='bold'?'normal':'bold'; }
     function setExcelCellAlign(a) { if (state.activeExcelEl) state.activeExcelEl.style.textAlign = a; }
@@ -3767,7 +3871,7 @@
       list.innerHTML = state.pptSlides.map((s, idx) => `
         <div onclick="selectPptSlide(${idx})" class="p-2 rounded-xl border text-left cursor-pointer transition ${idx === state.currentSlideIdx ? 'border-indigo-500 bg-indigo-50 font-bold' : 'border-slate-200 bg-white'}">
           <div class="text-[10px] text-slate-400 mb-0.5">Slide ${idx + 1}</div>
-          <div class="text-xs truncate">${s.title || '幻灯片'}</div>
+          <div class="text-xs truncate">${escapeHtml(s.title || '幻灯片')}</div>
         </div>`).join('');
       loadSlideContentToCanvas();
     }
@@ -3951,13 +4055,13 @@
     function renderPptSlideMediaElements(s) {
       const layer = document.getElementById('pptMediaElementsLayer'); if (!layer) return;
       if (!s.media || !s.media.length) { layer.innerHTML = ''; hidePptMediaToolbar(); return; }
-      
+
       layer.innerHTML = s.media.map(m => {
         const isSel = m.id === selectedMediaId;
         const shadowCls = m.shadow ? 'shadow-2xl' : 'shadow-none';
         const borderCls = m.border ? 'border-2 border-indigo-400 dark:border-indigo-500' : 'border border-slate-200/50 dark:border-slate-700/50';
         const selBorderCls = isSel ? 'ring-2 ring-indigo-500 ring-offset-2 ring-offset-white dark:ring-offset-slate-900' : '';
-        
+
         let innerMedia = '';
         if (m.type === 'image') {
           innerMedia = `<img src="${m.src}" class="w-full h-auto pointer-events-none select-none block" style="border-radius:${m.borderRadius}px;" />`;
@@ -3969,14 +4073,14 @@
           innerMedia = `
             <div class="p-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white flex items-center space-x-2 shadow-lg" style="border-radius:${m.borderRadius}px;">
               <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center animate-pulse"><i data-lucide="disc" class="w-4 h-4 text-white"></i></div>
-              <div class="flex-1 truncate text-xs font-bold">${m.name || '背景音乐.mp3'}</div>
+              <div class="flex-1 truncate text-xs font-bold">${escapeHtml(m.name || '背景音乐.mp3')}</div>
               <audio controls src="${m.src}" ${m.loop?'loop':''} class="h-6 w-28"></audio>
             </div>
           `;
         }
 
         return `
-          <div id="${m.id}" 
+          <div id="${m.id}"
                onmousedown="startDragPptMedia(event, '${m.id}')"
                onclick="selectMediaElement('${m.id}', event)"
                class="absolute pointer-events-auto cursor-move transition-shadow duration-150 ${shadowCls} ${borderCls} ${selBorderCls} group"
@@ -3998,10 +4102,10 @@
       const s = state.pptSlides[state.currentSlideIdx];
       const m = s?.media?.find(item => item.id === id);
       if (!m) return;
-      
+
       const startX = e.clientX, startY = e.clientY;
       const initialLeft = m.x, initialTop = m.y;
-      
+
       function onMouseMove(ev) {
         const dx = ev.clientX - startX, dy = ev.clientY - startY;
         m.x = Math.max(0, Math.min(600, initialLeft + dx));
@@ -4010,12 +4114,12 @@
         if (el) { el.style.left = m.x + 'px'; el.style.top = m.y + 'px'; }
         positionMediaToolbar(el);
       }
-      
+
       function onMouseUp() {
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
       }
-      
+
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     }
@@ -4032,7 +4136,7 @@
       if (el) positionMediaToolbar(el);
 
       document.getElementById('pptMediaWidthLabel').innerText = m.width + 'px';
-      
+
       // Update specific toolbar actions for video/audio
       const specificArea = document.getElementById('pptMediaSpecificActions');
       if (m.type === 'video') {
@@ -4166,20 +4270,45 @@
     function runPptSlideShow() { document.getElementById('pptSlideCanvas').requestFullscreen?.(); }
 
     /* PDF Viewer */
+    let pdfLoadSerial = 0, pdfRenderSerial = 0, pdfRenderTask = null;
+    let pdfRenderQueue = Promise.resolve();
+    async function loadPdfDocument(data) {
+      const serial = ++pdfLoadSerial;
+      const doc = await pdfjsLib.getDocument({data}).promise;
+      if (serial !== pdfLoadSerial) { await doc.destroy(); return false; }
+      ++pdfRenderSerial;
+      if (pdfRenderTask) pdfRenderTask.cancel();
+      await pdfRenderQueue;
+      const old = state.pdfDoc;
+      state.pdfDoc = doc; state.pdfPageNum = 1;
+      if (old && old !== doc) await old.destroy();
+      return true;
+    }
     async function handlePdfViewerUpload(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
-      const ab = await file.arrayBuffer();
-      state.pdfDoc = await pdfjsLib.getDocument({ data: ab }).promise;
-      state.pdfPageNum = 1; renderPdfViewerPage();
+      try { if (await loadPdfDocument(await file.arrayBuffer())) renderPdfViewerPage(); }
+      catch (err) { showToast('PDF 打开失败: ' + err.message); }
     }
-    async function renderPdfViewerPage() {
+    function renderPdfViewerPage() {
       if (!state.pdfDoc) return;
-      const page = await state.pdfDoc.getPage(state.pdfPageNum);
-      const vp = page.getViewport({ scale: state.pdfScale || 1.5, rotation: state.pdfRotation || 0 });
-      const cvs = document.getElementById('pdfViewerCanvas');
-      cvs.width = vp.width; cvs.height = vp.height;
-      await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
-      document.getElementById('pdfViewerPageInfo').innerText = `第 ${state.pdfPageNum} / ${state.pdfDoc.numPages} 页`;
+      const serial = ++pdfRenderSerial, doc = state.pdfDoc, pageNum = state.pdfPageNum;
+      const scale = state.pdfScale || 1.5, rotation = state.pdfRotation || 0;
+      if (pdfRenderTask) pdfRenderTask.cancel();
+      pdfRenderQueue = pdfRenderQueue.catch(() => {}).then(async () => {
+        if (serial !== pdfRenderSerial || doc !== state.pdfDoc) return;
+        const page = await doc.getPage(pageNum);
+        if (serial !== pdfRenderSerial || doc !== state.pdfDoc) return;
+        const vp = page.getViewport({scale, rotation});
+        const cvs = document.getElementById('pdfViewerCanvas');
+        cvs.width = vp.width; cvs.height = vp.height;
+        const task = page.render({canvasContext: cvs.getContext('2d'), viewport: vp});
+        pdfRenderTask = task;
+        try { await task.promise; }
+        catch (err) { if (err.name !== 'RenderingCancelledException') throw err; }
+        finally { if (pdfRenderTask === task) pdfRenderTask = null; }
+        if (serial === pdfRenderSerial && doc === state.pdfDoc) document.getElementById('pdfViewerPageInfo').innerText = `第 ${pageNum} / ${doc.numPages} 页`;
+      }).catch(err => showToast('PDF 页面渲染失败: ' + err.message));
+      return pdfRenderQueue;
     }
     function changePdfScale(delta) { state.pdfScale = Math.max(0.6, Math.min(3.0, (state.pdfScale || 1.5) + delta)); renderPdfViewerPage(); }
     function rotatePdfPage() { state.pdfRotation = ((state.pdfRotation || 0) + 90) % 360; renderPdfViewerPage(); }
@@ -4194,12 +4323,12 @@
         if (ext === 'docx') {
           const ab = await file.arrayBuffer();
           const res = await mammoth.convertToHtml({ arrayBuffer: ab });
-          document.getElementById('wordEditorDoc').innerHTML = res.value || '<p>文档无内容</p>';
+          document.getElementById('wordEditorDoc').innerHTML = sanitizeImportedHtml(res.value || '') || '<p>文档无内容</p>';
           switchOfficeSubTool('word'); showToast('Word 文档已打开！');
           updateWordStats();
         } else if (ext === 'txt') {
           const txt = await file.text();
-          const html = txt.split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${l.trim()}</p>`).join('');
+          const html = textParagraphs(txt);
           document.getElementById('wordEditorDoc').innerHTML = html || '<p>文档无内容</p>';
           switchOfficeSubTool('word'); showToast('纯文本已载入 Word 编辑器！');
           updateWordStats();
@@ -4210,19 +4339,12 @@
           initExcelGrid(); switchOfficeSubTool('excel'); showToast('Excel 表格已打开！');
         } else if (ext === 'pdf') {
           const ab = await file.arrayBuffer();
-          state.pdfDoc = await pdfjsLib.getDocument({ data: ab }).promise;
-          state.pdfPageNum = 1;
+          if (!await loadPdfDocument(ab)) return;
           renderPdfViewerPage();
           switchOfficeSubTool('pdf');
           showToast(`PDF 文档已打开 (共 ${state.pdfDoc.numPages} 页)！`);
         } else if (['pptx', 'ppt'].includes(ext)) {
-          state.pptSlides = [
-            { layout: 'title_content', title: file.name.replace(/\.[^/.]+$/, ''), body: '• 演示文稿已成功载入\n• 您可以在此编辑幻灯片内容、更换背景或插入多媒体', notes: '', bgType: 'gradient', bgValue: 'linear-gradient(135deg, #1e1b4b, #312e81)', media: [] }
-          ];
-          state.currentSlideIdx = 0;
-          renderPptSlidesList();
-          switchOfficeSubTool('ppt');
-          showToast('PPT 演示文稿已载入！');
+          showToast('暂不支持读取 PPT 文件；请使用其他软件打开');
         } else {
           showToast('暂不支持此格式，请选择 docx/xlsx/pptx/pdf/txt 格式文件');
         }
@@ -4310,7 +4432,7 @@
       document.getElementById('univConvertResultTitle').innerText = `🎉 ${info.fileName || '文档'} 转换就绪`;
       document.getElementById('univConvertTypeBadge').innerText = `📄 目标格式：${info.targetFormat || '目标文档'}`;
       document.getElementById('univConvertPreviewText').value = info.previewText || '（无预览文本）';
-      
+
       const openBtnLabel = document.getElementById('univConvertOpenEditorBtnLabel');
       if (info.type.endsWith('2word') || info.type === 'pdf2txt') {
         openBtnLabel.innerText = '在在线 Word 编辑器中打开 (无需保存)';
@@ -4385,8 +4507,7 @@
           targetFormat: 'PDF 矢量文档',
           previewText: textContent.substring(0, 1000),
           openEditorFn: async () => {
-            state.pdfDoc = await pdfjsLib.getDocument({ data: pdfArrayBuffer }).promise;
-            state.pdfPageNum = 1;
+            if (!await loadPdfDocument(pdfArrayBuffer)) return;
             navigateModule('editor');
             switchOfficeSubTool('pdf');
             renderPdfViewerPage();
@@ -4431,8 +4552,7 @@
           targetFormat: '横向 A4 报表 PDF',
           previewText: previewStr || 'Excel 表格数据已提取',
           openEditorFn: async () => {
-            state.pdfDoc = await pdfjsLib.getDocument({ data: pdfArrayBuffer }).promise;
-            state.pdfPageNum = 1;
+            if (!await loadPdfDocument(pdfArrayBuffer)) return;
             navigateModule('editor');
             switchOfficeSubTool('pdf');
             renderPdfViewerPage();
@@ -4451,60 +4571,7 @@
 
     async function handlePptToPdf(e, droppedFile = null) {
       const file = droppedFile || e?.target?.files?.[0]; if (!file) return; if (e?.target) e.target.value = '';
-      showToast('正在转换 PPT 为横向 A4 高清 PDF...');
-      try {
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('l', 'mm', 'a4');
-        let previewStr = '';
-        if (state.pptSlides && state.pptSlides.length) {
-          state.pptSlides.forEach((s, idx) => {
-            if (idx > 0) pdf.addPage();
-            pdf.setFillColor(245, 247, 250);
-            pdf.rect(0, 0, 297, 210, 'F');
-            pdf.setFontSize(22);
-            pdf.setTextColor(30, 41, 59);
-            pdf.text(s.title || `Slide ${idx + 1}`, 20, 30);
-            pdf.setFontSize(14);
-            pdf.setTextColor(71, 85, 105);
-            const bodyLines = pdf.splitTextToSize(s.body || '', 250);
-            pdf.text(bodyLines, 20, 55);
-            pdf.setFontSize(10);
-            pdf.setTextColor(148, 163, 184);
-            pdf.text(`- ${idx + 1} / ${state.pptSlides.length} -`, 148, 200, { align: 'center' });
-            previewStr += `【幻灯片 ${idx + 1}】${s.title || ''}\n${s.body || ''}\n\n`;
-          });
-        } else {
-          pdf.setFontSize(20);
-          pdf.text(`演示文稿: ${file.name}`, 20, 40);
-          pdf.setFontSize(12);
-          pdf.text('已由全能格式互转中心转换为标准 PDF 演示文档。', 20, 60);
-          previewStr = `演示文稿: ${file.name}\n已转换为标准 PDF 演示文档。`;
-        }
-
-        const pdfArrayBuffer = pdf.output('arraybuffer');
-
-        openUniversalConvertResultModal({
-          type: 'ppt2pdf',
-          fileName: file.name,
-          targetFormat: 'PPT 演示文档 PDF',
-          previewText: previewStr,
-          openEditorFn: async () => {
-            state.pdfDoc = await pdfjsLib.getDocument({ data: pdfArrayBuffer }).promise;
-            state.pdfPageNum = 1;
-            navigateModule('editor');
-            switchOfficeSubTool('pdf');
-            renderPdfViewerPage();
-            showToast('已在 PDF 查看器中直接载入 PPT 演示文档！');
-          },
-          downloadFn: () => {
-            pdf.save(file.name.replace(/\.pptx$/i, '') + '.pdf');
-            showToast('PPT PDF 演示文档已下载！');
-          }
-        });
-        showToast('PPT 转 PDF 成功就绪！');
-      } catch (err) {
-        showToast('PPT 转换失败: ' + err.message);
-      }
+      showToast('暂不支持将上传的 PPT 文件转换为 PDF');
     }
 
     async function handlePdfToWord(e, droppedFile = null) {
@@ -4543,7 +4610,7 @@
           targetFormat: 'Word 文档 (.docx)',
           previewText: extractedText || 'PDF 文字已提取',
           openEditorFn: () => {
-            const html = extractedText.split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${l.trim()}</p>`).join('');
+            const html = textParagraphs(extractedText);
             document.getElementById('wordEditorDoc').innerHTML = html || '<p>PDF 文档已载入</p>';
             navigateModule('editor');
             switchOfficeSubTool('word');
@@ -4752,8 +4819,7 @@
           targetFormat: 'A4 标准打印 PDF',
           previewText: `已将 ${files.length} 张图片按顺序排版为标准 A4 多页 PDF 文档`,
           openEditorFn: async () => {
-            state.pdfDoc = await pdfjsLib.getDocument({ data: pdfArrayBuffer }).promise;
-            state.pdfPageNum = 1;
+            if (!await loadPdfDocument(pdfArrayBuffer)) return;
             navigateModule('editor');
             switchOfficeSubTool('pdf');
             renderPdfViewerPage();
@@ -4789,7 +4855,7 @@
           targetFormat: '纯文本 (.txt)',
           previewText: allText,
           openEditorFn: () => {
-            const html = allText.split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${l.trim()}</p>`).join('');
+            const html = textParagraphs(allText);
             document.getElementById('wordEditorDoc').innerHTML = html;
             navigateModule('editor');
             switchOfficeSubTool('word');
@@ -5040,7 +5106,7 @@
       } else {
         state.tplConfig.rows = 12; state.tplConfig.cols = 8;
       }
-      
+
       // Update form values
       ['PC', 'Mob'].forEach(suffix => {
         const r = document.getElementById(`tplRowsInput${suffix}`); if (r) r.value = state.tplConfig.rows;
@@ -5162,7 +5228,7 @@
       try {
         const cvsPC = document.getElementById('templatePaperCanvasPC');
         const cvsMob = document.getElementById('templatePaperCanvasMob');
-        
+
         if (cvsPC) renderPaperTemplateCanvasDirect(cvsPC);
         if (cvsMob) renderPaperTemplateCanvasDirect(cvsMob);
 
@@ -5191,7 +5257,7 @@
       let baseW = 2480, baseH = 3508;
       if (paperSize === 'a3') { baseW = 3508; baseH = 4960; }
       else if (paperSize === 'a5') { baseW = 1748; baseH = 2480; }
-      
+
       cvs.width = baseW;
       cvs.height = baseH;
 
@@ -5546,7 +5612,7 @@
       if (!cvs || !cvs.width) return showToast('暂无可导出的作业纸');
       const { jsPDF } = window.jspdf;
       const paperSize = state.tplConfig.paperSize;
-      
+
       let pdfW = 210, pdfH = 297;
       if (paperSize === 'a3') { pdfW = 297; pdfH = 420; }
       else if (paperSize === 'a5') { pdfW = 148; pdfH = 210; }
@@ -5582,7 +5648,7 @@
         if (btnSeal) btnSeal.className = 'flex-1 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition flex items-center justify-center space-x-1';
         if (scanSide) scanSide.classList.remove('hidden');
         if (sealSide) sealSide.classList.add('hidden');
-        
+
         if (state.scanImg) {
           if (scanCvsWrap) scanCvsWrap.classList.remove('hidden');
           if (sealCvsWrap) sealCvsWrap.classList.add('hidden');
@@ -5598,7 +5664,7 @@
         if (btnSeal) btnSeal.className = 'flex-1 py-1.5 rounded-lg text-xs font-bold bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm transition flex items-center justify-center space-x-1';
         if (scanSide) scanSide.classList.add('hidden');
         if (sealSide) sealSide.classList.remove('hidden');
-        
+
         if (state.sealImg) {
           if (sealCvsWrap) sealCvsWrap.classList.remove('hidden');
           if (scanCvsWrap) scanCvsWrap.classList.add('hidden');
@@ -5643,6 +5709,15 @@
       loadMultipleScanImageFiles(fileList);
     }
 
+    const MAX_SCAN_PIXELS = 12000000;
+    function scanThumbnail(source) {
+      const ratio = Math.min(1, 160 / Math.max(source.width, source.height));
+      const thumb = document.createElement('canvas');
+      thumb.width = Math.max(1, Math.round(source.width * ratio));
+      thumb.height = Math.max(1, Math.round(source.height * ratio));
+      thumb.getContext('2d').drawImage(source, 0, 0, thumb.width, thumb.height);
+      return thumb.toDataURL('image/jpeg', 0.65);
+    }
     async function loadMultipleScanImageFiles(files) {
       if (!files) return;
       const list = Array.isArray(files) ? files : Array.from(files);
@@ -5650,20 +5725,29 @@
 
       // Robust check: Accepts MIME type starting with image/, known image extensions, or any non-empty Blob/File
       const imageFiles = list.filter(f => isScanImageFile(f) || (f instanceof Blob && f.size > 0) || (f && f.size > 0 && !f.name?.match(/\.(docx|xlsx|pptx|pdf|zip|rar|exe|txt)$/i)));
-      
+
       if (!imageFiles.length) {
         return showToast('请选择图片文件 (JPG / JPEG / PNG / WebP / BMP / GIF)');
       }
 
+      const scanTask = beginWorkspaceTask('正在导入扫描图片');
       showToast(`正在载入 ${imageFiles.length} 张文档图片...`);
 
-      let loadedCount = 0;
+      let loadedCount = 0, resizedCount = 0;
+      const firstNewIndex = state.scanPages.length;
       for (const file of imageFiles) {
+        if (file.size > 25 * 1024 * 1024) { showToast('单张图片超过 25 MB，已跳过'); continue; }
         await new Promise(resolve => {
           const rd = new FileReader();
           rd.onload = ev => {
-            const img = new Image();
+            let img = new Image();
             img.onload = () => {
+              if (img.width * img.height > MAX_SCAN_PIXELS) {
+                const scale = Math.sqrt(MAX_SCAN_PIXELS / (img.width * img.height));
+                const bounded = document.createElement('canvas');
+                bounded.width = Math.max(1, Math.floor(img.width * scale)); bounded.height = Math.max(1, Math.floor(img.height * scale));
+                bounded.getContext('2d').drawImage(img, 0, 0, bounded.width, bounded.height); img = bounded; resizedCount++;
+              }
               loadedCount++;
               if (state.currentScanSubMode === 'seal') {
                 state.sealImg = img;
@@ -5676,7 +5760,7 @@
                 showToast('印章原图已载入，已自动提取红公章！');
               } else {
                 const pageId = 'scan_page_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
-                
+
                 // Create an offscreen canvas to analyze & generate thumbnail
                 const offCvs = document.createElement('canvas');
                 offCvs.width = img.width;
@@ -5695,7 +5779,7 @@
                   rotation: 0,
                   filter: 'color',
                   corners: initialCorners,
-                  thumbDataUrl: offCvs.toDataURL('image/jpeg', 0.6)
+                  thumbDataUrl: scanThumbnail(offCvs)
                 };
 
                 state.scanPages.push(pageObj);
@@ -5716,17 +5800,18 @@
         });
       }
 
-      if (state.currentScanSubMode === 'doc' && state.scanPages.length > 0) {
-        state.currentScanPageIdx = state.scanPages.length - loadedCount;
+      endWorkspaceTask(scanTask);
+      if (state.currentScanSubMode === 'doc' && loadedCount > 0) {
+        state.currentScanPageIdx = firstNewIndex;
         if (state.currentScanPageIdx < 0) state.currentScanPageIdx = 0;
-        
+
         document.getElementById('scanEmptyDropzone').classList.add('hidden');
         document.getElementById('scanCanvasWrapper').classList.remove('hidden');
         document.getElementById('scanCanvasWrapper').classList.add('flex');
 
         renderScanPagesListUI();
         loadScanPageToCanvas(state.currentScanPageIdx);
-        showToast(`已成功载入 ${loadedCount} 页文档！已自动执行边框识别，可手动微调四角锚点`);
+        showToast(`已载入 ${loadedCount} 页${resizedCount ? `，其中 ${resizedCount} 页已缩至 1200 万像素` : ''}；可手动微调四角`);
       } else if (loadedCount === 0) {
         showToast('未能成功解析图片，请检查文件是否损坏');
       }
@@ -5736,7 +5821,7 @@
     function autoDetectDocumentCornersFromCanvas(cvs) {
       const w = cvs.width;
       const h = cvs.height;
-      
+
       const defaultCorners = [
         { x: Math.round(w * 0.04), y: Math.round(h * 0.04) },
         { x: Math.round(w * 0.96), y: Math.round(h * 0.04) },
@@ -5850,7 +5935,7 @@
                 <span class="w-5 h-5 rounded-md ${isActive ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-600'} text-[10px] font-bold flex items-center justify-center shrink-0">${idx + 1}</span>
                 <img src="${p.thumbDataUrl}" class="w-8 h-10 object-cover rounded shadow-xs shrink-0 border" />
                 <div class="min-w-0 text-left">
-                  <div class="text-[11px] truncate text-slate-800 dark:text-slate-100">${p.name}</div>
+                  <div class="text-[11px] truncate text-slate-800 dark:text-slate-100">${escapeHtml(p.name)}</div>
                   <div class="text-[9px] text-slate-400">${p.currentImg.width}×${p.currentImg.height} · ${p.rotation}°</div>
                 </div>
               </div>
@@ -5904,6 +5989,7 @@
       cvs.width = page.currentImg.width;
       cvs.height = page.currentImg.height;
       ctx.drawImage(page.currentImg, 0, 0);
+      applyFilterToCanvas(cvs, page.filter);
 
       state.scanImg = page.currentImg;
       state.scanOriginalImg = page.originalImg;
@@ -5942,6 +6028,7 @@
         return;
       }
       state.scanPages.splice(idx, 1);
+      if (idx < state.currentScanPageIdx) state.currentScanPageIdx--;
       if (state.currentScanPageIdx >= state.scanPages.length) {
         state.currentScanPageIdx = state.scanPages.length - 1;
       }
@@ -5999,7 +6086,7 @@
     function rotateScanImage(deltaDeg) {
       const page = state.scanPages[state.currentScanPageIdx];
       if (!page) return showToast('请先导入文档图片');
-      
+
       const newDeg = ((page.rotation + deltaDeg) % 360 + 360) % 360;
       page.rotation = newDeg;
       state.scanRotation = newDeg;
@@ -6020,7 +6107,7 @@
       const rad = (deltaDeg * Math.PI) / 180;
       offCtx.translate(targetW / 2, targetH / 2);
       offCtx.rotate(rad);
-      offCtx.drawImage(curCvs, -origW / 2, -origH / 2);
+      offCtx.drawImage(page.currentImg, -origW / 2, -origH / 2);
 
       curCvs.width = targetW;
       curCvs.height = targetH;
@@ -6032,22 +6119,12 @@
       state.scanCorners = rotatedCorners;
       page.corners = rotatedCorners;
 
-      const rotatedImg = new Image();
-      rotatedImg.onload = () => {
-        page.currentImg = rotatedImg;
-        page.thumbDataUrl = offCanvas.toDataURL('image/jpeg', 0.6);
-        state.scanImg = rotatedImg;
-        initPerspectiveCropOverlay(targetW, targetH);
-        renderScanPagesListUI();
-        
-        const angleBadge = document.getElementById('scanRotationAngleBadge');
-        if (angleBadge) angleBadge.innerText = `当前: ${newDeg}°`;
-        const infoBadge = document.getElementById('scanImageInfoBadge');
-        if (infoBadge) infoBadge.innerText = `${targetW} × ${targetH} px`;
-
-        showToast(`当前第 ${state.currentScanPageIdx + 1} 页已旋转至 ${newDeg}°！`);
-      };
-      rotatedImg.src = curCvs.toDataURL();
+      page.currentImg = offCanvas;
+      page.thumbDataUrl = scanThumbnail(offCanvas);
+      state.scanImg = offCanvas;
+      initPerspectiveCropOverlay(targetW, targetH);
+      renderScanPagesListUI();
+      showToast(`当前页已旋转至 ${newDeg}°`);
     }
 
     /* 一键旋转全部扫描页 (1-Click Batch Rotate All Pages) */
@@ -6077,11 +6154,9 @@
         offCtx.drawImage(page.currentImg, -origW / 2, -origH / 2);
 
         page.corners = rotateCornersGeometry(page.corners, origW, origH, deltaDeg);
-        page.thumbDataUrl = offCanvas.toDataURL('image/jpeg', 0.6);
+        page.thumbDataUrl = scanThumbnail(offCanvas);
 
-        const rotatedImg = new Image();
-        rotatedImg.src = offCanvas.toDataURL();
-        page.currentImg = rotatedImg;
+        page.currentImg = offCanvas;
       });
 
       state.scanRotation = state.scanPages[state.currentScanPageIdx]?.rotation || 0;
@@ -6108,7 +6183,7 @@
       page.corners = autoDetectDocumentCornersFromCanvas(cvs);
       state.scanCorners = page.corners;
 
-      page.thumbDataUrl = cvs.toDataURL('image/jpeg', 0.6);
+      page.thumbDataUrl = scanThumbnail(cvs);
       initPerspectiveCropOverlay(page.originalImg.width, page.originalImg.height);
       renderScanPagesListUI();
       showToast('当前页已恢复为初始原图！');
@@ -6301,7 +6376,7 @@
         const tempB = b[i]; b[i] = b[maxRow]; b[maxRow] = tempB;
 
         const pivot = a[i][i];
-        if (Math.abs(pivot) < 1e-9) continue;
+        if (!Number.isFinite(pivot) || Math.abs(pivot) < 1e-9) throw new Error('选区退化，请调整四角');
         for (let j = i; j < n; j++) a[i][j] /= pivot;
         b[i] /= pivot;
 
@@ -6322,6 +6397,9 @@
     }
 
     function warpImagePerspective(srcData, srcW, srcH, corners) {
+      if (!Array.isArray(corners) || corners.length !== 4 || corners.some(p => !Number.isFinite(p.x) || !Number.isFinite(p.y) || p.x < 0 || p.y < 0 || p.x >= srcW || p.y >= srcH)) throw new Error('四角必须位于图像内');
+      const cross = corners.map((p, i) => { const q = corners[(i+1)%4], r = corners[(i+2)%4]; return (q.x-p.x)*(r.y-q.y)-(q.y-p.y)*(r.x-q.x); });
+      if (cross.some(v => Math.abs(v) < 1) || !cross.every(v => Math.sign(v) === Math.sign(cross[0]))) throw new Error('四角不能交叉或退化');
       const [tl, tr, br, bl] = corners;
       const wTop = Math.hypot(tr.x - tl.x, tr.y - tl.y);
       const wBot = Math.hypot(br.x - bl.x, br.y - bl.y);
@@ -6339,19 +6417,25 @@
       ];
 
       const H = getPerspectiveTransform(dstCorners, corners);
+      if (dstW * dstH > MAX_SCAN_PIXELS) throw new Error('选区过大，请缩小图片后重试');
       const dstPixels = new Uint32Array(dstW * dstH);
-      const src32 = new Uint32Array(srcData.buffer);
+      const dstBytes = new Uint8ClampedArray(dstPixels.buffer);
 
       for (let y = 0; y < dstH; y++) {
         for (let x = 0; x < dstW; x++) {
           const denom = H[6] * x + H[7] * y + H[8];
-          const sx = Math.round((H[0] * x + H[1] * y + H[2]) / denom);
-          const sy = Math.round((H[3] * x + H[4] * y + H[5]) / denom);
-
-          if (sx >= 0 && sx < srcW && sy >= 0 && sy < srcH) {
-            dstPixels[y * dstW + x] = src32[sy * srcW + sx];
-          } else {
-            dstPixels[y * dstW + x] = 0xFFFFFFFF; // White background
+          const sx = (H[0] * x + H[1] * y + H[2]) / denom;
+          const sy = (H[3] * x + H[4] * y + H[5]) / denom;
+          const out = (y * dstW + x) * 4;
+          if (!Number.isFinite(sx) || !Number.isFinite(sy) || sx < 0 || sy < 0 || sx > srcW - 1 || sy > srcH - 1) {
+            dstBytes.set([255, 255, 255, 255], out); continue;
+          }
+          const x0 = Math.floor(sx), y0 = Math.floor(sy), x1 = Math.min(x0 + 1, srcW - 1), y1 = Math.min(y0 + 1, srcH - 1);
+          const fx = sx - x0, fy = sy - y0;
+          for (let c = 0; c < 4; c++) {
+            const top = srcData[(y0 * srcW + x0) * 4 + c] * (1-fx) + srcData[(y0 * srcW + x1) * 4 + c] * fx;
+            const bottom = srcData[(y1 * srcW + x0) * 4 + c] * (1-fx) + srcData[(y1 * srcW + x1) * 4 + c] * fx;
+            dstBytes[out+c] = top * (1-fy) + bottom * fy;
           }
         }
       }
@@ -6362,7 +6446,7 @@
     function executePerspectiveWarp() {
       const page = state.scanPages[state.currentScanPageIdx];
       if (!page || !state.scanCorners) return showToast('请先导入文档图片');
-      
+
       showToast('正在进行高精度透视变换拉直矫正...');
       try {
         const cvs = document.getElementById('scanMainCanvas');
@@ -6389,20 +6473,13 @@
         state.scanCorners = newRectangleCorners;
         page.corners = newRectangleCorners;
 
-        const warpedImg = new Image();
-        warpedImg.onload = () => {
-          page.currentImg = warpedImg;
-          page.thumbDataUrl = cvs.toDataURL('image/jpeg', 0.6);
-          state.scanImg = warpedImg;
-          initPerspectiveCropOverlay(dstW, dstH);
-          renderScanPagesListUI();
-          
-          const infoBadge = document.getElementById('scanImageInfoBadge');
-          if (infoBadge) infoBadge.innerText = `${dstW} × ${dstH} px`;
-
-          showToast('✅ 当前页透视拉直矫正成功！已修正为平整矩形，选框已自动重置');
-        };
-        warpedImg.src = cvs.toDataURL();
+        const warpedCanvas = document.createElement('canvas');
+        warpedCanvas.width = dstW; warpedCanvas.height = dstH;
+        warpedCanvas.getContext('2d').drawImage(cvs, 0, 0);
+        page.currentImg = warpedCanvas; page.filter = 'orig'; page.thumbDataUrl = scanThumbnail(warpedCanvas);
+        state.scanImg = warpedCanvas; initPerspectiveCropOverlay(dstW, dstH);
+        renderScanPagesListUI();
+        showToast('当前页透视矫正完成');
       } catch (err) {
         showToast('透视矫正失败: ' + err.message);
       }
@@ -6456,86 +6533,37 @@
       }
     }
 
+    function applyFilterToCanvas(cvs, mode) {
+      if (!['color', 'bw', 'seal'].includes(mode)) return;
+      const ctx = cvs.getContext('2d'), image = ctx.getImageData(0, 0, cvs.width, cvs.height), d = image.data;
+      if (mode === 'color') processMagicWhiteningFilter(image);
+      else for (let i = 0; i < d.length; i += 4) {
+        if (mode === 'bw') { const v = (0.299*d[i]+0.587*d[i+1]+0.114*d[i+2]) > 140 ? 255 : 0; d[i]=v; d[i+1]=v; d[i+2]=v; }
+        else if (d[i] > 110 && d[i]-d[i+1] > 20 && d[i]-d[i+2] > 20) { d[i]=230; d[i+1]=30; d[i+2]=30; }
+      }
+      ctx.putImageData(image, 0, 0);
+    }
     function applyScanFilter(mode) {
       const page = state.scanPages[state.currentScanPageIdx];
       if (!page) return showToast('请先导入文档图片');
-
       page.filter = mode;
-      const cvs = document.getElementById('scanMainCanvas');
-      const ctx = cvs.getContext('2d');
-      ctx.drawImage(page.currentImg, 0, 0);
-
-      if (mode === 'color') {
-        const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
-        processMagicWhiteningFilter(imgData);
-        ctx.putImageData(imgData, 0, 0);
-      } else if (mode === 'bw') {
-        const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
-        const d = imgData.data;
-        for (let i = 0; i < d.length; i += 4) {
-          const val = (0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2]) > 140 ? 255 : 0;
-          d[i] = val; d[i+1] = val; d[i+2] = val;
-        }
-        ctx.putImageData(imgData, 0, 0);
-      } else if (mode === 'seal') {
-        const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
-        const d = imgData.data;
-        for (let i = 0; i < d.length; i += 4) {
-          if (d[i] > 110 && d[i] - d[i+1] > 20 && d[i] - d[i+2] > 20) {
-            d[i] = 230; d[i+1] = 30; d[i+2] = 30;
-          }
-        }
-        ctx.putImageData(imgData, 0, 0);
-      }
-
-      page.thumbDataUrl = cvs.toDataURL('image/jpeg', 0.6);
-      renderScanPagesListUI();
-      showToast(`【${mode === 'color' ? '魔术彩色增白' : mode === 'bw' ? '黑白二值化' : mode === 'seal' ? '印章强化' : '高清原图'}】已应用！`);
+      const cvs = document.getElementById('scanMainCanvas'), ctx = cvs.getContext('2d');
+      ctx.drawImage(page.currentImg, 0, 0); applyFilterToCanvas(cvs, mode);
+      page.thumbDataUrl = scanThumbnail(cvs); renderScanPagesListUI();
+      showToast('滤镜已应用');
     }
-
     function applyCurrentFilterToAllPages() {
-      const curPage = state.scanPages[state.currentScanPageIdx];
-      if (!curPage) return showToast('请先导入文档图片');
-
-      const filter = curPage.filter || 'color';
-      showToast(`正在将【${filter}】滤镜批量应用到全部 ${state.scanPages.length} 页...`);
-
-      state.scanPages.forEach((p, idx) => {
-        p.filter = filter;
-        const off = document.createElement('canvas');
-        off.width = p.currentImg.width;
-        off.height = p.currentImg.height;
-        const offCtx = off.getContext('2d');
-        offCtx.drawImage(p.currentImg, 0, 0);
-
-        if (filter === 'color') {
-          const imgData = offCtx.getImageData(0, 0, off.width, off.height);
-          processMagicWhiteningFilter(imgData);
-          offCtx.putImageData(imgData, 0, 0);
-        } else if (filter === 'bw') {
-          const imgData = offCtx.getImageData(0, 0, off.width, off.height);
-          const d = imgData.data;
-          for (let i = 0; i < d.length; i += 4) {
-            const val = (0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2]) > 140 ? 255 : 0;
-            d[i] = val; d[i+1] = val; d[i+2] = val;
-          }
-          offCtx.putImageData(imgData, 0, 0);
-        } else if (filter === 'seal') {
-          const imgData = offCtx.getImageData(0, 0, off.width, off.height);
-          const d = imgData.data;
-          for (let i = 0; i < d.length; i += 4) {
-            if (d[i] > 110 && d[i] - d[i+1] > 20 && d[i] - d[i+2] > 20) {
-              d[i] = 230; d[i+1] = 30; d[i+2] = 30;
-            }
-          }
-          offCtx.putImageData(imgData, 0, 0);
-        }
-        p.thumbDataUrl = off.toDataURL('image/jpeg', 0.6);
+      const current = state.scanPages[state.currentScanPageIdx];
+      if (!current) return showToast('请先导入文档图片');
+      const filter = current.filter;
+      state.scanPages.forEach(page => {
+        page.filter = filter;
+        const off = document.createElement('canvas'); off.width = page.currentImg.width; off.height = page.currentImg.height;
+        off.getContext('2d').drawImage(page.currentImg, 0, 0); applyFilterToCanvas(off, filter);
+        page.thumbDataUrl = scanThumbnail(off);
       });
-
-      loadScanPageToCanvas(state.currentScanPageIdx);
-      renderScanPagesListUI();
-      showToast(`已将滤镜批量同步至全部 ${state.scanPages.length} 个扫描页面！`);
+      loadScanPageToCanvas(state.currentScanPageIdx); renderScanPagesListUI();
+      showToast(`已将滤镜应用至 ${state.scanPages.length} 页`);
     }
 
     /* Consolidated Multi-Page PDF Export Engine */
@@ -6548,29 +6576,18 @@
 
       state.scanPages.forEach((page, idx) => {
         if (idx > 0) pdf.addPage('a4', 'p');
-        
+
         const off = document.createElement('canvas');
         off.width = page.currentImg.width;
         off.height = page.currentImg.height;
         const offCtx = off.getContext('2d');
         offCtx.drawImage(page.currentImg, 0, 0);
 
-        if (page.filter === 'color') {
-          const imgData = offCtx.getImageData(0, 0, off.width, off.height);
-          processMagicWhiteningFilter(imgData);
-          offCtx.putImageData(imgData, 0, 0);
-        } else if (page.filter === 'bw') {
-          const imgData = offCtx.getImageData(0, 0, off.width, off.height);
-          const d = imgData.data;
-          for (let i = 0; i < d.length; i += 4) {
-            const val = (0.299 * d[i] + 0.587 * d[i+1] + 0.114 * d[i+2]) > 140 ? 255 : 0;
-            d[i] = val; d[i+1] = val; d[i+2] = val;
-          }
-          offCtx.putImageData(imgData, 0, 0);
-        }
-
+        applyFilterToCanvas(off, page.filter);
         const imgDataUrl = off.toDataURL('image/jpeg', 0.95);
-        pdf.addImage(imgDataUrl, 'JPEG', 0, 0, 210, 297);
+        const scale = Math.min(210 / off.width, 297 / off.height);
+        const width = off.width * scale, height = off.height * scale;
+        pdf.addImage(imgDataUrl, 'JPEG', (210-width)/2, (297-height)/2, width, height);
       });
 
       pdf.save(`Scanned_Document_Total_${state.scanPages.length}Pages.pdf`);
@@ -6703,9 +6720,10 @@
 
     async function processDiffFile(file, target) {
       if (!file) return;
+      const job = startAiJob('diff-' + target);
       const ext = file.name.split('.').pop().toLowerCase();
       const isImage = file.type.startsWith('image/') || ['jpg', 'jpeg', 'png', 'webp', 'bmp'].includes(ext);
-      
+
       const fileInfoEl = document.getElementById(`diffFileInfo${target}`);
       if (fileInfoEl) fileInfoEl.innerText = `${file.name} (${Math.round(file.size / 1024)}KB)`;
 
@@ -6717,7 +6735,7 @@
           const imgContainer = document.getElementById(`diffImagePreviewContainer${target}`);
           const imgThumb = document.getElementById(`diffImageThumb${target}`);
           const imgName = document.getElementById(`diffImageName${target}`);
-          
+
           const rd = new FileReader();
           rd.onload = async ev => {
             const dataUrl = ev.target.result;
@@ -6725,15 +6743,14 @@
             if (imgName) imgName.innerText = `扫描件: ${file.name}`;
             if (imgContainer) imgContainer.classList.remove('hidden');
 
-            // Invoke Vision AI if configured, otherwise fallback to local OCR
+            // Vision extraction requires a configured API.
             showToast(`正在对扫描件 ${file.name} 进行 AI 视觉识别与条款提取...`);
             let extractedText = '';
-            
-            const aiCfg = JSON.parse(localStorage.getItem('docscan_ai_config') || '{}');
+
+            const aiCfg = getAiConfig();
             if (aiCfg.apiKey && aiCfg.baseUrl) {
               try {
-                const base64 = dataUrl.split(',')[1];
-                const res = await fetch(`${aiCfg.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+                const res = await aiFetch(`${aiCfg.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -6745,21 +6762,24 @@
                       role: 'user',
                       content: [
                         { type: 'text', text: '请精确提取这份合同/文档扫描件中的全部文字内容，保留条款编号、标题、段落格式、数字金额与签署落款，不要包含任何多余的开场白或解释。' },
-                        { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64}` } }
+                        { type: 'image_url', image_url: { url: dataUrl } }
                       ]
                     }],
                     temperature: 0.1
                   })
                 });
                 const data = await res.json();
-                extractedText = data.choices?.[0]?.message?.content || '';
+                extractedText = aiResponseText(data);
               } catch (aiErr) {
-                console.warn('AI OCR failed, fallback to local text placeholder', aiErr);
+                showToast('扫描件识别失败: ' + aiErr.message);
               }
             }
 
+            if (!isCurrentAiJob('diff-' + target, job)) return;
             if (!extractedText) {
-              extractedText = `【扫描件图像: ${file.name}】\n已成功载入合同图像。若需超高精度字级比对，可在右上角配置 AI 视觉模型(如小米 MiMo Vision)，或直接在下方输入校对文字。\n\n甲方（发包方）：某某科技有限公司\n乙方（承包方）：某某工程设计有限公司\n一、合同标的与结算金额：人民币壹佰贰拾万元整（¥1,200,000.00）\n二、付款节点：合同签订后3日内支付30%，验收合格后支付60%，质保期满支付10%\n三、交货期限：2026年12月31日前完成全部交付\n四、违约金与滞纳金：每日按未付款项的0.05%计算\n五、争议解决：由原告所在地人民法院管辖`;
+              document.getElementById(`diffText${target}`).value = '';
+              showToast('未提取文字：请配置 AI 视觉模型或手动输入合同内容');
+              return;
             }
 
             document.getElementById(`diffText${target}`).value = extractedText;
@@ -6856,6 +6876,7 @@
     }
 
     async function runAiContractDiffAnalysis() {
+      const job = startAiJob('contract');
       const a = document.getElementById('diffTextA')?.value || '';
       const b = document.getElementById('diffTextB')?.value || '';
       const container = document.getElementById('diffResultContainer');
@@ -6872,7 +6893,7 @@
         </div>
       `;
 
-      const aiCfg = JSON.parse(localStorage.getItem('docscan_ai_config') || '{}');
+      const aiCfg = getAiConfig();
       const promptText = `你是一名资深的商业合同法务合规与审计专家。请深度审查并比对以下两份合同文档：
 
 【原版合同 / 文档 A 内容】：
@@ -6887,59 +6908,32 @@ ${b.substring(0, 4000)}
 3. 📊 【重点修改条款对照表】（列出原条款 vs 新条款及变更实质）
 4. 💡 【专业法务修改与签署建议】`;
 
-      let aiResult = '';
-      if (aiCfg.apiKey && aiCfg.baseUrl) {
-        try {
-          const res = await fetch(`${aiCfg.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${aiCfg.apiKey}`
-            },
-            body: JSON.stringify({
-              model: aiCfg.model || 'mimo-pro',
-              messages: [
-                { role: 'system', content: '你是一名顶级法务专家，擅长从两份合同文本或扫描件中发现细微但致命的条款修改与商业陷阱。' },
-                { role: 'user', content: promptText }
-              ],
-              temperature: 0.2
-            })
-          });
-          const data = await res.json();
-          aiResult = data.choices?.[0]?.message?.content || '';
-        } catch (e) {
-          console.warn('AI API call error, using smart fallback', e);
-        }
+      window.lastAiDiffReportText = '';
+      let aiResult;
+      try {
+        if (!aiCfg.apiKey || !aiCfg.baseUrl) throw new Error('请先配置 API 地址和 API Key');
+        const res = await aiFetch(`${aiCfg.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+          method: 'POST', headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${aiCfg.apiKey}`},
+          body: JSON.stringify({model: aiCfg.model || 'mimo-pro', messages: [
+            {role: 'system', content: '你是一名法务审查助手，请只依据提供的合同文本分析。'},
+            {role: 'user', content: promptText}
+          ], temperature: 0.2})
+        });
+        aiResult = aiResponseText(await res.json());
+        if (!isCurrentAiJob('contract', job)) return;
+      } catch (err) {
+        if (!isCurrentAiJob('contract', job)) return;
+        container.textContent = 'AI 合同审查失败：' + err.message;
+        showToast('AI 合同审查失败: ' + err.message);
+        return;
       }
-
-      if (!aiResult) {
-        aiResult = `# 📑 商业合同差异深度剖析与法律风险审查报告
-
-## 🚨 一、核心条款重大变更摘要
-- **结算金额与税率**：原版合同金额为 **¥1,200,000.00**，修改版/扫描件中微调为 **¥1,180,000.00**（减少 ¥20,000.00），需确认价格折扣是否已经过双方商务确认。
-- **付款节点条件**：修改版将原版“到货验收后3日内支付60%”修改为“全项验收合格并开具全额发票后30个工作日内支付”，回款周期明显拉长。
-- **违约金上限**：原版违约金上限为合同总额的 20%，修改版降为 5%，削弱了对方违约赔偿力度。
-
-## ⚠️ 二、潜藏商业与法律风险提示
-1. **单方解除合同权变动（高危 🚨）**：修改版在第七条新增了“甲方有权在提前15天书面通知的情况下无偿单方解除合同”，此条款严重不对等，剥夺了乙方的预期合同利益；
-2. **管辖法院变更（中危 ⚠️）**：原版约定由“原告所在地人民法院”管辖，修改版变更为“被告所在地人民法院”，若发生争议将增加己方异地诉讼成本。
-
-## 📊 三、重点修改条款对照表
-| 条款序号 | 原版合同约定 (文档 A) | 修改版/扫描件约定 (文档 B) | 变更实质与影响评估 |
-| :--- | :--- | :--- | :--- |
-| 第 2.3 条 | 验收后 3 日内支付进度款 | 验收且开票后 30 工作日支付 | 回款账期延长近一个半月 |
-| 第 5.1 条 | 每日按 0.05% 计算违约金 | 每日按 0.01% 计算违约金 | 对方违约成本大幅降低 |
-| 第 7.4 条 | 双方协商一致方可解除 | 甲方提前 15 日可单方无偿解除 | 不平等单方解约条款 |
-
-## 💡 四、专业法务修改与签署建议
-1. **坚决删除** 第 7.4 条中关于甲方单方无偿解除合同的特权条款，恢复为“除法定解除事由外，双方须协商一致方可解除”；
-2. **争取恢复** 付款节点为“验收后 7 个工作日内”，避免资金链受压；
-3. 确认扫描件盖章真实性与双方签约代表授权书有效性。`;
-      }
+      const truncated = a.length > 4000 || b.length > 4000;
+      if (truncated) aiResult = '注意：合同文本超过输入限制，每份仅分析前 4000 字符，后续内容未审查。\n\n' + aiResult;
 
       const formattedHtml = aiResult
         .split('\n')
-        .map(line => {
+        .map(rawLine => {
+          const line = escapeHtml(rawLine);
           if (line.startsWith('# ')) {
             return `<h2 class="text-base font-extrabold text-indigo-700 dark:text-indigo-300 mb-2 mt-1 pb-1 border-b border-indigo-200 dark:border-indigo-800">${line.slice(2)}</h2>`;
           } else if (line.startsWith('## ')) {
@@ -7032,7 +7026,7 @@ ${b.substring(0, 4000)}
       if (!p) return;
       document.getElementById('aiBaseUrl').value = p.baseUrl;
       document.getElementById('aiModelName').value = p.defaultModel;
-      
+
       const chipsContainer = document.getElementById('aiModelChipsContainer');
       if (chipsContainer) {
         chipsContainer.innerHTML = `
@@ -7090,7 +7084,7 @@ ${b.substring(0, 4000)}
 
       showToast('正在测试与大模型服务器连通性...');
       try {
-        const res = await fetch(`${baseUrl}/chat/completions`, {
+        const res = await aiFetch(`${baseUrl}/chat/completions`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -7115,10 +7109,11 @@ ${b.substring(0, 4000)}
     }
 
     async function runAiImageRecognition() {
+      const job = startAiJob('ocr');
+      const sourcePage = state.scanPages[state.currentScanPageIdx];
       if (!state.scanImg) return showToast('请先导入要识别的文档图片');
-      
-      const saved = localStorage.getItem('docscan_ai_config');
-      const cfg = saved ? JSON.parse(saved) : {};
+
+      const cfg = getAiConfig();
       const baseUrl = (cfg.baseUrl || 'https://api.xiaomi.com/v1').replace(/\/+$/, '');
       const apiKey = cfg.apiKey;
       const model = cfg.model || 'mimo-vision';
@@ -7136,7 +7131,7 @@ ${b.substring(0, 4000)}
       showToast(`正在通过 ${model} 进行 AI 视觉识别...`);
 
       try {
-        const res = await fetch(`${baseUrl}/chat/completions`, {
+        const res = await aiFetch(`${baseUrl}/chat/completions`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -7159,7 +7154,8 @@ ${b.substring(0, 4000)}
 
         if (res.ok) {
           const data = await res.json();
-          const recognizedText = data.choices?.[0]?.message?.content || '未识别出有效文字';
+          const recognizedText = aiResponseText(data);
+          if (!isCurrentAiJob('ocr', job) || sourcePage !== state.scanPages[state.currentScanPageIdx]) return;
           openAiOcrResultModal(recognizedText, model);
           showToast('AI 视觉识别完成！');
         } else {
@@ -7167,7 +7163,7 @@ ${b.substring(0, 4000)}
           showToast(`识别请求失败: ${errData.error?.message || res.statusText}`);
         }
       } catch (err) {
-        showToast('请求异常: ' + err.message);
+        if (isCurrentAiJob('ocr', job)) showToast('请求异常: ' + err.message);
       }
     }
 
@@ -7187,7 +7183,7 @@ ${b.substring(0, 4000)}
     function insertAiOcrToWord() {
       const text = document.getElementById('aiOcrResultText').value;
       if (!text) return;
-      const html = text.split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${l.trim()}</p>`).join('');
+      const html = textParagraphs(text);
       document.getElementById('wordEditorDoc').innerHTML += html;
       closeAiOcrResultModal();
       navigateModule('editor');
@@ -7204,16 +7200,18 @@ ${b.substring(0, 4000)}
     };
 
     async function handleAiEnhancedConvert(e, convType) {
+      const job = startAiJob('convert');
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
-      
-      const saved = localStorage.getItem('docscan_ai_config');
-      const cfg = saved ? JSON.parse(saved) : {};
+      if (convType === 'ppt2pdf') return showToast('暂不支持读取 PPT 文件进行 AI 转换');
+
+      const cfg = getAiConfig();
       const baseUrl = (cfg.baseUrl || 'https://api.xiaomi.com/v1').replace(/\/+$/, '');
       const apiKey = cfg.apiKey;
       const model = cfg.model || 'mimo-vision';
 
       if (!apiKey) {
-        showToast('💡 正在以本地高精引擎处理。配置 API Key（如小米 MiMo/DeepSeek）可开启云端大模型');
+        showToast('请先配置 API Key，再进行 AI 转换');
+        return;
       }
 
       showToast(`🤖 正在通过 ${model} 进行 AI 深度解析与重构转换...`);
@@ -7221,6 +7219,7 @@ ${b.substring(0, 4000)}
       try {
         let extractedRawText = '';
         let base64Img = null;
+        let coverageNotice = '';
 
         const ext = file.name.split('.').pop().toLowerCase();
         if (ext === 'docx') {
@@ -7235,6 +7234,7 @@ ${b.substring(0, 4000)}
         } else if (ext === 'pdf') {
           const ab = await file.arrayBuffer();
           const pdf = await pdfjsLib.getDocument({ data: ab }).promise;
+          if (pdf.numPages > 10) { coverageNotice = `注意：此 PDF 共 ${pdf.numPages} 页，仅处理前 10 页。`; showToast(coverageNotice); }
           for (let p = 1; p <= Math.min(10, pdf.numPages); p++) {
             const page = await pdf.getPage(p);
             const content = await page.getTextContent();
@@ -7274,7 +7274,7 @@ ${b.substring(0, 4000)}
           { type: 'image_url', image_url: { url: base64Img } }
         ] : userInstruction;
 
-        const res = await fetch(`${baseUrl}/chat/completions`, {
+        const res = await aiFetch(`${baseUrl}/chat/completions`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -7296,7 +7296,8 @@ ${b.substring(0, 4000)}
         }
 
         const data = await res.json();
-        const aiResultText = data.choices?.[0]?.message?.content || 'AI 转换已完成';
+        const aiResultText = (coverageNotice ? coverageNotice + '\n\n' : '') + aiResponseText(data);
+        if (!isCurrentAiJob('convert', job)) return;
 
         state.aiConvertedResult = {
           type: convType,
@@ -7308,6 +7309,7 @@ ${b.substring(0, 4000)}
         openAiConvertResultModal(convType, model, aiResultText);
         showToast('🎉 AI 深度强化转换成功完成！');
       } catch (err) {
+        if (!isCurrentAiJob('convert', job)) return;
         showToast('AI 转换异常: ' + err.message);
       }
     }
@@ -7317,7 +7319,7 @@ ${b.substring(0, 4000)}
       const titleEl = document.getElementById('aiConvertResultTitle');
       const badgeEl = document.getElementById('aiConvertModelBadge');
       const btnLabel = document.getElementById('aiConvertDownloadBtnLabel');
-      
+
       badgeEl.innerText = `🤖 驱动模型：${model}`;
       document.getElementById('aiConvertPreviewText').value = text;
 
@@ -7407,7 +7409,7 @@ ${b.substring(0, 4000)}
       if (!res || !res.text) return showToast('暂无转换结果');
 
       if (res.type.endsWith('2word') || res.type.endsWith('2txt') || res.type.endsWith('2pdf')) {
-        const html = res.text.split('\n').filter(l => l.trim()).map(l => `<p class="indent-2em">${l.trim()}</p>`).join('');
+        const html = textParagraphs(res.text);
         document.getElementById('wordEditorDoc').innerHTML = html;
         closeAiConvertResultModal();
         navigateModule('editor');
@@ -7531,8 +7533,7 @@ ${b.substring(0, 4000)}
     }
     function handleWatermarkUpload(e) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
-      showToast('防伪水印已加注，正在导出...');
-      setTimeout(() => showToast('加注水印 PDF 已成功下载！'), 600);
+      showToast('水印导出尚未实现，当前没有生成文件');
     }
     function handleIdCardUpload(e, side) {
       const file = e.target.files?.[0]; if (!file) return; e.target.value = '';
@@ -7582,30 +7583,47 @@ ${b.substring(0, 4000)}
       if (files.length < 2) return showToast('请至少选择 2 个 PDF 文件进行合并');
       showToast(`正在合并 ${files.length} 个 PDF 文件...`);
       try {
-        const { jsPDF } = window.jspdf;
-        const outPdf = new jsPDF('p', 'mm', 'a4');
-        let isFirst = true;
-
-        for (let i = 0; i < files.length; i++) {
-          const ab = await files[i].arrayBuffer();
-          const doc = await pdfjsLib.getDocument({ data: ab }).promise;
-          for (let p = 1; p <= doc.numPages; p++) {
-            const page = await doc.getPage(p);
-            const vp = page.getViewport({ scale: 1.5 });
-            const cvs = document.createElement('canvas');
-            cvs.width = vp.width; cvs.height = vp.height;
-            await page.render({ canvasContext: cvs.getContext('2d'), viewport: vp }).promise;
-            if (!isFirst) outPdf.addPage();
-            outPdf.addImage(cvs.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297);
-            isFirst = false;
-          }
+        if (!window.PDFLib?.PDFDocument) throw new Error('PDF 合并组件未加载，请检查网络连接');
+        const output = await PDFLib.PDFDocument.create();
+        for (const file of files) {
+          const source = await PDFLib.PDFDocument.load(await file.arrayBuffer());
+          const pages = await output.copyPages(source, source.getPageIndices());
+          pages.forEach(page => output.addPage(page));
         }
-        outPdf.save(`Merged_Document_${Date.now()}.pdf`);
+        const bytes = await output.save();
+        const url = URL.createObjectURL(new Blob([bytes], {type:'application/pdf'}));
+        try {
+          const link = document.createElement('a'); link.href = url; link.download = `Merged_Document_${Date.now()}.pdf`;
+          document.body.appendChild(link); link.click(); link.remove();
+        } finally { setTimeout(() => URL.revokeObjectURL(url), 60000); }
         showToast('PDF 多文件合并导出成功！');
       } catch (err) {
         showToast('PDF 合并失败: ' + err.message);
       }
     }
+
+    function trackWorkspaceTask(label, fn) {
+      return async function (...args) {
+        const task = beginWorkspaceTask(label);
+        try {
+          await new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 0)));
+          return await fn.apply(this, args);
+        }
+        finally { endWorkspaceTask(task); }
+      };
+    }
+    handleWordToPdf = trackWorkspaceTask('正在转换 Word', handleWordToPdf);
+    handleExcelToPdf = trackWorkspaceTask('正在转换表格', handleExcelToPdf);
+    handlePdfToWord = trackWorkspaceTask('正在转换 PDF', handlePdfToWord);
+    handlePdfToExcel = trackWorkspaceTask('正在转换 PDF', handlePdfToExcel);
+    handlePdfToPpt = trackWorkspaceTask('正在转换 PDF', handlePdfToPpt);
+    handlePdfToImages = trackWorkspaceTask('正在转换 PDF', handlePdfToImages);
+    handleImagesToPdf = trackWorkspaceTask('正在转换图片', handleImagesToPdf);
+    handlePdfToTxt = trackWorkspaceTask('正在转换 PDF', handlePdfToTxt);
+    handlePdfMergeFiles = trackWorkspaceTask('正在合并 PDF', handlePdfMergeFiles);
+    rotateAllScanPages = trackWorkspaceTask('正在旋转扫描页', rotateAllScanPages);
+    applyCurrentFilterToAllPages = trackWorkspaceTask('正在处理扫描页', applyCurrentFilterToAllPages);
+    exportMultiPageScanToPDF = trackWorkspaceTask('正在导出扫描页', exportMultiPageScanToPDF);
   </script>
 </body>
 </html>
